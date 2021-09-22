@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Copyright: (c) 2021, Dell EMC
+# Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """ Ansible module for managing SDCs on PowerFlex"""
 
@@ -13,9 +14,9 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = r'''
 module: dellemc_powerflex_sdc
 version_added: '1.0.0'
-short_description: Manage SDC's on Dell EMC PowerFlex.
+short_description: Manage SDCs on Dell EMC PowerFlex
 description:
-- Managing SDC's on PowerFlex storage system includes getting details of SDC
+- Managing SDCs on PowerFlex storage system includes getting details of SDC
   and renaming SDC.
 
 author:
@@ -53,11 +54,13 @@ options:
     choices: ['present', 'absent']
     required: True
     type: str
+notes:
+  - The check_mode is not supported.
 '''
 
 EXAMPLES = r'''
 - name: Get SDC details using SDC ip
-  dellemc_powerflex_sdc:
+  dellemc.powerflex.dellemc_powerflex_sdc:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -66,7 +69,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Rename SDC using SDC name
-  dellemc_powerflex_sdc:
+  dellemc.powerflex.dellemc_powerflex_sdc:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -78,51 +81,89 @@ EXAMPLES = r'''
 
 RETURN = r'''
 changed:
-    description: Whether or not the resource has changed
+    description: Whether or not the resource has changed.
     returned: always
     type: bool
+    sample: 'false'
 
 sdc_details:
-    description: Details of the SDC
+    description: Details of the SDC.
     returned: When SDC exists
     type: complex
     contains:
         id:
-            description:
-                - The ID of the SDC
+            description: The ID of the SDC.
             type: str
         name:
-            description:
-                - Name of the SDC
+            description: Name of the SDC.
             type: str
         sdcIp:
-            description:
-                - IP of the SDC
+            description: IP of the SDC.
             type: str
         osType:
-            description:
-                - OS type of the SDC
+            description: OS type of the SDC.
             type: str
         mapped_volumes:
-            description: The details of the mapped volumes
+            description: The details of the mapped volumes.
             type: list
             contains:
                 id:
-                    description:
-                        - The ID of the volume
+                    description: The ID of the volume.
                     type: str
                 name:
-                    description:
-                        - The name of the volume
+                    description: The name of the volume.
                     type: str
                 volumeType:
-                    description:
-                        - Type of the volume
+                    description: Type of the volume.
                     type: str
         sdcApproved:
-            description:
-                - Indicates whether an SDC has approved access to the system
+            description: Indicates whether an SDC has approved access to the
+                         system.
             type: bool
+    sample: {
+        "id": "07335d3d00000006",
+        "installedSoftwareVersionInfo": "R3_6.0.0",
+        "kernelBuildNumber": null,
+        "kernelVersion": "3.10.0",
+        "links": [
+            {
+                "href": "/api/instances/Sdc::07335d3d00000006",
+                "rel": "self"
+            },
+            {
+                "href": "/api/instances/Sdc::07335d3d00000006/relationships/
+                        Statistics",
+                "rel": "/api/Sdc/relationship/Statistics"
+            },
+            {
+                "href": "/api/instances/Sdc::07335d3d00000006/relationships/
+                        Volume",
+                "rel": "/api/Sdc/relationship/Volume"
+            },
+            {
+                "href": "/api/instances/System::4a54a8ba6df0690f",
+                "rel": "/api/parent/relationship/systemId"
+            }
+        ],
+        "mapped_volumes": [],
+        "mdmConnectionState": "Disconnected",
+        "memoryAllocationFailure": null,
+        "name": "LGLAP203",
+        "osType": "Linux",
+        "peerMdmId": null,
+        "perfProfile": "HighPerformance",
+        "sdcApproved": true,
+        "sdcApprovedIps": null,
+        "sdcGuid": "F8ECB844-23B8-4629-92BB-B6E49A1744CB",
+        "sdcIp": "N/A",
+        "sdcIps": null,
+        "sdcType": "AppSdc",
+        "sdrId": null,
+        "socketAllocationFailure": null,
+        "softwareVersionInfo": "R3_6.0.0",
+        "systemId": "4a54a8ba6df0690f",
+        "versionInfo": "R3_6.0.0"
+    }
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -206,7 +247,13 @@ class PowerFlexSdc(object):
             :return: The dict containing SDC details
         """
 
-        id_ip_name = sdc_ip if sdc_ip else sdc_name if sdc_name else sdc_id
+        if sdc_name:
+            id_ip_name = sdc_name
+        elif sdc_ip:
+            id_ip_name = sdc_ip
+        else:
+            id_ip_name = sdc_id
+
         try:
             if sdc_name:
                 sdc_details = self.powerflex_conn.sdc.get(
@@ -268,7 +315,12 @@ class PowerFlexSdc(object):
 
         sdc_details = self.get_sdc(sdc_name=sdc_name, sdc_id=sdc_id,
                                    sdc_ip=sdc_ip)
-        id_ip_name = sdc_ip if sdc_ip else sdc_name if sdc_name else sdc_id
+        if sdc_name:
+            id_ip_name = sdc_name
+        elif sdc_ip:
+            id_ip_name = sdc_ip
+        else:
+            id_ip_name = sdc_id
 
         if state == 'present' and not sdc_details:
             error_msg = 'Could not find any SDC instance with ' \

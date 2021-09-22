@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Copyright: (c) 2021, Dell EMC
+# Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """ Ansible module for managing Snapshots on PowerFlex"""
 
@@ -13,7 +14,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = r'''
 module: dellemc_powerflex_snapshot
 version_added: '1.0.0'
-short_description: Manage Snapshots on Dell EMC PowerFlex.
+short_description: Manage Snapshots on Dell EMC PowerFlex
 description:
 - Managing snapshots on PowerFlex Storage System includes
   creating new snapshot, getting details of snapshot,
@@ -84,7 +85,7 @@ options:
     type: str
   sdc:
     description:
-    - Specifies SDC parameters
+    - Specifies SDC parameters.
     type: list
     elements: dict
     suboptions:
@@ -139,11 +140,13 @@ options:
     choices: ['present', 'absent']
     required: True
     type: str
+notes:
+  - The check_mode is not supported.
 '''
 
 EXAMPLES = r'''
 - name: Create snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -155,7 +158,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Get snapshot details using snapshot id
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -164,28 +167,28 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Map snapshot to SDC
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
     verifycert: "{{verifycert}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
-        - sdc_ip: "10.247.66.203"
+        - sdc_ip: "198.10.xxx.xxx"
         - sdc_id: "663ac0d200000001"
     allow_multiple_mappings: True
     sdc_state: "mapped"
     state: "present"
 
 - name: Modify the attributes of SDC mapped to snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
     verifycert: "{{verifycert}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
-    - sdc_ip: "10.247.66.203"
+    - sdc_ip: "198.10.xxx.xxx"
       iops_limit: 11
       bandwidth_limit: 4096
     - sdc_id: "663ac0d200000001"
@@ -196,7 +199,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Extend the size of snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -206,20 +209,20 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Unmap SDCs from snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
     verifycert: "{{verifycert}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
-      - sdc_ip: "10.247.66.203"
+      - sdc_ip: "198.10.xxx.xxx"
       - sdc_id: "663ac0d200000001"
     sdc_state: "unmapped"
     state: "present"
 
 - name: Rename snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -229,7 +232,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Delete snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -241,87 +244,129 @@ EXAMPLES = r'''
 
 RETURN = r'''
 changed:
-    description: Whether or not the resource has changed
+    description: Whether or not the resource has changed.
     returned: always
     type: bool
+    sample: 'false'
 
 snapshot_details:
-    description: Details of the snapshot
+    description: Details of the snapshot.
     returned: When snapshot exists
     type: complex
     contains:
         ancestorVolumeId:
-            description:
-                - The ID of the root of the specified volume's V-Tree
+            description: The ID of the root of the specified volume's V-Tree.
             type: str
         ancestorVolumeName:
-            description:
-                - The name of the root of the specified volume's V-Tree
+            description: The name of the root of the specified volume's V-Tree.
             type: str
         creationTime:
-            description:
-                - The creation time of the snapshot
+            description: The creation time of the snapshot.
             type: int
         id:
-            description:
-                - The ID of the snapshot
+            description: The ID of the snapshot.
             type: str
         mappedSdcInfo:
-            description: The details of the mapped SDC
+            description: The details of the mapped SDC.
             type: complex
             contains:
                 sdcId:
-                    description:
-                        - ID of the SDC
+                    description: ID of the SDC.
                     type: str
                 sdcName:
-                    description:
-                        - Name of the SDC
+                    description: Name of the SDC.
                     type: str
                 sdcIp:
-                    description:
-                        - IP of the SDC
+                    description: IP of the SDC.
                     type: str
                 accessMode:
-                    description:
-                        - mapping access mode for the specified snapshot
+                    description: mapping access mode for the specified snapshot.
                     type: str
                 limitIops:
-                    description:
-                        - IOPS limit for the SDC
+                    description: IOPS limit for the SDC.
                     type: int
                 limitBwInMbps:
-                    description:
-                        - Bandwidth limit for the SDC
+                    description: Bandwidth limit for the SDC.
                     type: int
         name:
-            description:
-                - Name of the snapshot
+            description: Name of the snapshot.
             type: str
         secureSnapshotExpTime:
-            description:
-                - Expiry time of the snapshot
+            description: Expiry time of the snapshot.
             type: int
         sizeInKb:
-            description:
-                - Size of the snapshot
+            description: Size of the snapshot.
             type: int
         sizeInGb:
-            description:
-                - Size of the snapshot
+            description: Size of the snapshot.
             type: int
         retentionInHours:
-            description:
-                - Retention of the snapshot in hours
+            description: Retention of the snapshot in hours.
             type: int
         storagePoolId:
-            description:
-                - The ID of the Storage pool in which snapshot resides
+            description: The ID of the Storage pool in which snapshot resides.
             type: str
         storagePoolName:
-            description:
-                - The name of the Storage pool in which snapshot resides
+            description: The name of the Storage pool in which snapshot resides.
             type: str
+    sample: {
+        "accessModeLimit": "ReadOnly",
+        "ancestorVolumeId": "cdd883cf00000002",
+        "ancestorVolumeName": "ansible-volume-1",
+        "autoSnapshotGroupId": null,
+        "compressionMethod": "Invalid",
+        "consistencyGroupId": "22f1e80c00000001",
+        "creationTime": 1631619229,
+        "dataLayout": "MediumGranularity",
+        "id": "cdd883d000000004",
+        "links": [
+            {
+                "href": "/api/instances/Volume::cdd883d000000004",
+                "rel": "self"
+            },
+            {
+                "href": "/api/instances/Volume::cdd883d000000004/relationships
+                        /Statistics",
+                "rel": "/api/Volume/relationship/Statistics"
+            },
+            {
+                "href": "/api/instances/Volume::cdd883cf00000002",
+                "rel": "/api/parent/relationship/ancestorVolumeId"
+            },
+            {
+                "href": "/api/instances/VTree::6e86255c00000001",
+                "rel": "/api/parent/relationship/vtreeId"
+            },
+            {
+                "href": "/api/instances/StoragePool::e0d8f6c900000000",
+                "rel": "/api/parent/relationship/storagePoolId"
+            }
+        ],
+        "lockedAutoSnapshot": false,
+        "lockedAutoSnapshotMarkedForRemoval": false,
+        "managedBy": "ScaleIO",
+        "mappedSdcInfo": null,
+        "name": "ansible_vol_snap_1",
+        "notGenuineSnapshot": false,
+        "originalExpiryTime": 0,
+        "pairIds": null,
+        "replicationJournalVolume": false,
+        "replicationTimeStamp": 0,
+        "retentionInHours": 0,
+        "retentionLevels": [],
+        "secureSnapshotExpTime": 0,
+        "sizeInGb": 16,
+        "sizeInKb": 16777216,
+        "snplIdOfAutoSnapshot": null,
+        "snplIdOfSourceVolume": null,
+        "storagePoolId": "e0d8f6c900000000",
+        "storagePoolName": "pool1",
+        "timeStampIsAccurate": false,
+        "useRmcache": false,
+        "volumeReplicationState": "UnmarkedForReplication",
+        "volumeType": "Snapshot",
+        "vtreeId": "6e86255c00000001"
+    }
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -521,7 +566,12 @@ class PowerFlexSnapshot(object):
             :return: The ID of the SDC
         """
 
-        id_ip_name = sdc_ip if sdc_ip else sdc_name if sdc_name else sdc_id
+        if sdc_name:
+            id_ip_name = sdc_name
+        elif sdc_ip:
+            id_ip_name = sdc_ip
+        else:
+            id_ip_name = sdc_id
 
         try:
             if sdc_name:
@@ -896,8 +946,6 @@ class PowerFlexSnapshot(object):
         size = self.module.params['size']
         cap_unit = self.module.params['cap_unit']
         snapshot_new_name = self.module.params['snapshot_new_name']
-        allow_multiple_mappings = \
-            self.module.params['allow_multiple_mappings']
         sdc = copy.deepcopy(self.module.params['sdc'])
         sdc_state = self.module.params['sdc_state']
         desired_retention = self.module.params['desired_retention']
@@ -1094,31 +1142,31 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
                 timedelta(days=desired_retention)
             expiration_timestamp = time.mktime(expiration_timestamp.timetuple())
 
-    if 'secureSnapshotExpTime' in snapshot and expiration_timestamp:
-        if snapshot['secureSnapshotExpTime'] != expiration_timestamp:
-            existing_timestamp = snapshot['secureSnapshotExpTime']
-            new_timestamp = expiration_timestamp
+    if 'secureSnapshotExpTime' in snapshot and expiration_timestamp and \
+            snapshot['secureSnapshotExpTime'] != expiration_timestamp:
+        existing_timestamp = snapshot['secureSnapshotExpTime']
+        new_timestamp = expiration_timestamp
 
-            info_message = 'The existing timestamp is: %s and the new ' \
-                           'timestamp is: %s' % (existing_timestamp,
-                                                 new_timestamp)
-            LOG.info(info_message)
+        info_message = 'The existing timestamp is: %s and the new ' \
+                       'timestamp is: %s' % (existing_timestamp,
+                                             new_timestamp)
+        LOG.info(info_message)
 
-            existing_time_obj = datetime.fromtimestamp(existing_timestamp)
-            new_time_obj = datetime.fromtimestamp(new_timestamp)
+        existing_time_obj = datetime.fromtimestamp(existing_timestamp)
+        new_time_obj = datetime.fromtimestamp(new_timestamp)
 
-            if existing_time_obj > new_time_obj:
-                td = utils.dateutil.relativedelta.relativedelta(
-                    existing_time_obj, new_time_obj)
-            else:
-                td = utils.dateutil.relativedelta.relativedelta(
-                    new_time_obj, existing_time_obj)
+        if existing_time_obj > new_time_obj:
+            td = utils.dateutil.relativedelta.relativedelta(
+                existing_time_obj, new_time_obj)
+        else:
+            td = utils.dateutil.relativedelta.relativedelta(
+                new_time_obj, existing_time_obj)
 
-            LOG.info("Time difference: %s", td.minutes)
+        LOG.info("Time difference: %s", td.minutes)
 
-            # A delta of two minutes is treated as idempotent
-            if td.seconds > 120 or td.minutes > 2:
-                is_timestamp_modified = True
+        # A delta of two minutes is treated as idempotent
+        if td.seconds > 120 or td.minutes > 2:
+            is_timestamp_modified = True
 
     if size:
         if cap_unit == 'GB':
@@ -1129,9 +1177,8 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
         if new_size != snapshot['sizeInKb']:
             is_size_modified = True
 
-    if access_mode:
-        if snapshot['accessModeLimit'] != access_mode:
-            is_access_modified = True
+    if access_mode and snapshot['accessModeLimit'] != access_mode:
+        is_access_modified = True
 
     if is_timestamp_modified or is_size_modified or is_access_modified:
         is_modified = True

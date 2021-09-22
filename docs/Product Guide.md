@@ -1,813 +1,778 @@
-**Ansible Modules for Dell EMC PowerFlex** 
-=========================================
-### Product Guide 1.0
+# Ansible Modules for Dell EMC PowerFlex
+## Product Guide 1.1.0
+© 2021 Dell Inc. or its subsidiaries. All rights reserved. Dell, EMC, and other trademarks are trademarks of Dell Inc. or its subsidiaries. Other trademarks may be trademarks of their respective owners.
 
->   © 2021 Dell Inc. or its subsidiaries. All rights reserved. Dell
->   EMC, and other trademarks are trademarks of Dell Inc. or its
->   subsidiaries. Other trademarks may be trademarks of their respective
->   owners.
+--------------
+## Contents
+*   [Device Module](#device-module)
+    *   [Synopsis](#synopsis)
+    *   [Parameters](#parameters)
+    *   [Notes](#notes)
+    *   [Examples](#examples)
+    *   [Return Values](#return-values)
+    *   [Authors](#authors)
+*   [SDC Module](#sdc-module)
+    *   [Synopsis](#synopsis-1)
+    *   [Parameters](#parameters-1)
+    *   [Notes](#notes-1)
+    *   [Examples](#examples-1)
+    *   [Return Values](#return-values-1)
+    *   [Authors](#authors-1)
+*   [Volume Module](#volume-module)
+    *   [Synopsis](#synopsis-2)
+    *   [Parameters](#parameters-2)
+    *   [Notes](#notes-2)
+    *   [Examples](#examples-2)
+    *   [Return Values](#return-values-2)
+    *   [Authors](#authors-2)
+*   [SDS Module](#sds-module)
+    *   [Synopsis](#synopsis-3)
+    *   [Parameters](#parameters-3)
+    *   [Notes](#notes-3)
+    *   [Examples](#examples-3)
+    *   [Return Values](#return-values-3)
+    *   [Authors](#authors-3)
+*   [Gatherfacts Module](#gatherfacts-module)
+    *   [Synopsis](#synopsis-4)
+    *   [Parameters](#parameters-4)
+    *   [Notes](#notes-4)
+    *   [Examples](#examples-4)
+    *   [Return Values](#return-values-4)
+    *   [Authors](#authors-4)
+*   [Snapshot Module](#snapshot-module)
+    *   [Synopsis](#synopsis-5)
+    *   [Parameters](#parameters-5)
+    *   [Notes](#notes-5)
+    *   [Examples](#examples-5)
+    *   [Return Values](#return-values-5)
+    *   [Authors](#authors-5)
+*   [Storage Pool Module](#storage-pool-module)
+    *   [Synopsis](#synopsis-6)
+    *   [Parameters](#parameters-6)
+    *   [Notes](#notes-6)
+    *   [Examples](#examples-6)
+    *   [Return Values](#return-values-6)
+    *   [Authors](#authors-6)
 
-Contents
--------
-- [Common access parameters](#common-access-parameters)
+--------------
 
--   [Gatherfacts module](#gatherfacts-module)
-    -   [Synopsis](#synopsis)
-    -   [Parameters](#parameters)
-    -   [Examples](#examples)
-    -   [Return Values](#return-values)
-    -   [Authors](#authors)
--   [SDC module](#sdc-module)
-    -   [Synopsis](#synopsis-1)
-    -   [Parameters](#parameters-1)
-    -   [Examples](#examples-1)
-    -   [Return Values](#return-values-1)
-    -   [Authors](#authors-1)
--   [Volume module](#volume-module)
-    -   [Synopsis](#synopsis-2)
-    -   [Parameters](#parameters-2)
-    -   [Examples](#examples-2)
-    -   [Return Values](#return-values-2)
-    -   [Authors](#authors-2)
--   [Snapshot module](#snapshot-module)
-    -   [Synopsis](#synopsis-3)
-    -   [Parameters](#parameters-3)
-    -   [Examples](#examples-3)
-    -   [Return Values](#return-values-3)
-    -   [Authors](#authors-3)
--   [Storage pool module](#storage-pool-module)
-    -   [Synopsis](#synopsis-4)
-    -   [Parameters](#parameters-4)
-    -   [Examples](#examples-4)
-    -   [Return Values](#return-values-4)
-    -   [Authors](#authors-4)
+# Device Module
 
-Common access parameters
-==================================
-These parameters are applicable to all modules, along with module-specific parameters.
+Manage device on Dell EMC PowerFlex
 
-**NOTE:** If the parameter is mandatory, then required=True else it is an optional parameter.
- This is applicable to all the module specific parameters also.
- 
-<table  border=0 cellpadding=0 class="documentation-table">
+### Synopsis
+ Managing device on PowerFlex storage system includes adding new device, getting details of device, and removing a device.
+
+### Parameters
+                                                                                                                                                                                                                                                                                                                                                                                                                                            
+<table>
     <tr>
-        <th colspan="2">Parameter</th>
-        <th>Choices/<font color="blue">Defaults</font></th>
-                    <th width="100%">Comments</th>
+        <th colspan=1>Parameter</th>
+        <th width="20%">Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Choices</th>
+        <th width="80%">Description</th>
     </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-gateway_host"></div>
-                <b>gateway_host</b>
-                <a class="ansibleOptionLink" href="#parameter-gateway_host" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>,
-                                              <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>IP or FQDN of the PowerFlex gateway host.</div>
-                                                    </td>
+                                                            <tr>
+            <td colspan=1 > current_pathname</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Full path of the device to be added.  <br> Required while adding a device. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-port"></div>
-                <b>port</b>
-                <a class="ansibleOptionLink" href="#parameter-port" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=integer</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                <b>Default:</b><br/><div style="color: blue">443</div>
-                                </td>
-                                                            <td>
-                                        <div>Port number through which communication happens with PowerFlex gateway host.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > device_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Device name.  <br> Mutually exclusive with device_id. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-username"></div>
-                <b>username</b>
-                <a class="ansibleOptionLink" href="#parameter-username" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The username of the PowerFlex gateway host.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > device_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Device ID.  <br> Mutually exclusive with device_name. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-password"></div>
-                <b>password</b>
-                <a class="ansibleOptionLink" href="#parameter-password" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The password of the PowerFlex gateway host.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > sds_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the SDS.  <br> Required while adding a device.  <br> Mutually exclusive with sds_id. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-verifycert"></div>
-                <b>verifycert</b>
-                <a class="ansibleOptionLink" href="#parameter-verifycert" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=boolean</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                                                                <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>no</li>
-                                                                                                                                                                                            <li><div style="color: blue"><b>yes</b>&nbsp;&larr;</div></li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Boolean variable to specify whether or not to validate SSL certificate.</div>
-                                        <div>True - Indicates that the SSL certificate should be verified.</div>
-                                        <div>False - Indicates that the SSL certificate should not be verified.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > sds_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the SDS.  <br> Required while adding a device.  <br> Mutually exclusive with sds_name. </td>
         </tr>
-                    </table>
-<br/>
+                    <tr>
+            <td colspan=1 > storage_pool_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Storage Pool name.  <br> Used while adding a storage device.  <br> Mutually exclusive with storage_pool_id, acceleration_pool_id and acceleration_pool_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > storage_pool_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Storage Pool ID.  <br> Used while adding a storage device.  <br> Media type supported are SSD and HDD.  <br> Mutually exclusive with storage_pool_name, acceleration_pool_id and acceleration_pool_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > acceleration_pool_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Acceleration Pool Name.  <br> Used while adding an acceleration device.  <br> Media type supported are SSD and NVDIMM.  <br> Mutually exclusive with storage_pool_id, storage_pool_name and acceleration_pool_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > acceleration_pool_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Acceleration Pool ID.  <br> Used while adding an acceleration device.  <br> Media type supported are SSD and NVDIMM.  <br> Mutually exclusive with acceleration_pool_name, storage_pool_name and storage_pool_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > protection_domain_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Protection domain name.  <br> Used while identifying a storage pool along with storage_pool_name.  <br> Mutually exclusive with protection_domain_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > protection_domain_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Protection domain ID.  <br> Used while identifying a storage pool along with storage_pool_name.  <br> Mutually exclusive with protection_domain_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > external_acceleration_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>Invalid</li>  <li>None</li>  <li>Read</li>  <li>Write</li>  <li>ReadAndWrite</li> </ul></td>
+            <td> <br> Device external acceleration types.  <br> Used while adding a device. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > media_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>HDD</li>  <li>SSD</li>  <li>NVDIMM</li> </ul></td>
+            <td> <br> Device media types.  <br> Required while adding a device. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the device. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td> <ul> <li>True</li>  <li>False</li> </ul></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                                                    </table>
 
+### Notes
+* The value for device_id is generated only after successful addition of the device.
+* Unique ways to identify a device - (current_pathname , sds_id) or (current_pathname , sds_name) or (device_name , sds_name) or (device_name , sds_id) or device_id.
+* It is recommended to install Rfcache driver for SSD device on SDS in order to add it to an acceleration pool.
+* The check_mode is not supported.
 
-Gather Facts Module
-====================
-
-## Synopsis
-
--   Gathering information about Dell EMC PowerFlex storage system
-    includes Get the API details of a PowerFlex array, Get list of
-    volumes in PowerFlex array, Get list of SDSs in a PowerFlex array,
-    Get list of SDCs in a PowerFlex array, Get list of storage pools in
-    PowerFlex array, Get list of protection domains in a PowerFlex
-    array, Get list of snapshot policies in a PowerFlex array.
-
-## Parameters
-
-<table  border=0 cellpadding=0 class="documentation-table">
-    <tr>
-        <th colspan="2">Parameter</th>
-        <th>Choices/<font color="blue">Defaults</font></th>
-                    <th width="100%">Comments</th>
-    </tr>
-                <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-filters"></div>
-                <b>filters</b>
-                <a class="ansibleOptionLink" href="#parameter-filters" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=list</span>
-                     , <span style="color: purple">elements=dictionary</span>                                            </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>List of filters to support filtered output for storage entities.</div>
-                                        <div>Each filter is a list of filter_key, filter_operator, filter_value.</div>
-                                        <div>Supports passing of multiple filters.</div>
-                                                    </td>
-        </tr>
-                                    <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-filters/filter_key"></div>
-                <b>filter_key</b>
-                <a class="ansibleOptionLink" href="#parameter-filters/filter_key" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Name identifier of the filter.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-filters/filter_operator"></div>
-                <b>filter_operator</b>
-                <a class="ansibleOptionLink" href="#parameter-filters/filter_operator" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>equal</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Operation to be performed on filter key.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-filters/filter_value"></div>
-                <b>filter_value</b>
-                <a class="ansibleOptionLink" href="#parameter-filters/filter_value" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Value of the filter key.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-gather_subset"></div>
-                <b>gather_subset</b>
-                <a class="ansibleOptionLink" href="#parameter-gather_subset" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=list</span>
-                     , <span style="color: purple">elements=string</span>                                            </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>vol</li>
-                                                                                                                                                                                            <li>storage_pool</li>
-                                                                                                                                                                                            <li>protection_domain</li>
-                                                                                                                                                                                            <li>sdc</li>
-                                                                                                                                                                                            <li>sds</li>
-                                                                                                                                                                                            <li>snapshot_policy</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>List of string variables to specify the Powerflex storage system entities for which information is required.</div>
-                                        <div>vol</div>
-                                        <div>storage_pool</div>
-                                        <div>protection_domain</div>
-                                        <div>sdc</div>
-                                        <div>sds</div>
-                                        <div>snapshot_policy</div>
-                                                    </td>
-        </tr>
-                    </table>
-<br/>
-
-## Examples
-
-``` yaml+jinja
-- name: Get detailed list of PowerFlex entities.
-  dellemc_powerflex_gatherfacts:
+### Examples
+```
+- name: Add a device
+  dellemc.powerflex.dellemc_powerflex_device:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
     verifycert: "{{verifycert}}"
-    gather_subset:
-      - vol
-      - storage_pool
-      - protection_domain
-      - sdc
-      - sds
-      - snapshot_policy
-
-- name: Get a subset list of PowerFlex volumes.
-  dellemc_powerflex_gatherfacts:
+    port: "{{port}}"
+    current_pathname: "/dev/sdb"
+    sds_name: "node1"
+    media_type: "HDD"
+    device_name: "device2"
+    storage_pool_name: "pool1"
+    protection_domain_name: "domain1"
+    external_acceleration_type: "ReadAndWrite"
+    state: "present"
+- name: Get device details using device_id
+  dellemc.powerflex.dellemc_powerflex_device:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
     verifycert: "{{verifycert}}"
-    gather_subset:
-      - vol
-    filters:
-      - filter_key: "name"
-        filter_operator: "equal"
-        filter_value: "ansible_test"
+    port: "{{port}}"
+    device_id: "d7fe088900000000"
+    state: "present"
+- name: Get device details using (current_pathname, sds_name)
+  dellemc.powerflex.dellemc_powerflex_device:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    current_pathname: "/dev/sdb"
+    sds_name: "node0"
+    state: "present"
+- name: Get device details using (current_pathname, sds_id)
+  dellemc.powerflex.dellemc_powerflex_device:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    current_pathname: "/dev/sdb"
+    sds_id: "5717d71800000000"
+    state: "present"
+- name: Remove a device using device_id
+  dellemc.powerflex.dellemc_powerflex_device:
+   gateway_host: "{{gateway_host}}"
+   username: "{{username}}"
+   password: "{{password}}"
+   verifycert: "{{verifycert}}"
+   port: "{{port}}"
+   device_id: "76eb7e2f00010000"
+   state: "absent"
+- name: Remove a device using (current_pathname, sds_id)
+  dellemc.powerflex.dellemc_powerflex_device:
+   gateway_host: "{{gateway_host}}"
+   username: "{{username}}"
+   password: "{{password}}"
+   verifycert: "{{verifycert}}"
+   port: "{{port}}"
+   current_pathname: "/dev/sdb"
+   sds_name: "node1"
+   state: "absent"
 ```
 
-## Return Values
-
-<table border=0 cellpadding=0 class="documentation-table">
+### Return Values
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+<table>
     <tr>
-        <th colspan="2">Key</th>
+        <th colspan=3>Key</th>
+        <th>Type</th>
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-API_Version"></div>
-                <b>API_Version</b>
-                <a class="ansibleOptionLink" href="#return-API_Version" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>API version of PowerFlex API Gateway.</div>
-                                    <br/>
-                                </td>
+                                                                                            <tr>
+            <td colspan=3 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=3 > device_details </td>
+            <td>  complex </td>
+            <td> When device exists </td>
+            <td> Details of the device. </td>
         </tr>
                             <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-Array_Details"></div>
-                <b>Array_Details</b>
-                <a class="ansibleOptionLink" href="#return-Array_Details" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=list</span>
-                   , <span style="color: purple">elements=string</span>                    </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>System entities of PowerFlex storage array.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Array_Details/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-Array_Details/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The ID of the system</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Array_Details/installId"></div>
-                <b>installId</b>
-                <a class="ansibleOptionLink" href="#return-Array_Details/installId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>installation Id</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Array_Details/mdmSecurityPolicy"></div>
-                <b>mdmSecurityPolicy</b>
-                <a class="ansibleOptionLink" href="#return-Array_Details/mdmSecurityPolicy" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>mdm security policy</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Array_Details/systemVersionName"></div>
-                <b>systemVersionName</b>
-                <a class="ansibleOptionLink" href="#return-Array_Details/systemVersionName" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>system version and name</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-changed"></div>
-                <b>changed</b>
-                <a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=boolean</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Whether or not the resource has changed</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-Protection_Domains"></div>
-                <b>Protection_Domains</b>
-                <a class="ansibleOptionLink" href="#return-Protection_Domains" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Details of all protection domains</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Protection_Domains/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-Protection_Domains/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>protection domain id</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Protection_Domains/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-Protection_Domains/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>protection domain name</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-SDCs"></div>
-                <b>SDCs</b>
-                <a class="ansibleOptionLink" href="#return-SDCs" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Details of storage data clients</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-SDCs/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-SDCs/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>storage data client id</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-SDCs/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-SDCs/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>storage data client name</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-SDSs"></div>
-                <b>SDSs</b>
-                <a class="ansibleOptionLink" href="#return-SDSs" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Details of storage data servers</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-SDSs/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-SDSs/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>storage data server id</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-SDSs/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-SDSs/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>storage data server name</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-Snapshot_Policies"></div>
-                <b>Snapshot_Policies</b>
-                <a class="ansibleOptionLink" href="#return-Snapshot_Policies" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Details of snapshot policies</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Snapshot_Policies/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-Snapshot_Policies/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>snapshot policy id</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Snapshot_Policies/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-Snapshot_Policies/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>snapshot policy name</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-Storage_Pools"></div>
-                <b>Storage_Pools</b>
-                <a class="ansibleOptionLink" href="#return-Storage_Pools" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Details of storage pools</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Storage_Pools/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-Storage_Pools/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>storage pool id</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Storage_Pools/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-Storage_Pools/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>storage pool name</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-Volumes"></div>
-                <b>Volumes</b>
-                <a class="ansibleOptionLink" href="#return-Volumes" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Details of volumes</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Volumes/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-Volumes/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>volume id</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-Volumes/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-Volumes/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>volume name</div>
-                                    <br/>
-                                </td>
-        </tr>
-                    </table>
-<br/><br/>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > accelerationPoolId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Acceleration pool ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > accelerationPoolName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Acceleration pool name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > accelerationProps </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates acceleration props. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > aggregatedState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates aggregated state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > ataSecurityActive </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates ATA security active state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > autoDetectMediaType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates auto detection of media type. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > cacheLookAheadActive </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates cache look ahead active state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > capacity </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Device capacity. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > capacityLimitInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Device capacity limit in KB. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > deviceCurrentPathName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Device current path name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > deviceOriginalPathName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Device original path name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > deviceState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates device state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > deviceType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates device type. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > errorState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates error state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > externalAccelerationType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates external acceleration type. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > fglNvdimmMetadataAmortizationX100 </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Indicates FGL NVDIMM meta data amortization value. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > fglNvdimmWriteCacheSize </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Indicates FGL NVDIMM write cache size. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > firmwareVersion </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates firmware version. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Device ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > ledSetting </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates LED setting. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > links </td>
+                <td> list </td>
+                <td>success</td>
+                <td> Device links. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > href </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Device instance URL. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > rel </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Relationship of device with different entities. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > logicalSectorSizeInBytes </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Logical sector size in bytes. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > longSuccessfulIos </td>
+                <td> list </td>
+                <td>success</td>
+                <td> Indicates long successful IOs. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > maxCapacityInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Maximum device capacity limit in KB. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > mediaFailing </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates media failing. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > mediaType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates media type. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > modelName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates model name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Device name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > persistentChecksumState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates persistent checksum state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > physicalSectorSizeInBytes </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Physical sector size in bytes. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > protectionDomainId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Protection domain ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Protection domain name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > raidControllerSerialNumber </td>
+                <td> str </td>
+                <td>success</td>
+                <td> RAID controller serial number. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > rfcacheErrorDeviceDoesNotExist </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates RF cache error device does not exist. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > rfcacheProps </td>
+                <td> str </td>
+                <td>success</td>
+                <td> RF cache props. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sdsId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sdsName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > serialNumber </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates Serial number. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > spSdsId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates SPs SDS ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > ssdEndOfLifeState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates SSD end of life state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storagePoolId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Storage Pool ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storagePoolName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Storage Pool name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storageProps </td>
+                <td> list </td>
+                <td>success</td>
+                <td> Storage props. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > temperatureState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates temperature state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > vendorName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates vendor name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > writeCacheActive </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates write cache active. </td>
+            </tr>
+                                        </table>
 
 ### Authors
+* Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
 
--   Arindam Datta (@dattaarindam) &lt;<ansible.team@dell.com>&gt;
+--------------------------------
+# SDC Module
 
+Manage SDCs on Dell EMC PowerFlex
 
-SDC Module
-==============================================
+### Synopsis
+ Managing SDCs on PowerFlex storage system includes getting details of SDC and renaming SDC.
 
-## Synopsis
-
--   Managing SDC's on PowerFlex storage system includes getting details
-    of SDC and renaming SDC.
-
-## Parameters
-
-<table  border=0 cellpadding=0 class="documentation-table">
+### Parameters
+                                                                                                                                                                                                                                                        
+<table>
     <tr>
-        <th colspan="1">Parameter</th>
-        <th>Choices/<font color="blue">Defaults</font></th>
-                    <th width="100%">Comments</th>
+        <th colspan=1>Parameter</th>
+        <th width="20%">Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Choices</th>
+        <th width="80%">Description</th>
     </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc_id"></div>
-                <b>sdc_id</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>ID of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.</div>
-                                        <div>Mutually exclusive with sdc_name and sdc_ip.</div>
-                                                    </td>
+                                                            <tr>
+            <td colspan=1 > sdc_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Name of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.  <br> Mutually exclusive with sdc_id and sdc_ip. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc_ip"></div>
-                <b>sdc_ip</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc_ip" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>IP of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.</div>
-                                        <div>Mutually exclusive with sdc_id and sdc_name.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > sdc_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.  <br> Mutually exclusive with sdc_name and sdc_ip. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc_name"></div>
-                <b>sdc_name</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Name of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.</div>
-                                        <div>Mutually exclusive with sdc_id and sdc_ip.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > sdc_ip</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> IP of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.  <br> Mutually exclusive with sdc_id and sdc_name. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc_new_name"></div>
-                <b>sdc_new_name</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc_new_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>New name of the SDC. Used to rename the SDC.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > sdc_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> New name of the SDC. Used to rename the SDC. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-state"></div>
-                <b>state</b>
-                <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>present</li>
-                                                                                                                                                                                            <li>absent</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>State of the storage pool.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the SDC. </td>
         </tr>
-                    </table>
-<br/>
+                    <tr>
+            <td colspan=1 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td> <ul> <li>True</li>  <li>False</li> </ul></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                                                    </table>
 
-## Examples
+### Notes
+* The check_mode is not supported.
 
-``` yaml+jinja
+### Examples
+```
 - name: Get SDC details using SDC ip
-  dellemc_powerflex_sdc:
+  dellemc.powerflex.dellemc_powerflex_sdc:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -816,7 +781,7 @@ SDC Module
     state: "present"
 
 - name: Rename SDC using SDC name
-  dellemc_powerflex_sdc:
+  dellemc.powerflex.dellemc_powerflex_sdc:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -826,696 +791,380 @@ SDC Module
     state: "present"
 ```
 
-## Return Values
-
-
-<table border=0 cellpadding=0 class="documentation-table">
+### Return Values
+                                                                                                                                                                                                                                                                                                                                                                                                                                    
+<table>
     <tr>
-        <th colspan="3">Key</th>
+        <th colspan=3>Key</th>
+        <th>Type</th>
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                <tr>
-                            <td colspan="3">
-                <div class="ansibleOptionAnchor" id="return-changed"></div>
-                <b>changed</b>
-                <a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=boolean</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Whether or not the resource has changed</div>
-                                    <br/>
-                                </td>
+                                                                                            <tr>
+            <td colspan=3 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=3 > sdc_details </td>
+            <td>  complex </td>
+            <td> When SDC exists </td>
+            <td> Details of the SDC. </td>
         </tr>
                             <tr>
-                            <td colspan="3">
-                <div class="ansibleOptionAnchor" id="return-sdc_details"></div>
-                <b>sdc_details</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>When SDC exists</td>
-            <td>
-                                        <div>Details of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The ID of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/mapped_volumes"></div>
-                <b>mapped_volumes</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/mapped_volumes" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=list</span>
-                   , <span style="color: purple">elements=string</span>                    </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The details of the mapped volumes</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/mapped_volumes/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/mapped_volumes/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The ID of the volume</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/mapped_volumes/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/mapped_volumes/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The name of the volume</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/mapped_volumes/volumeType"></div>
-                <b>volumeType</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/mapped_volumes/volumeType" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Type of the volume</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/osType"></div>
-                <b>osType</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/osType" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>OS type of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/sdcApproved"></div>
-                <b>sdcApproved</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/sdcApproved" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=boolean</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Indicates whether an SDC has approved access to the system</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-sdc_details/sdcIp"></div>
-                <b>sdcIp</b>
-                <a class="ansibleOptionLink" href="#return-sdc_details/sdcIp" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>IP of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                    </table>
-<br/><br/>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the SDC. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > mapped_volumes </td>
+                <td> list </td>
+                <td>success</td>
+                <td> The details of the mapped volumes. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > id </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> The ID of the volume. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > name </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> The name of the volume. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > volumeType </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Type of the volume. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the SDC. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > osType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> OS type of the SDC. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sdcApproved </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates whether an SDC has approved access to the system. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sdcIp </td>
+                <td> str </td>
+                <td>success</td>
+                <td> IP of the SDC. </td>
+            </tr>
+                                        </table>
 
 ### Authors
+* Akash Shendge (@shenda1) <ansible.team@dell.com>
 
--   Akash Shendge (@shenda1) &lt;<ansible.team@dell.com>&gt;
+--------------------------------
+# Volume Module
 
+Manage volumes on Dell EMC PowerFlex
 
-Volume Module
-==========================================
+### Synopsis
+ Managing volumes on PowerFlex storage system includes creating new volume, getting details of volume, adding/removing snapshot policy to/from volume, mapping/unmapping volume to/from SDC, listing snapshots associated with a volume, modifying attributes of volume and deleting volume.
 
-## Synopsis
-
--   Managing volumes on PowerFlex storage system includes creating new
-    volume, getting details of volume, adding/removing snapshot policy
-    to/from volume, mapping/unmapping volume to/from SDC, listing
-    snapshots associated with a volume, modifying attributes of volume
-    and deleting volume.
-
-## Parameters
-
-<table  border=0 cellpadding=0 class="documentation-table">
+### Parameters
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+<table>
     <tr>
-        <th colspan="2">Parameter</th>
-        <th>Choices/<font color="blue">Defaults</font></th>
-                    <th width="100%">Comments</th>
+        <th colspan=2>Parameter</th>
+        <th width="20%">Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Choices</th>
+        <th width="80%">Description</th>
     </tr>
-                <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-allow_multiple_mappings"></div>
-                <b>allow_multiple_mappings</b>
-                <a class="ansibleOptionLink" href="#parameter-allow_multiple_mappings" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=boolean</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                    <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>no</li>
-                                                                                                                                                                                            <li>yes</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Specifies whether to allow multiple mappings or not.</div>
-                                        <div>If the volume is mapped to one SDC then for every new mapping allow_multiple_mappings has to be passed as True.</div>
-                                                    </td>
+                                                            <tr>
+            <td colspan=2 > vol_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the volume.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with vol_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the volume.  <br> Except create operation, all other operations can be performed using vol_id.  <br> Mutually exclusive with vol_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > storage_pool_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> During creation, if storage pool name is provided then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with storage_pool_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > storage_pool_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> Mutually exclusive with storage_pool_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > protection_domain_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > protection_domain_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>THICK_PROVISIONED</li>  <li>THIN_PROVISIONED</li> </ul></td>
+            <td> <br> Type of volume provisioning. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > compression_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>NORMAL</li>  <li>NONE</li> </ul></td>
+            <td> <br> Type of the compression method. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > use_rmcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Whether to use RM Cache or not. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_policy_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Name of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_policy_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> ID of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > auto_snap_remove_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>remove</li>  <li>detach</li> </ul></td>
+            <td> <br> Whether to remove or detach the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type.  <br> If the snapshot policy name/id is passed empty then auto_snap_remove_type is defaulted to 'detach'. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > size</td>
+            <td> int  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The size of the volume.  <br> Size of the volume will be assigned as higher multiple of 8 GB. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > cap_unit</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>GB</li>  <li>TB</li> </ul></td>
+            <td> <br> The unit of the volume size. It defaults to 'GB'. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> New name of the volume. Used to rename the volume. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > allow_multiple_mappings</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies whether to allow multiple mappings or not.  <br> If the volume is mapped to one SDC then for every new mapping allow_multiple_mappings has to be passed as True. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > sdc</td>
+            <td> list   <br> elements: dict </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies SDC parameters. </td>
         </tr>
                             <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-auto_snap_remove_type"></div>
-                <b>auto_snap_remove_type</b>
-                <a class="ansibleOptionLink" href="#parameter-auto_snap_remove_type" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>remove</li>
-                                                                                                                                                                                            <li>detach</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Whether to remove or detach the snapshot policy.</div>
-                                        <div>To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type.</div>
-                                        <div>If the snapshot policy name/id is passed empty then auto_snap_remove_type is defaulted to &#x27;detach&#x27;.</div>
-                                                    </td>
-        </tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > sdc_name </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Name of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > sdc_id </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_name and sdc_ip.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > sdc_ip </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> IP of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > access_mode </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td> <ul> <li>READ_WRITE</li>  <li>READ_ONLY</li>  <li>NO_ACCESS</li> </ul></td>
+                <td>  <br> Define the access mode for all mappings of the volume.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > bandwidth_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit of volume network bandwidth.  <br> Need to mention in multiple of 1024 Kbps.  <br> To set no limit, 0 is to be passed.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > iops_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit of volume IOPS.  <br> Minimum IOPS limit is 11 and specify 0 for unlimited iops.  </td>
+            </tr>
                             <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-cap_unit"></div>
-                <b>cap_unit</b>
-                <a class="ansibleOptionLink" href="#parameter-cap_unit" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>GB</li>
-                                                                                                                                                                                            <li>TB</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>The unit of the volume size. It defaults to &#x27;GB&#x27;.</div>
-                                                    </td>
+            <td colspan=2 > sdc_state</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>mapped</li>  <li>unmapped</li> </ul></td>
+            <td> <br> Mapping state of the SDC. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-compression_type"></div>
-                <b>compression_type</b>
-                <a class="ansibleOptionLink" href="#parameter-compression_type" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>NORMAL</li>
-                                                                                                                                                                                            <li>NONE</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Type of the compression method.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=2 > delete_snapshots</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> If True, the volume and all its dependent snapshots will be deleted.  <br> If False, only the volume will be deleted.  <br> It can be specified only when the state is absent.  <br> It defaults to False, if not specified. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-delete_snapshots"></div>
-                <b>delete_snapshots</b>
-                <a class="ansibleOptionLink" href="#parameter-delete_snapshots" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=boolean</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                    <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>no</li>
-                                                                                                                                                                                            <li>yes</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>If True, the volume and all its dependent snapshots will be deleted.</div>
-                                        <div>If False, only the volume will be deleted.</div>
-                                        <div>delete_snapshots parameter can be specified only when the state is absent.</div>
-                                        <div>delete_snapshots defaults to False.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=2 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the volume. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-protection_domain_id"></div>
-                <b>protection_domain_id</b>
-                <a class="ansibleOptionLink" href="#parameter-protection_domain_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The id of the protection domain.</div>
-                                        <div>While creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.</div>
-                                        <div>protection_domain_name and protection_domain_id are mutually exclusive parameters.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-protection_domain_name"></div>
-                <b>protection_domain_name</b>
-                <a class="ansibleOptionLink" href="#parameter-protection_domain_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The name of the protection domain.</div>
-                                        <div>While creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.</div>
-                                        <div>protection_domain_name and protection_domain_name are mutually exclusive parameters.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=2 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-sdc"></div>
-                <b>sdc</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=list</span>
-                     , <span style="color: purple">elements=dictionary</span>                                            </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Specifies SDC parameters</div>
-                                                    </td>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
         </tr>
-                                    <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/access_mode"></div>
-                <b>access_mode</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/access_mode" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>READ_WRITE</li>
-                                                                                                                                                                                            <li>READ_ONLY</li>
-                                                                                                                                                                                            <li>NO_ACCESS</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Define the access mode for all mappings of the volume.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td> <ul> <li>True</li>  <li>False</li> </ul></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
         </tr>
-                            <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/bandwidth_limit"></div>
-                <b>bandwidth_limit</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/bandwidth_limit" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=integer</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Limit of volume network bandwidth.</div>
-                                        <div>Need to mention in multiple of 1024 Kbps.</div>
-                                        <div>To set no limit, 0 is to be passed.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
         </tr>
-                            <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/iops_limit"></div>
-                <b>iops_limit</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/iops_limit" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=integer</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Limit of volume IOPS.</div>
-                                        <div>Minimum IOPS limit is 11 and specify 0 for unlimited iops.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/sdc_id"></div>
-                <b>sdc_id</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/sdc_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>ID of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip.</div>
-                                        <div>Mutually exclusive with sdc_name and sdc_ip.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/sdc_ip"></div>
-                <b>sdc_ip</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/sdc_ip" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>IP of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip.</div>
-                                        <div>Mutually exclusive with sdc_id and sdc_ip.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/sdc_name"></div>
-                <b>sdc_name</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/sdc_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Name of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip.</div>
-                                        <div>Mutually exclusive with sdc_id and sdc_ip.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-sdc_state"></div>
-                <b>sdc_state</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc_state" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>mapped</li>
-                                                                                                                                                                                            <li>unmapped</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Mapping state of the SDC.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-size"></div>
-                <b>size</b>
-                <a class="ansibleOptionLink" href="#parameter-size" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=integer</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The size of the volume.</div>
-                                        <div>Size of the volume will be assigned as higher multiple of 8 GB.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-snapshot_policy_id"></div>
-                <b>snapshot_policy_id</b>
-                <a class="ansibleOptionLink" href="#parameter-snapshot_policy_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>ID of the snapshot policy.</div>
-                                        <div>To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-snapshot_policy_name"></div>
-                <b>snapshot_policy_name</b>
-                <a class="ansibleOptionLink" href="#parameter-snapshot_policy_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Name of the snapshot policy.</div>
-                                        <div>To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-state"></div>
-                <b>state</b>
-                <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>present</li>
-                                                                                                                                                                                            <li>absent</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>State of the volume.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-storage_pool_id"></div>
-                <b>storage_pool_id</b>
-                <a class="ansibleOptionLink" href="#parameter-storage_pool_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The id of the storage pool.</div>
-                                        <div>Either name or the id of the storage pool is required for creating a volume.</div>
-                                        <div>storage_pool_name and storage_pool_id are mutually exclusive parameters.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-storage_pool_name"></div>
-                <b>storage_pool_name</b>
-                <a class="ansibleOptionLink" href="#parameter-storage_pool_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The name of the storage pool.</div>
-                                        <div>Either name or the id of the storage pool is required for creating a volume.</div>
-                                        <div>During creation, If storage pool name is provided then either protection domain name or id must be mentioned along with it.</div>
-                                        <div>storage_pool_name and storage_pool_id are mutually exclusive parameters.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-use_rmcache"></div>
-                <b>use_rmcache</b>
-                <a class="ansibleOptionLink" href="#parameter-use_rmcache" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=boolean</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                    <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>no</li>
-                                                                                                                                                                                            <li>yes</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Whether to use RM Cache or not.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-vol_id"></div>
-                <b>vol_id</b>
-                <a class="ansibleOptionLink" href="#parameter-vol_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The ID of the volume.</div>
-                                        <div>Except create operation, all other operations can be performed using vol_id.</div>
-                                        <div>vol_name and vol_id are mutually exclusive parameters.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-vol_name"></div>
-                <b>vol_name</b>
-                <a class="ansibleOptionLink" href="#parameter-vol_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The name of the volume.</div>
-                                        <div>Mandatory for create operation.</div>
-                                        <div>vol_name is unique across the PowerFlex array.</div>
-                                        <div>vol_name and vol_id are mutually exclusive parameters.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-vol_new_name"></div>
-                <b>vol_new_name</b>
-                <a class="ansibleOptionLink" href="#parameter-vol_new_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>New name of the volume. Used to rename the volume.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-vol_type"></div>
-                <b>vol_type</b>
-                <a class="ansibleOptionLink" href="#parameter-vol_type" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>THICK_PROVISIONED</li>
-                                                                                                                                                                                            <li>THIN_PROVISIONED</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>The type of volume provisioning.</div>
-                                                    </td>
-        </tr>
-                    </table>
-<br/>
+                                                    </table>
 
-## Examples
+### Notes
+* The check_mode is not supported.
 
-``` yaml+jinja
+### Examples
+```
 - name: Create a volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1531,7 +1180,7 @@ Volume Module
     state: "present"
 
 - name: Map a SDC to volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1546,7 +1195,7 @@ Volume Module
     state: "present"
 
 - name: Unmap a SDC to volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1559,7 +1208,7 @@ Volume Module
     state: "present"
 
 - name: Map multiple SDCs to a volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1572,14 +1221,14 @@ Volume Module
         access_mode: "READ_WRITE"
         bandwidth_limit: 2048
         iops_limit: 20
-      - sdc_ip: "127.0.0.1"
+      - sdc_ip: "198.10.xxx.xxx"
         access_mode: "READ_ONLY"
     allow_multiple_mappings: True
     sdc_state: "mapped"
     state: "present"
 
 - name: Get the details of the volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1589,7 +1238,7 @@ Volume Module
     state: "present"
 
 - name: Modify the details of the Volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1602,7 +1251,7 @@ Volume Module
     state: "present"
 
 - name: Delete the Volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1613,7 +1262,7 @@ Volume Module
     state: "absent"
 
 - name: Delete the Volume and all its dependent snapshots
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1624,740 +1273,1553 @@ Volume Module
     state: "absent"
 ```
 
-## Return Values
-
-<table border=0 cellpadding=0 class="documentation-table">
+### Return Values
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+<table>
     <tr>
-        <th colspan="3">Key</th>
+        <th colspan=3>Key</th>
+        <th>Type</th>
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                <tr>
-                            <td colspan="3">
-                <div class="ansibleOptionAnchor" id="return-changed"></div>
-                <b>changed</b>
-                <a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=boolean</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Whether or not the resource has changed</div>
-                                    <br/>
-                                </td>
+                                                                                            <tr>
+            <td colspan=3 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=3 > volume_details </td>
+            <td>  complex </td>
+            <td> When volume exists </td>
+            <td> Details of the volume. </td>
         </tr>
                             <tr>
-                            <td colspan="3">
-                <div class="ansibleOptionAnchor" id="return-volume_details"></div>
-                <b>volume_details</b>
-                <a class="ansibleOptionLink" href="#return-volume_details" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>When volume exists</td>
-            <td>
-                                        <div>Details of the volume</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The ID of the volume.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/mappedSdcInfo"></div>
-                <b>mappedSdcInfo</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/mappedSdcInfo" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The details of the mapped SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-volume_details/mappedSdcInfo/accessMode"></div>
-                <b>accessMode</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/mappedSdcInfo/accessMode" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>mapping access mode for the specified volume</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-volume_details/mappedSdcInfo/limitBwInMbps"></div>
-                <b>limitBwInMbps</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/mappedSdcInfo/limitBwInMbps" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=integer</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Bandwidth limit for the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-volume_details/mappedSdcInfo/limitIops"></div>
-                <b>limitIops</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/mappedSdcInfo/limitIops" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=integer</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>IOPS limit for the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-volume_details/mappedSdcInfo/sdcId"></div>
-                <b>sdcId</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/mappedSdcInfo/sdcId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>ID of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-volume_details/mappedSdcInfo/sdcIp"></div>
-                <b>sdcIp</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/mappedSdcInfo/sdcIp" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>IP of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-volume_details/mappedSdcInfo/sdcName"></div>
-                <b>sdcName</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/mappedSdcInfo/sdcName" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the volume</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/protectionDomainId"></div>
-                <b>protectionDomainId</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/protectionDomainId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>ID of the protection domain in which volume resides.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/protectionDomainName"></div>
-                <b>protectionDomainName</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/protectionDomainName" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the protection domain in which volume resides.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/sizeInGb"></div>
-                <b>sizeInGb</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/sizeInGb" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=integer</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Size of the volume in Gb.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/sizeInKb"></div>
-                <b>sizeInKb</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/sizeInKb" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=integer</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Size of the volume in Kb.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/snapshotPolicyId"></div>
-                <b>snapshotPolicyId</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/snapshotPolicyId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>ID of the snapshot policy associated with volume.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/snapshotPolicyName"></div>
-                <b>snapshotPolicyName</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/snapshotPolicyName" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the snapshot policy associated with volume.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/snapshotsList"></div>
-                <b>snapshotsList</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/snapshotsList" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>List of snapshots associated with the volume.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/storagePoolId"></div>
-                <b>storagePoolId</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/storagePoolId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>ID of the storage pool in which volume resides.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-volume_details/storagePoolName"></div>
-                <b>storagePoolName</b>
-                <a class="ansibleOptionLink" href="#return-volume_details/storagePoolName" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the storage pool in which volume resides.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                    </table>
-<br/><br/>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > mappedSdcInfo </td>
+                <td> complex </td>
+                <td>success</td>
+                <td> The details of the mapped SDC. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > accessMode </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> mapping access mode for the specified volume. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > limitBwInMbps </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Bandwidth limit for the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > limitIops </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> IOPS limit for the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcId </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> ID of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcIp </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> IP of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcName </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the SDC. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > protectionDomainId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the protection domain in which volume resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the protection domain in which volume resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sizeInGb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the volume in Gb. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sizeInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the volume in Kb. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > snapshotPolicyId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the snapshot policy associated with volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > snapshotPolicyName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the snapshot policy associated with volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > snapshotsList </td>
+                <td> str </td>
+                <td>success</td>
+                <td> List of snapshots associated with the volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storagePoolId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the storage pool in which volume resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storagePoolName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the storage pool in which volume resides. </td>
+            </tr>
+                                        </table>
 
 ### Authors
+* P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>
 
--   P Srinivas Rao (@srinivas-rao5) &lt;<ansible.team@dell.com>&gt;
+--------------------------------
+# SDS Module
 
-# Snapshot Module
+Manage SDS on Dell EMC PowerFlex
 
-## Synopsis
+### Synopsis
+ Managing SDS on PowerFlex storage system includes creating new SDS, getting details of SDS, adding/removing IP to/from SDS, modifying attributes of SDS, and deleting SDS.
 
--   Managing snapshots on PowerFlex Storage System includes creating new
-    snapshot, getting details of snapshot, mapping/unmapping snapshot
-    to/from SDC, modifying attributes of snapshot and deleting snapshot.
-
-## Parameters
-
-<table  border=0 cellpadding=0 class="documentation-table">
+### Parameters
+                                                                                                                                                                                                                                                                                                                                                                                                                                            
+<table>
     <tr>
-        <th colspan="2">Parameter</th>
-        <th>Choices/<font color="blue">Defaults</font></th>
-                    <th width="100%">Comments</th>
+        <th colspan=2>Parameter</th>
+        <th width="20%">Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Choices</th>
+        <th width="80%">Description</th>
     </tr>
-                <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-allow_multiple_mappings"></div>
-                <b>allow_multiple_mappings</b>
-                <a class="ansibleOptionLink" href="#parameter-allow_multiple_mappings" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=boolean</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                    <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>no</li>
-                                                                                                                                                                                            <li>yes</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Specifies whether to allow multiple mappings or not.</div>
-                                                    </td>
+                                                            <tr>
+            <td colspan=2 > sds_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the SDS.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with sds_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > sds_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the SDS.  <br> Except create operation, all other operations can be performed using sds_id.  <br> Mutually exclusive with sds_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > protection_domain_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the protection domain.  <br> Mutually exclusive with protection_domain_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > protection_domain_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the protection domain.  <br> Mutually exclusive with protection_domain_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > sds_ip_list</td>
+            <td> list   <br> elements: dict </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Dictionary of IPs and their roles for the SDS.  <br> At least one IP-role is  mandatory while creating a SDS.  <br> IP-roles can be updated as well. </td>
         </tr>
                             <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-cap_unit"></div>
-                <b>cap_unit</b>
-                <a class="ansibleOptionLink" href="#parameter-cap_unit" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>GB</li>
-                                                                                                                                                                                            <li>TB</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>The unit of the volume size. It defaults to &#x27;GB&#x27;, if not specified.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > ip </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td></td>
+                <td>  <br> IP address of the SDS.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > role </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td> <ul> <li>sdsOnly</li>  <li>sdcOnly</li>  <li>all</li> </ul></td>
+                <td>  <br> Role assigned to the SDS IP address.  </td>
+            </tr>
+                            <tr>
+            <td colspan=2 > sds_ip_state</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>present-in-sds</li>  <li>absent-in-sds</li> </ul></td>
+            <td> <br> State of IP with respect to the SDS. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > rfcache_enabled</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Whether to enable the Read Flash cache. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > rmcache_enabled</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Whether to enable the Read RAM cache. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > rmcache_size</td>
+            <td> int  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Read RAM cache size (in MB).  <br> Minimum size is 128 MB.  <br> Maximum size is 3911 MB. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > sds_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> SDS new name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > performance_profile</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>Compact</li>  <li>HighPerformance</li> </ul></td>
+            <td> <br> Performance profile to apply to the SDS.  <br> The HighPerformance profile configures a predefined set of parameters for very high performance use cases.  <br> Default value by API is "HighPerformance". </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the SDS. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td> <ul> <li>True</li>  <li>False</li> </ul></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                                                    </table>
+
+### Notes
+* The maximum limit for the IPs that can be associated with an SDS is 8.
+* There needs to be at least 1 IP for SDS communication and 1 for SDC communication(if only 1 IP exists, it must be with role 'all'; else 1 IP can be with role 'all'and other IPs with role 'sdcOnly'; or 1 IP must be with role 'sdsOnly' and others with role 'sdcOnly').
+* There can be 1 or more IPs with role 'sdcOnly'.
+* There must be only 1 IP with SDS role (either with role 'all' or 'sdsOnly').
+* SDS can be created with RF cache disabled, but, be aware that the RF cache is not always updated. In this case, the user should re-try the operation.
+* The check_mode is not supported.
+
+### Examples
+```
+- name: Create SDS
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_name: "node0"
+    protection_domain_name: "domain1"
+    sds_ip_list:
+      - ip: "198.10.xxx.xxx"
+        role: "all"
+    sds_ip_state: "present-in-sds"
+    state: "present"
+
+- name: Create SDS with all parameters
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_name: "node1"
+    protection_domain_name: "domain1"
+    sds_ip_list:
+      - ip: "198.10.xxx.xxx"
+        role: "sdcOnly"
+    sds_ip_state: "present-in-sds"
+    rmcache_enabled: true
+    rmcache_size: 128
+    performance_profile: "HighPerformance"
+    state: "present"
+
+- name: Get SDS details using name
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_name: "node0"
+    state: "present"
+
+- name: Get SDS details using ID
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_id: "5718253c00000004"
+    state: "present"
+
+- name: Modify SDS attributes using name
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_name: "node0"
+    sds_new_name: "node0_new"
+    rfcache_enabled: true
+    rmcache_enabled: true
+    rmcache_size: 256
+    performance_profile: "HighPerformance"
+    state: "present"
+
+- name: Modify SDS attributes using ID
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_id: "5718253c00000004"
+    sds_new_name: "node0_new"
+    rfcache_enabled: true
+    rmcache_enabled: true
+    rmcache_size: 256
+    performance_profile: "HighPerformance"
+    state: "present"
+
+- name: Add IP and role to an SDS
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_name: "node0"
+    sds_ip_list:
+      - ip: "198.10.xxx.xxx"
+        role: "sdcOnly"
+    sds_ip_state: "present-in-sds"
+    state: "present"
+
+- name: Remove IP and role from an SDS
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_name: "node0"
+    sds_ip_list:
+      - ip: "198.10.xxx.xxx"
+        role: "sdcOnly"
+    sds_ip_state: "absent-in-sds"
+    state: "present"
+
+- name: Delete SDS using name
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_name: "node0"
+    state: "absent"
+
+- name: Delete SDS using ID
+  dellemc.powerflex.dellemc_powerflex_sds:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    sds_id: "5718253c00000004"
+    state: "absent"
+```
+
+### Return Values
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+<table>
+    <tr>
+        <th colspan=4>Key</th>
+        <th>Type</th>
+        <th>Returned</th>
+        <th width="100%">Description</th>
+    </tr>
+                                                                                            <tr>
+            <td colspan=4 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=4 > sds_details </td>
+            <td>  complex </td>
+            <td> When SDS exists </td>
+            <td> Details of the SDS. </td>
         </tr>
                             <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-desired_retention"></div>
-                <b>desired_retention</b>
-                <a class="ansibleOptionLink" href="#parameter-desired_retention" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=integer</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The retention value for the Snapshot.</div>
-                                        <div>If the desired_retention is not mentioned during creation, snapshot will be created with unlimited retention.</div>
-                                        <div>Maximum supported desired retention is 31 days.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > authenticationError </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates authentication error. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > certificateInfo </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Information about certificate. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > configuredDrlMode </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Configured DRL mode. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > drlMode </td>
+                <td> str </td>
+                <td>success</td>
+                <td> DRL mode. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > faultSetId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Fault set ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > fglMetadataCacheSize </td>
+                <td> int </td>
+                <td>success</td>
+                <td> FGL metadata cache size. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > fglMetadataCacheState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> FGL metadata cache state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > fglNumConcurrentWrites </td>
+                <td> int </td>
+                <td>success</td>
+                <td> FGL concurrent writes. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > ipList </td>
+                <td> list </td>
+                <td>success</td>
+                <td> SDS IP list. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > ip </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> IP present in the SDS. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > role </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Role of the SDS IP. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > lastUpgradeTime </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Last time SDS was upgraded. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > links </td>
+                <td> list </td>
+                <td>success</td>
+                <td> SDS links. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > href </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> SDS instance URL. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > rel </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> SDS's relationship with different entities. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > maintenanceState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Maintenance state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > maintenanceType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Maintenance type. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > mdmConnectionState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> MDM connection state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > membershipState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Membership state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the SDS. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > numOfIoBuffers </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Number of IO buffers. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > numRestarts </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Number of restarts. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > onVmWare </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Presence on VMware. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > perfProfile </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Performance profile. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > port </td>
+                <td> int </td>
+                <td>success</td>
+                <td> SDS port. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > protectionDomainId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Protection Domain ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Protection Domain Name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > raidControllers </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Number of RAID controllers. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rfcacheEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Whether RF cache is enabled or not. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rfcacheErrorApiVersionMismatch </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RF cache error for API version mismatch. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rfcacheErrorDeviceDoesNotExist </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RF cache error for device does not exist. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rfcacheErrorInconsistentCacheConfiguration </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RF cache error for inconsistent cache configuration. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rfcacheErrorInconsistentSourceConfiguration </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RF cache error for inconsistent source configuration. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rfcacheErrorInvalidDriverPath </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RF cache error for invalid driver path. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rfcacheErrorLowResources </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RF cache error for low resources. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rmcacheEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Whether Read RAM cache is enabled or not. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rmcacheFrozen </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RM cache frozen. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rmcacheMemoryAllocationState </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RM cache memory allocation state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rmcacheSizeInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> RM cache size in KB. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rmcacheSizeInMb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> RM cache size in MB. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sdsConfigurationFailure </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS configuration failure. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sdsDecoupled </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS decoupled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sdsReceiveBufferAllocationFailures </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS receive buffer allocation failures. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sdsState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > softwareVersionInfo </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS software version information. </td>
+            </tr>
+                                        </table>
+
+### Authors
+* Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
+
+--------------------------------
+# Gatherfacts Module
+
+Gathering information about Dell EMC PowerFlex
+
+### Synopsis
+ Gathering information about Dell EMC PowerFlex storage system includes get the api details of a PowerFlex array, get list of volumes in PowerFlex array, get list of SDSs in a PowerFlex array, get list of SDCs in a PowerFlex array, get list of storage pools in PowerFlex array, get list of protection domains in a PowerFlex array, get list of snapshot policies in a PowerFlex array, and get list of devices in a PowerFlex array.
+
+### Parameters
+                                                                                                                                                                                                                                    
+<table>
+    <tr>
+        <th colspan=2>Parameter</th>
+        <th width="20%">Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Choices</th>
+        <th width="80%">Description</th>
+    </tr>
+                                                            <tr>
+            <td colspan=2 > gather_subset</td>
+            <td> list   <br> elements: str </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>vol</li>  <li>storage_pool</li>  <li>protection_domain</li>  <li>sdc</li>  <li>sds</li>  <li>snapshot_policy</li>  <li>device</li> </ul></td>
+            <td> <br> List of string variables to specify the Powerflex storage system entities for which information is required.  <br> Volumes - vol.  <br> Storage pools - storage_pool.  <br> Protection domains - protection_domain.  <br> SDCs - sdc.  <br> SDSs - sds.  <br> Snapshot policies - snapshot_policy.  <br> Devices - device. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > filters</td>
+            <td> list   <br> elements: dict </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> List of filters to support filtered output for storage entities.  <br> Each filter is a list of filter_key, filter_operator, filter_value.  <br> Supports passing of multiple filters. </td>
         </tr>
                             <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-read_only"></div>
-                <b>read_only</b>
-                <a class="ansibleOptionLink" href="#parameter-read_only" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=boolean</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                    <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>no</li>
-                                                                                                                                                                                            <li>yes</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Specifies whether mapping of the created snapshot volume will have read-write access or limited to read-only access.</div>
-                                        <div>If true, snapshot is created with read-only access.</div>
-                                        <div>If false, snapshot is created with read-write access.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > filter_key </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td></td>
+                <td>  <br> Name identifier of the filter.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > filter_operator </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td> <ul> <li>equal</li> </ul></td>
+                <td>  <br> Operation to be performed on filter key.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > filter_value </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td></td>
+                <td>  <br> Value of the filter key.  </td>
+            </tr>
+                            <tr>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td> <ul> <li>True</li>  <li>False</li> </ul></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                                                    </table>
+
+### Notes
+* The check_mode is not supported.
+
+### Examples
+```
+ - name: Get detailed list of PowerFlex entities
+   dellemc.powerflex.dellemc_powerflex_gatherfacts:
+     gateway_host: "{{gateway_host}}"
+     username: "{{username}}"
+     password: "{{password}}"
+     verifycert: "{{verifycert}}"
+     gather_subset:
+       - vol
+       - storage_pool
+       - protection_domain
+       - sdc
+       - sds
+       - snapshot_policy
+       - device
+
+ - name: Get a subset list of PowerFlex volumes
+   dellemc.powerflex.dellemc_powerflex_gatherfacts:
+     gateway_host: "{{gateway_host}}"
+     username: "{{username}}"
+     password: "{{password}}"
+     verifycert: "{{verifycert}}"
+     gather_subset:
+       - vol
+     filters:
+       - filter_key: "name"
+         filter_operator: "equal"
+         filter_value: "ansible_test"
+```
+
+### Return Values
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+<table>
+    <tr>
+        <th colspan=2>Key</th>
+        <th>Type</th>
+        <th>Returned</th>
+        <th width="100%">Description</th>
+    </tr>
+                                                                                            <tr>
+            <td colspan=2 > API_Version </td>
+            <td>  str </td>
+            <td> always </td>
+            <td> API version of PowerFlex API Gateway. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > Array_Details </td>
+            <td>  dict </td>
+            <td> always </td>
+            <td> System entities of PowerFlex storage array. </td>
         </tr>
                             <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-remove_mode"></div>
-                <b>remove_mode</b>
-                <a class="ansibleOptionLink" href="#parameter-remove_mode" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>ONLY_ME</li>
-                                                                                                                                                                                            <li>INCLUDING_DESCENDANTS</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Removal mode for the snapshot.</div>
-                                        <div>It defaults to &#x27;ONLY_ME&#x27;, if not specified.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > addressSpaceUsage </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Address space usage. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > authenticationMethod </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Authentication method. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > capacityAlertCriticalThresholdPercent </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Capacity alert critical threshold percentage. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > capacityAlertHighThresholdPercent </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Capacity alert high threshold percentage. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > capacityTimeLeftInDays </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Capacity time left in days. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > cliPasswordAllowed </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> CLI password allowed. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > daysInstalled </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Days installed. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > defragmentationEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Defragmentation enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > enterpriseFeaturesEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enterprise eatures enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the system. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > installId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> installation Id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > isInitialLicense </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Initial license. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > lastUpgradeTime </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Last upgrade time. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > managementClientSecureCommunicationEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Management client secure communication enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > maxCapacityInGb </td>
+                <td> dict </td>
+                <td>success</td>
+                <td> Maximum capacity in GB. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mdmCluster </td>
+                <td> dict </td>
+                <td>success</td>
+                <td> MDM cluster details. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mdmExternalPort </td>
+                <td> int </td>
+                <td>success</td>
+                <td> MDM external port. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mdmManagementPort </td>
+                <td> int </td>
+                <td>success</td>
+                <td> MDM management port. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mdmSecurityPolicy </td>
+                <td> str </td>
+                <td>success</td>
+                <td> MDM security policy. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > showGuid </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Show guid. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > swid </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SWID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > systemVersionName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> System version and name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > tlsVersion </td>
+                <td> str </td>
+                <td>success</td>
+                <td> TLS version. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > upgradeState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Upgrade state. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > Devices </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of devices. </td>
         </tr>
                             <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-retention_unit"></div>
-                <b>retention_unit</b>
-                <a class="ansibleOptionLink" href="#parameter-retention_unit" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>hours</li>
-                                                                                                                                                                                            <li>days</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>The unit for retention. It defaults to &#x27;hours&#x27;, if not specified.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> device id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> device name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > Protection_Domains </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of all protection domains. </td>
         </tr>
                             <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-sdc"></div>
-                <b>sdc</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=list</span>
-                     , <span style="color: purple">elements=dictionary</span>                                            </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Specifies SDC parameters</div>
-                                                    </td>
-        </tr>
-                                    <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/access_mode"></div>
-                <b>access_mode</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/access_mode" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>READ_WRITE</li>
-                                                                                                                                                                                            <li>READ_ONLY</li>
-                                                                                                                                                                                            <li>NO_ACCESS</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Define the access mode for all mappings of the snapshot.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> protection domain id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> protection domain name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > SDCs </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of storage data clients. </td>
         </tr>
                             <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/bandwidth_limit"></div>
-                <b>bandwidth_limit</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/bandwidth_limit" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=integer</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Limit of snapshot network bandwidth.</div>
-                                        <div>Need to mention in multiple of 1024 Kbps.</div>
-                                        <div>To set no limit, 0 is to be passed.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data client id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data client name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > SDSs </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of storage data servers. </td>
         </tr>
                             <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/iops_limit"></div>
-                <b>iops_limit</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/iops_limit" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=integer</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Limit of snapshot IOPS.</div>
-                                        <div>Minimum IOPS limit is 11 and specify 0 for unlimited iops.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data server id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data server name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > Snapshot_Policies </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of snapshot policies. </td>
         </tr>
                             <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/sdc_id"></div>
-                <b>sdc_id</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/sdc_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>ID of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip.</div>
-                                        <div>Mutually exclusive with sdc_name and sdc_ip.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> snapshot policy id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> snapshot policy name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > Storage_Pools </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of storage pools. </td>
         </tr>
                             <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/sdc_ip"></div>
-                <b>sdc_ip</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/sdc_ip" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>IP of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip.</div>
-                                        <div>Mutually exclusive with sdc_id and sdc_ip.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage pool id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage pool name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > Volumes </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of volumes. </td>
         </tr>
                             <tr>
-                                                <td class="elbow-placeholder"></td>
-                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-sdc/sdc_name"></div>
-                <b>sdc_name</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc/sdc_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>Name of the SDC.</div>
-                                        <div>Specify either sdc_name, sdc_id or sdc_ip.</div>
-                                        <div>Mutually exclusive with sdc_id and sdc_ip.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-sdc_state"></div>
-                <b>sdc_state</b>
-                <a class="ansibleOptionLink" href="#parameter-sdc_state" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>mapped</li>
-                                                                                                                                                                                            <li>unmapped</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Mapping state of the SDC.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-size"></div>
-                <b>size</b>
-                <a class="ansibleOptionLink" href="#parameter-size" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=integer</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The size of the snapshot.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-snapshot_id"></div>
-                <b>snapshot_id</b>
-                <a class="ansibleOptionLink" href="#parameter-snapshot_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The ID of the Snapshot.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-snapshot_name"></div>
-                <b>snapshot_name</b>
-                <a class="ansibleOptionLink" href="#parameter-snapshot_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The name of the snapshot.</div>
-                                        <div>Mandatory for create operation.</div>
-                                        <div>Specify either snapshot name or ID (but not both) for any operation.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-snapshot_new_name"></div>
-                <b>snapshot_new_name</b>
-                <a class="ansibleOptionLink" href="#parameter-snapshot_new_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>New name of the snapshot. Used to rename the snapshot.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-state"></div>
-                <b>state</b>
-                <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>present</li>
-                                                                                                                                                                                            <li>absent</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>State of the snapshot.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-vol_id"></div>
-                <b>vol_id</b>
-                <a class="ansibleOptionLink" href="#parameter-vol_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The ID of the volume.</div>
-                                                    </td>
-        </tr>
-                            <tr>
-                                                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="parameter-vol_name"></div>
-                <b>vol_name</b>
-                <a class="ansibleOptionLink" href="#parameter-vol_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The name of the volume for which snapshot will be taken.</div>
-                                        <div>Specify either vol_name or vol_id while creating snapshot.</div>
-                                                    </td>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> volume id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> volume name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
         </tr>
                     </table>
-<br/>
 
-## Examples
+### Authors
+* Arindam Datta (@dattaarindam) <ansible.team@dell.com>
 
-``` yaml+jinja
+--------------------------------
+# Snapshot Module
+
+Manage Snapshots on Dell EMC PowerFlex
+
+### Synopsis
+ Managing snapshots on PowerFlex Storage System includes creating new snapshot, getting details of snapshot, mapping/unmapping snapshot to/from SDC, modifying attributes of snapshot and deleting snapshot.
+
+### Parameters
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+<table>
+    <tr>
+        <th colspan=2>Parameter</th>
+        <th width="20%">Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Choices</th>
+        <th width="80%">Description</th>
+    </tr>
+                                                            <tr>
+            <td colspan=2 > snapshot_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the snapshot.  <br> Mandatory for create operation.  <br> Specify either snapshot name or ID (but not both) for any operation. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the Snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the volume for which snapshot will be taken.  <br> Specify either vol_name or vol_id while creating snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the volume. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > read_only</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies whether mapping of the created snapshot volume will have read-write access or limited to read-only access.  <br> If true, snapshot is created with read-only access.  <br> If false, snapshot is created with read-write access. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > size</td>
+            <td> int  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The size of the snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > cap_unit</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>GB</li>  <li>TB</li> </ul></td>
+            <td> <br> The unit of the volume size. It defaults to 'GB', if not specified.. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> New name of the snapshot. Used to rename the snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > allow_multiple_mappings</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies whether to allow multiple mappings or not. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > desired_retention</td>
+            <td> int  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The retention value for the Snapshot.  <br> If the desired_retention is not mentioned during creation, snapshot will be created with unlimited retention.  <br> Maximum supported desired retention is 31 days. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > retention_unit</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>hours</li>  <li>days</li> </ul></td>
+            <td> <br> The unit for retention. It defaults to 'hours', if not specified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > sdc</td>
+            <td> list   <br> elements: dict </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies SDC parameters. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > sdc_name </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Name of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > sdc_id </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_name and sdc_ip.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > sdc_ip </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> IP of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > access_mode </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td> <ul> <li>READ_WRITE</li>  <li>READ_ONLY</li>  <li>NO_ACCESS</li> </ul></td>
+                <td>  <br> Define the access mode for all mappings of the snapshot.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > bandwidth_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit of snapshot network bandwidth.  <br> Need to mention in multiple of 1024 Kbps.  <br> To set no limit, 0 is to be passed.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > iops_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit of snapshot IOPS.  <br> Minimum IOPS limit is 11 and specify 0 for unlimited iops.  </td>
+            </tr>
+                            <tr>
+            <td colspan=2 > sdc_state</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>mapped</li>  <li>unmapped</li> </ul></td>
+            <td> <br> Mapping state of the SDC. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > remove_mode</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>ONLY_ME</li>  <li>INCLUDING_DESCENDANTS</li> </ul></td>
+            <td> <br> Removal mode for the snapshot.  <br> It defaults to 'ONLY_ME', if not specified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td> <ul> <li>True</li>  <li>False</li> </ul></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                                                    </table>
+
+### Notes
+* The check_mode is not supported.
+
+### Examples
+```
 - name: Create snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2369,7 +2831,7 @@ Volume Module
     state: "present"
 
 - name: Get snapshot details using snapshot id
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2378,28 +2840,28 @@ Volume Module
     state: "present"
 
 - name: Map snapshot to SDC
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
     verifycert: "{{verifycert}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
-        - sdc_ip: "10.247.66.203"
+        - sdc_ip: "198.10.xxx.xxx"
         - sdc_id: "663ac0d200000001"
     allow_multiple_mappings: True
     sdc_state: "mapped"
     state: "present"
 
 - name: Modify the attributes of SDC mapped to snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
     verifycert: "{{verifycert}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
-    - sdc_ip: "10.247.66.203"
+    - sdc_ip: "198.10.xxx.xxx"
       iops_limit: 11
       bandwidth_limit: 4096
     - sdc_id: "663ac0d200000001"
@@ -2410,7 +2872,7 @@ Volume Module
     state: "present"
 
 - name: Extend the size of snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2420,20 +2882,20 @@ Volume Module
     state: "present"
 
 - name: Unmap SDCs from snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
     verifycert: "{{verifycert}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
-      - sdc_ip: "10.247.66.203"
+      - sdc_ip: "198.10.xxx.xxx"
       - sdc_id: "663ac0d200000001"
     sdc_state: "unmapped"
     state: "present"
 
 - name: Rename snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2443,7 +2905,7 @@ Volume Module
     state: "present"
 
 - name: Delete snapshot
-  dellemc_powerflex_snapshot:
+  dellemc.powerflex.dellemc_powerflex_snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2453,464 +2915,305 @@ Volume Module
     state: "absent"
 ```
 
-## Return Values
-
-<table border=0 cellpadding=0 class="documentation-table">
+### Return Values
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+<table>
     <tr>
-        <th colspan="3">Key</th>
+        <th colspan=3>Key</th>
+        <th>Type</th>
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                <tr>
-                            <td colspan="3">
-                <div class="ansibleOptionAnchor" id="return-changed"></div>
-                <b>changed</b>
-                <a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=boolean</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Whether or not the resource has changed</div>
-                                    <br/>
-                                </td>
+                                                                                            <tr>
+            <td colspan=3 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=3 > snapshot_details </td>
+            <td>  complex </td>
+            <td> When snapshot exists </td>
+            <td> Details of the snapshot. </td>
         </tr>
                             <tr>
-                            <td colspan="3">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details"></div>
-                <b>snapshot_details</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>When snapshot exists</td>
-            <td>
-                                        <div>Details of the snapshot</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/ancestorVolumeId"></div>
-                <b>ancestorVolumeId</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/ancestorVolumeId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The of the root of the specified volume&#x27;s V-Tree</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/creationTime"></div>
-                <b>creationTime</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/creationTime" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=integer</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The creation time of the snapshot</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The ID of the snapshot</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/mappedSdcInfo"></div>
-                <b>mappedSdcInfo</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/mappedSdcInfo" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>The details of the mapped SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                                    <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/mappedSdcInfo/accessMode"></div>
-                <b>accessMode</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/mappedSdcInfo/accessMode" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>mapping access mode for the specified snapshot</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/mappedSdcInfo/limitBwInMbps"></div>
-                <b>limitBwInMbps</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/mappedSdcInfo/limitBwInMbps" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=integer</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Bandwidth limit for the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/mappedSdcInfo/limitIops"></div>
-                <b>limitIops</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/mappedSdcInfo/limitIops" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=integer</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>IOPS limit for the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/mappedSdcInfo/sdcId"></div>
-                <b>sdcId</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/mappedSdcInfo/sdcId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>ID of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/mappedSdcInfo/sdcIp"></div>
-                <b>sdcIp</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/mappedSdcInfo/sdcIp" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>IP of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/mappedSdcInfo/sdcName"></div>
-                <b>sdcName</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/mappedSdcInfo/sdcName" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the SDC</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the snapshot</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/sizeInKb"></div>
-                <b>sizeInKb</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/sizeInKb" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=integer</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Size of the snapshot</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-snapshot_details/storagePoolId"></div>
-                <b>storagePoolId</b>
-                <a class="ansibleOptionLink" href="#return-snapshot_details/storagePoolId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Storage pool in which snapshot resides</div>
-                                    <br/>
-                                </td>
-        </tr>
-                    </table>
-<br/><br/>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > ancestorVolumeId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the root of the specified volume's V-Tree. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > ancestorVolumeName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The name of the root of the specified volume's V-Tree. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > creationTime </td>
+                <td> int </td>
+                <td>success</td>
+                <td> The creation time of the snapshot. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the snapshot. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > mappedSdcInfo </td>
+                <td> complex </td>
+                <td>success</td>
+                <td> The details of the mapped SDC. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > accessMode </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> mapping access mode for the specified snapshot. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > limitBwInMbps </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Bandwidth limit for the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > limitIops </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> IOPS limit for the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcId </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> ID of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcIp </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> IP of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcName </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the SDC. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the snapshot. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > retentionInHours </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Retention of the snapshot in hours. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > secureSnapshotExpTime </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Expiry time of the snapshot. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sizeInGb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the snapshot. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sizeInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the snapshot. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storagePoolId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the Storage pool in which snapshot resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storagePoolName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The name of the Storage pool in which snapshot resides. </td>
+            </tr>
+                                        </table>
 
 ### Authors
+* Akash Shendge (@shenda1) <ansible.team@dell.com>
 
--   Akash Shendge (@shenda1) &lt;<ansible.team@dell.com>&gt;
-
+--------------------------------
 # Storage Pool Module
 
-## Synopsis
+Managing Dell EMC PowerFlex storage pool
 
--   Dell EMC PowerFlex storage pool module includes Get the details of
-    storage pool, Create a new storage pool, Modify the attribute of a
-    storage pool.
+### Synopsis
+ Dell EMC PowerFlex storage pool module includes getting the details of storage pool, creating a new storage pool, and modifying the attribute of a storage pool.
 
-## Parameters
-
-<table  border=0 cellpadding=0 class="documentation-table">
+### Parameters
+                                                                                                                                                                                                                                                                                                                                        
+<table>
     <tr>
-        <th colspan="1">Parameter</th>
-        <th>Choices/<font color="blue">Defaults</font></th>
-                    <th width="100%">Comments</th>
+        <th colspan=1>Parameter</th>
+        <th width="20%">Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Choices</th>
+        <th width="80%">Description</th>
     </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-media_type"></div>
-                <b>media_type</b>
-                <a class="ansibleOptionLink" href="#parameter-media_type" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>HDD</li>
-                                                                                                                                                                                            <li>SSD</li>
-                                                                                                                                                                                            <li>TRANSITIONAL</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Type of devices in the storage pool.</div>
-                                                    </td>
+                                                            <tr>
+            <td colspan=1 > storage_pool_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the storage pool.  <br> If more than one storage pool is found with the same name then protection domain id/name is required to perform the task.  <br> Mutually exclusive with storage_pool_id. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-protection_domain_id"></div>
-                <b>protection_domain_id</b>
-                <a class="ansibleOptionLink" href="#parameter-protection_domain_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The id of the protection domain.</div>
-                                        <div>While creation of a pool, either protection domain name or id must be mentioned.</div>
-                                        <div>protection_domain_name and protection_domain_id are mutually exclusive parameters.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > storage_pool_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The id of the storage pool.  <br> It is auto generated, hence should not be provided during creation of a storage pool.  <br> Mutually exclusive with storage_pool_name. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-protection_domain_name"></div>
-                <b>protection_domain_name</b>
-                <a class="ansibleOptionLink" href="#parameter-protection_domain_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The name of the protection domain.</div>
-                                        <div>While creation of a pool, either protection domain name or id must be mentioned.</div>
-                                        <div>protection_domain_name and protection_domain_name are mutually exclusive parameters.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > protection_domain_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the protection domain.  <br> During creation of a pool, either protection domain name or id must be mentioned.  <br> Mutually exclusive with protection_domain_id. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-state"></div>
-                <b>state</b>
-                <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                             , <span style="color: red">required=True</span>                    </div>
-                                                    </td>
-                            <td>
-                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>present</li>
-                                                                                                                                                                                            <li>absent</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>State of the storage pool.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > protection_domain_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The id of the protection domain.  <br> During creation of a pool, either protection domain name or id must be mentioned.  <br> Mutually exclusive with protection_domain_name. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-storage_pool_id"></div>
-                <b>storage_pool_id</b>
-                <a class="ansibleOptionLink" href="#parameter-storage_pool_id" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The id of the storage pool.</div>
-                                        <div>storage_pool_id is auto generated, hence should not be provided during creation of a storage pool.</div>
-                                        <div>storage_pool_name and storage_pool_id are mutually exclusive parameters.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > media_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>HDD</li>  <li>SSD</li>  <li>TRANSITIONAL</li> </ul></td>
+            <td> <br> Type of devices in the storage pool. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-storage_pool_name"></div>
-                <b>storage_pool_name</b>
-                <a class="ansibleOptionLink" href="#parameter-storage_pool_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>The name of the storage pool.</div>
-                                        <div>If more than one storage pool is found with the same name then protection domain id/name is required to perform the task.</div>
-                                        <div>storage_pool_name and storage_pool_id are mutually exclusive parameters.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > storage_pool_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> New name for the storage pool can be provided.  <br> This parameter is used for renaming the storage pool. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-storage_pool_new_name"></div>
-                <b>storage_pool_new_name</b>
-                <a class="ansibleOptionLink" href="#parameter-storage_pool_new_name" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=string</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                        </td>
-                                                            <td>
-                                        <div>New name for the storage pool can be provided.</div>
-                                        <div>This parameter is used for renaming the storage pool.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > use_rfcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Enable/Disable RFcache on a specific storage pool. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-use_rfcache"></div>
-                <b>use_rfcache</b>
-                <a class="ansibleOptionLink" href="#parameter-use_rfcache" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=boolean</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                    <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>no</li>
-                                                                                                                                                                                            <li>yes</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Enable/Disable RFcache on a specific storage pool.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > use_rmcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Enable/Disable RMcache on a specific storage pool. </td>
         </tr>
-                            <tr>
-                                                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="parameter-use_rmcache"></div>
-                <b>use_rmcache</b>
-                <a class="ansibleOptionLink" href="#parameter-use_rmcache" title="Permalink to this option"></a>
-                <div style="font-size: small">
-                    <span style="color: purple">type=boolean</span>
-                                                                </div>
-                                                    </td>
-                            <td>
-                                                                                                                                                                    <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                            <li>no</li>
-                                                                                                                                                                                            <li>yes</li>
-                                                                                </ul>
-                                                                        </td>
-                                                            <td>
-                                        <div>Enable/Disable RMcache on a specific storage pool.</div>
-                                                    </td>
+                    <tr>
+            <td colspan=1 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the storage pool. </td>
         </tr>
-                    </table>
-<br/>
+                    <tr>
+            <td colspan=1 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td> <ul> <li>True</li>  <li>False</li> </ul></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                                                    </table>
 
-## Notes
+### Notes
+* TRANSITIONAL media type is supported only during modification.
+* The check_mode is not supported.
 
-<div class="note">
-
-<div class="title">
-
-</div>
-
-- TRANSITIONAL media type is supported only during modification.
-- The modules prefixed with dellemc\_powerflex are built to support the Dell
-EMC PowerFlex storage platform.
-
-</div>
-
-## Examples
-
-``` yaml+jinja
+### Examples
+```
 - name: Get the details of storage pool by name
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2920,7 +3223,7 @@ EMC PowerFlex storage platform.
     state: "present"
 
 - name: Get the details of storage pool by id
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2929,7 +3232,7 @@ EMC PowerFlex storage platform.
     state: "present"
 
 - name: Create a new storage pool by name
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2940,7 +3243,7 @@ EMC PowerFlex storage platform.
     state: "present"
 
 - name: Modify a storage pool by name
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2952,7 +3255,7 @@ EMC PowerFlex storage platform.
     state: "present"
 
 - name: Rename storage pool by id
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -2962,161 +3265,80 @@ EMC PowerFlex storage platform.
     state: "present"
 ```
 
-## Return Values
-
-
-<table border=0 cellpadding=0 class="documentation-table">
+### Return Values
+                                                                                                                                                                                                                                                                                    
+<table>
     <tr>
-        <th colspan="2">Key</th>
+        <th colspan=2>Key</th>
+        <th>Type</th>
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-changed"></div>
-                <b>changed</b>
-                <a class="ansibleOptionLink" href="#return-changed" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=boolean</span>
-                                      </div>
-                                </td>
-            <td>always</td>
-            <td>
-                                        <div>Whether or not the resource has changed</div>
-                                    <br/>
-                                </td>
+                                                                                            <tr>
+            <td colspan=2 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > storage_pool_details </td>
+            <td>  complex </td>
+            <td> When storage pool exists </td>
+            <td> Details of the storage pool. </td>
         </tr>
                             <tr>
-                            <td colspan="2">
-                <div class="ansibleOptionAnchor" id="return-storage_pool_details"></div>
-                <b>storage_pool_details</b>
-                <a class="ansibleOptionLink" href="#return-storage_pool_details" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">complex</span>
-                                      </div>
-                                </td>
-            <td>When storage pool exists</td>
-            <td>
-                                        <div>Details of the storage pool</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-storage_pool_details/id"></div>
-                <b>id</b>
-                <a class="ansibleOptionLink" href="#return-storage_pool_details/id" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>ID of the storage pool under protection domain.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-storage_pool_details/mediaType"></div>
-                <b>mediaType</b>
-                <a class="ansibleOptionLink" href="#return-storage_pool_details/mediaType" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Type of devices in the storage pool</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-storage_pool_details/name"></div>
-                <b>name</b>
-                <a class="ansibleOptionLink" href="#return-storage_pool_details/name" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the storage pool under protection domain.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-storage_pool_details/protectionDomainId"></div>
-                <b>protectionDomainId</b>
-                <a class="ansibleOptionLink" href="#return-storage_pool_details/protectionDomainId" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>ID of the protection domain in which pool resides.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-storage_pool_details/protectionDomainName"></div>
-                <b>protectionDomainName</b>
-                <a class="ansibleOptionLink" href="#return-storage_pool_details/protectionDomainName" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=string</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Name of the protection domain in which pool resides.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-storage_pool_details/useRfcache"></div>
-                <b>useRfcache</b>
-                <a class="ansibleOptionLink" href="#return-storage_pool_details/useRfcache" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=boolean</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Enable/Disable RFcache on a specific storage pool.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                            <tr>
-                                <td class="elbow-placeholder">&nbsp;</td>
-                            <td colspan="1">
-                <div class="ansibleOptionAnchor" id="return-storage_pool_details/useRmcache"></div>
-                <b>useRmcache</b>
-                <a class="ansibleOptionLink" href="#return-storage_pool_details/useRmcache" title="Permalink to this return value"></a>
-                <div style="font-size: small">
-                  <span style="color: purple">type=boolean</span>
-                                      </div>
-                                </td>
-            <td>success</td>
-            <td>
-                                        <div>Enable/Disable RMcache on a specific storage pool.</div>
-                                    <br/>
-                                </td>
-        </tr>
-                    </table>
-<br/><br/>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the storage pool under protection domain. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mediaType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Type of devices in the storage pool. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the storage pool under protection domain. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > protectionDomainId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the protection domain in which pool resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the protection domain in which pool resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > useRfcache </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enable/Disable RFcache on a specific storage pool. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > useRmcache </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enable/Disable RMcache on a specific storage pool. </td>
+            </tr>
+                                        </table>
 
 ### Authors
+* Arindam Datta (@dattaarindam) <ansible.team@dell.com>
+* P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>
 
--   Arindam Datta (@dattaarindam) &lt;<ansible.team@dell.com>&gt;
--   P Srinivas Rao (@srinivas-rao5) &lt;<ansible.team@dell.com>&gt;
+--------------------------------

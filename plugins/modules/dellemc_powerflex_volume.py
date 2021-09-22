@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Copyright: (c) 2021, Dell EMC
+# Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """ Ansible module for managing volumes on PowerFlex"""
 
@@ -13,7 +14,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = r'''
 module: dellemc_powerflex_volume
 version_added: '1.0.0'
-short_description: Manage volumes on Dell EMC PowerFlex.
+short_description: Manage volumes on Dell EMC PowerFlex
 description:
 - Managing volumes on PowerFlex storage system includes
   creating new volume, getting details of volume, adding/removing snapshot
@@ -29,55 +30,51 @@ options:
     description:
     - The name of the volume.
     - Mandatory for create operation.
-    - vol_name is unique across the PowerFlex array.
-    - vol_name and vol_id are mutually exclusive parameters.
+    - It is unique across the PowerFlex array.
+    - Mutually exclusive with vol_id.
     type: str
   vol_id:
     description:
     - The ID of the volume.
     - Except create operation, all other operations can be performed
       using vol_id.
-    - vol_name and vol_id are mutually exclusive parameters.
+    - Mutually exclusive with vol_id.
     type: str
   storage_pool_name:
     description:
     - The name of the storage pool.
     - Either name or the id of the storage pool is required for creating a
       volume.
-    - During creation, If storage pool name is provided then either
+    - During creation, if storage pool name is provided then either
       protection domain name or id must be mentioned along with it.
-    - storage_pool_name and storage_pool_id are mutually exclusive
-      parameters.
+    - Mutually exclusive with storage_pool_id.
     type: str
   storage_pool_id:
     description:
-    - The id of the storage pool.
+    - The ID of the storage pool.
     - Either name or the id of the storage pool is required for creating
       a volume.
-    - storage_pool_name and storage_pool_id are mutually exclusive
-      parameters.
+    - Mutually exclusive with storage_pool_name.
     type: str
   protection_domain_name:
     description:
     - The name of the protection domain.
-    - While creation of a volume, if more than one storage pool exists with
+    - During creation of a volume, if more than one storage pool exists with
       the same name then either protection domain name or id must be
-       mentioned along with it.
-    - protection_domain_name and protection_domain_name are mutually
-      exclusive parameters.
+      mentioned along with it.
+    - Mutually exclusive with protection_domain_id.
     type: str
   protection_domain_id:
     description:
-    - The id of the protection domain.
-    - While creation of a volume, if more than one storage pool exists with
+    - The ID of the protection domain.
+    - During creation of a volume, if more than one storage pool exists with
       the same name then either protection domain name or id must be
-       mentioned along with it.
-    - protection_domain_name and protection_domain_id are mutually exclusive
-      parameters.
+      mentioned along with it.
+    - Mutually exclusive with protection_domain_name.
     type: str
   vol_type:
     description:
-    - The type of volume provisioning.
+    - Type of volume provisioning.
     choices: ["THICK_PROVISIONED", "THIN_PROVISIONED"]
     type: str
   compression_type:
@@ -135,7 +132,7 @@ options:
     type: bool
   sdc:
     description:
-    - Specifies SDC parameters
+    - Specifies SDC parameters.
     type: list
     elements: dict
     suboptions:
@@ -182,9 +179,8 @@ options:
     description:
     - If True, the volume and all its dependent snapshots will be deleted.
     - If False, only the volume will be deleted.
-    - delete_snapshots parameter can be specified only when the
-      state is absent.
-    - delete_snapshots defaults to False.
+    - It can be specified only when the state is absent.
+    - It defaults to False, if not specified.
     type: bool
   state:
     description:
@@ -192,11 +188,13 @@ options:
     choices: ['present', 'absent']
     required: True
     type: str
+notes:
+  - The check_mode is not supported.
 '''
 
 EXAMPLES = r'''
 - name: Create a volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -212,7 +210,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Map a SDC to volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -227,7 +225,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Unmap a SDC to volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -240,7 +238,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Map multiple SDCs to a volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -253,14 +251,14 @@ EXAMPLES = r'''
         access_mode: "READ_WRITE"
         bandwidth_limit: 2048
         iops_limit: 20
-      - sdc_ip: "127.0.0.1"
+      - sdc_ip: "198.10.xxx.xxx"
         access_mode: "READ_ONLY"
     allow_multiple_mappings: True
     sdc_state: "mapped"
     state: "present"
 
 - name: Get the details of the volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -270,7 +268,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Modify the details of the Volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -283,7 +281,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Delete the Volume
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -294,7 +292,7 @@ EXAMPLES = r'''
     state: "absent"
 
 - name: Delete the Volume and all its dependent snapshots
-  dellemc_powerflex_volume:
+  dellemc.powerflex.dellemc_powerflex_volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -307,86 +305,182 @@ EXAMPLES = r'''
 
 RETURN = r'''
 changed:
-    description: Whether or not the resource has changed
+    description: Whether or not the resource has changed.
     returned: always
     type: bool
+    sample: 'false'
 volume_details:
-    description: Details of the volume
+    description: Details of the volume.
     returned: When volume exists
     type: complex
     contains:
         id:
-            description:
-                - The ID of the volume.
+            description: The ID of the volume.
             type: str
         mappedSdcInfo:
-            description: The details of the mapped SDC
+            description: The details of the mapped SDC.
             type: complex
             contains:
                 sdcId:
-                    description:
-                        - ID of the SDC
+                    description: ID of the SDC.
                     type: str
                 sdcName:
-                    description:
-                        - Name of the SDC
+                    description: Name of the SDC.
                     type: str
                 sdcIp:
-                    description:
-                        - IP of the SDC
+                    description: IP of the SDC.
                     type: str
                 accessMode:
-                    description:
-                        - mapping access mode for the specified volume
+                    description: mapping access mode for the specified volume.
                     type: str
                 limitIops:
-                    description:
-                        - IOPS limit for the SDC
+                    description: IOPS limit for the SDC.
                     type: int
                 limitBwInMbps:
-                    description:
-                        - Bandwidth limit for the SDC
+                    description: Bandwidth limit for the SDC.
                     type: int
         name:
-            description:
-                - Name of the volume
+            description: Name of the volume.
             type: str
         sizeInKb:
-            description:
-                - Size of the volume in Kb.
+            description: Size of the volume in Kb.
             type: int
         sizeInGb:
-            description:
-                - Size of the volume in Gb.
+            description: Size of the volume in Gb.
             type: int
         storagePoolId:
-            description:
-                - ID of the storage pool in which volume resides.
+            description: ID of the storage pool in which volume resides.
             type: str
         storagePoolName:
-            description:
-                - Name of the storage pool in which volume resides.
+            description: Name of the storage pool in which volume resides.
             type: str
         protectionDomainId:
-            description:
-                - ID of the protection domain in which volume resides.
+            description: ID of the protection domain in which volume resides.
             type: str
         protectionDomainName:
-            description:
-                - Name of the protection domain in which volume resides.
+            description: Name of the protection domain in which volume resides.
             type: str
         snapshotPolicyId:
-            description:
-                - ID of the snapshot policy associated with volume.
+            description: ID of the snapshot policy associated with volume.
             type: str
         snapshotPolicyName:
-            description:
-                - Name of the snapshot policy associated with volume.
+            description: Name of the snapshot policy associated with volume.
             type: str
         snapshotsList:
-            description:
-                - List of snapshots associated with the volume.
+            description: List of snapshots associated with the volume.
             type: str
+    sample: {
+        "accessModeLimit": "ReadWrite",
+        "ancestorVolumeId": null,
+        "autoSnapshotGroupId": null,
+        "compressionMethod": "Invalid",
+        "consistencyGroupId": null,
+        "creationTime": 1631618520,
+        "dataLayout": "MediumGranularity",
+        "id": "cdd883cf00000002",
+        "links": [
+            {
+                "href": "/api/instances/Volume::cdd883cf00000002",
+                "rel": "self"
+            },
+            {
+                "href": "/api/instances/Volume::cdd883cf00000002/relationships
+                        /Statistics",
+                "rel": "/api/Volume/relationship/Statistics"
+            },
+            {
+                "href": "/api/instances/VTree::6e86255c00000001",
+                "rel": "/api/parent/relationship/vtreeId"
+            },
+            {
+                "href": "/api/instances/StoragePool::e0d8f6c900000000",
+                "rel": "/api/parent/relationship/storagePoolId"
+            }
+        ],
+        "lockedAutoSnapshot": false,
+        "lockedAutoSnapshotMarkedForRemoval": false,
+        "managedBy": "ScaleIO",
+        "mappedSdcInfo": null,
+        "name": "ansible-volume-1",
+        "notGenuineSnapshot": false,
+        "originalExpiryTime": 0,
+        "pairIds": null,
+        "protectionDomainId": "9300c1f900000000",
+        "protectionDomainName": "domain1",
+        "replicationJournalVolume": false,
+        "replicationTimeStamp": 0,
+        "retentionLevels": [],
+        "secureSnapshotExpTime": 0,
+        "sizeInGB": 16,
+        "sizeInKb": 16777216,
+        "snapshotPolicyId": null,
+        "snapshotPolicyName": null,
+        "snapshotsList": [
+            {
+                "accessModeLimit": "ReadOnly",
+                "ancestorVolumeId": "cdd883cf00000002",
+                "autoSnapshotGroupId": null,
+                "compressionMethod": "Invalid",
+                "consistencyGroupId": "22f1e80c00000001",
+                "creationTime": 1631619229,
+                "dataLayout": "MediumGranularity",
+                "id": "cdd883d000000004",
+                "links": [
+                    {
+                        "href": "/api/instances/Volume::cdd883d000000004",
+                        "rel": "self"
+                    },
+                    {
+                        "href": "/api/instances/Volume::cdd883d000000004
+                                /relationships/Statistics",
+                        "rel": "/api/Volume/relationship/Statistics"
+                    },
+                    {
+                        "href": "/api/instances/Volume::cdd883cf00000002",
+                        "rel": "/api/parent/relationship/ancestorVolumeId"
+                    },
+                    {
+                        "href": "/api/instances/VTree::6e86255c00000001",
+                        "rel": "/api/parent/relationship/vtreeId"
+                    },
+                    {
+                        "href": "/api/instances/StoragePool::e0d8f6c900000000",
+                        "rel": "/api/parent/relationship/storagePoolId"
+                    }
+                ],
+                "lockedAutoSnapshot": false,
+                "lockedAutoSnapshotMarkedForRemoval": false,
+                "managedBy": "ScaleIO",
+                "mappedSdcInfo": null,
+                "name": "ansible_vol_snap_1",
+                "notGenuineSnapshot": false,
+                "originalExpiryTime": 0,
+                "pairIds": null,
+                "replicationJournalVolume": false,
+                "replicationTimeStamp": 0,
+                "retentionLevels": [],
+                "secureSnapshotExpTime": 0,
+                "sizeInKb": 16777216,
+                "snplIdOfAutoSnapshot": null,
+                "snplIdOfSourceVolume": null,
+                "storagePoolId": "e0d8f6c900000000",
+                "timeStampIsAccurate": false,
+                "useRmcache": false,
+                "volumeReplicationState": "UnmarkedForReplication",
+                "volumeType": "Snapshot",
+                "vtreeId": "6e86255c00000001"
+            }
+        ],
+        "snplIdOfAutoSnapshot": null,
+        "snplIdOfSourceVolume": null,
+        "storagePoolId": "e0d8f6c900000000",
+        "storagePoolName": "pool1",
+        "timeStampIsAccurate": false,
+        "useRmcache": false,
+        "volumeReplicationState": "UnmarkedForReplication",
+        "volumeType": "ThinProvisioned",
+        "vtreeId": "6e86255c00000001"
+    }
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -621,7 +715,12 @@ class PowerFlexVolume(object):
             :return: The ID of the SDC
         """
 
-        id_ip_name = sdc_ip if sdc_ip else sdc_name if sdc_name else sdc_id
+        if sdc_name:
+            id_ip_name = sdc_name
+        elif sdc_ip:
+            id_ip_name = sdc_ip
+        else:
+            id_ip_name = sdc_id
 
         try:
             if sdc_name:
@@ -658,12 +757,7 @@ class PowerFlexVolume(object):
         """
         try:
             if vol_name is None or len(vol_name.strip()) == 0:
-                self.module.fail_json(msg="Please provide valid volume "
-                                          "name.")
-
-            if vol_name is None:
-                self.module.fail_json(msg="Please provide valid volume "
-                                          "name.")
+                self.module.fail_json(msg="Please provide valid volume name.")
 
             if not size:
                 self.module.fail_json(msg="Size is a mandatory parameter "
@@ -1025,11 +1119,11 @@ class PowerFlexVolume(object):
             if new_name != vol_details['name']:
                 modify_dict['new_name'] = new_name
 
-        if snap_pol_id is not None and snap_pol_id == "":
-            if auto_snap_remove_type and vol_details['snplIdOfSourceVolume']:
-                modify_dict['auto_snap_remove_type'] = auto_snap_remove_type
-                modify_dict['snap_pol_id'] = \
-                    vol_details['snplIdOfSourceVolume']
+        if snap_pol_id is not None and snap_pol_id == "" and \
+                auto_snap_remove_type and vol_details['snplIdOfSourceVolume']:
+            modify_dict['auto_snap_remove_type'] = auto_snap_remove_type
+            modify_dict['snap_pol_id'] = \
+                vol_details['snplIdOfSourceVolume']
 
         if snap_pol_id is not None and snap_pol_id != "":
             if auto_snap_remove_type and vol_details['snplIdOfSourceVolume']:
