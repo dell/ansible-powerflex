@@ -1,4 +1,5 @@
 # Copyright: (c) 2021, DellEMC
+# Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -22,7 +23,7 @@ try:
 except ImportError:
     HAS_POWERFLEX_SDK = False
 
-'''import pkg_resources'''
+"""importing pkg_resources"""
 try:
     from pkg_resources import parse_version
     import pkg_resources
@@ -31,7 +32,7 @@ try:
 except ImportError:
     PKG_RSRC_IMPORTED = False
 
-'''import dateutil'''
+"""importing dateutil"""
 try:
     import dateutil.relativedelta
     HAS_DATEUTIL = True

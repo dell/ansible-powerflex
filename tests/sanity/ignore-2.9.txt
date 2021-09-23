@@ -1,0 +1,7 @@
+plugins/modules/dellemc_powerflex_device.py validate-modules:missing-gplv3-license
+plugins/modules/dellemc_powerflex_gatherfacts.py validate-modules:missing-gplv3-license
+plugins/modules/dellemc_powerflex_sdc.py validate-modules:missing-gplv3-license
+plugins/modules/dellemc_powerflex_sds.py validate-modules:missing-gplv3-license
+plugins/modules/dellemc_powerflex_snapshot.py validate-modules:missing-gplv3-license
+plugins/modules/dellemc_powerflex_storagepool.py validate-modules:missing-gplv3-license
+plugins/modules/dellemc_powerflex_volume.py validate-modules:missing-gplv3-license

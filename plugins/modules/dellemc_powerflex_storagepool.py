@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Copyright: (c) 2021, Dell EMC
+# Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """Ansible module for managing Dell EMC PowerFlex storage pool"""
 
@@ -16,13 +17,13 @@ module: dellemc_powerflex_storagepool
 
 version_added: '1.0.0'
 
-short_description: Managing Dell EMC PowerFlex storage pool.
+short_description: Managing Dell EMC PowerFlex storage pool
 
 description:
 - Dell EMC PowerFlex storage pool module includes
-  Get the details of storage pool,
-  Create a new storage pool,
-  Modify the attribute of a storage pool.
+  getting the details of storage pool,
+  creating a new storage pool, and
+  modifying the attribute of a storage pool.
 
 extends_documentation_fragment:
   - dellemc.powerflex.dellemc_powerflex.powerflex
@@ -37,32 +38,28 @@ options:
     - The name of the storage pool.
     - If more than one storage pool is found with the same name then
       protection domain id/name is required to perform the task.
-    - storage_pool_name and storage_pool_id are mutually exclusive
-      parameters.
+    - Mutually exclusive with storage_pool_id.
     type: str
   storage_pool_id:
     description:
     - The id of the storage pool.
-    - storage_pool_id is auto generated, hence should not be provided during
+    - It is auto generated, hence should not be provided during
       creation of a storage pool.
-    - storage_pool_name and storage_pool_id are mutually exclusive
-      parameters.
+    - Mutually exclusive with storage_pool_name.
     type: str
   protection_domain_name:
     description:
     - The name of the protection domain.
-    - While creation of a pool, either protection domain name or id must be
+    - During creation of a pool, either protection domain name or id must be
       mentioned.
-    - protection_domain_name and protection_domain_name are mutually
-      exclusive parameters.
+    - Mutually exclusive with protection_domain_id.
     type: str
   protection_domain_id:
     description:
     - The id of the protection domain.
-    - While creation of a pool, either protection domain name or id must
+    - During creation of a pool, either protection domain name or id must
       be mentioned.
-    - protection_domain_name and protection_domain_id are mutually exclusive
-      parameters.
+    - Mutually exclusive with protection_domain_name.
     type: str
   media_type:
     description:
@@ -89,13 +86,14 @@ options:
     choices: ["present", "absent"]
     required: true
 notes:
-- TRANSITIONAL media type is supported only during modification.
+  - TRANSITIONAL media type is supported only during modification.
+  - The check_mode is not supported.
 '''
 
 EXAMPLES = r'''
 
 - name: Get the details of storage pool by name
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -105,7 +103,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Get the details of storage pool by id
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -114,7 +112,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Create a new storage pool by name
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -125,7 +123,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Modify a storage pool by name
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -137,7 +135,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Rename storage pool by id
-  dellemc_powerflex_storagepool:
+  dellemc.powerflex.dellemc_powerflex_storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -150,42 +148,139 @@ EXAMPLES = r'''
 
 RETURN = r'''
 changed:
-    description: Whether or not the resource has changed
+    description: Whether or not the resource has changed.
     returned: always
     type: bool
+    sample: 'false'
 storage_pool_details:
-    description: Details of the storage pool
+    description: Details of the storage pool.
     returned: When storage pool exists
     type: complex
     contains:
         mediaType:
-            description:
-                - Type of devices in the storage pool
+            description: Type of devices in the storage pool.
             type: str
         useRfcache:
-            description:
-                - Enable/Disable RFcache on a specific storage pool.
+            description: Enable/Disable RFcache on a specific storage pool.
             type: bool
         useRmcache:
-            description:
-                - Enable/Disable RMcache on a specific storage pool.
+            description: Enable/Disable RMcache on a specific storage pool.
             type: bool
         id:
-            description:
-                - ID of the storage pool under protection domain.
+            description: ID of the storage pool under protection domain.
             type: str
         name:
-            description:
-                - Name of the storage pool under protection domain.
+            description: Name of the storage pool under protection domain.
             type: str
         protectionDomainId:
-            description:
-                - ID of the protection domain in which pool resides.
+            description: ID of the protection domain in which pool resides.
             type: str
         protectionDomainName:
-            description:
-                - Name of the protection domain in which pool resides.
+            description: Name of the protection domain in which pool resides.
             type: str
+    sample: {
+        "addressSpaceUsage": "Normal",
+        "addressSpaceUsageType": "DeviceCapacityLimit",
+        "backgroundScannerBWLimitKBps": 3072,
+        "backgroundScannerMode": "DataComparison",
+        "bgScannerCompareErrorAction": "ReportAndFix",
+        "bgScannerReadErrorAction": "ReportAndFix",
+        "capacityAlertCriticalThreshold": 90,
+        "capacityAlertHighThreshold": 80,
+        "capacityUsageState": "Normal",
+        "capacityUsageType": "NetCapacity",
+        "checksumEnabled": false,
+        "compressionMethod": "Invalid",
+        "dataLayout": "MediumGranularity",
+        "externalAccelerationType": "None",
+        "fglAccpId": null,
+        "fglExtraCapacity": null,
+        "fglMaxCompressionRatio": null,
+        "fglMetadataSizeXx100": null,
+        "fglNvdimmMetadataAmortizationX100": null,
+        "fglNvdimmWriteCacheSizeInMb": null,
+        "fglOverProvisioningFactor": null,
+        "fglPerfProfile": null,
+        "fglWriteAtomicitySize": null,
+        "fragmentationEnabled": true,
+        "id": "e0d8f6c900000000",
+        "links": [
+            {
+                "href": "/api/instances/StoragePool::e0d8f6c900000000",
+                "rel": "self"
+            },
+            {
+                "href": "/api/instances/StoragePool::e0d8f6c900000000
+                        /relationships/Statistics",
+                "rel": "/api/StoragePool/relationship/Statistics"
+            },
+            {
+                "href": "/api/instances/StoragePool::e0d8f6c900000000
+                        /relationships/SpSds",
+                "rel": "/api/StoragePool/relationship/SpSds"
+            },
+            {
+                "href": "/api/instances/StoragePool::e0d8f6c900000000
+                        /relationships/Volume",
+                "rel": "/api/StoragePool/relationship/Volume"
+            },
+            {
+                "href": "/api/instances/StoragePool::e0d8f6c900000000
+                        /relationships/Device",
+                "rel": "/api/StoragePool/relationship/Device"
+            },
+            {
+                "href": "/api/instances/StoragePool::e0d8f6c900000000
+                        /relationships/VTree",
+                "rel": "/api/StoragePool/relationship/VTree"
+            },
+            {
+                "href": "/api/instances/ProtectionDomain::9300c1f900000000",
+                "rel": "/api/parent/relationship/protectionDomainId"
+            }
+        ],
+        "mediaType": "HDD",
+        "name": "pool1",
+        "numOfParallelRebuildRebalanceJobsPerDevice": 2,
+        "persistentChecksumBuilderLimitKb": 3072,
+        "persistentChecksumEnabled": true,
+        "persistentChecksumState": "Protected",
+        "persistentChecksumValidateOnRead": false,
+        "protectedMaintenanceModeIoPriorityAppBwPerDeviceThresholdInKbps": null,
+        "protectedMaintenanceModeIoPriorityAppIopsPerDeviceThreshold": null,
+        "protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps": 10240,
+        "protectedMaintenanceModeIoPriorityNumOfConcurrentIosPerDevice": 1,
+        "protectedMaintenanceModeIoPriorityPolicy": "limitNumOfConcurrentIos",
+        "protectedMaintenanceModeIoPriorityQuietPeriodInMsec": null,
+        "protectionDomainId": "9300c1f900000000",
+        "protectionDomainName": "domain1",
+        "rebalanceEnabled": true,
+        "rebalanceIoPriorityAppBwPerDeviceThresholdInKbps": null,
+        "rebalanceIoPriorityAppIopsPerDeviceThreshold": null,
+        "rebalanceIoPriorityBwLimitPerDeviceInKbps": 10240,
+        "rebalanceIoPriorityNumOfConcurrentIosPerDevice": 1,
+        "rebalanceIoPriorityPolicy": "favorAppIos",
+        "rebalanceIoPriorityQuietPeriodInMsec": null,
+        "rebuildEnabled": true,
+        "rebuildIoPriorityAppBwPerDeviceThresholdInKbps": null,
+        "rebuildIoPriorityAppIopsPerDeviceThreshold": null,
+        "rebuildIoPriorityBwLimitPerDeviceInKbps": 10240,
+        "rebuildIoPriorityNumOfConcurrentIosPerDevice": 1,
+        "rebuildIoPriorityPolicy": "limitNumOfConcurrentIos",
+        "rebuildIoPriorityQuietPeriodInMsec": null,
+        "replicationCapacityMaxRatio": 32,
+        "rmcacheWriteHandlingMode": "Cached",
+        "sparePercentage": 10,
+        "useRfcache": false,
+        "useRmcache": false,
+        "vtreeMigrationIoPriorityAppBwPerDeviceThresholdInKbps": null,
+        "vtreeMigrationIoPriorityAppIopsPerDeviceThreshold": null,
+        "vtreeMigrationIoPriorityBwLimitPerDeviceInKbps": 10240,
+        "vtreeMigrationIoPriorityNumOfConcurrentIosPerDevice": 1,
+        "vtreeMigrationIoPriorityPolicy": "favorAppIos",
+        "vtreeMigrationIoPriorityQuietPeriodInMsec": null,
+        "zeroPaddingEnabled": true
+    }
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -245,10 +340,8 @@ class PowerFlexStoragePool(object):
             filter_fields = {}
             if protection_domain_id:
                 filter_fields = {'id': protection_domain_id}
-            elif protection_domain_name:
+            if protection_domain_name:
                 filter_fields = {'name': protection_domain_name}
-            else:
-                pass
 
             pd_details = self.powerflex_conn.protection_domain.get(
                 filter_fields=filter_fields)
