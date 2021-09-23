@@ -2,20 +2,23 @@
 
 The Ansible Modules for Dell EMC PowerFlex allow Data Center and IT administrators to use RedHat Ansible to automate and orchestrate the provisioning and management of Dell EMC PowerFlex storage systems.
 
-The capabilities of the Ansible modules are managing SDCs, volumes, snapshots and storage pools; and to gather high level facts from the storage system. The options available for each are list, show, create, modify and delete. These tasks can be executed by running simple playbooks written in yaml syntax. The modules are written so that all the operations are idempotent, so making multiple identical requests has the same effect as making a single request.
+The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, storage pools, SDSs and devices; and to gather high level facts from the storage system. The options available are list, show, create, modify and delete. These tasks can be executed by running simple playbooks written in yaml syntax. The modules are written so that all the operations are idempotent, so making multiple identical requests has the same effect as making a single request.
+
+## License
+Ansible collection for PowerFlex is released and licensed under the GPL-3.0 license. See [LICENSE](LICENSE) for the full terms. Ansible modules and modules utilities that are part of the Ansible collection for PowerFlex are released and licensed under the Apache 2.0 license. See [MODULE-LICENSE](MODULE-LICENSE) for the full terms.
 
 ## Support
-Ansible modules for PowerFlex are supported by Dell EMC and are provided under the terms of the license attached to the source code. Dell EMC does not provide support for any source code modifications. For any Ansible module issues, questions or feedback, join the [Dell EMC Automation community](https://www.dell.com/community/Automation/bd-p/Automation).
+Ansible collection for PowerFlex are supported by Dell EMC and are provided under the terms of the license attached to the collection. Please see the [LICENSE](#license) section for the full terms. Dell EMC does not provide any support for the source code modifications. For any Ansible modules issues, questions or feedback, join the [Dell EMC Automation Community](https://www.dell.com/community/Automation/bd-p/Automation).
 
-## Supported Platforms
-  * Dell EMC PowerFlex (VxFlex OS) version 3.5
 
 ## Prerequisites
-  * Ansible 2.9 or later
-  * Python 3.5 or later
-  * Red Hat Enterprise Linux 7.6, 7.7, 7.8, 8.2
-  * PyPowerFlex python library for PowerFlex 1.1.0
 
+| **Ansible Modules** | **PowerFlex/VxFlex OS Version** | **Red Hat Enterprise Linux**| **SDK version**| **Python version** | **Ansible** |
+|---------------------|-----------------------|------------------------------|--------------------|--------------------|-------------|
+| v1.1.0 | 3.5, <br> 3.6 |7.8, <br>8.2 | 1.2.0 | 3.6.x <br> 3.7.x <br> 3.8.x | 2.9 <br> 2.10 <br> 2.11 | 
+
+  * Please follow PyPowerFlex installation instructions on [PyPowerFlex Documentation](https://github.com/dell/python-powerflex)
+  
 ## Idempotency
 The modules are written in such a way that all requests are idempotent and hence fault-tolerant. It essentially means that the result of a successfully performed request is independent of the number of times it is executed.
 
@@ -25,6 +28,8 @@ The modules are written in such a way that all requests are idempotent and hence
   * SDC module
   * Storage pool module
   * Volume module
+  * SDS module
+  * Device Module
 
 ## Installation of SDK
 Install python sdk named 'PyPowerFlex'. It can be installed using pip, based on appropriate python version.
@@ -37,10 +42,25 @@ Install python sdk named 'PyPowerFlex'. It can be installed using pip, based on 
   
         pip install .
 
+## Building Collections
+  * Use the following command to build the collection from source code:
+
+        ansible-galaxy collection build
+
+   For more details on how to build a tar ball, please refer: [Building the collection](https://docs.ansible.com/ansible/latest/dev_guide/developing_collections_distributing.html#building-your-collection-tarball)
+
 ## Installing Collections
-  * Download the tar build and execute the following command to install the collection anywhere in your system:
+
+#### Online Installation of Collections
+  * Use the following command to install the latest collection hosted in [galaxy portal](https://galaxy.ansible.com/dellemc/powerflex):
+
+        ansible-galaxy collection install dellemc.powerflex -p <install_path>
+
+#### Offline Installation of Collections
+
+  * Download the latest tar build from any of the available distribution channel [Ansible Galaxy](https://galaxy.ansible.com/dellemc/powerflex) /[Automation Hub](https://console.redhat.com/ansible/automation-hub/repo/published/dellemc/powerflex) and use the following command to install the collection anywhere in your system:
  
-        ansible-galaxy collection install dellemc-powerflex-1.0.0.tar.gz -p <install_path>
+        ansible-galaxy collection install dellemc-powerflex-1.1.0.tar.gz -p <install_path>
 
   * Set the environment variable:
   
@@ -54,13 +74,18 @@ Install python sdk named 'PyPowerFlex'. It can be installed using pip, based on 
         collections:
         - dellemc.powerflex
 
+  * In order to use installed collection in a specific task use a proper FQCN(Fully Qualified Collection Name). Refer to the following example:
+
+        tasks:
+        - name: Get Volume details
+          dellemc.powerflex.dellemc_powerflex_volume
     
   * For generating Ansible documentation for a specific module, embed the FQCN  before the module name. Refer to the following example:
         
         ansible-doc dellemc.powerflex.dellemc_powerflex_gatherfacts
 
 ## Running Ansible Modules
-The Ansible server must be configured with Python library for PowerFlex to run the Ansible playbooks. The [Documents]( https://github.com/dell/ansible-powerflex/tree/1.0.0/docs ) provide information on different Ansible modules along with their functions and syntax. The parameters table in the Product Guide provides information on various parameters which needs to be configured before running the modules.
+The Ansible server must be configured with Python library for PowerFlex to run the Ansible playbooks. The [Documents]( https://github.com/dell/ansible-powerflex/tree/1.1.0/docs ) provide information on different Ansible modules along with their functions and syntax. The parameters table in the Product Guide provides information on various parameters which needs to be configured before running the modules.
 
 ## SSL Certificate Validation
 

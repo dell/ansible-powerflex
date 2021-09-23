@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Copyright: (c) 2021, Dell EMC
+# Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """Ansible module for Gathering information about Dell EMC PowerFlex"""
 
@@ -16,17 +17,18 @@ module: dellemc_powerflex_gatherfacts
 
 version_added: '1.0.0'
 
-short_description: Gathering information about Dell EMC PowerFlex.
+short_description: Gathering information about Dell EMC PowerFlex
 
 description:
 - Gathering information about Dell EMC PowerFlex storage system includes
-  Get the api details of a PowerFlex array,
-  Get list of volumes in PowerFlex array,
-  Get list of SDSs in a PowerFlex array,
-  Get list of SDCs in a PowerFlex array,
-  Get list of storage pools in PowerFlex array,
-  Get list of protection domains in a PowerFlex array,
-  Get list of snapshot policies in a PowerFlex array.
+  get the api details of a PowerFlex array,
+  get list of volumes in PowerFlex array,
+  get list of SDSs in a PowerFlex array,
+  get list of SDCs in a PowerFlex array,
+  get list of storage pools in PowerFlex array,
+  get list of protection domains in a PowerFlex array,
+  get list of snapshot policies in a PowerFlex array, and
+  get list of devices in a PowerFlex array.
 
 extends_documentation_fragment:
   - dellemc.powerflex.dellemc_powerflex.powerflex
@@ -37,15 +39,17 @@ author:
 options:
   gather_subset:
     description:
-    - List of string variables to specify the Powerflex storage system entities
-      for which information is required.
-    - vol
-    - storage_pool
-    - protection_domain
-    - sdc
-    - sds
-    - snapshot_policy
-    choices: [vol, storage_pool, protection_domain, sdc, sds, snapshot_policy]
+    - List of string variables to specify the Powerflex storage system
+      entities for which information is required.
+    - Volumes - vol.
+    - Storage pools - storage_pool.
+    - Protection domains - protection_domain.
+    - SDCs - sdc.
+    - SDSs - sds.
+    - Snapshot policies - snapshot_policy.
+    - Devices - device.
+    choices: [vol, storage_pool, protection_domain, sdc, sds,
+             snapshot_policy, device]
     type: list
     elements: str
   filters:
@@ -53,7 +57,6 @@ options:
     - List of filters to support filtered output for storage entities.
     - Each filter is a list of filter_key, filter_operator, filter_value.
     - Supports passing of multiple filters.
-    required: False
     type: list
     elements: dict
     suboptions:
@@ -73,11 +76,13 @@ options:
         - Value of the filter key.
         type: str
         required: True
+notes:
+  - The check_mode is not supported.
 '''
 
 EXAMPLES = r'''
- - name: Get detailed list of PowerFlex entities.
-   dellemc_powerflex_gatherfacts:
+ - name: Get detailed list of PowerFlex entities
+   dellemc.powerflex.dellemc_powerflex_gatherfacts:
      gateway_host: "{{gateway_host}}"
      username: "{{username}}"
      password: "{{password}}"
@@ -89,9 +94,10 @@ EXAMPLES = r'''
        - sdc
        - sds
        - snapshot_policy
+       - device
 
- - name: Get a subset list of PowerFlex volumes.
-   dellemc_powerflex_gatherfacts:
+ - name: Get a subset list of PowerFlex volumes
+   dellemc.powerflex.dellemc_powerflex_gatherfacts:
      gateway_host: "{{gateway_host}}"
      username: "{{username}}"
      password: "{{password}}"
@@ -106,112 +112,331 @@ EXAMPLES = r'''
 
 RETURN = r'''
 changed:
-    description: Whether or not the resource has changed
+    description: Whether or not the resource has changed.
     returned: always
     type: bool
+    sample: 'false'
 Array_Details:
     description: System entities of PowerFlex storage array.
     returned: always
-    type: list
+    type: dict
     contains:
-        id:
-            description:
-                - The ID of the system
+        addressSpaceUsage:
+            description: Address space usage.
             type: str
-        systemVersionName:
-            description:
-                - system version and name
+        authenticationMethod:
+            description: Authentication method.
+            type: str
+        capacityAlertCriticalThresholdPercent:
+            description: Capacity alert critical threshold percentage.
+            type: int
+        capacityAlertHighThresholdPercent:
+            description: Capacity alert high threshold percentage.
+            type: int
+        capacityTimeLeftInDays:
+            description: Capacity time left in days.
+            type: str
+        cliPasswordAllowed:
+            description: CLI password allowed.
+            type: bool
+        daysInstalled:
+            description: Days installed.
+            type: int
+        defragmentationEnabled:
+            description: Defragmentation enabled.
+            type: bool
+        enterpriseFeaturesEnabled:
+            description: Enterprise eatures enabled.
+            type: bool
+        id:
+            description: The ID of the system.
             type: str
         installId:
-            description:
-                - installation Id
+            description: installation Id.
             type: str
+        isInitialLicense:
+            description: Initial license.
+            type: bool
+        lastUpgradeTime:
+            description: Last upgrade time.
+            type: int
+        managementClientSecureCommunicationEnabled:
+            description: Management client secure communication enabled.
+            type: bool
+        maxCapacityInGb:
+            description: Maximum capacity in GB.
+            type: dict
+        mdmCluster:
+            description: MDM cluster details.
+            type: dict
+        mdmExternalPort:
+            description: MDM external port.
+            type: int
+        mdmManagementPort:
+            description: MDM management port.
+            type: int
         mdmSecurityPolicy:
-            description:
-                - mdm security policy
+            description: MDM security policy.
             type: str
+        showGuid:
+            description: Show guid.
+            type: bool
+        swid:
+            description: SWID.
+            type: str
+        systemVersionName:
+            description: System version and name.
+            type: str
+        tlsVersion:
+            description: TLS version.
+            type: str
+        upgradeState:
+            description: Upgrade state.
+            type: str
+    sample: {
+        "addressSpaceUsage": "Normal",
+        "authenticationMethod": "Native",
+        "capacityAlertCriticalThresholdPercent": 90,
+        "capacityAlertHighThresholdPercent": 80,
+        "capacityTimeLeftInDays": "24",
+        "cliPasswordAllowed": true,
+        "daysInstalled": 66,
+        "defragmentationEnabled": true,
+        "enterpriseFeaturesEnabled": true,
+        "id": "4a54a8ba6df0690f",
+        "installId": "38622771228e56db",
+        "isInitialLicense": true,
+        "lastUpgradeTime": 0,
+        "managementClientSecureCommunicationEnabled": true,
+        "maxCapacityInGb": "Unlimited",
+        "mdmCluster": {
+            "clusterMode": "ThreeNodes",
+            "clusterState": "ClusteredNormal",
+            "goodNodesNum": 3,
+            "goodReplicasNum": 2,
+            "id": "5356091375512217871",
+            "master": {
+                "id": "6101582c2ca8db00",
+                "ips": [
+                    "10.47.xxx.xxx"
+                ],
+                "managementIPs": [
+                    "10.47.xxx.xxx"
+                ],
+                "name": "node0",
+                "opensslVersion": "OpenSSL 1.0.2k-fips  26 Jan 2017",
+                "port": 9011,
+                "role": "Manager",
+                "status": "Normal",
+                "versionInfo": "R3_6.0.0",
+                "virtualInterfaces": [
+                    "ens160"
+                ]
+            },
+            "slaves": [
+                {
+                    "id": "23fb724015661901",
+                    "ips": [
+                        "10.47.xxx.xxx"
+                    ],
+                    "managementIPs": [
+                        "10.47.xxx.xxx"
+                    ],
+                    "opensslVersion": "OpenSSL 1.0.2k-fips  26 Jan 2017",
+                    "port": 9011,
+                    "role": "Manager",
+                    "status": "Normal",
+                    "versionInfo": "R3_6.0.0",
+                    "virtualInterfaces": [
+                        "ens160"
+                    ]
+                }
+            ],
+            "tieBreakers": [
+                {
+                    "id": "6ef27eb20d0c1202",
+                    "ips": [
+                        "10.47.xxx.xxx"
+                    ],
+                    "managementIPs": [
+                        "10.47.xxx.xxx"
+                    ],
+                    "opensslVersion": "N/A",
+                    "port": 9011,
+                    "role": "TieBreaker",
+                    "status": "Normal",
+                    "versionInfo": "R3_6.0.0"
+                }
+            ]
+        },
+        "mdmExternalPort": 7611,
+        "mdmManagementPort": 6611,
+        "mdmSecurityPolicy": "None",
+        "showGuid": true,
+        "swid": "",
+        "systemVersionName": "DellEMC PowerFlex Version: R3_6.0.354",
+        "tlsVersion": "TLSv1.2",
+        "upgradeState": "NoUpgrade"
+    }
 API_Version:
     description: API version of PowerFlex API Gateway.
     returned: always
     type: str
+    sample: "3.5"
 Protection_Domains:
-    description: Details of all protection domains
+    description: Details of all protection domains.
     returned: always
-    type: complex
+    type: list
     contains:
         id:
-            description:
-                - protection domain id
+            description: protection domain id.
             type: str
         name:
-            description:
-                - protection domain name
+            description: protection domain name.
             type: str
+    sample: [
+        {
+            "id": "9300e90900000001",
+            "name": "domain2"
+        },
+        {
+            "id": "9300c1f900000000",
+            "name": "domain1"
+        }
+    ]
 SDCs:
-    description: Details of storage data clients
+    description: Details of storage data clients.
     returned: always
-    type: complex
+    type: list
     contains:
         id:
-            description:
-                - storage data client id
+            description: storage data client id.
             type: str
         name:
-            description:
-                - storage data client name
+            description: storage data client name.
             type: str
+    sample: [
+        {
+            "id": "07335d3d00000006",
+            "name": "LGLAP203"
+        },
+        {
+            "id": "07335d3c00000005",
+            "name": "LGLAP178"
+        },
+        {
+            "id": "0733844a00000003"
+        }
+    ]
 SDSs:
-    description: Details of storage data servers
+    description: Details of storage data servers.
     returned: always
-    type: complex
+    type: list
     contains:
         id:
-            description:
-                - storage data server id
+            description: storage data server id.
             type: str
         name:
-            description:
-                - storage data server name
+            description: storage data server name.
             type: str
+    sample: [
+        {
+            "id": "8f3bb0cc00000002",
+            "name": "node0"
+        },
+        {
+            "id": "8f3bb0ce00000000",
+            "name": "node1"
+        },
+        {
+            "id": "8f3bb15300000001",
+            "name": "node22"
+        }
+    ]
 Snapshot_Policies:
-    description: Details of snapshot policies
+    description: Details of snapshot policies.
     returned: always
-    type: complex
+    type: list
     contains:
         id:
-            description:
-                - snapshot policy id
+            description: snapshot policy id.
             type: str
         name:
-            description:
-                - snapshot policy name
+            description: snapshot policy name.
             type: str
+    sample: [
+        {
+            "id": "2b380c5c00000000",
+            "name": "sample_snap_policy"
+        },
+        {
+            "id": "2b380c5d00000001",
+            "name": "sample_snap_policy_1"
+        }
+    ]
 Storage_Pools:
-    description: Details of storage pools
+    description: Details of storage pools.
     returned: always
-    type: complex
+    type: list
     contains:
         id:
-            description:
-                - storage pool id
+            description: storage pool id.
             type: str
         name:
-            description:
-                - storage pool name
+            description: storage pool name.
             type: str
+    sample: [
+        {
+            "id": "e0d8f6c900000000",
+            "name": "pool1"
+        },
+        {
+            "id": "e0d96c1f00000002",
+            "name": "pool1"
+        }
+    ]
 Volumes:
-    description: Details of volumes
+    description: Details of volumes.
     returned: always
-    type: complex
+    type: list
     contains:
         id:
-            description:
-                - volume id
+            description: volume id.
             type: str
         name:
-            description:
-                - volume name
+            description: volume name.
             type: str
+    sample: [
+        {
+            "id": "cdd883cf00000002",
+            "name": "ansible-volume-1"
+        }
+    ]
+Devices:
+    description: Details of devices.
+    returned: always
+    type: list
+    contains:
+        id:
+            description: device id.
+            type: str
+        name:
+            description: device name.
+            type: str
+    sample:  [
+        {
+            "id": "b6efa59900000000",
+            "name": "device230"
+        },
+        {
+            "id": "b6efa5fa00020000",
+            "name": "device_node0"
+        },
+        {
+            "id": "b7f3a60900010000",
+            "name": "device22"
+        }
+    ]
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -283,9 +508,9 @@ class PowerFlexGatherfacts(object):
                            'isInitialLicense', 'lastUpgradeTime',
                            'managementClientSecureCommunicationEnabled',
                            'maxCapacityInGb', 'mdmCluster',
-                           'mdmExternalPort', 'mdmManagementPort', 'mdmSecurityPolicy',
-                           'showGuid', 'swid', 'systemVersionName',
-                           'tlsVersion', 'upgradeState']
+                           'mdmExternalPort', 'mdmManagementPort',
+                           'mdmSecurityPolicy', 'showGuid', 'swid',
+                           'systemVersionName', 'tlsVersion', 'upgradeState']
 
             sys_list = self.powerflex_conn.system.get()
             sys_details_list = []
@@ -340,7 +565,8 @@ class PowerFlexGatherfacts(object):
             self.module.fail_json(msg=msg)
 
     def get_pd_list(self, filter_dict=None):
-        """ Get the list of Protection Domains on a given PowerFlex storage system """
+        """ Get the list of Protection Domains on a given PowerFlex
+            storage system """
 
         try:
             LOG.info('Getting protection domain list ')
@@ -352,13 +578,14 @@ class PowerFlexGatherfacts(object):
             return result_list(pd)
 
         except Exception as e:
-            msg = 'Get protection domain list from powerflex array failed with' \
-                  ' error %s' % (str(e))
+            msg = 'Get protection domain list from powerflex array failed ' \
+                  'with error %s' % (str(e))
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
     def get_storage_pool_list(self, filter_dict=None):
-        """ Get the list of storage pools on a given PowerFlex storage system """
+        """ Get the list of storage pools on a given PowerFlex storage
+            system """
 
         try:
             LOG.info('Getting storage pool list ')
@@ -409,8 +636,27 @@ class PowerFlexGatherfacts(object):
             return result_list(snapshot_schedules)
 
         except Exception as e:
-            msg = 'Get snapshot schedules list from powerflex array failed with' \
-                  ' error %s' % (str(e))
+            msg = 'Get snapshot schedules list from powerflex array failed ' \
+                  'with error %s' % (str(e))
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
+    def get_devices_list(self, filter_dict=None):
+        """ Get the list of devices on a given PowerFlex storage
+            system """
+
+        try:
+            LOG.info('Getting device list ')
+            if filter_dict:
+                devices = self.powerflex_conn.device.get(filter_fields=filter_dict)
+            else:
+                devices = self.powerflex_conn.device.get()
+
+            return result_list(devices)
+
+        except Exception as e:
+            msg = 'Get device list from powerflex array failed ' \
+                  'with error %s' % (str(e))
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
@@ -478,6 +724,7 @@ class PowerFlexGatherfacts(object):
         vol = []
         snapshot_policy = []
         protection_domain = []
+        device = []
 
         subset = self.module.params['gather_subset']
         if subset is not None:
@@ -493,6 +740,8 @@ class PowerFlexGatherfacts(object):
                 vol = self.get_volumes_list(filter_dict=filter_dict)
             if 'snapshot_policy' in subset:
                 snapshot_policy = self.get_snapshot_policy_list(filter_dict=filter_dict)
+            if 'device' in subset:
+                device = self.get_devices_list(filter_dict=filter_dict)
 
         self.module.exit_json(
             Array_Details=array_details,
@@ -502,7 +751,8 @@ class PowerFlexGatherfacts(object):
             Storage_Pools=storage_pool,
             Volumes=vol,
             Snapshot_Policies=snapshot_policy,
-            Protection_Domains=protection_domain
+            Protection_Domains=protection_domain,
+            Devices=device
         )
 
 
@@ -533,7 +783,7 @@ def get_powerflex_gatherfacts_parameters():
         gather_subset=dict(type='list', required=False, elements='str',
                            choices=['vol', 'storage_pool',
                                     'protection_domain', 'sdc', 'sds',
-                                    'snapshot_policy']),
+                                    'snapshot_policy', 'device']),
         filters=dict(type='list', required=False, elements='dict',
                      options=dict(filter_key=dict(type='str', required=True),
                                   filter_operator=dict(

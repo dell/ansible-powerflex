@@ -1,6 +1,6 @@
 **Ansible Modules for Dell EMC PowerFlex** 
 =========================================
-### Release Notes 1.0
+### Release Notes 1.1.0
 
 >   © 2021 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   EMC, and other trademarks are trademarks of Dell Inc. or its
@@ -23,60 +23,45 @@ Product Description
 -------------------
 
 The Ansible Modules for Dell EMC PowerFlex are used for managing volumes,
-storage pools, SDCs, and snapshots for PowerFlex storage devices. 
+storage pools, SDCs, snapshots, SDSs and devices for PowerFlex storage devices. 
 The modules use playbooks to list, show, create, delete, and modify
 each of the entities.
 
 The Ansible Modules for Dell EMC PowerFlex supports the following
 features:
 
--   Create volumes, storage pools and snapshots. 
--   Modify volumes, storage pools, SDCs and snapshots.
--   Delete volumes and snapshots.
--   Get details of a volumes, snapshots, SDCs and storage pool.
+-   Create volumes, storage pools, snapshots, SDSs.
+-   Add devices.
+-   Modify volumes, storage pools, SDCs, snapshots and SDSs.
+-   Delete volumes, snapshots and SDSs.
+-   Get details of a volumes, snapshots, SDCs, storage pools, SDSs and devices.
 -   Get entities of the PowerFlex storage device.
+-   Remove devices.
 
 New Features
 ---------------------------
 
-The Ansible Modules for Dell EMC PowerFlex release 1.0 supports the
+The Ansible Modules for Dell EMC PowerFlex release 1.1.0 supports the
 following features:
 
 - The following are the features of the gatherfacts module:
-   - Get the API details of a PowerFlex storage device.
-   - Get the list of SDCs.
-   - Get the list of SDSs.
-   - Get the list of volumes.
-   - Get the list of snapshots.
-   - Get the list of storage pools.
-   - Get list of protection domains.
-   - Get list of snapshot policies.
+   - Get list of devices.
 
-- The following are the features of the volume module:
-   - Get the details of a volume.
-   - Create a volume.
-   - Modify details of a volume.
-   - Delete a volume.
+- The following are the features of the SDS module:
+   - Get the details of an SDS.
+   - Create an SDS.
+   - Modify details of an SDS.
+   - Delete an SDS.
 
-- The following are the features of the snapshot module:
-   - Get the details of a snapshot.
-   - Create a snapshot.
-   - Modify details of a snapshot.
-   - Delete a snapshot.
-
-- The following are the features of the storage pools module:
-   - Get the details of a storage pool.
-   - Create a storage pool.
-   - Modify details of a storage pool.
-
-- The following are the features of the SDCs module:
-   - Get the details of the SDC.
-   - Rename a SDC.
-
+- The following are the features of the device module:
+   - Get the details of a device.
+   - Add a device.
+   - Remove a device.
+  
 
 Known issues
 ------------
-There are no known issues.
+- Setting the RF cache and performance profile of the SDS during its creation fails intermittently on PowerFlex version 3.5 
 
 Limitations
 -----------
