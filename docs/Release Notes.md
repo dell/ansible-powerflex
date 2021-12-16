@@ -1,6 +1,6 @@
 **Ansible Modules for Dell EMC PowerFlex** 
 =========================================
-### Release Notes 1.1.0
+### Release Notes 1.1.1
 
 >   © 2021 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   EMC, and other trademarks are trademarks of Dell Inc. or its
@@ -12,12 +12,12 @@ Contents
 These release notes contain supplemental information about Ansible
 Modules for Dell EMC PowerFlex.
 
--   Product Description
--   New Features
--   Known issues
--   Limitations
--   Distribution
--   Documentation
+-   [Product Description](#product-description)
+-   [New Features](#new-features)
+-   [Known issues](#known-issues)
+-   [Limitations](#limitations)
+-   [Distribution](#distribution)
+-   [Documentation](#documentation)
 
 Product Description
 -------------------
@@ -40,24 +40,8 @@ features:
 
 New Features
 ---------------------------
-
-The Ansible Modules for Dell EMC PowerFlex release 1.1.0 supports the
-following features:
-
-- The following are the features of the gatherfacts module:
-   - Get list of devices.
-
-- The following are the features of the SDS module:
-   - Get the details of an SDS.
-   - Create an SDS.
-   - Modify details of an SDS.
-   - Delete an SDS.
-
-- The following are the features of the device module:
-   - Get the details of a device.
-   - Add a device.
-   - Remove a device.
-  
+- The Product Guide, Release Notes and ReadMe have been updated to adhere to the guidelines by the ansible community.
+- "gatherfacts" module has been renamed to "info" module.
 
 Known issues
 ------------
@@ -70,11 +54,11 @@ There are no known limitations.
 Distribution
 ------------
 The software package is available for download from the [Ansible Modules
-for PowerFlex GitHub](https://github.com/dell/ansible-powerflex) page.
+for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.1.1) page.
 
 Documentation
 -------------
-The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex)
+The documentation is available on [Ansible Modules for PowerFlex GitHub](../docs)
 page. It includes the following:
 
    - README
