@@ -7,13 +7,10 @@
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
 
 DOCUMENTATION = r'''
 ---
-module: dellemc_powerflex_gatherfacts
+module: info
 
 version_added: '1.0.0'
 
@@ -82,7 +79,7 @@ notes:
 
 EXAMPLES = r'''
  - name: Get detailed list of PowerFlex entities
-   dellemc.powerflex.dellemc_powerflex_gatherfacts:
+   dellemc.powerflex.info:
      gateway_host: "{{gateway_host}}"
      username: "{{username}}"
      password: "{{password}}"
@@ -97,7 +94,7 @@ EXAMPLES = r'''
        - device
 
  - name: Get a subset list of PowerFlex volumes
-   dellemc.powerflex.dellemc_powerflex_gatherfacts:
+   dellemc.powerflex.info:
      gateway_host: "{{gateway_host}}"
      username: "{{username}}"
      password: "{{password}}"
@@ -443,13 +440,13 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import dellemc_ansible_powerflex_utils as utils
 
-LOG = utils.get_logger('dellemc_powerflex_gatherfacts')
+LOG = utils.get_logger('info')
 
 MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
 
 
-class PowerFlexGatherfacts(object):
-    """Class with Gatherfacts operations"""
+class PowerFlexInfo(object):
+    """Class with Info operations"""
 
     filter_mapping = {'equal': 'eq.'}
 
@@ -457,7 +454,7 @@ class PowerFlexGatherfacts(object):
         """ Define all parameters required by this module"""
 
         self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_gatherfacts_parameters())
+        self.module_params.update(get_powerflex_info_parameters())
 
         self.filter_keys = sorted(
             [k for k in self.module_params['filters']['options'].keys()
@@ -670,8 +667,8 @@ class PowerFlexGatherfacts(object):
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
-        is_invalid_filter = any([filter_dict[i] is None for i in filter_dict])
-        if is_invalid_filter:
+        is_invalid_filter = [filter_dict[i] is None for i in filter_dict]
+        if True in is_invalid_filter:
             msg = "Filter keys: '{0}' cannot be None".format(self.filter_keys)
             LOG.error(msg)
             self.module.fail_json(msg=msg)
@@ -707,7 +704,7 @@ class PowerFlexGatherfacts(object):
         return filter_dict
 
     def perform_module_operation(self):
-        """ Perform different actions on Gatherfacts based on user input
+        """ Perform different actions on info based on user input
             in the playbook """
 
         filters = self.module.params['filters']
@@ -776,16 +773,16 @@ def result_list(entity):
         return None
 
 
-def get_powerflex_gatherfacts_parameters():
+def get_powerflex_info_parameters():
     """This method provides parameters required for the ansible
-    gatherfacts module on powerflex"""
+    info module on powerflex"""
     return dict(
         gather_subset=dict(type='list', required=False, elements='str',
                            choices=['vol', 'storage_pool',
                                     'protection_domain', 'sdc', 'sds',
                                     'snapshot_policy', 'device']),
         filters=dict(type='list', required=False, elements='dict',
-                     options=dict(filter_key=dict(type='str', required=True),
+                     options=dict(filter_key=dict(type='str', required=True, no_log=False),
                                   filter_operator=dict(
                                       type='str', required=True,
                                       choices=['equal']),
@@ -794,9 +791,9 @@ def get_powerflex_gatherfacts_parameters():
 
 
 def main():
-    """ Create PowerFlex Gatherfacts object and perform action on it
+    """ Create PowerFlex info object and perform action on it
         based on user input from playbook"""
-    obj = PowerFlexGatherfacts()
+    obj = PowerFlexInfo()
     obj.perform_module_operation()
 
 

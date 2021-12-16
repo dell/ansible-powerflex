@@ -1,5 +1,9 @@
 # ansible-powerflex Change Log
 
+## Version 1.1.1 - released on 16/12/21
+- Gatherfacts has been renamed to Info.
+- Product Guide, Release Notes and ReadMe updated as per community guidelines.
+
 ## Version 1.1.0 - released on 28/09/21
 - Added dual licensing.
 - Added CRUD operations for SDS and device.

@@ -54,7 +54,7 @@ notes:
             default: 443
     requirements:
       - A Dell EMC PowerFlex storage system version 3.5 and later.
-      - Ansible 2.9 or later.
+      - Ansible 2.10, 2.11 or 2.12
     notes:
       - The modules prefixed with dellemc_powerflex are built to support the
         Dell EMC PowerFlex storage platform.
