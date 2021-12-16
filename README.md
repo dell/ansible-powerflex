@@ -15,7 +15,7 @@ Ansible collection for PowerFlex are supported by Dell EMC and are provided unde
 
 | **Ansible Modules** | **PowerFlex/VxFlex OS Version** | **Red Hat Enterprise Linux**| **SDK version**| **Python version** | **Ansible** |
 |---------------------|-----------------------|------------------------------|--------------------|--------------------|-------------|
-| v1.1.0 | 3.5, <br> 3.6 |7.8, <br>8.2 | 1.2.0 | 3.6.x <br> 3.7.x <br> 3.8.x | 2.9 <br> 2.10 <br> 2.11 | 
+| v1.1.1 | 3.5, <br> 3.6 |7.8, <br>8.2 | 1.2.0 | 3.7.x <br> 3.8.x <br> 3.9.x | 2.10 <br> 2.11 <br> 2.12 |
 
   * Please follow PyPowerFlex installation instructions on [PyPowerFlex Documentation](https://github.com/dell/python-powerflex)
   
@@ -23,13 +23,13 @@ Ansible collection for PowerFlex are supported by Dell EMC and are provided unde
 The modules are written in such a way that all requests are idempotent and hence fault-tolerant. It essentially means that the result of a successfully performed request is independent of the number of times it is executed.
 
 ## List of Ansible Modules for Dell EMC PowerFlex
-  * Gather facts module
-  * Snapshot module
-  * SDC module
-  * Storage pool module
-  * Volume module
-  * SDS module
-  * Device Module
+  * [Info module](docs/Product%20Guide.md#info-module)
+  * [Snapshot module](docs/Product%20Guide.md#snapshot-module)
+  * [SDC module](docs/Product%20Guide.md#sdc-module)
+  * [Storage pool module](docs/Product%20Guide.md#storage-pool-module)
+  * [Volume module](docs/Product%20Guide.md#volume-module)
+  * [SDS module](docs/Product%20Guide.md#sds-module)
+  * [Device Module](docs/Product%20Guide.md#device-module)
 
 ## Installation of SDK
 Install python sdk named 'PyPowerFlex'. It can be installed using pip, based on appropriate python version.
@@ -60,7 +60,7 @@ Install python sdk named 'PyPowerFlex'. It can be installed using pip, based on 
 
   * Download the latest tar build from any of the available distribution channel [Ansible Galaxy](https://galaxy.ansible.com/dellemc/powerflex) /[Automation Hub](https://console.redhat.com/ansible/automation-hub/repo/published/dellemc/powerflex) and use the following command to install the collection anywhere in your system:
  
-        ansible-galaxy collection install dellemc-powerflex-1.1.0.tar.gz -p <install_path>
+        ansible-galaxy collection install dellemc-powerflex-1.1.1.tar.gz -p <install_path>
 
   * Set the environment variable:
   
@@ -82,10 +82,10 @@ Install python sdk named 'PyPowerFlex'. It can be installed using pip, based on 
     
   * For generating Ansible documentation for a specific module, embed the FQCN  before the module name. Refer to the following example:
         
-        ansible-doc dellemc.powerflex.dellemc_powerflex_gatherfacts
+        ansible-doc dellemc.powerflex.dellemc_powerflex_volume
 
 ## Running Ansible Modules
-The Ansible server must be configured with Python library for PowerFlex to run the Ansible playbooks. The [Documents]( https://github.com/dell/ansible-powerflex/tree/1.1.0/docs ) provide information on different Ansible modules along with their functions and syntax. The parameters table in the Product Guide provides information on various parameters which needs to be configured before running the modules.
+The Ansible server must be configured with Python library for PowerFlex to run the Ansible playbooks. The [Documents](docs) provide information on different Ansible modules along with their functions and syntax. The parameters table in the Product Guide provides information on various parameters which needs to be configured before running the modules.
 
 ## SSL Certificate Validation
 
