@@ -1,2 +1,8 @@
----
-requires_ansible: ">=2.9"
+requires_ansible: ">=2.10"
+plugin_routing:
+    modules:
+        dellemc_powerflex_gatherfacts:
+            redirect: dellemc.powerflex.info
+            deprecation:
+                removal_date: 2022-03-31
+                warning_text: Use info module instead.
