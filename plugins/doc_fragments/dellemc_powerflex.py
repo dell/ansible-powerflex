@@ -44,7 +44,6 @@ notes:
             - True - Indicates that the SSL certificate should be verified.
             - False - Indicates that the SSL certificate should not be
               verified.
-            choices: [True, False]
         port:
             description:
             - Port number through which communication happens with PowerFlex
