@@ -73,8 +73,7 @@ def get_powerflex_gateway_host_parameters():
         gateway_host=dict(type='str', required=True),
         username=dict(type='str', required=True),
         password=dict(type='str', required=True, no_log=True),
-        verifycert=dict(choices=[True, False], type='bool', required=False,
-                        default=True),
+        verifycert=dict(type='bool', required=False, default=True),
         port=dict(type='int', required=False, default=443)
     )
 
