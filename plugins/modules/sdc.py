@@ -9,7 +9,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = r'''
-module: dellemc_powerflex_sdc
+module: sdc
 version_added: '1.0.0'
 short_description: Manage SDCs on Dell EMC PowerFlex
 description:
@@ -57,7 +57,7 @@ notes:
 
 EXAMPLES = r'''
 - name: Get SDC details using SDC ip
-  dellemc.powerflex.dellemc_powerflex_sdc:
+  dellemc.powerflex.sdc:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -66,7 +66,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Rename SDC using SDC name
-  dellemc.powerflex.dellemc_powerflex_sdc:
+  dellemc.powerflex.sdc:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -167,7 +167,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import dellemc_ansible_powerflex_utils as utils
 
-LOG = utils.get_logger('dellemc_powerflex_sdc')
+LOG = utils.get_logger('sdc')
 
 MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
 

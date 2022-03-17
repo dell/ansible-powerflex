@@ -9,15 +9,15 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = r'''
-module: dellemc_powerflex_volume
+module: volume
 version_added: '1.0.0'
 short_description: Manage volumes on Dell EMC PowerFlex
 description:
 - Managing volumes on PowerFlex storage system includes
-  creating new volume, getting details of volume, adding/removing snapshot
-  policy to/from volume, mapping/unmapping volume to/from SDC, listing
-   snapshots associated with a volume, modifying attributes of volume
-   and deleting volume.
+  creating, getting details, modifying attributes and deleting volume.
+- It also includes adding/removing snapshot policy,
+  mapping/unmapping volume to/from SDC and listing
+  associated snapshots.
 author:
 - P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>
 extends_documentation_fragment:
@@ -191,7 +191,7 @@ notes:
 
 EXAMPLES = r'''
 - name: Create a volume
-  dellemc.powerflex.dellemc_powerflex_volume:
+  dellemc.powerflex.volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -207,7 +207,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Map a SDC to volume
-  dellemc.powerflex.dellemc_powerflex_volume:
+  dellemc.powerflex.volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -222,7 +222,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Unmap a SDC to volume
-  dellemc.powerflex.dellemc_powerflex_volume:
+  dellemc.powerflex.volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -235,7 +235,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Map multiple SDCs to a volume
-  dellemc.powerflex.dellemc_powerflex_volume:
+  dellemc.powerflex.volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -255,7 +255,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Get the details of the volume
-  dellemc.powerflex.dellemc_powerflex_volume:
+  dellemc.powerflex.volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -265,7 +265,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Modify the details of the Volume
-  dellemc.powerflex.dellemc_powerflex_volume:
+  dellemc.powerflex.volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -278,7 +278,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Delete the Volume
-  dellemc.powerflex.dellemc_powerflex_volume:
+  dellemc.powerflex.volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -289,7 +289,7 @@ EXAMPLES = r'''
     state: "absent"
 
 - name: Delete the Volume and all its dependent snapshots
-  dellemc.powerflex.dellemc_powerflex_volume:
+  dellemc.powerflex.volume:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -485,7 +485,7 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import dellemc_ansible_powerflex_utils as utils
 import copy
 
-LOG = utils.get_logger('dellemc_powerflex_volume')
+LOG = utils.get_logger('volume')
 
 MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
 

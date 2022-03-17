@@ -18,14 +18,8 @@ short_description: Gathering information about Dell EMC PowerFlex
 
 description:
 - Gathering information about Dell EMC PowerFlex storage system includes
-  get the api details of a PowerFlex array,
-  get list of volumes in PowerFlex array,
-  get list of SDSs in a PowerFlex array,
-  get list of SDCs in a PowerFlex array,
-  get list of storage pools in PowerFlex array,
-  get list of protection domains in a PowerFlex array,
-  get list of snapshot policies in a PowerFlex array, and
-  get list of devices in a PowerFlex array.
+  getting the api details, list of volumes, SDSs, SDCs, storage pools,
+  protection domains, snapshot policies, and devices.
 
 extends_documentation_fragment:
   - dellemc.powerflex.dellemc_powerflex.powerflex
