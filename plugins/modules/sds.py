@@ -9,7 +9,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = r'''
-module: dellemc_powerflex_sds
+module: sds
 version_added: '1.1.0'
 short_description: Manage SDS on Dell EMC PowerFlex
 description:
@@ -104,9 +104,10 @@ options:
 notes:
   - The maximum limit for the IPs that can be associated with an SDS is 8.
   - There needs to be at least 1 IP for SDS communication and 1 for SDC
-    communication(if only 1 IP exists, it must be with role 'all'; else 1 IP
+    communication.
+  - If only 1 IP exists, it must be with role 'all'; else 1 IP
     can be with role 'all'and other IPs with role 'sdcOnly'; or 1 IP must be
-    with role 'sdsOnly' and others with role 'sdcOnly').
+    with role 'sdsOnly' and others with role 'sdcOnly'.
   - There can be 1 or more IPs with role 'sdcOnly'.
   - There must be only 1 IP with SDS role (either with role 'all' or
     'sdsOnly').
@@ -117,7 +118,7 @@ notes:
 
 EXAMPLES = r'''
 - name: Create SDS
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -132,7 +133,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Create SDS with all parameters
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -150,7 +151,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Get SDS details using name
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -160,7 +161,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Get SDS details using ID
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -170,7 +171,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Modify SDS attributes using name
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -185,7 +186,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Modify SDS attributes using ID
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -200,7 +201,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Add IP and role to an SDS
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -214,7 +215,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Remove IP and role from an SDS
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -228,7 +229,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Delete SDS using name
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -238,7 +239,7 @@ EXAMPLES = r'''
     state: "absent"
 
 - name: Delete SDS using ID
-  dellemc.powerflex.dellemc_powerflex_sds:
+  dellemc.powerflex.sds:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -479,7 +480,7 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import dellemc_ansible_powerflex_utils as utils
 import copy
 
-LOG = utils.get_logger('dellemc_powerflex_sds')
+LOG = utils.get_logger('sds')
 
 MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
 

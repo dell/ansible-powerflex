@@ -51,10 +51,17 @@ notes:
             type: int
             required: False
             default: 443
+        timeout:
+            description:
+            - Time after which connection will get terminated.
+            - It is to be mentioned in seconds.
+            type: int
+            required: False
+            default: 120
     requirements:
       - A Dell EMC PowerFlex storage system version 3.5 and later.
       - Ansible 2.10, 2.11 or 2.12
     notes:
-      - The modules prefixed with dellemc_powerflex are built to support the
-        Dell EMC PowerFlex storage platform.
+      - The modules present in the collection named as 'dellemc.powerflex'
+        are built to support the Dell EMC PowerFlex storage platform.
 '''
