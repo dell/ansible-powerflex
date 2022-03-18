@@ -9,7 +9,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = r'''
-module: dellemc_powerflex_device
+module: device
 version_added: '1.1.0'
 short_description: Manage device on Dell EMC PowerFlex
 description:
@@ -121,7 +121,7 @@ notes:
 
 EXAMPLES = r'''
 - name: Add a device
-  dellemc.powerflex.dellemc_powerflex_device:
+  dellemc.powerflex.device:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -136,7 +136,7 @@ EXAMPLES = r'''
     external_acceleration_type: "ReadAndWrite"
     state: "present"
 - name: Get device details using device_id
-  dellemc.powerflex.dellemc_powerflex_device:
+  dellemc.powerflex.device:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -145,7 +145,7 @@ EXAMPLES = r'''
     device_id: "d7fe088900000000"
     state: "present"
 - name: Get device details using (current_pathname, sds_name)
-  dellemc.powerflex.dellemc_powerflex_device:
+  dellemc.powerflex.device:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -155,7 +155,7 @@ EXAMPLES = r'''
     sds_name: "node0"
     state: "present"
 - name: Get device details using (current_pathname, sds_id)
-  dellemc.powerflex.dellemc_powerflex_device:
+  dellemc.powerflex.device:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -165,7 +165,7 @@ EXAMPLES = r'''
     sds_id: "5717d71800000000"
     state: "present"
 - name: Remove a device using device_id
-  dellemc.powerflex.dellemc_powerflex_device:
+  dellemc.powerflex.device:
    gateway_host: "{{gateway_host}}"
    username: "{{username}}"
    password: "{{password}}"
@@ -174,7 +174,7 @@ EXAMPLES = r'''
    device_id: "76eb7e2f00010000"
    state: "absent"
 - name: Remove a device using (current_pathname, sds_id)
-  dellemc.powerflex.dellemc_powerflex_device:
+  dellemc.powerflex.device:
    gateway_host: "{{gateway_host}}"
    username: "{{username}}"
    password: "{{password}}"
@@ -427,7 +427,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import dellemc_ansible_powerflex_utils as utils
 
-LOG = utils.get_logger('dellemc_powerflex_device')
+LOG = utils.get_logger('device')
 
 MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
 

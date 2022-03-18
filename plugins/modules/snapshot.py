@@ -9,14 +9,13 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 DOCUMENTATION = r'''
-module: dellemc_powerflex_snapshot
+module: snapshot
 version_added: '1.0.0'
 short_description: Manage Snapshots on Dell EMC PowerFlex
 description:
 - Managing snapshots on PowerFlex Storage System includes
-  creating new snapshot, getting details of snapshot,
-  mapping/unmapping snapshot to/from SDC, modifying attributes of snapshot
-  and deleting snapshot.
+  creating, getting details, mapping/unmapping to/from SDC,
+  modifying the attributes and deleting snapshot.
 
 author:
 - Akash Shendge (@shenda1) <ansible.team@dell.com>
@@ -143,7 +142,7 @@ notes:
 
 EXAMPLES = r'''
 - name: Create snapshot
-  dellemc.powerflex.dellemc_powerflex_snapshot:
+  dellemc.powerflex.snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -155,7 +154,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Get snapshot details using snapshot id
-  dellemc.powerflex.dellemc_powerflex_snapshot:
+  dellemc.powerflex.snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -164,7 +163,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Map snapshot to SDC
-  dellemc.powerflex.dellemc_powerflex_snapshot:
+  dellemc.powerflex.snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -178,7 +177,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Modify the attributes of SDC mapped to snapshot
-  dellemc.powerflex.dellemc_powerflex_snapshot:
+  dellemc.powerflex.snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -196,7 +195,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Extend the size of snapshot
-  dellemc.powerflex.dellemc_powerflex_snapshot:
+  dellemc.powerflex.snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -206,7 +205,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Unmap SDCs from snapshot
-  dellemc.powerflex.dellemc_powerflex_snapshot:
+  dellemc.powerflex.snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -219,7 +218,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Rename snapshot
-  dellemc.powerflex.dellemc_powerflex_snapshot:
+  dellemc.powerflex.snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -229,7 +228,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Delete snapshot
-  dellemc.powerflex.dellemc_powerflex_snapshot:
+  dellemc.powerflex.snapshot:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -373,7 +372,7 @@ from datetime import datetime, timedelta
 import time
 import copy
 
-LOG = utils.get_logger('dellemc_powerflex_snapshot')
+LOG = utils.get_logger('snapshot')
 
 MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
 

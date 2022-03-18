@@ -7,6 +7,8 @@ __metaclass__ = type
 import logging
 import math
 from decimal import Decimal
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.dellemc_powerflex_logging_handler \
+    import CustomRotatingFileHandler
 
 """import PyPowerFlex lib"""
 try:
@@ -63,8 +65,14 @@ options:
     required: true
   password:
     description:
-    - password to access on to PowerFlex Gateway
+    - password to access on to PowerFlex Gateway.
     required: true
+  timeout:
+    description:
+    - Time after which connection will get terminated.
+    - It is to be mentioned in seconds.
+    - defaults to 120 if not mentioned.
+    required: false
 '''
 
 
@@ -74,7 +82,8 @@ def get_powerflex_gateway_host_parameters():
         username=dict(type='str', required=True),
         password=dict(type='str', required=True, no_log=True),
         verifycert=dict(type='bool', required=False, default=True),
-        port=dict(type='int', required=False, default=443)
+        port=dict(type='int', required=False, default=443),
+        timeout=dict(type='int', required=False, default=120)
     )
 
 
@@ -87,8 +96,9 @@ parameters:
                 - port:port at which powerflex api gateway api is hosted.
                 - verifycert: Boolean value to inform system whether to
                   verify client certificate or not.
-                - username:  User name to access on to powerflex api gateway
-                - password: Password to access powerflex api gateway
+                - username:  User name to access on to powerflex api gateway.
+                - password: Password to access powerflex api gateway.
+                - timeout: Time after which connection will get terminated.
 returns connection object to access powerflex api gateway host using PyPowerFlex SDK
 '''
 
@@ -101,7 +111,7 @@ def get_powerflex_gateway_host_connection(module_params):
             verify_certificate=module_params['verifycert'],
             username=module_params['username'],
             password=module_params['password'],
-            timeout=120)
+            timeout=module_params['timeout'])
         conn.initialize()
         return conn
 
@@ -124,14 +134,14 @@ def pypowerflex_version_check():
             missing_packages += 'pkg_resources, '
 
         if not HAS_POWERFLEX_SDK:
-            missing_packages += 'PyPowerFlex V 1.1.0 or above'
+            missing_packages += 'PyPowerFlex V 1.3.0 or above'
         else:
-            min_ver = '1.1.0'
+            min_ver = '1.3.0'
             curr_version = pkg_resources.require("PyPowerFlex")[0].version
             supported_version = parse_version(curr_version) >= parse_version(
                 min_ver)
             if not supported_version:
-                missing_packages += 'PyPowerFlex V 1.1.0 or above'
+                missing_packages += 'PyPowerFlex V 1.3.0 or above'
 
         missing_packages_check = dict(
             dependency_present=False if missing_packages else True,
@@ -160,12 +170,17 @@ returns logger object
 '''
 
 
-def get_logger(module_name, log_file_name='dellemc_ansible_provisioning.log',
-               log_devel=logging.INFO):
+def get_logger(module_name, log_file_name='ansible_powerflex.log', log_devel=logging.INFO):
     FORMAT = '%(asctime)-15s %(filename)s %(levelname)s : %(message)s'
+    max_bytes = 5 * 1024 * 1024
     logging.basicConfig(filename=log_file_name, format=FORMAT)
     LOG = logging.getLogger(module_name)
     LOG.setLevel(log_devel)
+    handler = CustomRotatingFileHandler(log_file_name, maxBytes=max_bytes, backupCount=5)
+    formatter = logging.Formatter(FORMAT)
+    handler.setFormatter(formatter)
+    LOG.addHandler(handler)
+    LOG.propagate = False
     return LOG
 
 

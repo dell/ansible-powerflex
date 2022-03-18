@@ -10,7 +10,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: dellemc_powerflex_storagepool
+module: storagepool
 
 version_added: '1.0.0'
 
@@ -90,7 +90,7 @@ notes:
 EXAMPLES = r'''
 
 - name: Get the details of storage pool by name
-  dellemc.powerflex.dellemc_powerflex_storagepool:
+  dellemc.powerflex.storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -100,7 +100,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Get the details of storage pool by id
-  dellemc.powerflex.dellemc_powerflex_storagepool:
+  dellemc.powerflex.storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -109,7 +109,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Create a new storage pool by name
-  dellemc.powerflex.dellemc_powerflex_storagepool:
+  dellemc.powerflex.storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -120,7 +120,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Modify a storage pool by name
-  dellemc.powerflex.dellemc_powerflex_storagepool:
+  dellemc.powerflex.storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -132,7 +132,7 @@ EXAMPLES = r'''
     state: "present"
 
 - name: Rename storage pool by id
-  dellemc.powerflex.dellemc_powerflex_storagepool:
+  dellemc.powerflex.storagepool:
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -284,7 +284,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import dellemc_ansible_powerflex_utils as utils
 
-LOG = utils.get_logger('dellemc_powerflex_storagepool')
+LOG = utils.get_logger('storagepool')
 
 MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
 
