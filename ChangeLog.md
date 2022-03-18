@@ -2,7 +2,7 @@
 
 ## Version 1.2.0 - released on 25/03/22
 - Added CURD operations for protection domain module.
-- Names of previously released modules have been changed from dellemc_powerflex_\<module name> to \<module name>.
+- Names of previously released modules have been changed from dellemc_powerflex_\<module name> to \<module name>..
 
 ## Version 1.1.1 - released on 16/12/21
 - Gatherfacts has been renamed to Info.
