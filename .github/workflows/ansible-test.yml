@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ansible-version: [stable-2.12]
+        ansible-version: [stable-2.11]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
