@@ -65,13 +65,13 @@ jobs:
           path: .cache/collection-tarballs
 
       - name: Setup Unit test Pre-requisites
-         run: |
+        run: |
           ansible-galaxy collection install .cache/collection-tarballs/*.tar.gz
           if [ -f /home/runner/.ansible/collections/ansible_collections/dellemc/powerflex/tests/requirements.txt ]; then pip install -r /home/runner/.ansible/collections/ansible_collections/dellemc/powerflex/tests/requirements.txt; fi
 
       - name: Run Unit tests using ansible-test
-         run: ansible-test units -v --color --python ${{ matrix.python-version }} --coverage
-         working-directory: /home/runner/.ansible/collections/ansible_collections/dellemc/powerflex
+        run: ansible-test units -v --color --python ${{ matrix.python-version }} --coverage
+        working-directory: /home/runner/.ansible/collections/ansible_collections/dellemc/powerflex
 ###
 # Sanity tests (REQUIRED)
 #
