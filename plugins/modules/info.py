@@ -1,8 +1,8 @@
 #!/usr/bin/python
-# Copyright: (c) 2021, Dell EMC
+# Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-"""Ansible module for Gathering information about Dell EMC PowerFlex"""
+"""Ansible module for Gathering information about Dell Technologies (Dell) PowerFlex"""
 
 from __future__ import absolute_import, division, print_function
 
@@ -14,15 +14,15 @@ module: info
 
 version_added: '1.0.0'
 
-short_description: Gathering information about Dell EMC PowerFlex
+short_description: Gathering information about Dell PowerFlex
 
 description:
-- Gathering information about Dell EMC PowerFlex storage system includes
+- Gathering information about Dell PowerFlex storage system includes
   getting the api details, list of volumes, SDSs, SDCs, storage pools,
   protection domains, snapshot policies, and devices.
 
 extends_documentation_fragment:
-  - dellemc.powerflex.dellemc_powerflex.powerflex
+  - dellemc.powerflex.powerflex
 
 author:
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
@@ -68,7 +68,7 @@ options:
         type: str
         required: True
 notes:
-  - The check_mode is not supported.
+  - The check_mode is supported.
 '''
 
 EXAMPLES = r'''
@@ -432,7 +432,7 @@ Devices:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
-    import dellemc_ansible_powerflex_utils as utils
+    import utils
 
 LOG = utils.get_logger('info')
 
@@ -456,7 +456,7 @@ class PowerFlexInfo(object):
 
         """ initialize the ansible module """
         self.module = AnsibleModule(argument_spec=self.module_params,
-                                    supports_check_mode=False)
+                                    supports_check_mode=True)
 
         if MISSING_PACKAGES_CHECK and \
                 not MISSING_PACKAGES_CHECK['dependency_present']:
@@ -468,6 +468,8 @@ class PowerFlexInfo(object):
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
                 self.module.params)
             LOG.info('Got the PowerFlex system connection object instance')
+            LOG.info('The check_mode flag %s', self.module.check_mode)
+
         except Exception as e:
             LOG.error(str(e))
             self.module.fail_json(msg=str(e))

@@ -1,5 +1,5 @@
 # Ansible Modules for Dell Technologies PowerFlex
-## Product Guide 1.2.0
+## Product Guide 1.3.0
 © 2022 Dell Inc. or its subsidiaries. All rights reserved. Dell, and other trademarks are trademarks of Dell Inc. or its subsidiaries. Other trademarks may be trademarks of their respective owners.
 
 --------------
@@ -18,54 +18,61 @@
     *   [Examples](#examples-1)
     *   [Return Values](#return-values-1)
     *   [Authors](#authors-1)
-*   [Protection Domain Module](#protection-domain-module)
+*   [MDM Cluster Module](#mdm-cluster-module)
     *   [Synopsis](#synopsis-2)
     *   [Parameters](#parameters-2)
     *   [Notes](#notes-2)
     *   [Examples](#examples-2)
     *   [Return Values](#return-values-2)
     *   [Authors](#authors-2)
-*   [SDC Module](#sdc-module)
+*   [Protection Domain Module](#protection-domain-module)
     *   [Synopsis](#synopsis-3)
     *   [Parameters](#parameters-3)
     *   [Notes](#notes-3)
     *   [Examples](#examples-3)
     *   [Return Values](#return-values-3)
     *   [Authors](#authors-3)
-*   [SDS Module](#sds-module)
+*   [SDC Module](#sdc-module)
     *   [Synopsis](#synopsis-4)
     *   [Parameters](#parameters-4)
     *   [Notes](#notes-4)
     *   [Examples](#examples-4)
     *   [Return Values](#return-values-4)
     *   [Authors](#authors-4)
-*   [Snapshot Module](#snapshot-module)
+*   [SDS Module](#sds-module)
     *   [Synopsis](#synopsis-5)
     *   [Parameters](#parameters-5)
     *   [Notes](#notes-5)
     *   [Examples](#examples-5)
     *   [Return Values](#return-values-5)
     *   [Authors](#authors-5)
-*   [Storage Pool Module](#storage-pool-module)
+*   [Snapshot Module](#snapshot-module)
     *   [Synopsis](#synopsis-6)
     *   [Parameters](#parameters-6)
     *   [Notes](#notes-6)
     *   [Examples](#examples-6)
     *   [Return Values](#return-values-6)
     *   [Authors](#authors-6)
-*   [Volume Module](#volume-module)
+*   [Storage Pool Module](#storage-pool-module)
     *   [Synopsis](#synopsis-7)
     *   [Parameters](#parameters-7)
     *   [Notes](#notes-7)
     *   [Examples](#examples-7)
     *   [Return Values](#return-values-7)
     *   [Authors](#authors-7)
+*   [Volume Module](#volume-module)
+    *   [Synopsis](#synopsis-8)
+    *   [Parameters](#parameters-8)
+    *   [Notes](#notes-8)
+    *   [Examples](#examples-8)
+    *   [Return Values](#return-values-8)
+    *   [Authors](#authors-8)
 
 --------------
 
 # Device Module
 
-Manage device on Dell EMC PowerFlex
+Manage device on Dell PowerFlex
 
 ### Synopsis
  Managing device on PowerFlex storage system includes adding new device, getting details of device, and removing a device.
@@ -81,45 +88,13 @@ Manage device on Dell EMC PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=1 > storage_pool_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Storage Pool ID.  <br> Used while adding a storage device.  <br> Media type supported are SSD and HDD.  <br> Mutually exclusive with storage_pool_name, acceleration_pool_id and acceleration_pool_name. </td>
-        </tr>
                     <tr>
-            <td colspan=1 > storage_pool_name</td>
+            <td colspan=1 > acceleration_pool_name</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> Storage Pool name.  <br> Used while adding a storage device.  <br> Mutually exclusive with storage_pool_id, acceleration_pool_id and acceleration_pool_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > sds_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the SDS.  <br> Required while adding a device.  <br> Mutually exclusive with sds_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > device_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Device name.  <br> Mutually exclusive with device_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > state</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
-            <td> <br> State of the device. </td>
+            <td> <br> Acceleration Pool Name.  <br> Used while adding an acceleration device.  <br> Media type supported are SSD and NVDIMM.  <br> Mutually exclusive with storage_pool_id, storage_pool_name and acceleration_pool_name. </td>
         </tr>
                     <tr>
             <td colspan=1 > timeout</td>
@@ -130,92 +105,28 @@ Manage device on Dell EMC PowerFlex
             <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
         </tr>
                     <tr>
-            <td colspan=1 > acceleration_pool_name</td>
+            <td colspan=1 > storage_pool_name</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> Acceleration Pool Name.  <br> Used while adding an acceleration device.  <br> Media type supported are SSD and NVDIMM.  <br> Mutually exclusive with storage_pool_id, storage_pool_name and acceleration_pool_name. </td>
+            <td> <br> Storage Pool name.  <br> Used while adding a storage device.  <br> Mutually exclusive with storage_pool_id, acceleration_pool_id and acceleration_pool_name. </td>
         </tr>
                     <tr>
-            <td colspan=1 > verifycert</td>
-            <td> bool  </td>
-            <td></td>
-            <td> True </td>
-            <td></td>
-            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > external_acceleration_type</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>Invalid</li>  <li>None</li>  <li>Read</li>  <li>Write</li>  <li>ReadAndWrite</li> </ul></td>
-            <td> <br> Device external acceleration types.  <br> Used while adding a device. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > current_pathname</td>
+            <td colspan=1 > acceleration_pool_id</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> Full path of the device to be added.  <br> Required while adding a device. </td>
+            <td> <br> Acceleration Pool ID.  <br> Used while adding an acceleration device.  <br> Media type supported are SSD and NVDIMM.  <br> Mutually exclusive with acceleration_pool_name, storage_pool_name and storage_pool_id. </td>
         </tr>
                     <tr>
-            <td colspan=1 > password</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The password of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > media_type</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>HDD</li>  <li>SSD</li>  <li>NVDIMM</li> </ul></td>
-            <td> <br> Device media types.  <br> Required while adding a device. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > device_id</td>
+            <td colspan=1 > sds_name</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> Device ID.  <br> Mutually exclusive with device_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > protection_domain_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Protection domain ID.  <br> Used while identifying a storage pool along with storage_pool_name.  <br> Mutually exclusive with protection_domain_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > username</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The username of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > gateway_host</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+            <td> <br> The name of the SDS.  <br> Required while adding a device.  <br> Mutually exclusive with sds_id. </td>
         </tr>
                     <tr>
             <td colspan=1 > protection_domain_name</td>
@@ -226,6 +137,78 @@ Manage device on Dell EMC PowerFlex
             <td> <br> Protection domain name.  <br> Used while identifying a storage pool along with storage_pool_name.  <br> Mutually exclusive with protection_domain_id. </td>
         </tr>
                     <tr>
+            <td colspan=1 > current_pathname</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Full path of the device to be added.  <br> Required while adding a device. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > media_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>HDD</li>  <li>SSD</li>  <li>NVDIMM</li> </ul></td>
+            <td> <br> Device media types.  <br> Required while adding a device. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > device_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Device name.  <br> Mutually exclusive with device_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > protection_domain_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Protection domain ID.  <br> Used while identifying a storage pool along with storage_pool_name.  <br> Mutually exclusive with protection_domain_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the device. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > external_acceleration_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>Invalid</li>  <li>None</li>  <li>Read</li>  <li>Write</li>  <li>ReadAndWrite</li> </ul></td>
+            <td> <br> Device external acceleration types.  <br> Used while adding a device. </td>
+        </tr>
+                    <tr>
             <td colspan=1 > sds_id</td>
             <td> str  </td>
             <td></td>
@@ -234,21 +217,45 @@ Manage device on Dell EMC PowerFlex
             <td> <br> The ID of the SDS.  <br> Required while adding a device.  <br> Mutually exclusive with sds_name. </td>
         </tr>
                     <tr>
-            <td colspan=1 > acceleration_pool_id</td>
+            <td colspan=1 > device_id</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> Acceleration Pool ID.  <br> Used while adding an acceleration device.  <br> Media type supported are SSD and NVDIMM.  <br> Mutually exclusive with acceleration_pool_name, storage_pool_name and storage_pool_id. </td>
+            <td> <br> Device ID.  <br> Mutually exclusive with device_name. </td>
         </tr>
-                                                                    </table>
+                    <tr>
+            <td colspan=1 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > storage_pool_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Storage Pool ID.  <br> Used while adding a storage device.  <br> Media type supported are SSD and HDD.  <br> Mutually exclusive with storage_pool_name, acceleration_pool_id and acceleration_pool_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                                                                                            </table>
 
 ### Notes
 * The value for device_id is generated only after successful addition of the device.
 * Unique ways to identify a device - (current_pathname , sds_id) or (current_pathname , sds_name) or (device_name , sds_name) or (device_name , sds_id) or device_id.
 * It is recommended to install Rfcache driver for SSD device on SDS in order to add it to an acceleration pool.
 * The check_mode is not supported.
-* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell EMC PowerFlex storage platform.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 ### Examples
 ```
@@ -326,7 +333,7 @@ Manage device on Dell EMC PowerFlex
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                            <tr>
+                                            <tr>
             <td colspan=3 > changed </td>
             <td>  bool </td>
             <td> always </td>
@@ -340,31 +347,31 @@ Manage device on Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > externalAccelerationType </td>
+                <td colspan=2 > aggregatedState </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Indicates external acceleration type. </td>
+                <td> Indicates aggregated state. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > fglNvdimmMetadataAmortizationX100 </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Indicates FGL NVDIMM meta data amortization value. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > errorState </td>
+                <td colspan=2 > deviceState </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Indicates error state. </td>
+                <td> Indicates device state. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > writeCacheActive </td>
+                <td colspan=2 > rfcacheErrorDeviceDoesNotExist </td>
                 <td> bool </td>
                 <td>success</td>
-                <td> Indicates write cache active. </td>
+                <td> Indicates RF cache error device does not exist. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > accelerationProps </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates acceleration props. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -375,10 +382,66 @@ Manage device on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > deviceOriginalPathName </td>
+                <td colspan=2 > accelerationPoolId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Device original path name. </td>
+                <td> Acceleration pool ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > capacity </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Device capacity. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > cacheLookAheadActive </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates cache look ahead active state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > ssdEndOfLifeState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates SSD end of life state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storagePoolId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Storage Pool ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > serialNumber </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates Serial number. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Device name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > errorState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates error state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > spSdsId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates SPs SDS ID. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -389,17 +452,10 @@ Manage device on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > mediaFailing </td>
-                <td> bool </td>
+                <td colspan=2 > fglNvdimmWriteCacheSize </td>
+                <td> int </td>
                 <td>success</td>
-                <td> Indicates media failing. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > vendorName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates vendor name. </td>
+                <td> Indicates FGL NVDIMM write cache size. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -407,6 +463,13 @@ Manage device on Dell EMC PowerFlex
                 <td> str </td>
                 <td>success</td>
                 <td> Indicates persistent checksum state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Protection domain name. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -433,206 +496,10 @@ Manage device on Dell EMC PowerFlex
                 </tr>
                                                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > firmwareVersion </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates firmware version. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > rfcacheProps </td>
-                <td> str </td>
-                <td>success</td>
-                <td> RF cache props. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > storagePoolId </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Storage Pool ID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > physicalSectorSizeInBytes </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Physical sector size in bytes. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > ledSetting </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates LED setting. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sdsName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> SDS name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > ataSecurityActive </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Indicates ATA security active state. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > spSdsId </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates SPs SDS ID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > deviceType </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates device type. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > maxCapacityInKb </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Maximum device capacity limit in KB. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > rfcacheErrorDeviceDoesNotExist </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Indicates RF cache error device does not exist. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > storageProps </td>
-                <td> list </td>
-                <td>success</td>
-                <td> Storage props. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > ssdEndOfLifeState </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates SSD end of life state. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > accelerationProps </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates acceleration props. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > protectionDomainId </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Protection domain ID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > protectionDomainName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Protection domain name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > longSuccessfulIos </td>
-                <td> list </td>
-                <td>success</td>
-                <td> Indicates long successful IOs. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > accelerationPoolName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Acceleration pool name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > fglNvdimmWriteCacheSize </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Indicates FGL NVDIMM write cache size. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=2 > capacityLimitInKb </td>
                 <td> int </td>
                 <td>success</td>
                 <td> Device capacity limit in KB. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Device ID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > autoDetectMediaType </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates auto detection of media type. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > cacheLookAheadActive </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Indicates cache look ahead active state. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > modelName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates model name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > accelerationPoolId </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Acceleration pool ID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > serialNumber </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Indicates Serial number. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > logicalSectorSizeInBytes </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Logical sector size in bytes. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > capacity </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Device capacity. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Device name. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -643,17 +510,38 @@ Manage device on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > deviceState </td>
+                <td colspan=2 > accelerationPoolName </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Indicates device state. </td>
+                <td> Acceleration pool name. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > storagePoolName </td>
+                <td colspan=2 > protectionDomainId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Storage Pool name. </td>
+                <td> Protection domain ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > ataSecurityActive </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates ATA security active state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > firmwareVersion </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates firmware version. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > longSuccessfulIos </td>
+                <td> list </td>
+                <td>success</td>
+                <td> Indicates long successful IOs. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -664,10 +552,94 @@ Manage device on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > aggregatedState </td>
+                <td colspan=2 > physicalSectorSizeInBytes </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Physical sector size in bytes. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > deviceType </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Indicates aggregated state. </td>
+                <td> Indicates device type. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > fglNvdimmMetadataAmortizationX100 </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Indicates FGL NVDIMM meta data amortization value. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > modelName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates model name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > ledSetting </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates LED setting. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > autoDetectMediaType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates auto detection of media type. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > writeCacheActive </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates write cache active. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sdsName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > rfcacheProps </td>
+                <td> str </td>
+                <td>success</td>
+                <td> RF cache props. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Device ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > maxCapacityInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Maximum device capacity limit in KB. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > vendorName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates vendor name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storagePoolName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Storage Pool name. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -676,7 +648,42 @@ Manage device on Dell EMC PowerFlex
                 <td>success</td>
                 <td> Indicates media type. </td>
             </tr>
-                                                                                                        </table>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > externalAccelerationType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates external acceleration type. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > storageProps </td>
+                <td> list </td>
+                <td>success</td>
+                <td> Storage props. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > deviceOriginalPathName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Device original path name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > logicalSectorSizeInBytes </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Logical sector size in bytes. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > mediaFailing </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates media failing. </td>
+            </tr>
+                                                                                        </table>
 
 ### Authors
 * Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
@@ -684,10 +691,10 @@ Manage device on Dell EMC PowerFlex
 --------------------------------
 # Info Module
 
-Gathering information about Dell EMC PowerFlex
+Gathering information about Dell PowerFlex
 
 ### Synopsis
- Gathering information about Dell EMC PowerFlex storage system includes getting the api details, list of volumes, SDSs, SDCs, storage pools, protection domains, snapshot policies, and devices.
+ Gathering information about Dell PowerFlex storage system includes getting the api details, list of volumes, SDSs, SDCs, storage pools, protection domains, snapshot policies, and devices.
 
 ### Parameters
                                                                                                                                                                                                                                                         
@@ -700,38 +707,6 @@ Gathering information about Dell EMC PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=2 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > gather_subset</td>
-            <td> list   <br> elements: str </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>vol</li>  <li>storage_pool</li>  <li>protection_domain</li>  <li>sdc</li>  <li>sds</li>  <li>snapshot_policy</li>  <li>device</li> </ul></td>
-            <td> <br> List of string variables to specify the Powerflex storage system entities for which information is required.  <br> Volumes - vol.  <br> Storage pools - storage_pool.  <br> Protection domains - protection_domain.  <br> SDCs - sdc.  <br> SDSs - sds.  <br> Snapshot policies - snapshot_policy.  <br> Devices - device. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > gateway_host</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > timeout</td>
-            <td> int  </td>
-            <td></td>
-            <td> 120 </td>
-            <td></td>
-            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
-        </tr>
                     <tr>
             <td colspan=2 > filters</td>
             <td> list   <br> elements: dict </td>
@@ -741,6 +716,15 @@ Gathering information about Dell EMC PowerFlex
             <td> <br> List of filters to support filtered output for storage entities.  <br> Each filter is a list of filter_key, filter_operator, filter_value.  <br> Supports passing of multiple filters. </td>
         </tr>
                             <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > filter_key </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td></td>
+                <td>  <br> Name identifier of the filter.  </td>
+            </tr>
+                    <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > filter_value </td>
                 <td> str  </td>
@@ -758,22 +742,29 @@ Gathering information about Dell EMC PowerFlex
                 <td> <ul> <li>equal</li> </ul></td>
                 <td>  <br> Operation to be performed on filter key.  </td>
             </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > filter_key </td>
-                <td> str  </td>
-                <td> True </td>
-                <td></td>
-                <td></td>
-                <td>  <br> Name identifier of the filter.  </td>
-            </tr>
                             <tr>
-            <td colspan=2 > username</td>
-            <td> str  </td>
+            <td colspan=2 > timeout</td>
+            <td> int  </td>
+            <td></td>
+            <td> 120 </td>
+            <td></td>
+            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
             <td> True </td>
             <td></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
             <td></td>
-            <td> <br> The username of the PowerFlex gateway host. </td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
         </tr>
                     <tr>
             <td colspan=2 > password</td>
@@ -784,18 +775,34 @@ Gathering information about Dell EMC PowerFlex
             <td> <br> The password of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
-            <td colspan=2 > verifycert</td>
-            <td> bool  </td>
+            <td colspan=2 > gather_subset</td>
+            <td> list   <br> elements: str </td>
             <td></td>
+            <td></td>
+            <td> <ul> <li>vol</li>  <li>storage_pool</li>  <li>protection_domain</li>  <li>sdc</li>  <li>sds</li>  <li>snapshot_policy</li>  <li>device</li> </ul></td>
+            <td> <br> List of string variables to specify the Powerflex storage system entities for which information is required.  <br> Volumes - vol.  <br> Storage pools - storage_pool.  <br> Protection domains - protection_domain.  <br> SDCs - sdc.  <br> SDSs - sds.  <br> Snapshot policies - snapshot_policy.  <br> Devices - device. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > username</td>
+            <td> str  </td>
             <td> True </td>
             <td></td>
-            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
         </tr>
-                                                                    </table>
+                    <tr>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                                                                                            </table>
 
 ### Notes
-* The check_mode is not supported.
-* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell EMC PowerFlex storage platform.
+* The check_mode is supported.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 ### Examples
 ```
@@ -837,7 +844,67 @@ Gathering information about Dell EMC PowerFlex
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
+                                            <tr>
+            <td colspan=2 > Snapshot_Policies </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of snapshot policies. </td>
+        </tr>
                             <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> snapshot policy id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> snapshot policy name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > Devices </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of devices. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> device id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> device name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > SDSs </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of storage data servers. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data server id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data server name. </td>
+            </tr>
+                                        <tr>
             <td colspan=2 > Storage_Pools </td>
             <td>  list </td>
             <td> always </td>
@@ -845,17 +912,69 @@ Gathering information about Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage pool id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > name </td>
                 <td> str </td>
                 <td>success</td>
                 <td> storage pool name. </td>
             </tr>
-                                <tr>
+                                        <tr>
+            <td colspan=2 > API_Version </td>
+            <td>  str </td>
+            <td> always </td>
+            <td> API version of PowerFlex API Gateway. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > Volumes </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of volumes. </td>
+        </tr>
+                            <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > id </td>
                 <td> str </td>
                 <td>success</td>
-                <td> storage pool id. </td>
+                <td> volume id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> volume name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=2 > Protection_Domains </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of all protection domains. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> protection domain id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> protection domain name. </td>
             </tr>
                                         <tr>
             <td colspan=2 > SDCs </td>
@@ -865,17 +984,17 @@ Gathering information about Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage data client name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > id </td>
                 <td> str </td>
                 <td>success</td>
                 <td> storage data client id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data client name. </td>
             </tr>
                                         <tr>
             <td colspan=2 > Array_Details </td>
@@ -885,31 +1004,10 @@ Gathering information about Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > capacityTimeLeftInDays </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Capacity time left in days. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > installId </td>
-                <td> str </td>
-                <td>success</td>
-                <td> installation Id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > enterpriseFeaturesEnabled </td>
+                <td colspan=1 > isInitialLicense </td>
                 <td> bool </td>
                 <td>success</td>
-                <td> Enterprise eatures enabled. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > upgradeState </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Upgrade state. </td>
+                <td> Initial license. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -920,45 +1018,17 @@ Gathering information about Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > lastUpgradeTime </td>
+                <td colspan=1 > mdmManagementPort </td>
                 <td> int </td>
                 <td>success</td>
-                <td> Last upgrade time. </td>
+                <td> MDM management port. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > mdmSecurityPolicy </td>
+                <td colspan=1 > authenticationMethod </td>
                 <td> str </td>
                 <td>success</td>
-                <td> MDM security policy. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > showGuid </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Show guid. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > systemVersionName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> System version and name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > maxCapacityInGb </td>
-                <td> dict </td>
-                <td>success</td>
-                <td> Maximum capacity in GB. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> The ID of the system. </td>
+                <td> Authentication method. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -976,20 +1046,6 @@ Gathering information about Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > isInitialLicense </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Initial license. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > addressSpaceUsage </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Address space usage. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > managementClientSecureCommunicationEnabled </td>
                 <td> bool </td>
                 <td>success</td>
@@ -997,17 +1053,31 @@ Gathering information about Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > capacityAlertCriticalThresholdPercent </td>
-                <td> int </td>
+                <td colspan=1 > mdmSecurityPolicy </td>
+                <td> str </td>
                 <td>success</td>
-                <td> Capacity alert critical threshold percentage. </td>
+                <td> MDM security policy. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > mdmManagementPort </td>
-                <td> int </td>
+                <td colspan=1 > systemVersionName </td>
+                <td> str </td>
                 <td>success</td>
-                <td> MDM management port. </td>
+                <td> System version and name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > showGuid </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Show guid. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > maxCapacityInGb </td>
+                <td> dict </td>
+                <td>success</td>
+                <td> Maximum capacity in GB. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1018,6 +1088,13 @@ Gathering information about Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > capacityAlertHighThresholdPercent </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Capacity alert high threshold percentage. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > swid </td>
                 <td> str </td>
                 <td>success</td>
@@ -1025,10 +1102,59 @@ Gathering information about Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > authenticationMethod </td>
+                <td colspan=1 > enterpriseFeaturesEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enterprise eatures enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > installId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Authentication method. </td>
+                <td> installation Id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > lastUpgradeTime </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Last upgrade time. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the system. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > upgradeState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Upgrade state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > capacityAlertCriticalThresholdPercent </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Capacity alert critical threshold percentage. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > addressSpaceUsage </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Address space usage. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > capacityTimeLeftInDays </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Capacity time left in days. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1044,134 +1170,811 @@ Gathering information about Dell EMC PowerFlex
                 <td>success</td>
                 <td> Defragmentation enabled. </td>
             </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > capacityAlertHighThresholdPercent </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Capacity alert high threshold percentage. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > Devices </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of devices. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> device name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> device id. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > Snapshot_Policies </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of snapshot policies. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> snapshot policy name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> snapshot policy id. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > SDSs </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of storage data servers. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage data server name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage data server id. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > Volumes </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of volumes. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> volume name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> volume id. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > Protection_Domains </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of all protection domains. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> protection domain name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> protection domain id. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > changed </td>
-            <td>  bool </td>
-            <td> always </td>
-            <td> Whether or not the resource has changed. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > API_Version </td>
-            <td>  str </td>
-            <td> always </td>
-            <td> API version of PowerFlex API Gateway. </td>
-        </tr>
-                                                                                    </table>
+                                                                                        </table>
 
 ### Authors
 * Arindam Datta (@dattaarindam) <ansible.team@dell.com>
 
 --------------------------------
+# MDM Cluster Module
+
+Manage MDM cluster on Dell PowerFlex
+
+### Synopsis
+ Managing MDM cluster and MDMs on PowerFlex storage system includes adding/removing standby MDM, modify MDM name and virtual interface.
+ It also includes getting details of MDM cluster, modify MDM cluster ownership, cluster mode, and performance profile.
+
+### Parameters
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+<table>
+    <tr>
+        <th colspan=2>Parameter</th>
+        <th width="20%">Type</th>
+        <th>Required</th>
+        <th>Default</th>
+        <th>Choices</th>
+        <th width="80%">Description</th>
+    </tr>
+                    <tr>
+            <td colspan=2 > virtual_ip_interfaces</td>
+            <td> list   <br> elements: str </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> List of interfaces to be used for virtual IPs.  <br> The order of interfaces must be matched with virtual IPs assigned to the cluster.  <br> Interfaces of the primary and secondary type MDMs are allowed to modify.  <br> The virtual_ip_interfaces is mutually exclusive with clear_interfaces. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > standby_mdm</td>
+            <td> dict  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies add standby MDM parameters. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > management_ips </td>
+                <td> list   <br> elements: str </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> List of management IPs to manage MDM. It can contain IPv4 addresses.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > allow_multiple_ips </td>
+                <td> bool  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Allow the added node to have different number of IPs from the primary node.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > port </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Specifies the port of new MDM.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > virtual_interfaces </td>
+                <td> list   <br> elements: str </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> List of NIC interfaces that will be used for virtual IP addresses.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > role </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td> <ul> <li>Manager</li>  <li>TieBreaker</li> </ul></td>
+                <td>  <br> Role of new MDM.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mdm_ips </td>
+                <td> list   <br> elements: str </td>
+                <td> True </td>
+                <td></td>
+                <td></td>
+                <td>  <br> List of MDM IPs that will be assigned to new MDM. It can contain IPv4 addresses.  </td>
+            </tr>
+                            <tr>
+            <td colspan=2 > mdm</td>
+            <td> list   <br> elements: dict </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies parameters to add/remove MDMs to/from the MDM cluster. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mdm_name </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Name of MDM that will be added/removed to/from the cluster.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mdm_type </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td> <ul> <li>Secondary</li>  <li>TieBreaker</li> </ul></td>
+                <td>  <br> Type of the MDM.  <br> Either mdm_id or mdm_name must be passed with mdm_type.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > mdm_id </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> ID of MDM that will be added/removed to/from the cluster.  </td>
+            </tr>
+                            <tr>
+            <td colspan=2 > mdm_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the MDM.  <br> Mutually exclusive with mdm_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > performance_profile</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>Compact</li>  <li>HighPerformance</li> </ul></td>
+            <td> <br> Apply performance profile to cluster MDMs. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > timeout</td>
+            <td> int  </td>
+            <td></td>
+            <td> 120 </td>
+            <td></td>
+            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > cluster_mode</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>OneNode</li>  <li>ThreeNodes</li>  <li>FiveNodes</li> </ul></td>
+            <td> <br> Mode of the cluster. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > clear_interfaces</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Clear all virtual IP interfaces.  <br> The clear_interfaces is mutually exclusive with virtual_ip_interfaces. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > is_primary</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Set is_primary as True to change MDM cluster ownership from the current master MDM to different MDM.  <br> Set is_primary as False, will return MDM cluster details.  <br> New owner MDM must be an MDM with a manager role. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > mdm_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> To rename the MDM. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the MDM cluster. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > mdm_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the MDM. It is unique across the PowerFlex array.  <br> Mutually exclusive with mdm_id.  <br> If mdm_name passed in add standby operation, then same name will be assigned to the new standby mdm. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > mdm_state</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>present-in-cluster</li>  <li>absent-in-cluster</li> </ul></td>
+            <td> <br> Mapping state of MDM. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                                                                                            </table>
+
+### Notes
+* Parameters mdm_name or mdm_id are mandatory for rename and modify virtual IP interfaces.
+* Parameters mdm_name or mdm_id are not required while modifying performance profile.
+* For change MDM cluster ownership operation, only changed as True will be returned and for idempotency case MDM cluster details will be returned.
+* Reinstall all SDC after changing ownership to some newly added MDM.
+* To add manager standby MDM, MDM package must be installed with manager role.
+* The check mode is supported.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
+
+### Examples
+```
+- name: Add a standby MDM
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    mdm_name: "mdm_1"
+    standby_mdm:
+      mdm_ips:
+        - "10.x.x.x"
+      role: "TieBreaker"
+      management_ips:
+        - "10.x.y.z"
+    state: "present"
+
+- name: Remove a standby MDM
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    mdm_name: "mdm_1"
+    state: "absent"
+
+- name: Switch cluster mode from 3 node to 5 node MDM cluster
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    cluster_mode: "FiveNodes"
+    mdm:
+      - mdm_id: "5f091a8a013f1100"
+        mdm_type: "Secondary"
+      - mdm_name: "mdm_1"
+        mdm_type: "TieBreaker"
+    sdc_state: "present-in-cluster"
+    state: "present"
+
+- name: Switch cluster mode from 5 node to 3 node MDM cluster
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    cluster_mode: "ThreeNodes"
+    mdm:
+      - mdm_id: "5f091a8a013f1100"
+        mdm_type: "Secondary"
+      - mdm_name: "mdm_1"
+        mdm_type: "TieBreaker"
+    sdc_state: "absent-in-cluster"
+    state: "present"
+
+- name: Get the details of the MDM cluster
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    state: "present"
+
+- name: Change ownership of MDM cluster
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    mdm_name: "mdm_2"
+    is_primary: True
+    state: "present"
+
+- name: Modify performance profile
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    performance_profile: "HighPerformance"
+    state: "present"
+
+- name: Rename the MDM
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    mdm_name: "mdm_1"
+    mdm_new_name: "new_mdm_1"
+    state: "present"
+
+- name: Modify virtual IP interface of the MDM
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    mdm_name: "mdm_1"
+    virtual_ip_interface:
+        - "ens224"
+    state: "present"
+
+- name: Clear virtual IP interface of the MDM
+  dellemc.powerflex.mdm_cluster:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    verifycert: "{{verifycert}}"
+    port: "{{port}}"
+    mdm_name: "mdm_1"
+    clear_interfaces: True
+    state: "present"
+```
+
+### Return Values
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+<table>
+    <tr>
+        <th colspan=6>Key</th>
+        <th>Type</th>
+        <th>Returned</th>
+        <th width="100%">Description</th>
+    </tr>
+                                            <tr>
+            <td colspan=6 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=6 > mdm_cluster_details </td>
+            <td>  complex </td>
+            <td> When MDM cluster exists </td>
+            <td> Details of the MDM cluster. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the MDM cluster. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > goodReplicasNum </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Number of nodes for Replication. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > clusterState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> State of the MDM cluster. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > tieBreakers </td>
+                <td> list </td>
+                <td>success</td>
+                <td> The list of the TieBreaker MDMs. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > id </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> ID of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > opensslVersion </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> OpenSSL version. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > versionInfo </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Version of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > ips </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of IPs for tie-breaker MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > port </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Port of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > status </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Status of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > managementIPs </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of management IPs for tie-breaker MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > role </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Role of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > name </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the MDM. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > clusterMode </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Mode of the MDM cluster. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > virtualIps </td>
+                <td> list </td>
+                <td>success</td>
+                <td> List of virtual IPs. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > standbyMDMs </td>
+                <td> list </td>
+                <td>success</td>
+                <td> The list of the standby MDMs. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > id </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> ID of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > opensslVersion </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> OpenSSL version. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > versionInfo </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Version of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > ips </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of IPs for MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > port </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Port of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > status </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Status of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > name </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > managementIPs </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of management IPs for MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > role </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Role of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > virtualInterfaces </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of virtual interfaces </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of MDM cluster. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > goodNodesNum </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Number of Nodes in MDM cluster. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > slaves </td>
+                <td> list </td>
+                <td>success</td>
+                <td> The list of the secondary MDMs. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > id </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> ID of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > opensslVersion </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> OpenSSL version. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > versionInfo </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Version of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > ips </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of IPs for secondary MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > port </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Port of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > status </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Status of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > name </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > managementIPs </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of management IPs for secondary MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > role </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Role of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > virtualInterfaces </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of virtual interfaces </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > master </td>
+                <td> complex </td>
+                <td>success</td>
+                <td> The details of the master MDM. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > id </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> ID of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > opensslVersion </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> OpenSSL version. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > versionInfo </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Version of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > ips </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of IPs for master MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > port </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Port of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > status </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Status of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > name </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > managementIPs </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of management IPs for master MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > role </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Role of MDM. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > virtualInterfaces </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> List of virtual interfaces </td>
+                </tr>
+                                                                                                                    </table>
+
+### Authors
+* Bhavneet Sharma (@sharmb5) <ansible.team@dell.com>
+
+--------------------------------
 # Protection Domain Module
 
-Manage Protection Domain on Dell EMC PowerFlex
+Manage Protection Domain on Dell PowerFlex
 
 ### Synopsis
  Managing Protection Domain on PowerFlex storage system includes creating, modifying attributes, deleting and getting details of Protection Domain.
@@ -1187,14 +1990,6 @@ Manage Protection Domain on Dell EMC PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=2 > state</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
-            <td> <br> State of the protection domain. </td>
-        </tr>
                     <tr>
             <td colspan=2 > timeout</td>
             <td> int  </td>
@@ -1204,12 +1999,20 @@ Manage Protection Domain on Dell EMC PowerFlex
             <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
         </tr>
                     <tr>
-            <td colspan=2 > protection_domain_new_name</td>
+            <td colspan=2 > protection_domain_name</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> Used to rename the protection domain. </td>
+            <td> <br> The name of the protection domain.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with protection_domain_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
         </tr>
                     <tr>
             <td colspan=2 > password</td>
@@ -1220,75 +2023,6 @@ Manage Protection Domain on Dell EMC PowerFlex
             <td> <br> The password of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
-            <td colspan=2 > network_limits</td>
-            <td> dict  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Network bandwidth limit used by all SDS in protection domain. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > bandwidth_unit </td>
-                <td> str  </td>
-                <td></td>
-                <td> KBps </td>
-                <td> <ul> <li>KBps</li>  <li>MBps</li>  <li>GBps</li> </ul></td>
-                <td>  <br> Unit for network bandwidth limits.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > rebalance_limit </td>
-                <td> int  </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>  <br> Limit the network bandwidth for rebalance.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > vtree_migration_limit </td>
-                <td> int  </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>  <br> Limit the network bandwidth for vtree migration.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > rebuild_limit </td>
-                <td> int  </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>  <br> Limit the network bandwidth for rebuild.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > overall_limit </td>
-                <td> int  </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>  <br> Limit the overall network bandwidth.  </td>
-            </tr>
-                            <tr>
-            <td colspan=2 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > verifycert</td>
-            <td> bool  </td>
-            <td></td>
-            <td> True </td>
-            <td></td>
-            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
-        </tr>
-                    <tr>
             <td colspan=2 > is_active</td>
             <td> bool  </td>
             <td></td>
@@ -1297,20 +2031,12 @@ Manage Protection Domain on Dell EMC PowerFlex
             <td> <br> Used to activate or deactivate the protection domain. </td>
         </tr>
                     <tr>
-            <td colspan=2 > protection_domain_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The ID of the protection domain.  <br> Except for create operation, all other operations can be performed using protection_domain_id.  <br> Mutually exclusive with protection_domain_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > username</td>
+            <td colspan=2 > gateway_host</td>
             <td> str  </td>
             <td> True </td>
             <td></td>
             <td></td>
-            <td> <br> The username of the PowerFlex gateway host. </td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
             <td colspan=2 > rf_cache_limits</td>
@@ -1322,12 +2048,12 @@ Manage Protection Domain on Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > page_size </td>
-                <td> int  </td>
+                <td colspan=1 > is_enabled </td>
+                <td> bool  </td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>  <br> Used to set the cache page size in KB.  </td>
+                <td>  <br> Used to enable or disable RFcache in the protection domain.  </td>
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1340,6 +2066,15 @@ Manage Protection Domain on Dell EMC PowerFlex
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > page_size </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Used to set the cache page size in KB.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > max_io_limit </td>
                 <td> int  </td>
                 <td></td>
@@ -1347,38 +2082,106 @@ Manage Protection Domain on Dell EMC PowerFlex
                 <td></td>
                 <td>  <br> Used to set cache maximum I/O limit in KB.  </td>
             </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > is_enabled </td>
-                <td> bool  </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>  <br> Used to enable or disable RFcache in the protection domain.  </td>
-            </tr>
                             <tr>
-            <td colspan=2 > protection_domain_name</td>
+            <td colspan=2 > protection_domain_new_name</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> The name of the protection domain.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with protection_domain_id. </td>
+            <td> <br> Used to rename the protection domain. </td>
         </tr>
                     <tr>
-            <td colspan=2 > gateway_host</td>
+            <td colspan=2 > protection_domain_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the protection domain.  <br> Except for create operation, all other operations can be performed using protection_domain_id.  <br> Mutually exclusive with protection_domain_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the protection domain. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > network_limits</td>
+            <td> dict  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Network bandwidth limit used by all SDS in protection domain. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > rebalance_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit the network bandwidth for rebalance.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > rebuild_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit the network bandwidth for rebuild.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > bandwidth_unit </td>
+                <td> str  </td>
+                <td></td>
+                <td> KBps </td>
+                <td> <ul> <li>KBps</li>  <li>MBps</li>  <li>GBps</li> </ul></td>
+                <td>  <br> Unit for network bandwidth limits.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > overall_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit the overall network bandwidth.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > vtree_migration_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit the network bandwidth for vtree migration.  </td>
+            </tr>
+                            <tr>
+            <td colspan=2 > username</td>
             <td> str  </td>
             <td> True </td>
             <td></td>
             <td></td>
-            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
         </tr>
-                                                                    </table>
+                    <tr>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                                                                                            </table>
 
 ### Notes
 * The protection domain can only be deleted if all its related objects have been dissociated from the protection domain.
 * If the protection domain set to inactive, then no operation can be performed on protection domain.
 * The check_mode is not supported.
-* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell EMC PowerFlex storage platform.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 ### Examples
 ```
@@ -1473,13 +2276,33 @@ Manage Protection Domain on Dell EMC PowerFlex
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                            <tr>
+                                            <tr>
+            <td colspan=6 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
             <td colspan=6 > protection_domain_details </td>
             <td>  complex </td>
             <td> When protection domain exists </td>
             <td> Details of the protection domain. </td>
         </tr>
                             <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > protectedMaintenanceModeNetworkThrottlingInKbps </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Protected maintenance mode network throttling in KBps. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > fglDefaultNumConcurrentWrites </td>
+                <td> str </td>
+                <td>success</td>
+                <td> FGL concurrent writes. </td>
+            </tr>
+                                <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=5 > rfcachePageSizeKb </td>
                 <td> bool </td>
@@ -1488,17 +2311,10 @@ Manage Protection Domain on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > rfcacheEnabled </td>
+                <td colspan=5 > fglMetadataCacheEnabled </td>
                 <td> bool </td>
                 <td>success</td>
-                <td> Whether RF cache is enabled or not. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > protectedMaintenanceModeNetworkThrottlingEnabled </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Whether protected maintenance mode network throttling enabled. </td>
+                <td> Whether FGL cache enabled. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1509,17 +2325,10 @@ Manage Protection Domain on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > overallIoNetworkThrottlingInKbps </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Overall network throttling in KBps. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > vtreeMigrationNetworkThrottlingEnabled </td>
+                <td colspan=5 > rfcacheEnabled </td>
                 <td> bool </td>
                 <td>success</td>
-                <td> Whether V-Tree migration network throttling enabled. </td>
+                <td> Whether RF cache is enabled or not. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1531,18 +2340,10 @@ Manage Protection Domain on Dell EMC PowerFlex
                                          <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=4 > disconnectedClientName </td>
+                    <td colspan=4 > clientServerConnStatus </td>
                     <td> str </td>
                     <td>success</td>
-                    <td> Disconnected client name. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=4 > disconnectedServerIp </td>
-                    <td> str </td>
-                    <td>success</td>
-                    <td> Disconnected server IP. </td>
+                    <td> Connectivity status of client and server. </td>
                 </tr>
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
@@ -1555,6 +2356,22 @@ Manage Protection Domain on Dell EMC PowerFlex
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > disconnectedClientId </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Disconnected client ID. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > disconnectedClientName </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Disconnected client name. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
                     <td colspan=4 > disconnectedServerName </td>
                     <td> str </td>
                     <td>success</td>
@@ -1563,32 +2380,45 @@ Manage Protection Domain on Dell EMC PowerFlex
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=4 > clientServerConnStatus </td>
+                    <td colspan=4 > disconnectedServerIp </td>
                     <td> str </td>
                     <td>success</td>
-                    <td> Connectivity status of client and server. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=4 > disconnectedClientId </td>
-                    <td> str </td>
-                    <td>success</td>
-                    <td> Disconnected client ID. </td>
+                    <td> Disconnected server IP. </td>
                 </tr>
                                                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > rfcacheAccpId </td>
-                <td> str </td>
+                <td colspan=5 > rebalanceNetworkThrottlingInKbps </td>
+                <td> int </td>
                 <td>success</td>
-                <td> Id of RF cache acceleration pool. </td>
+                <td> Rebalance network throttling in KBps. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > vtreeMigrationNetworkThrottlingInKbps </td>
+                <td colspan=5 > rfcacheMaxIoSizeKb </td>
                 <td> int </td>
                 <td>success</td>
-                <td> V-Tree migration network throttling in KBps. </td>
+                <td> RF cache maximum I/O size in KB. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > systemId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of system. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > rebalanceNetworkThrottlingEnabled </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Whether rebalance network throttling enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > storagePool </td>
+                <td> list </td>
+                <td>success</td>
+                <td> List of storage pools. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1606,65 +2436,6 @@ Manage Protection Domain on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Protection domain ID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > rebuildNetworkThrottlingEnabled </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Whether rebuild network throttling enabled. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > fglDefaultNumConcurrentWrites </td>
-                <td> str </td>
-                <td>success</td>
-                <td> FGL concurrent writes. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > systemId </td>
-                <td> str </td>
-                <td>success</td>
-                <td> ID of system. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > mdmSdsNetworkDisconnectionsCounterParameters </td>
-                <td> dict </td>
-                <td>success</td>
-                <td> MDM's SDS counter parameter. </td>
-            </tr>
-                                         <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=4 > shortWindow </td>
-                    <td> int </td>
-                    <td>success</td>
-                    <td> Short window for Counter Parameters. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=4 > mediumWindow </td>
-                    <td> int </td>
-                    <td>success</td>
-                    <td> Medium window for Counter Parameters. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=4 > longWindow </td>
-                    <td> int </td>
-                    <td>success</td>
-                    <td> Long window for Counter Parameters. </td>
-                </tr>
-                                                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=5 > rfcacheOpertionalMode </td>
                 <td> str </td>
                 <td>success</td>
@@ -1672,17 +2443,24 @@ Manage Protection Domain on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > fglMetadataCacheEnabled </td>
-                <td> bool </td>
+                <td colspan=5 > id </td>
+                <td> str </td>
                 <td>success</td>
-                <td> Whether FGL cache enabled. </td>
+                <td> Protection domain ID. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > rebalanceNetworkThrottlingInKbps </td>
-                <td> int </td>
+                <td colspan=5 > vtreeMigrationNetworkThrottlingEnabled </td>
+                <td> bool </td>
                 <td>success</td>
-                <td> Rebalance network throttling in KBps. </td>
+                <td> Whether V-Tree migration network throttling enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > rfcacheAccpId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Id of RF cache acceleration pool. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1709,17 +2487,31 @@ Manage Protection Domain on Dell EMC PowerFlex
                 </tr>
                                                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > protectedMaintenanceModeNetworkThrottlingInKbps </td>
+                <td colspan=5 > vtreeMigrationNetworkThrottlingInKbps </td>
                 <td> int </td>
                 <td>success</td>
-                <td> Protected maintenance mode network throttling in KBps. </td>
+                <td> V-Tree migration network throttling in KBps. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > rfcacheMaxIoSizeKb </td>
+                <td colspan=5 > protectedMaintenanceModeNetworkThrottlingEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Whether protected maintenance mode network throttling enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > rebuildNetworkThrottlingEnabled </td>
                 <td> int </td>
                 <td>success</td>
-                <td> RF cache maximum I/O size in KB. </td>
+                <td> Whether rebuild network throttling enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > protectionDomainState </td>
+                <td> int </td>
+                <td>success</td>
+                <td> State of protection domain. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1730,19 +2522,20 @@ Manage Protection Domain on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > storagePool </td>
-                <td> list </td>
-                <td>success</td>
-                <td> List of storage pools. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=5 > sdsSdsNetworkDisconnectionsCounterParameters </td>
                 <td> dict </td>
                 <td>success</td>
                 <td> Counter parameter for SDS-SDS network. </td>
             </tr>
                                          <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > longWindow </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Long window for Counter Parameters. </td>
+                </tr>
+                                             <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td colspan=4 > shortWindow </td>
@@ -1758,7 +2551,21 @@ Manage Protection Domain on Dell EMC PowerFlex
                     <td>success</td>
                     <td> Medium window for Counter Parameters. </td>
                 </tr>
-                                             <tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > overallIoNetworkThrottlingInKbps </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Overall network throttling in KBps. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=5 > mdmSdsNetworkDisconnectionsCounterParameters </td>
+                <td> dict </td>
+                <td>success</td>
+                <td> MDM's SDS counter parameter. </td>
+            </tr>
+                                         <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td colspan=4 > longWindow </td>
@@ -1766,27 +2573,23 @@ Manage Protection Domain on Dell EMC PowerFlex
                     <td>success</td>
                     <td> Long window for Counter Parameters. </td>
                 </tr>
-                                                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > rebalanceNetworkThrottlingEnabled </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Whether rebalance network throttling enabled. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=5 > protectionDomainState </td>
-                <td> int </td>
-                <td>success</td>
-                <td> State of protection domain. </td>
-            </tr>
-                                        <tr>
-            <td colspan=6 > changed </td>
-            <td>  bool </td>
-            <td> always </td>
-            <td> Whether or not the resource has changed. </td>
-        </tr>
-                                                                                    </table>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > shortWindow </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Short window for Counter Parameters. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=4 > mediumWindow </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Medium window for Counter Parameters. </td>
+                </tr>
+                                                                                                                    </table>
 
 ### Authors
 * Bhavneet Sharma (@sharmb5) <ansible.team@dell.com>
@@ -1794,7 +2597,7 @@ Manage Protection Domain on Dell EMC PowerFlex
 --------------------------------
 # SDC Module
 
-Manage SDCs on Dell EMC PowerFlex
+Manage SDCs on Dell PowerFlex
 
 ### Synopsis
  Managing SDCs on PowerFlex storage system includes getting details of SDC and renaming SDC.
@@ -1810,45 +2613,13 @@ Manage SDCs on Dell EMC PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                                            <tr>
+                    <tr>
             <td colspan=1 > sdc_ip</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
             <td> <br> IP of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.  <br> Mutually exclusive with sdc_id and sdc_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > sdc_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Name of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.  <br> Mutually exclusive with sdc_id and sdc_ip. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > verifycert</td>
-            <td> bool  </td>
-            <td></td>
-            <td> True </td>
-            <td></td>
-            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > state</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
-            <td> <br> State of the SDC. </td>
         </tr>
                     <tr>
             <td colspan=1 > timeout</td>
@@ -1859,20 +2630,12 @@ Manage SDCs on Dell EMC PowerFlex
             <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
         </tr>
                     <tr>
-            <td colspan=1 > sdc_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.  <br> Mutually exclusive with sdc_name and sdc_ip. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > username</td>
+            <td colspan=1 > state</td>
             <td> str  </td>
             <td> True </td>
             <td></td>
-            <td></td>
-            <td> <br> The username of the PowerFlex gateway host. </td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the SDC. </td>
         </tr>
                     <tr>
             <td colspan=1 > sdc_new_name</td>
@@ -1883,12 +2646,52 @@ Manage SDCs on Dell EMC PowerFlex
             <td> <br> New name of the SDC. Used to rename the SDC. </td>
         </tr>
                     <tr>
+            <td colspan=1 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
             <td colspan=1 > password</td>
             <td> str  </td>
             <td> True </td>
             <td></td>
             <td></td>
             <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > sdc_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.  <br> Mutually exclusive with sdc_name and sdc_ip. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > sdc_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Name of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.  <br> Mutually exclusive with sdc_id and sdc_ip. </td>
         </tr>
                     <tr>
             <td colspan=1 > gateway_host</td>
@@ -1898,11 +2701,11 @@ Manage SDCs on Dell EMC PowerFlex
             <td></td>
             <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
         </tr>
-                                                                    </table>
+                                                                                            </table>
 
 ### Notes
 * The check_mode is not supported.
-* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell EMC PowerFlex storage platform.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 ### Examples
 ```
@@ -1935,13 +2738,7 @@ Manage SDCs on Dell EMC PowerFlex
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                            <tr>
-            <td colspan=3 > changed </td>
-            <td>  bool </td>
-            <td> always </td>
-            <td> Whether or not the resource has changed. </td>
-        </tr>
-                    <tr>
+                                            <tr>
             <td colspan=3 > sdc_details </td>
             <td>  complex </td>
             <td> When SDC exists </td>
@@ -1949,10 +2746,31 @@ Manage SDCs on Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the SDC. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sdcApproved </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Indicates whether an SDC has approved access to the system. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=2 > name </td>
                 <td> str </td>
                 <td>success</td>
                 <td> Name of the SDC. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sdcIp </td>
+                <td> str </td>
+                <td>success</td>
+                <td> IP of the SDC. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -1962,14 +2780,6 @@ Manage SDCs on Dell EMC PowerFlex
                 <td> The details of the mapped volumes. </td>
             </tr>
                                          <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > name </td>
-                    <td> str </td>
-                    <td>success</td>
-                    <td> The name of the volume. </td>
-                </tr>
-                                             <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td colspan=1 > id </td>
@@ -1985,6 +2795,14 @@ Manage SDCs on Dell EMC PowerFlex
                     <td>success</td>
                     <td> Type of the volume. </td>
                 </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > name </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> The name of the volume. </td>
+                </tr>
                                                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=2 > osType </td>
@@ -1992,28 +2810,13 @@ Manage SDCs on Dell EMC PowerFlex
                 <td>success</td>
                 <td> OS type of the SDC. </td>
             </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sdcApproved </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Indicates whether an SDC has approved access to the system. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> The ID of the SDC. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sdcIp </td>
-                <td> str </td>
-                <td>success</td>
-                <td> IP of the SDC. </td>
-            </tr>
-                                                                                                        </table>
+                                        <tr>
+            <td colspan=3 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                                                                    </table>
 
 ### Authors
 * Akash Shendge (@shenda1) <ansible.team@dell.com>
@@ -2021,7 +2824,7 @@ Manage SDCs on Dell EMC PowerFlex
 --------------------------------
 # SDS Module
 
-Manage SDS on Dell EMC PowerFlex
+Manage SDS on Dell PowerFlex
 
 ### Synopsis
  Managing SDS on PowerFlex storage system includes creating new SDS, getting details of SDS, adding/removing IP to/from SDS, modifying attributes of SDS, and deleting SDS.
@@ -2037,13 +2840,69 @@ Manage SDS on Dell EMC PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                                            <tr>
+                    <tr>
+            <td colspan=2 > rmcache_size</td>
+            <td> int  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Read RAM cache size (in MB).  <br> Minimum size is 128 MB.  <br> Maximum size is 3911 MB. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > timeout</td>
+            <td> int  </td>
+            <td></td>
+            <td> 120 </td>
+            <td></td>
+            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > protection_domain_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the protection domain.  <br> Mutually exclusive with protection_domain_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
             <td colspan=2 > performance_profile</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td> <ul> <li>Compact</li>  <li>HighPerformance</li> </ul></td>
             <td> <br> Performance profile to apply to the SDS.  <br> The HighPerformance profile configures a predefined set of parameters for very high performance use cases.  <br> Default value by API is "HighPerformance". </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > sds_ip_state</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>present-in-sds</li>  <li>absent-in-sds</li> </ul></td>
+            <td> <br> State of IP with respect to the SDS. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > sds_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the SDS.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with sds_id. </td>
         </tr>
                     <tr>
             <td colspan=2 > sds_new_name</td>
@@ -2054,12 +2913,60 @@ Manage SDS on Dell EMC PowerFlex
             <td> <br> SDS new name. </td>
         </tr>
                     <tr>
-            <td colspan=2 > sds_name</td>
+            <td colspan=2 > protection_domain_id</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> The name of the SDS.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with sds_id. </td>
+            <td> <br> The ID of the protection domain.  <br> Mutually exclusive with protection_domain_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the SDS. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > sds_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the SDS.  <br> Except create operation, all other operations can be performed using sds_id.  <br> Mutually exclusive with sds_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > rmcache_enabled</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Whether to enable the Read RAM cache. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > rfcache_enabled</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Whether to enable the Read Flash cache. </td>
         </tr>
                     <tr>
             <td colspan=2 > sds_ip_list</td>
@@ -2071,15 +2978,6 @@ Manage SDS on Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > role </td>
-                <td> str  </td>
-                <td> True </td>
-                <td></td>
-                <td> <ul> <li>sdsOnly</li>  <li>sdcOnly</li>  <li>all</li> </ul></td>
-                <td>  <br> Role assigned to the SDS IP address.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > ip </td>
                 <td> str  </td>
                 <td> True </td>
@@ -2087,71 +2985,16 @@ Manage SDS on Dell EMC PowerFlex
                 <td></td>
                 <td>  <br> IP address of the SDS.  </td>
             </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > role </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td> <ul> <li>sdsOnly</li>  <li>sdcOnly</li>  <li>all</li> </ul></td>
+                <td>  <br> Role assigned to the SDS IP address.  </td>
+            </tr>
                             <tr>
-            <td colspan=2 > state</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
-            <td> <br> State of the SDS. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > timeout</td>
-            <td> int  </td>
-            <td></td>
-            <td> 120 </td>
-            <td></td>
-            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > sds_ip_state</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>present-in-sds</li>  <li>absent-in-sds</li> </ul></td>
-            <td> <br> State of IP with respect to the SDS. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > rfcache_enabled</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Whether to enable the Read Flash cache. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > rmcache_enabled</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Whether to enable the Read RAM cache. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > password</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The password of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > rmcache_size</td>
-            <td> int  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Read RAM cache size (in MB).  <br> Minimum size is 128 MB.  <br> Maximum size is 3911 MB. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
             <td colspan=2 > verifycert</td>
             <td> bool  </td>
             <td></td>
@@ -2159,47 +3002,7 @@ Manage SDS on Dell EMC PowerFlex
             <td></td>
             <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
         </tr>
-                    <tr>
-            <td colspan=2 > protection_domain_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The ID of the protection domain.  <br> Mutually exclusive with protection_domain_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > username</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The username of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > protection_domain_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the protection domain.  <br> Mutually exclusive with protection_domain_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > sds_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The ID of the SDS.  <br> Except create operation, all other operations can be performed using sds_id.  <br> Mutually exclusive with sds_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > gateway_host</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
-        </tr>
-                                                                    </table>
+                                                                                            </table>
 
 ### Notes
 * The maximum limit for the IPs that can be associated with an SDS is 8.
@@ -2209,7 +3012,7 @@ Manage SDS on Dell EMC PowerFlex
 * There must be only 1 IP with SDS role (either with role 'all' or 'sdsOnly').
 * SDS can be created with RF cache disabled, but, be aware that the RF cache is not always updated. In this case, the user should re-try the operation.
 * The check_mode is not supported.
-* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell EMC PowerFlex storage platform.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 ### Examples
 ```
@@ -2354,7 +3157,13 @@ Manage SDS on Dell EMC PowerFlex
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                            <tr>
+                                            <tr>
+            <td colspan=4 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
             <td colspan=4 > sds_details </td>
             <td>  complex </td>
             <td> When SDS exists </td>
@@ -2362,80 +3171,17 @@ Manage SDS on Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > sdsReceiveBufferAllocationFailures </td>
-                <td> str </td>
-                <td>success</td>
-                <td> SDS receive buffer allocation failures. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > rfcacheEnabled </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Whether RF cache is enabled or not. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > lastUpgradeTime </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Last time SDS was upgraded. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > sdsDecoupled </td>
-                <td> str </td>
-                <td>success</td>
-                <td> SDS decoupled. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > rfcacheErrorDeviceDoesNotExist </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> RF cache error for device does not exist. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > fglMetadataCacheState </td>
-                <td> str </td>
-                <td>success</td>
-                <td> FGL metadata cache state. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > rmcacheEnabled </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Whether Read RAM cache is enabled or not. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > numOfIoBuffers </td>
+                <td colspan=3 > rmcacheSizeInKb </td>
                 <td> int </td>
                 <td>success</td>
-                <td> Number of IO buffers. </td>
+                <td> RM cache size in KB. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > faultSetId </td>
+                <td colspan=3 > drlMode </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Fault set ID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > onVmWare </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Presence on VMware. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > rmcacheMemoryAllocationState </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> RM cache memory allocation state. </td>
+                <td> DRL mode. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2446,24 +3192,38 @@ Manage SDS on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > rmcacheSizeInMb </td>
+                <td colspan=3 > numOfIoBuffers </td>
                 <td> int </td>
                 <td>success</td>
-                <td> RM cache size in MB. </td>
+                <td> Number of IO buffers. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > protectionDomainId </td>
-                <td> str </td>
+                <td colspan=3 > rfcacheErrorDeviceDoesNotExist </td>
+                <td> bool </td>
                 <td>success</td>
-                <td> Protection Domain ID. </td>
+                <td> RF cache error for device does not exist. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > certificateInfo </td>
+                <td colspan=3 > rmcacheEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Whether Read RAM cache is enabled or not. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > mdmConnectionState </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Information about certificate. </td>
+                <td> MDM connection state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sdsState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS state. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2474,10 +3234,17 @@ Manage SDS on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > rmcacheSizeInKb </td>
-                <td> int </td>
+                <td colspan=3 > softwareVersionInfo </td>
+                <td> str </td>
                 <td>success</td>
-                <td> RM cache size in KB. </td>
+                <td> SDS software version information. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rmcacheMemoryAllocationState </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> RM cache memory allocation state. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2488,31 +3255,45 @@ Manage SDS on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > rfcacheErrorInconsistentCacheConfiguration </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> RF cache error for inconsistent cache configuration. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > numRestarts </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Number of restarts. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> SDS ID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=3 > rfcacheErrorInconsistentSourceConfiguration </td>
                 <td> bool </td>
                 <td>success</td>
                 <td> RF cache error for inconsistent source configuration. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > rfcacheEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Whether RF cache is enabled or not. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > faultSetId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Fault set ID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sdsDecoupled </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SDS decoupled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > lastUpgradeTime </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Last time SDS was upgraded. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > onVmWare </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Presence on VMware. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2523,24 +3304,17 @@ Manage SDS on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > protectionDomainName </td>
+                <td colspan=3 > certificateInfo </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Protection Domain Name. </td>
+                <td> Information about certificate. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > rfcacheErrorApiVersionMismatch </td>
-                <td> bool </td>
+                <td colspan=3 > sdsReceiveBufferAllocationFailures </td>
+                <td> str </td>
                 <td>success</td>
-                <td> RF cache error for API version mismatch. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > fglNumConcurrentWrites </td>
-                <td> int </td>
-                <td>success</td>
-                <td> FGL concurrent writes. </td>
+                <td> SDS receive buffer allocation failures. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2552,32 +3326,39 @@ Manage SDS on Dell EMC PowerFlex
                                          <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=2 > role </td>
-                    <td> str </td>
-                    <td>success</td>
-                    <td> Role of the SDS IP. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
                     <td colspan=2 > ip </td>
                     <td> str </td>
                     <td>success</td>
                     <td> IP present in the SDS. </td>
                 </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > role </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Role of the SDS IP. </td>
+                </tr>
                                                             <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > authenticationError </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Indicates authentication error. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > membershipState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Membership state. </td>
+            </tr>
+                                <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=3 > configuredDrlMode </td>
                 <td> str </td>
                 <td>success</td>
                 <td> Configured DRL mode. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > mdmConnectionState </td>
-                <td> str </td>
-                <td>success</td>
-                <td> MDM connection state. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2588,10 +3369,24 @@ Manage SDS on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > raidControllers </td>
-                <td> int </td>
+                <td colspan=3 > rfcacheErrorApiVersionMismatch </td>
+                <td> bool </td>
                 <td>success</td>
-                <td> Number of RAID controllers. </td>
+                <td> RF cache error for API version mismatch. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Protection Domain Name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > maintenanceType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Maintenance type. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2602,17 +3397,24 @@ Manage SDS on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > softwareVersionInfo </td>
+                <td colspan=3 > id </td>
                 <td> str </td>
                 <td>success</td>
-                <td> SDS software version information. </td>
+                <td> SDS ID. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > sdsConfigurationFailure </td>
-                <td> str </td>
+                <td colspan=3 > port </td>
+                <td> int </td>
                 <td>success</td>
-                <td> SDS configuration failure. </td>
+                <td> SDS port. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > numRestarts </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Number of restarts. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2639,24 +3441,45 @@ Manage SDS on Dell EMC PowerFlex
                 </tr>
                                                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > maintenanceType </td>
-                <td> str </td>
+                <td colspan=3 > rfcacheErrorInconsistentCacheConfiguration </td>
+                <td> bool </td>
                 <td>success</td>
-                <td> Maintenance type. </td>
+                <td> RF cache error for inconsistent cache configuration. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > port </td>
+                <td colspan=3 > fglMetadataCacheState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> FGL metadata cache state. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > fglNumConcurrentWrites </td>
                 <td> int </td>
                 <td>success</td>
-                <td> SDS port. </td>
+                <td> FGL concurrent writes. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > sdsState </td>
+                <td colspan=3 > raidControllers </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Number of RAID controllers. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sdsConfigurationFailure </td>
                 <td> str </td>
                 <td>success</td>
-                <td> SDS state. </td>
+                <td> SDS configuration failure. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > protectionDomainId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Protection Domain ID. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2667,32 +3490,12 @@ Manage SDS on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > authenticationError </td>
-                <td> str </td>
+                <td colspan=3 > rmcacheSizeInMb </td>
+                <td> int </td>
                 <td>success</td>
-                <td> Indicates authentication error. </td>
+                <td> RM cache size in MB. </td>
             </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > drlMode </td>
-                <td> str </td>
-                <td>success</td>
-                <td> DRL mode. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=3 > membershipState </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Membership state. </td>
-            </tr>
-                                        <tr>
-            <td colspan=4 > changed </td>
-            <td>  bool </td>
-            <td> always </td>
-            <td> Whether or not the resource has changed. </td>
-        </tr>
-                                                                                    </table>
+                                                                                        </table>
 
 ### Authors
 * Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
@@ -2700,7 +3503,7 @@ Manage SDS on Dell EMC PowerFlex
 --------------------------------
 # Snapshot Module
 
-Manage Snapshots on Dell EMC PowerFlex
+Manage Snapshots on Dell PowerFlex
 
 ### Synopsis
  Managing snapshots on PowerFlex Storage System includes creating, getting details, mapping/unmapping to/from SDC, modifying the attributes and deleting snapshot.
@@ -2716,30 +3519,6 @@ Manage Snapshots on Dell EMC PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=2 > retention_unit</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>hours</li>  <li>days</li> </ul></td>
-            <td> <br> The unit for retention. It defaults to 'hours', if not specified. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > vol_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the volume for which snapshot will be taken.  <br> Specify either vol_name or vol_id while creating snapshot. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > state</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
-            <td> <br> State of the snapshot. </td>
-        </tr>
                     <tr>
             <td colspan=2 > size</td>
             <td> int  </td>
@@ -2747,6 +3526,14 @@ Manage Snapshots on Dell EMC PowerFlex
             <td></td>
             <td></td>
             <td> <br> The size of the snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > timeout</td>
+            <td> int  </td>
+            <td></td>
+            <td> 120 </td>
+            <td></td>
+            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
         </tr>
                     <tr>
             <td colspan=2 > sdc_state</td>
@@ -2757,12 +3544,28 @@ Manage Snapshots on Dell EMC PowerFlex
             <td> <br> Mapping state of the SDC. </td>
         </tr>
                     <tr>
-            <td colspan=2 > snapshot_id</td>
+            <td colspan=2 > vol_name</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> The ID of the Snapshot. </td>
+            <td> <br> The name of the volume for which snapshot will be taken.  <br> Specify either vol_name or vol_id while creating snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the volume. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
         </tr>
                     <tr>
             <td colspan=2 > password</td>
@@ -2771,6 +3574,62 @@ Manage Snapshots on Dell EMC PowerFlex
             <td></td>
             <td></td>
             <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the Snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > remove_mode</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>ONLY_ME</li>  <li>INCLUDING_DESCENDANTS</li> </ul></td>
+            <td> <br> Removal mode for the snapshot.  <br> It defaults to 'ONLY_ME', if not specified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > allow_multiple_mappings</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies whether to allow multiple mappings or not. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > read_only</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies whether mapping of the created snapshot volume will have read-write access or limited to read-only access.  <br> If true, snapshot is created with read-only access.  <br> If false, snapshot is created with read-write access. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> New name of the snapshot. Used to rename the snapshot. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > desired_retention</td>
+            <td> int  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The retention value for the Snapshot.  <br> If the desired_retention is not mentioned during creation, snapshot will be created with unlimited retention.  <br> Maximum supported desired retention is 31 days. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the snapshot.  <br> Mandatory for create operation.  <br> Specify either snapshot name or ID (but not both) for any operation. </td>
         </tr>
                     <tr>
             <td colspan=2 > sdc</td>
@@ -2788,6 +3647,15 @@ Manage Snapshots on Dell EMC PowerFlex
                 <td></td>
                 <td></td>
                 <td>  <br> IP of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > sdc_id </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_name and sdc_ip.  </td>
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -2818,15 +3686,6 @@ Manage Snapshots on Dell EMC PowerFlex
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > sdc_id </td>
-                <td> str  </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>  <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_name and sdc_ip.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > bandwidth_limit </td>
                 <td> int  </td>
                 <td></td>
@@ -2835,60 +3694,20 @@ Manage Snapshots on Dell EMC PowerFlex
                 <td>  <br> Limit of snapshot network bandwidth.  <br> Need to mention in multiple of 1024 Kbps.  <br> To set no limit, 0 is to be passed.  </td>
             </tr>
                             <tr>
-            <td colspan=2 > remove_mode</td>
+            <td colspan=2 > state</td>
             <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>ONLY_ME</li>  <li>INCLUDING_DESCENDANTS</li> </ul></td>
-            <td> <br> Removal mode for the snapshot.  <br> It defaults to 'ONLY_ME', if not specified. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > allow_multiple_mappings</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Specifies whether to allow multiple mappings or not. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > verifycert</td>
-            <td> bool  </td>
-            <td></td>
             <td> True </td>
             <td></td>
-            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the snapshot. </td>
         </tr>
                     <tr>
-            <td colspan=2 > snapshot_new_name</td>
+            <td colspan=2 > retention_unit</td>
             <td> str  </td>
             <td></td>
             <td></td>
-            <td></td>
-            <td> <br> New name of the snapshot. Used to rename the snapshot. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > snapshot_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the snapshot.  <br> Mandatory for create operation.  <br> Specify either snapshot name or ID (but not both) for any operation. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > desired_retention</td>
-            <td> int  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The retention value for the Snapshot.  <br> If the desired_retention is not mentioned during creation, snapshot will be created with unlimited retention.  <br> Maximum supported desired retention is 31 days. </td>
+            <td> <ul> <li>hours</li>  <li>days</li> </ul></td>
+            <td> <br> The unit for retention. It defaults to 'hours', if not specified. </td>
         </tr>
                     <tr>
             <td colspan=2 > cap_unit</td>
@@ -2907,14 +3726,6 @@ Manage Snapshots on Dell EMC PowerFlex
             <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
-            <td colspan=2 > read_only</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Specifies whether mapping of the created snapshot volume will have read-write access or limited to read-only access.  <br> If true, snapshot is created with read-only access.  <br> If false, snapshot is created with read-write access. </td>
-        </tr>
-                    <tr>
             <td colspan=2 > username</td>
             <td> str  </td>
             <td> True </td>
@@ -2923,26 +3734,18 @@ Manage Snapshots on Dell EMC PowerFlex
             <td> <br> The username of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
-            <td colspan=2 > vol_id</td>
-            <td> str  </td>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
             <td></td>
+            <td> True </td>
             <td></td>
-            <td></td>
-            <td> <br> The ID of the volume. </td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
         </tr>
-                    <tr>
-            <td colspan=2 > timeout</td>
-            <td> int  </td>
-            <td></td>
-            <td> 120 </td>
-            <td></td>
-            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
-        </tr>
-                                                                    </table>
+                                                                                            </table>
 
 ### Notes
 * The check_mode is not supported.
-* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell EMC PowerFlex storage platform.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 ### Examples
 ```
@@ -3052,7 +3855,7 @@ Manage Snapshots on Dell EMC PowerFlex
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                            <tr>
+                                            <tr>
             <td colspan=3 > changed </td>
             <td>  bool </td>
             <td> always </td>
@@ -3066,24 +3869,31 @@ Manage Snapshots on Dell EMC PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > retentionInHours </td>
+                <td colspan=2 > secureSnapshotExpTime </td>
                 <td> int </td>
                 <td>success</td>
-                <td> Retention of the snapshot in hours. </td>
+                <td> Expiry time of the snapshot. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > creationTime </td>
-                <td> int </td>
-                <td>success</td>
-                <td> The creation time of the snapshot. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > storagePoolId </td>
+                <td colspan=2 > ancestorVolumeName </td>
                 <td> str </td>
                 <td>success</td>
-                <td> The ID of the Storage pool in which snapshot resides. </td>
+                <td> The name of the root of the specified volume's V-Tree. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sizeInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the snapshot. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sizeInGb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the snapshot. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -3095,10 +3905,10 @@ Manage Snapshots on Dell EMC PowerFlex
                                          <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > sdcName </td>
-                    <td> str </td>
+                    <td colspan=1 > limitBwInMbps </td>
+                    <td> int </td>
                     <td>success</td>
-                    <td> Name of the SDC. </td>
+                    <td> Bandwidth limit for the SDC. </td>
                 </tr>
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
@@ -3107,6 +3917,22 @@ Manage Snapshots on Dell EMC PowerFlex
                     <td> str </td>
                     <td>success</td>
                     <td> mapping access mode for the specified snapshot. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcName </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcIp </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> IP of the SDC. </td>
                 </tr>
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
@@ -3124,49 +3950,19 @@ Manage Snapshots on Dell EMC PowerFlex
                     <td>success</td>
                     <td> ID of the SDC. </td>
                 </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > limitBwInMbps </td>
-                    <td> int </td>
-                    <td>success</td>
-                    <td> Bandwidth limit for the SDC. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > sdcIp </td>
-                    <td> str </td>
-                    <td>success</td>
-                    <td> IP of the SDC. </td>
-                </tr>
                                                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > ancestorVolumeId </td>
+                <td colspan=2 > id </td>
                 <td> str </td>
                 <td>success</td>
-                <td> The ID of the root of the specified volume's V-Tree. </td>
+                <td> The ID of the snapshot. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sizeInGb </td>
+                <td colspan=2 > retentionInHours </td>
                 <td> int </td>
                 <td>success</td>
-                <td> Size of the snapshot. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Name of the snapshot. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sizeInKb </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Size of the snapshot. </td>
+                <td> Retention of the snapshot in hours. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -3177,26 +3973,33 @@ Manage Snapshots on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > id </td>
+                <td colspan=2 > storagePoolId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> The ID of the snapshot. </td>
+                <td> The ID of the Storage pool in which snapshot resides. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > secureSnapshotExpTime </td>
+                <td colspan=2 > creationTime </td>
                 <td> int </td>
                 <td>success</td>
-                <td> Expiry time of the snapshot. </td>
+                <td> The creation time of the snapshot. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > ancestorVolumeName </td>
+                <td colspan=2 > ancestorVolumeId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> The name of the root of the specified volume's V-Tree. </td>
+                <td> The ID of the root of the specified volume's V-Tree. </td>
             </tr>
-                                                                                                        </table>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the snapshot. </td>
+            </tr>
+                                                                                        </table>
 
 ### Authors
 * Akash Shendge (@shenda1) <ansible.team@dell.com>
@@ -3204,10 +4007,10 @@ Manage Snapshots on Dell EMC PowerFlex
 --------------------------------
 # Storage Pool Module
 
-Managing Dell EMC PowerFlex storage pool
+Managing Dell PowerFlex storage pool
 
 ### Synopsis
- Dell EMC PowerFlex storage pool module includes getting the details of storage pool, creating a new storage pool, and modifying the attribute of a storage pool.
+ Dell PowerFlex storage pool module includes getting the details of storage pool, creating a new storage pool, and modifying the attribute of a storage pool.
 
 ### Parameters
                                                                                                                                                                                                                                                                                                                                                             
@@ -3220,30 +4023,6 @@ Managing Dell EMC PowerFlex storage pool
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=1 > storage_pool_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the storage pool.  <br> If more than one storage pool is found with the same name then protection domain id/name is required to perform the task.  <br> Mutually exclusive with storage_pool_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > state</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
-            <td> <br> State of the storage pool. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > use_rmcache</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Enable/Disable RMcache on a specific storage pool. </td>
-        </tr>
                     <tr>
             <td colspan=1 > timeout</td>
             <td> int  </td>
@@ -3251,30 +4030,6 @@ Managing Dell EMC PowerFlex storage pool
             <td> 120 </td>
             <td></td>
             <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > media_type</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>HDD</li>  <li>SSD</li>  <li>TRANSITIONAL</li> </ul></td>
-            <td> <br> Type of devices in the storage pool. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > storage_pool_new_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> New name for the storage pool can be provided.  <br> This parameter is used for renaming the storage pool. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > password</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The password of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
             <td colspan=1 > protection_domain_name</td>
@@ -3293,12 +4048,44 @@ Managing Dell EMC PowerFlex storage pool
             <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
         </tr>
                     <tr>
+            <td colspan=1 > media_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>HDD</li>  <li>SSD</li>  <li>TRANSITIONAL</li> </ul></td>
+            <td> <br> Type of devices in the storage pool. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > use_rmcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Enable/Disable RMcache on a specific storage pool. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > storage_pool_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> New name for the storage pool can be provided.  <br> This parameter is used for renaming the storage pool. </td>
+        </tr>
+                    <tr>
             <td colspan=1 > gateway_host</td>
             <td> str  </td>
             <td> True </td>
             <td></td>
             <td></td>
             <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > use_rfcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Enable/Disable RFcache on a specific storage pool. </td>
         </tr>
                     <tr>
             <td colspan=1 > protection_domain_id</td>
@@ -3309,20 +4096,36 @@ Managing Dell EMC PowerFlex storage pool
             <td> <br> The id of the protection domain.  <br> During creation of a pool, either protection domain name or id must be mentioned.  <br> Mutually exclusive with protection_domain_name. </td>
         </tr>
                     <tr>
+            <td colspan=1 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the storage pool. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > storage_pool_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the storage pool.  <br> If more than one storage pool is found with the same name then protection domain id/name is required to perform the task.  <br> Mutually exclusive with storage_pool_id. </td>
+        </tr>
+                    <tr>
             <td colspan=1 > username</td>
             <td> str  </td>
             <td> True </td>
             <td></td>
             <td></td>
             <td> <br> The username of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > use_rfcache</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Enable/Disable RFcache on a specific storage pool. </td>
         </tr>
                     <tr>
             <td colspan=1 > storage_pool_id</td>
@@ -3340,12 +4143,12 @@ Managing Dell EMC PowerFlex storage pool
             <td></td>
             <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
         </tr>
-                                                                    </table>
+                                                                                            </table>
 
 ### Notes
 * TRANSITIONAL media type is supported only during modification.
 * The check_mode is not supported.
-* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell EMC PowerFlex storage platform.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 ### Examples
 ```
@@ -3411,7 +4214,13 @@ Managing Dell EMC PowerFlex storage pool
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                            <tr>
+                                            <tr>
+            <td colspan=2 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
             <td colspan=2 > storage_pool_details </td>
             <td>  complex </td>
             <td> When storage pool exists </td>
@@ -3419,17 +4228,17 @@ Managing Dell EMC PowerFlex storage pool
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
+                <td colspan=1 > id </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Name of the storage pool under protection domain. </td>
+                <td> ID of the storage pool under protection domain. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > protectionDomainId </td>
-                <td> str </td>
+                <td colspan=1 > useRfcache </td>
+                <td> bool </td>
                 <td>success</td>
-                <td> ID of the protection domain in which pool resides. </td>
+                <td> Enable/Disable RFcache on a specific storage pool. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -3447,17 +4256,17 @@ Managing Dell EMC PowerFlex storage pool
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > useRfcache </td>
-                <td> bool </td>
+                <td colspan=1 > name </td>
+                <td> str </td>
                 <td>success</td>
-                <td> Enable/Disable RFcache on a specific storage pool. </td>
+                <td> Name of the storage pool under protection domain. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
+                <td colspan=1 > protectionDomainId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> ID of the storage pool under protection domain. </td>
+                <td> ID of the protection domain in which pool resides. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -3466,13 +4275,7 @@ Managing Dell EMC PowerFlex storage pool
                 <td>success</td>
                 <td> Type of devices in the storage pool. </td>
             </tr>
-                                        <tr>
-            <td colspan=2 > changed </td>
-            <td>  bool </td>
-            <td> always </td>
-            <td> Whether or not the resource has changed. </td>
-        </tr>
-                                                                                    </table>
+                                                                                        </table>
 
 ### Authors
 * Arindam Datta (@dattaarindam) <ansible.team@dell.com>
@@ -3481,7 +4284,7 @@ Managing Dell EMC PowerFlex storage pool
 --------------------------------
 # Volume Module
 
-Manage volumes on Dell EMC PowerFlex
+Manage volumes on Dell PowerFlex
 
 ### Synopsis
  Managing volumes on PowerFlex storage system includes creating, getting details, modifying attributes and deleting volume.
@@ -3498,101 +4301,13 @@ Manage volumes on Dell EMC PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=2 > storage_pool_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> During creation, if storage pool name is provided then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with storage_pool_id. </td>
-        </tr>
                     <tr>
-            <td colspan=2 > use_rmcache</td>
-            <td> bool  </td>
+            <td colspan=2 > size</td>
+            <td> int  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> Whether to use RM Cache or not. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > sdc_state</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>mapped</li>  <li>unmapped</li> </ul></td>
-            <td> <br> Mapping state of the SDC. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > snapshot_policy_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Name of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > protection_domain_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The ID of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > gateway_host</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > vol_type</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>THICK_PROVISIONED</li>  <li>THIN_PROVISIONED</li> </ul></td>
-            <td> <br> Type of volume provisioning. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > compression_type</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>NORMAL</li>  <li>NONE</li> </ul></td>
-            <td> <br> Type of the compression method. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > vol_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The ID of the volume.  <br> Except create operation, all other operations can be performed using vol_id.  <br> Mutually exclusive with vol_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > cap_unit</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>GB</li>  <li>TB</li> </ul></td>
-            <td> <br> The unit of the volume size. It defaults to 'GB'. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > vol_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the volume.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with vol_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > state</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
-            <td> <br> State of the volume. </td>
+            <td> <br> The size of the volume.  <br> Size of the volume will be assigned as higher multiple of 8 GB. </td>
         </tr>
                     <tr>
             <td colspan=2 > timeout</td>
@@ -3603,28 +4318,52 @@ Manage volumes on Dell EMC PowerFlex
             <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
         </tr>
                     <tr>
-            <td colspan=2 > size</td>
+            <td colspan=2 > auto_snap_remove_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>remove</li>  <li>detach</li> </ul></td>
+            <td> <br> Whether to remove or detach the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type.  <br> If the snapshot policy name/id is passed empty then auto_snap_remove_type is defaulted to 'detach'. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the volume.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with vol_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > protection_domain_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the volume.  <br> Except create operation, all other operations can be performed using vol_id.  <br> Mutually exclusive with vol_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
             <td> int  </td>
             <td></td>
+            <td> 443 </td>
             <td></td>
-            <td></td>
-            <td> <br> The size of the volume.  <br> Size of the volume will be assigned as higher multiple of 8 GB. </td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
         </tr>
                     <tr>
-            <td colspan=2 > snapshot_policy_id</td>
+            <td colspan=2 > vol_type</td>
             <td> str  </td>
             <td></td>
             <td></td>
-            <td></td>
-            <td> <br> ID of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > password</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The password of the PowerFlex gateway host. </td>
+            <td> <ul> <li>THICK_PROVISIONED</li>  <li>THIN_PROVISIONED</li> </ul></td>
+            <td> <br> Type of volume provisioning. </td>
         </tr>
                     <tr>
             <td colspan=2 > sdc</td>
@@ -3642,6 +4381,15 @@ Manage volumes on Dell EMC PowerFlex
                 <td></td>
                 <td></td>
                 <td>  <br> IP of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
+            </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > sdc_id </td>
+                <td> str  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_name and sdc_ip.  </td>
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -3672,15 +4420,6 @@ Manage volumes on Dell EMC PowerFlex
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > sdc_id </td>
-                <td> str  </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>  <br> ID of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_name and sdc_ip.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > bandwidth_limit </td>
                 <td> int  </td>
                 <td></td>
@@ -3689,12 +4428,20 @@ Manage volumes on Dell EMC PowerFlex
                 <td>  <br> Limit of volume network bandwidth.  <br> Need to mention in multiple of 1024 Kbps.  <br> To set no limit, 0 is to be passed.  </td>
             </tr>
                             <tr>
-            <td colspan=2 > delete_snapshots</td>
+            <td colspan=2 > protection_domain_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > verifycert</td>
             <td> bool  </td>
             <td></td>
+            <td> True </td>
             <td></td>
-            <td></td>
-            <td> <br> If True, the volume and all its dependent snapshots will be deleted.  <br> If False, only the volume will be deleted.  <br> It can be specified only when the state is absent.  <br> It defaults to False, if not specified. </td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
         </tr>
                     <tr>
             <td colspan=2 > allow_multiple_mappings</td>
@@ -3705,20 +4452,92 @@ Manage volumes on Dell EMC PowerFlex
             <td> <br> Specifies whether to allow multiple mappings or not.  <br> If the volume is mapped to one SDC then for every new mapping allow_multiple_mappings has to be passed as True. </td>
         </tr>
                     <tr>
-            <td colspan=2 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > auto_snap_remove_type</td>
+            <td colspan=2 > sdc_state</td>
             <td> str  </td>
             <td></td>
             <td></td>
-            <td> <ul> <li>remove</li>  <li>detach</li> </ul></td>
-            <td> <br> Whether to remove or detach the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type.  <br> If the snapshot policy name/id is passed empty then auto_snap_remove_type is defaulted to 'detach'. </td>
+            <td> <ul> <li>mapped</li>  <li>unmapped</li> </ul></td>
+            <td> <br> Mapping state of the SDC. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_policy_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Name of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > compression_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>NORMAL</li>  <li>NONE</li> </ul></td>
+            <td> <br> Type of the compression method. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_policy_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> ID of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > use_rmcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Whether to use RM Cache or not. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > cap_unit</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>GB</li>  <li>TB</li> </ul></td>
+            <td> <br> The unit of the volume size. It defaults to 'GB'. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > delete_snapshots</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> If True, the volume and all its dependent snapshots will be deleted.  <br> If False, only the volume will be deleted.  <br> It can be specified only when the state is absent.  <br> It defaults to False, if not specified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the volume. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > storage_pool_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> During creation, if storage pool name is provided then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with storage_pool_id. </td>
         </tr>
                     <tr>
             <td colspan=2 > vol_new_name</td>
@@ -3729,22 +4548,6 @@ Manage volumes on Dell EMC PowerFlex
             <td> <br> New name of the volume. Used to rename the volume. </td>
         </tr>
                     <tr>
-            <td colspan=2 > username</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The username of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > protection_domain_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_id. </td>
-        </tr>
-                    <tr>
             <td colspan=2 > storage_pool_id</td>
             <td> str  </td>
             <td></td>
@@ -3753,18 +4556,18 @@ Manage volumes on Dell EMC PowerFlex
             <td> <br> The ID of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> Mutually exclusive with storage_pool_name. </td>
         </tr>
                     <tr>
-            <td colspan=2 > verifycert</td>
-            <td> bool  </td>
-            <td></td>
+            <td colspan=2 > username</td>
+            <td> str  </td>
             <td> True </td>
             <td></td>
-            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
         </tr>
-                                                                    </table>
+                                                                                            </table>
 
 ### Notes
 * The check_mode is not supported.
-* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell EMC PowerFlex storage platform.
+* The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 ### Examples
 ```
@@ -3887,33 +4690,13 @@ Manage volumes on Dell EMC PowerFlex
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                            <tr>
-            <td colspan=3 > changed </td>
-            <td>  bool </td>
-            <td> always </td>
-            <td> Whether or not the resource has changed. </td>
-        </tr>
-                    <tr>
+                                            <tr>
             <td colspan=3 > volume_details </td>
             <td>  complex </td>
             <td> When volume exists </td>
             <td> Details of the volume. </td>
         </tr>
                             <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > snapshotPolicyName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Name of the snapshot policy associated with volume. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > protectionDomainName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Name of the protection domain in which volume resides. </td>
-            </tr>
-                                <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=2 > snapshotPolicyId </td>
                 <td> str </td>
@@ -3922,10 +4705,24 @@ Manage volumes on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > storagePoolId </td>
+                <td colspan=2 > snapshotsList </td>
                 <td> str </td>
                 <td>success</td>
-                <td> ID of the storage pool in which volume resides. </td>
+                <td> List of snapshots associated with the volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > snapshotPolicyName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the snapshot policy associated with volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sizeInGb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the volume in Gb. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -3937,10 +4734,10 @@ Manage volumes on Dell EMC PowerFlex
                                          <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > sdcName </td>
-                    <td> str </td>
+                    <td colspan=1 > limitBwInMbps </td>
+                    <td> int </td>
                     <td>success</td>
-                    <td> Name of the SDC. </td>
+                    <td> Bandwidth limit for the SDC. </td>
                 </tr>
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
@@ -3949,6 +4746,22 @@ Manage volumes on Dell EMC PowerFlex
                     <td> str </td>
                     <td>success</td>
                     <td> mapping access mode for the specified volume. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcName </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > sdcIp </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> IP of the SDC. </td>
                 </tr>
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
@@ -3966,49 +4779,19 @@ Manage volumes on Dell EMC PowerFlex
                     <td>success</td>
                     <td> ID of the SDC. </td>
                 </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > limitBwInMbps </td>
-                    <td> int </td>
-                    <td>success</td>
-                    <td> Bandwidth limit for the SDC. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > sdcIp </td>
-                    <td> str </td>
-                    <td>success</td>
-                    <td> IP of the SDC. </td>
-                </tr>
                                                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sizeInKb </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Size of the volume in Kb. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sizeInGb </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Size of the volume in Gb. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > name </td>
+                <td colspan=2 > id </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Name of the volume. </td>
+                <td> The ID of the volume. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > protectionDomainId </td>
+                <td colspan=2 > protectionDomainName </td>
                 <td> str </td>
                 <td>success</td>
-                <td> ID of the protection domain in which volume resides. </td>
+                <td> Name of the protection domain in which volume resides. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -4019,19 +4802,39 @@ Manage volumes on Dell EMC PowerFlex
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > snapshotsList </td>
+                <td colspan=2 > storagePoolId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> List of snapshots associated with the volume. </td>
+                <td> ID of the storage pool in which volume resides. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > id </td>
+                <td colspan=2 > protectionDomainId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> The ID of the volume. </td>
+                <td> ID of the protection domain in which volume resides. </td>
             </tr>
-                                                                                                        </table>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > sizeInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the volume in Kb. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the volume. </td>
+            </tr>
+                                        <tr>
+            <td colspan=3 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                                                                    </table>
 
 ### Authors
 * P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>
