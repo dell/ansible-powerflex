@@ -1,8 +1,8 @@
 #!/usr/bin/python
-# Copyright: (c) 2021, Dell EMC
+# Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-"""Ansible module for managing Dell EMC PowerFlex storage pool"""
+"""Ansible module for managing Dell Technologies (Dell) PowerFlex storage pool"""
 
 from __future__ import absolute_import, division, print_function
 
@@ -14,16 +14,15 @@ module: storagepool
 
 version_added: '1.0.0'
 
-short_description: Managing Dell EMC PowerFlex storage pool
+short_description: Managing Dell PowerFlex storage pool
 
 description:
-- Dell EMC PowerFlex storage pool module includes
-  getting the details of storage pool,
-  creating a new storage pool, and
-  modifying the attribute of a storage pool.
+- Dell PowerFlex storage pool module includes getting the details of
+  storage pool, creating a new storage pool, and modifying the attribute of
+  a storage pool.
 
 extends_documentation_fragment:
-  - dellemc.powerflex.dellemc_powerflex.powerflex
+  - dellemc.powerflex.powerflex
 
 author:
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
@@ -282,7 +281,7 @@ storage_pool_details:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
-    import dellemc_ansible_powerflex_utils as utils
+    import utils
 
 LOG = utils.get_logger('storagepool')
 

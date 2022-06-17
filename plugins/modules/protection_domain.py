@@ -1,8 +1,8 @@
 #!/usr/bin/python
-# Copyright: (c) 2022, Dell EMC
+# Copyright: (c) 2022, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-""" Ansible module for managing Protection Domain on PowerFlex"""
+""" Ansible module for managing Protection Domain on Dell Technologies (Dell) PowerFlex"""
 from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
@@ -10,14 +10,14 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 module: protection_domain
 version_added: '1.2.0'
-short_description: Manage Protection Domain on Dell EMC PowerFlex
+short_description: Manage Protection Domain on Dell PowerFlex
 description:
 - Managing Protection Domain on PowerFlex storage system includes creating,
   modifying attributes, deleting and getting details of Protection Domain.
 author:
 - Bhavneet Sharma (@sharmb5) <ansible.team@dell.com>
 extends_documentation_fragment:
-  - dellemc.powerflex.dellemc_powerflex.powerflex
+  - dellemc.powerflex.powerflex
 options:
   protection_domain_name:
     description:
@@ -487,7 +487,7 @@ protection_domain_details:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
-    import dellemc_ansible_powerflex_utils as utils
+    import utils
 
 LOG = utils.get_logger('protection_domain')
 
