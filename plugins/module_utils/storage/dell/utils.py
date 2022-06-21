@@ -1,4 +1,4 @@
-# Copyright: (c) 2021, DellEMC
+# Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 from __future__ import absolute_import, division, print_function
 
@@ -7,7 +7,7 @@ __metaclass__ = type
 import logging
 import math
 from decimal import Decimal
-from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.dellemc_powerflex_logging_handler \
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.logging_handler \
     import CustomRotatingFileHandler
 
 """import PyPowerFlex lib"""
@@ -134,14 +134,14 @@ def pypowerflex_version_check():
             missing_packages += 'pkg_resources, '
 
         if not HAS_POWERFLEX_SDK:
-            missing_packages += 'PyPowerFlex V 1.3.0 or above'
+            missing_packages += 'PyPowerFlex V 1.4.0 or above'
         else:
-            min_ver = '1.3.0'
+            min_ver = '1.4.0'
             curr_version = pkg_resources.require("PyPowerFlex")[0].version
             supported_version = parse_version(curr_version) >= parse_version(
                 min_ver)
             if not supported_version:
-                missing_packages += 'PyPowerFlex V 1.3.0 or above'
+                missing_packages += 'PyPowerFlex V 1.4.0 or above'
 
         missing_packages_check = dict(
             dependency_present=False if missing_packages else True,

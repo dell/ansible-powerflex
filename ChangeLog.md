@@ -1,5 +1,10 @@
 # ansible-powerflex Change Log
 
+## Version 1.3.0 - released on 28/06/22
+- Added operations like Add/remove standby mdm, rename mdm, change mdm cluster ownership, switch mdm cluster mode, set performance profile, modify virtual IP interfaces and Get high level details of MDM cluster.
+- Added execution environment manifest file to support building an execution environment with ansible-builder.
+- Enabled the check_mode support for info module
+
 ## Version 1.2.0 - released on 25/03/22
 - Added CRUD operations for protection domain module.
 - Names of previously released modules have been changed from dellemc_powerflex_\<module name> to \<module name>.

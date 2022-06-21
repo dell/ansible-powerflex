@@ -1,23 +1,13 @@
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2020, Dell EMC.
+# Copyright: (c) 2020, Dell Technologies.
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
 class ModuleDocFragment(object):
-
-    DOCUMENTATION = r'''
-options:
-  - See respective platform section for more details.
-requirements:
-  - See respective platform section for more details.
-notes:
-  - Ansible modules are available for Dell EMC PowerFlex Storage Platform.
-'''
-
     # Documentation fragment for PowerFlex
-    POWERFLEX = r'''
+    DOCUMENTATION = r'''
     options:
         gateway_host:
             required: True
@@ -59,9 +49,8 @@ notes:
             required: False
             default: 120
     requirements:
-      - A Dell EMC PowerFlex storage system version 3.5 and later.
-      - Ansible 2.10, 2.11 or 2.12
+      - A Dell PowerFlex storage system version 3.5 and later. Ansible 2.11, 2.12 or 2.13
     notes:
       - The modules present in the collection named as 'dellemc.powerflex'
-        are built to support the Dell EMC PowerFlex storage platform.
+        are built to support the Dell PowerFlex storage platform.
 '''

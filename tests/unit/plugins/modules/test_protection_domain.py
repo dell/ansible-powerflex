@@ -1,17 +1,12 @@
-# Copyright: (c) 2022, DellEMC
+# Copyright: (c) 2022, Dell Technologies
 
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-"""Unit Tests for Protection Domain module on PowerFlex"""
+"""Unit Tests for Protection Domain module on Dell Technologies (Dell) PowerFlex"""
 
 from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'
-                    }
-
 import pytest
 from mock.mock import MagicMock
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_protection_domain_api import MockProtectionDomainApi
@@ -20,7 +15,7 @@ from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_api_exception \
     import MockApiException
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
-    import dellemc_ansible_powerflex_utils as utils
+    import utils
 
 utils.get_logger = MagicMock()
 utils.get_powerflex_gateway_host_connection = MagicMock()
