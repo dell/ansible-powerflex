@@ -1,8 +1,8 @@
 #!/usr/bin/python
-# Copyright: (c) 2021, Dell EMC
+# Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-""" Ansible module for managing device on PowerFlex"""
+""" Ansible module for managing device on Dell Technologies (Dell) PowerFlex"""
 
 from __future__ import (absolute_import, division, print_function)
 
@@ -11,14 +11,14 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 module: device
 version_added: '1.1.0'
-short_description: Manage device on Dell EMC PowerFlex
+short_description: Manage device on Dell PowerFlex
 description:
 - Managing device on PowerFlex storage system includes
   adding new device, getting details of device, and removing a device.
 author:
 - Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
 extends_documentation_fragment:
-  - dellemc.powerflex.dellemc_powerflex.powerflex
+  - dellemc.powerflex.powerflex
 options:
   current_pathname:
     description:
@@ -425,7 +425,7 @@ device_details:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
-    import dellemc_ansible_powerflex_utils as utils
+    import utils
 
 LOG = utils.get_logger('device')
 
@@ -1043,6 +1043,11 @@ class PowerFlexDevice(object):
                     acceleration_pool_id=device_details[0][
                         'accelerationPoolId'])
                 device_details[0]['accelerationPoolName'] = ap_details['name']
+                pd_id = ap_details['protectionDomainId']
+                device_details[0]['protectionDomainId'] = pd_id
+                pd_details = self.get_protection_domain(
+                    protection_domain_id=pd_id)
+                device_details[0]['protectionDomainName'] = pd_details['name']
 
             return device_details[0]
 

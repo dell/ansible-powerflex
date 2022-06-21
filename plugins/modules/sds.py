@@ -1,8 +1,8 @@
 #!/usr/bin/python
-# Copyright: (c) 2021, Dell EMC
+# Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-""" Ansible module for managing SDS on PowerFlex"""
+""" Ansible module for managing SDS on Dell Technologies (Dell) PowerFlex"""
 
 from __future__ import (absolute_import, division, print_function)
 
@@ -11,7 +11,7 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 module: sds
 version_added: '1.1.0'
-short_description: Manage SDS on Dell EMC PowerFlex
+short_description: Manage SDS on Dell PowerFlex
 description:
 - Managing SDS on PowerFlex storage system includes
   creating new SDS, getting details of SDS, adding/removing IP to/from SDS,
@@ -19,7 +19,7 @@ description:
 author:
 - Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
 extends_documentation_fragment:
-  - dellemc.powerflex.dellemc_powerflex.powerflex
+  - dellemc.powerflex.powerflex
 options:
   sds_name:
     description:
@@ -477,7 +477,7 @@ sds_details:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
-    import dellemc_ansible_powerflex_utils as utils
+    import utils
 import copy
 
 LOG = utils.get_logger('sds')
