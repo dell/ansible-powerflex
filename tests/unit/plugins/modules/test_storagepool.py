@@ -21,7 +21,6 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
 utils.get_logger = MagicMock()
 utils.get_powerflex_gateway_host_connection = MagicMock()
 utils.PowerFlexClient = MagicMock()
-utils.pypowerflex_version_check = MagicMock(return_value={'dependency_present': True, 'error_message': ""})
 
 from ansible.module_utils import basic
 basic.AnsibleModule = MagicMock()
