@@ -1,5 +1,11 @@
 # ansible-powerflex Change Log
 
+## Version 1.4.0 - released on 27/09/22
+- Info module is enhanced to support the listing volumes and storage pools with statistics data​.
+- Storage pool module is enhanced to get the details with statistics data​.
+- Volume module is enhanced to get the details with statistics data​.
+- Added support for 4.0.x release of PowerFlex OS.
+
 ## Version 1.3.0 - released on 28/06/22
 - Added operations like Add/remove standby mdm, rename mdm, change mdm cluster ownership, switch mdm cluster mode, set performance profile, modify virtual IP interfaces and Get high level details of MDM cluster.
 - Added execution environment manifest file to support building an execution environment with ansible-builder.

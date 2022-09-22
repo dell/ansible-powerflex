@@ -134,14 +134,14 @@ def pypowerflex_version_check():
             missing_packages += 'pkg_resources, '
 
         if not HAS_POWERFLEX_SDK:
-            missing_packages += 'PyPowerFlex V 1.4.0 or above'
+            missing_packages += 'PyPowerFlex V 1.5.0 or above'
         else:
-            min_ver = '1.4.0'
+            min_ver = '1.5.0'
             curr_version = pkg_resources.require("PyPowerFlex")[0].version
             supported_version = parse_version(curr_version) >= parse_version(
                 min_ver)
             if not supported_version:
-                missing_packages += 'PyPowerFlex V 1.4.0 or above'
+                missing_packages += 'PyPowerFlex V 1.5.0 or above'
 
         missing_packages_check = dict(
             dependency_present=False if missing_packages else True,
