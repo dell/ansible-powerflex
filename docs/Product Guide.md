@@ -1,5 +1,5 @@
 # Ansible Modules for Dell Technologies PowerFlex
-## Product Guide 1.3.0
+## Product Guide 1.4.0
 © 2022 Dell Inc. or its subsidiaries. All rights reserved. Dell, and other trademarks are trademarks of Dell Inc. or its subsidiaries. Other trademarks may be trademarks of their respective owners.
 
 --------------
@@ -707,6 +707,14 @@ Gathering information about Dell PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
+                                                            <tr>
+            <td colspan=2 > gather_subset</td>
+            <td> list   <br> elements: str </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>vol</li>  <li>storage_pool</li>  <li>protection_domain</li>  <li>sdc</li>  <li>sds</li>  <li>snapshot_policy</li>  <li>device</li> </ul></td>
+            <td> <br> List of string variables to specify the Powerflex storage system entities for which information is required.  <br> Volumes - vol.  <br> Storage pools - storage_pool.  <br> Protection domains - protection_domain.  <br> SDCs - sdc.  <br> SDSs - sds.  <br> Snapshot policies - snapshot_policy.  <br> Devices - device. </td>
+        </tr>
                     <tr>
             <td colspan=2 > filters</td>
             <td> list   <br> elements: dict </td>
@@ -726,15 +734,6 @@ Gathering information about Dell PowerFlex
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > filter_value </td>
-                <td> str  </td>
-                <td> True </td>
-                <td></td>
-                <td></td>
-                <td>  <br> Value of the filter key.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
                 <td colspan=1 > filter_operator </td>
                 <td> str  </td>
                 <td> True </td>
@@ -742,13 +741,38 @@ Gathering information about Dell PowerFlex
                 <td> <ul> <li>equal</li> </ul></td>
                 <td>  <br> Operation to be performed on filter key.  </td>
             </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > filter_value </td>
+                <td> str  </td>
+                <td> True </td>
+                <td></td>
+                <td></td>
+                <td>  <br> Value of the filter key.  </td>
+            </tr>
                             <tr>
-            <td colspan=2 > timeout</td>
-            <td> int  </td>
+            <td colspan=2 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
             <td></td>
-            <td> 120 </td>
             <td></td>
-            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
             <td colspan=2 > verifycert</td>
@@ -767,38 +791,14 @@ Gathering information about Dell PowerFlex
             <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
         </tr>
                     <tr>
-            <td colspan=2 > password</td>
-            <td> str  </td>
-            <td> True </td>
+            <td colspan=2 > timeout</td>
+            <td> int  </td>
             <td></td>
+            <td> 120 </td>
             <td></td>
-            <td> <br> The password of the PowerFlex gateway host. </td>
+            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
         </tr>
-                    <tr>
-            <td colspan=2 > gather_subset</td>
-            <td> list   <br> elements: str </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>vol</li>  <li>storage_pool</li>  <li>protection_domain</li>  <li>sdc</li>  <li>sds</li>  <li>snapshot_policy</li>  <li>device</li> </ul></td>
-            <td> <br> List of string variables to specify the Powerflex storage system entities for which information is required.  <br> Volumes - vol.  <br> Storage pools - storage_pool.  <br> Protection domains - protection_domain.  <br> SDCs - sdc.  <br> SDSs - sds.  <br> Snapshot policies - snapshot_policy.  <br> Devices - device. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > username</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The username of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > gateway_host</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
-        </tr>
-                                                                                            </table>
+                                                    </table>
 
 ### Notes
 * The check_mode is supported.
@@ -836,341 +836,548 @@ Gathering information about Dell PowerFlex
 ```
 
 ### Return Values
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                           
 <table>
     <tr>
-        <th colspan=2>Key</th>
+        <th colspan=4>Key</th>
         <th>Type</th>
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=2 > Snapshot_Policies </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of snapshot policies. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> snapshot policy id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> snapshot policy name. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > Devices </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of devices. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> device id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> device name. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > SDSs </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of storage data servers. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage data server id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage data server name. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > Storage_Pools </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of storage pools. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage pool id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage pool name. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > API_Version </td>
+                                                                                            <tr>
+            <td colspan=4 > API_Version </td>
             <td>  str </td>
             <td> always </td>
             <td> API version of PowerFlex API Gateway. </td>
         </tr>
                     <tr>
-            <td colspan=2 > changed </td>
-            <td>  bool </td>
-            <td> always </td>
-            <td> Whether or not the resource has changed. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > Volumes </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of volumes. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> volume id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> volume name. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > Protection_Domains </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of all protection domains. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> protection domain id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> protection domain name. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > SDCs </td>
-            <td>  list </td>
-            <td> always </td>
-            <td> Details of storage data clients. </td>
-        </tr>
-                            <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage data client id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
-                <td> str </td>
-                <td>success</td>
-                <td> storage data client name. </td>
-            </tr>
-                                        <tr>
-            <td colspan=2 > Array_Details </td>
+            <td colspan=4 > Array_Details </td>
             <td>  dict </td>
             <td> always </td>
             <td> System entities of PowerFlex storage array. </td>
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > isInitialLicense </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Initial license. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > daysInstalled </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Days installed. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > mdmManagementPort </td>
-                <td> int </td>
-                <td>success</td>
-                <td> MDM management port. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > authenticationMethod </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Authentication method. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > cliPasswordAllowed </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> CLI password allowed. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > tlsVersion </td>
-                <td> str </td>
-                <td>success</td>
-                <td> TLS version. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > managementClientSecureCommunicationEnabled </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Management client secure communication enabled. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > mdmSecurityPolicy </td>
-                <td> str </td>
-                <td>success</td>
-                <td> MDM security policy. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > systemVersionName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> System version and name. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > showGuid </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Show guid. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > maxCapacityInGb </td>
-                <td> dict </td>
-                <td>success</td>
-                <td> Maximum capacity in GB. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > mdmCluster </td>
-                <td> dict </td>
-                <td>success</td>
-                <td> MDM cluster details. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > capacityAlertHighThresholdPercent </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Capacity alert high threshold percentage. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > swid </td>
-                <td> str </td>
-                <td>success</td>
-                <td> SWID. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > enterpriseFeaturesEnabled </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Enterprise eatures enabled. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > installId </td>
-                <td> str </td>
-                <td>success</td>
-                <td> installation Id. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > lastUpgradeTime </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Last upgrade time. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
-                <td> str </td>
-                <td>success</td>
-                <td> The ID of the system. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > upgradeState </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Upgrade state. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > capacityAlertCriticalThresholdPercent </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Capacity alert critical threshold percentage. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > addressSpaceUsage </td>
+                <td colspan=3 > addressSpaceUsage </td>
                 <td> str </td>
                 <td>success</td>
                 <td> Address space usage. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > capacityTimeLeftInDays </td>
+                <td colspan=3 > authenticationMethod </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Authentication method. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > capacityAlertCriticalThresholdPercent </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Capacity alert critical threshold percentage. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > capacityAlertHighThresholdPercent </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Capacity alert high threshold percentage. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > capacityTimeLeftInDays </td>
                 <td> str </td>
                 <td>success</td>
                 <td> Capacity time left in days. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > mdmExternalPort </td>
+                <td colspan=3 > cliPasswordAllowed </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> CLI password allowed. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > daysInstalled </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Days installed. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > defragmentationEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Defragmentation enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > enterpriseFeaturesEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enterprise features enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the system. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > installId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> installation Id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > isInitialLicense </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Initial license. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > lastUpgradeTime </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Last upgrade time. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > managementClientSecureCommunicationEnabled </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Management client secure communication enabled. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > maxCapacityInGb </td>
+                <td> dict </td>
+                <td>success</td>
+                <td> Maximum capacity in GB. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > mdmCluster </td>
+                <td> dict </td>
+                <td>success</td>
+                <td> MDM cluster details. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > mdmExternalPort </td>
                 <td> int </td>
                 <td>success</td>
                 <td> MDM external port. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > defragmentationEnabled </td>
+                <td colspan=3 > mdmManagementPort </td>
+                <td> int </td>
+                <td>success</td>
+                <td> MDM management port. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > mdmSecurityPolicy </td>
+                <td> str </td>
+                <td>success</td>
+                <td> MDM security policy. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > showGuid </td>
                 <td> bool </td>
                 <td>success</td>
-                <td> Defragmentation enabled. </td>
+                <td> Show guid. </td>
             </tr>
-                                                                                        </table>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > swid </td>
+                <td> str </td>
+                <td>success</td>
+                <td> SWID. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > systemVersionName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> System version and name. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > tlsVersion </td>
+                <td> str </td>
+                <td>success</td>
+                <td> TLS version. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > upgradeState </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Upgrade state. </td>
+            </tr>
+                                        <tr>
+            <td colspan=4 > Devices </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of devices. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> device id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> device name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=4 > Protection_Domains </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of all protection domains. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> protection domain id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> protection domain name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=4 > SDCs </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of storage data clients. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data client id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data client name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=4 > SDSs </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of storage data servers. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data server id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> storage data server name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=4 > Snapshot_Policies </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of snapshot policies. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> snapshot policy id. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> snapshot policy name. </td>
+            </tr>
+                                        <tr>
+            <td colspan=4 > Storage_Pools </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of storage pools. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the storage pool under protection domain. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > mediaType </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Type of devices in the storage pool. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the storage pool under protection domain. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > protectionDomainId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the protection domain in which pool resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the protection domain in which pool resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > statistics </td>
+                <td> complex </td>
+                <td>success</td>
+                <td> Statistics details of the storage pool. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > capacityInUseInKb </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Total capacity of the storage pool. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > deviceIds </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> Device Ids of the storage pool. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > unusedCapacityInKb </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Unused capacity of the storage pool. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > useRfcache </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enable/Disable RFcache on a specific storage pool. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > useRmcache </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enable/Disable RMcache on a specific storage pool. </td>
+            </tr>
+                                        <tr>
+            <td colspan=4 > Volumes </td>
+            <td>  list </td>
+            <td> always </td>
+            <td> Details of volumes. </td>
+        </tr>
+                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > id </td>
+                <td> str </td>
+                <td>success</td>
+                <td> The ID of the volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > mappedSdcInfo </td>
+                <td> complex </td>
+                <td>success</td>
+                <td> The details of the mapped SDC. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > accessMode </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> mapping access mode for the specified volume. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > limitBwInMbps </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Bandwidth limit for the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > limitIops </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> IOPS limit for the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > sdcId </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> ID of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > sdcIp </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> IP of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > sdcName </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the SDC. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > name </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > protectionDomainId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the protection domain in which volume resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the protection domain in which volume resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sizeInGb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the volume in Gb. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sizeInKb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the volume in Kb. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > snapshotPolicyId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the snapshot policy associated with volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > snapshotPolicyName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the snapshot policy associated with volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > snapshotsList </td>
+                <td> str </td>
+                <td>success</td>
+                <td> List of snapshots associated with the volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > statistics </td>
+                <td> complex </td>
+                <td>success</td>
+                <td> Statistics details of the storage pool. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > numOfChildVolumes </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Number of child volumes. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > numOfMappedSdcs </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Number of mapped Sdcs of the volume. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > storagePoolId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the storage pool in which volume resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > storagePoolName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the storage pool in which volume resides. </td>
+            </tr>
+                                        <tr>
+            <td colspan=4 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    </table>
 
 ### Authors
 * Arindam Datta (@dattaarindam) <ansible.team@dell.com>
@@ -4023,109 +4230,13 @@ Managing Dell PowerFlex storage pool
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                    <tr>
-            <td colspan=1 > timeout</td>
-            <td> int  </td>
-            <td></td>
-            <td> 120 </td>
-            <td></td>
-            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > protection_domain_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The name of the protection domain.  <br> During creation of a pool, either protection domain name or id must be mentioned.  <br> Mutually exclusive with protection_domain_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > media_type</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>HDD</li>  <li>SSD</li>  <li>TRANSITIONAL</li> </ul></td>
-            <td> <br> Type of devices in the storage pool. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > use_rmcache</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Enable/Disable RMcache on a specific storage pool. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > storage_pool_new_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> New name for the storage pool can be provided.  <br> This parameter is used for renaming the storage pool. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > gateway_host</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > use_rfcache</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Enable/Disable RFcache on a specific storage pool. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > protection_domain_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The id of the protection domain.  <br> During creation of a pool, either protection domain name or id must be mentioned.  <br> Mutually exclusive with protection_domain_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > state</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
-            <td> <br> State of the storage pool. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > password</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The password of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
+                                                            <tr>
             <td colspan=1 > storage_pool_name</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
             <td> <br> The name of the storage pool.  <br> If more than one storage pool is found with the same name then protection domain id/name is required to perform the task.  <br> Mutually exclusive with storage_pool_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=1 > username</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The username of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
             <td colspan=1 > storage_pool_id</td>
@@ -4136,6 +4247,86 @@ Managing Dell PowerFlex storage pool
             <td> <br> The id of the storage pool.  <br> It is auto generated, hence should not be provided during creation of a storage pool.  <br> Mutually exclusive with storage_pool_name. </td>
         </tr>
                     <tr>
+            <td colspan=1 > protection_domain_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the protection domain.  <br> During creation of a pool, either protection domain name or id must be mentioned.  <br> Mutually exclusive with protection_domain_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > protection_domain_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The id of the protection domain.  <br> During creation of a pool, either protection domain name or id must be mentioned.  <br> Mutually exclusive with protection_domain_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > media_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>HDD</li>  <li>SSD</li>  <li>TRANSITIONAL</li> </ul></td>
+            <td> <br> Type of devices in the storage pool. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > storage_pool_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> New name for the storage pool can be provided.  <br> This parameter is used for renaming the storage pool. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > use_rfcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Enable/Disable RFcache on a specific storage pool. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > use_rmcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Enable/Disable RMcache on a specific storage pool. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > state</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td> <ul> <li>present</li>  <li>absent</li> </ul></td>
+            <td> <br> State of the storage pool. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > gateway_host</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > username</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The username of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
             <td colspan=1 > verifycert</td>
             <td> bool  </td>
             <td></td>
@@ -4143,7 +4334,23 @@ Managing Dell PowerFlex storage pool
             <td></td>
             <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
         </tr>
-                                                                                            </table>
+                    <tr>
+            <td colspan=1 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=1 > timeout</td>
+            <td> int  </td>
+            <td></td>
+            <td> 120 </td>
+            <td></td>
+            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
+        </tr>
+                                                    </table>
 
 ### Notes
 * TRANSITIONAL media type is supported only during modification.
@@ -4206,76 +4413,107 @@ Managing Dell PowerFlex storage pool
 ```
 
 ### Return Values
-                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 <table>
     <tr>
-        <th colspan=2>Key</th>
+        <th colspan=3>Key</th>
         <th>Type</th>
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=2 > changed </td>
+                                                                                            <tr>
+            <td colspan=3 > changed </td>
             <td>  bool </td>
             <td> always </td>
             <td> Whether or not the resource has changed. </td>
         </tr>
                     <tr>
-            <td colspan=2 > storage_pool_details </td>
+            <td colspan=3 > storage_pool_details </td>
             <td>  complex </td>
             <td> When storage pool exists </td>
             <td> Details of the storage pool. </td>
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > id </td>
+                <td colspan=2 > id </td>
                 <td> str </td>
                 <td>success</td>
                 <td> ID of the storage pool under protection domain. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > useRfcache </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Enable/Disable RFcache on a specific storage pool. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > protectionDomainName </td>
+                <td colspan=2 > mediaType </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Name of the protection domain in which pool resides. </td>
+                <td> Type of devices in the storage pool. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > useRmcache </td>
-                <td> bool </td>
-                <td>success</td>
-                <td> Enable/Disable RMcache on a specific storage pool. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > name </td>
+                <td colspan=2 > name </td>
                 <td> str </td>
                 <td>success</td>
                 <td> Name of the storage pool under protection domain. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > protectionDomainId </td>
+                <td colspan=2 > protectionDomainId </td>
                 <td> str </td>
                 <td>success</td>
                 <td> ID of the protection domain in which pool resides. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > mediaType </td>
+                <td colspan=2 > protectionDomainName </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Type of devices in the storage pool. </td>
+                <td> Name of the protection domain in which pool resides. </td>
             </tr>
-                                                                                        </table>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > statistics </td>
+                <td> complex </td>
+                <td>success</td>
+                <td> Statistics details of the storage pool. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > capacityInUseInKb </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Total capacity of the storage pool. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > deviceIds </td>
+                    <td> list </td>
+                    <td>success</td>
+                    <td> Device Ids of the storage pool. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=1 > unusedCapacityInKb </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Unused capacity of the storage pool. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > useRfcache </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enable/Disable RFcache on a specific storage pool. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=2 > useRmcache </td>
+                <td> bool </td>
+                <td>success</td>
+                <td> Enable/Disable RMcache on a specific storage pool. </td>
+            </tr>
+                                        </table>
 
 ### Authors
 * Arindam Datta (@dattaarindam) <ansible.team@dell.com>
@@ -4301,37 +4539,37 @@ Manage volumes on Dell PowerFlex
         <th>Choices</th>
         <th width="80%">Description</th>
     </tr>
-                    <tr>
-            <td colspan=2 > size</td>
-            <td> int  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The size of the volume.  <br> Size of the volume will be assigned as higher multiple of 8 GB. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > timeout</td>
-            <td> int  </td>
-            <td></td>
-            <td> 120 </td>
-            <td></td>
-            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > auto_snap_remove_type</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>remove</li>  <li>detach</li> </ul></td>
-            <td> <br> Whether to remove or detach the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type.  <br> If the snapshot policy name/id is passed empty then auto_snap_remove_type is defaulted to 'detach'. </td>
-        </tr>
-                    <tr>
+                                                            <tr>
             <td colspan=2 > vol_name</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
             <td> <br> The name of the volume.  <br> Mandatory for create operation.  <br> It is unique across the PowerFlex array.  <br> Mutually exclusive with vol_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the volume.  <br> Except create operation, all other operations can be performed using vol_id.  <br> Mutually exclusive with vol_name. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > storage_pool_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The name of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> During creation, if storage pool name is provided then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with storage_pool_id. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > storage_pool_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The ID of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> Mutually exclusive with storage_pool_name. </td>
         </tr>
                     <tr>
             <td colspan=2 > protection_domain_name</td>
@@ -4342,20 +4580,12 @@ Manage volumes on Dell PowerFlex
             <td> <br> The name of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_id. </td>
         </tr>
                     <tr>
-            <td colspan=2 > vol_id</td>
+            <td colspan=2 > protection_domain_id</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> <br> The ID of the volume.  <br> Except create operation, all other operations can be performed using vol_id.  <br> Mutually exclusive with vol_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > port</td>
-            <td> int  </td>
-            <td></td>
-            <td> 443 </td>
-            <td></td>
-            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+            <td> <br> The ID of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_name. </td>
         </tr>
                     <tr>
             <td colspan=2 > vol_type</td>
@@ -4364,6 +4594,78 @@ Manage volumes on Dell PowerFlex
             <td></td>
             <td> <ul> <li>THICK_PROVISIONED</li>  <li>THIN_PROVISIONED</li> </ul></td>
             <td> <br> Type of volume provisioning. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > compression_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>NORMAL</li>  <li>NONE</li> </ul></td>
+            <td> <br> Type of the compression method. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > use_rmcache</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Whether to use RM Cache or not. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_policy_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Name of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > snapshot_policy_id</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> ID of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > auto_snap_remove_type</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>remove</li>  <li>detach</li> </ul></td>
+            <td> <br> Whether to remove or detach the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type.  <br> If the snapshot policy name/id is passed empty then auto_snap_remove_type is defaulted to 'detach'. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > size</td>
+            <td> int  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> The size of the volume.  <br> Size of the volume will be assigned as higher multiple of 8 GB. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > cap_unit</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td> <ul> <li>GB</li>  <li>TB</li> </ul></td>
+            <td> <br> The unit of the volume size. It defaults to 'GB'. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > vol_new_name</td>
+            <td> str  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> New name of the volume. Used to rename the volume. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > allow_multiple_mappings</td>
+            <td> bool  </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <br> Specifies whether to allow or not allow multiple mappings.  <br> If the volume is mapped to one SDC then for every new mapping allow_multiple_mappings has to be passed as True. </td>
         </tr>
                     <tr>
             <td colspan=2 > sdc</td>
@@ -4375,12 +4677,12 @@ Manage volumes on Dell PowerFlex
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > sdc_ip </td>
+                <td colspan=1 > sdc_name </td>
                 <td> str  </td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>  <br> IP of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
+                <td>  <br> Name of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -4393,21 +4695,12 @@ Manage volumes on Dell PowerFlex
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > sdc_name </td>
+                <td colspan=1 > sdc_ip </td>
                 <td> str  </td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>  <br> Name of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
-            </tr>
-                    <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=1 > iops_limit </td>
-                <td> int  </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>  <br> Limit of volume IOPS.  <br> Minimum IOPS limit is 11 and specify 0 for unlimited iops.  </td>
+                <td>  <br> IP of the SDC.  <br> Specify either sdc_name, sdc_id or sdc_ip.  <br> Mutually exclusive with sdc_id and sdc_ip.  </td>
             </tr>
                     <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
@@ -4427,93 +4720,22 @@ Manage volumes on Dell PowerFlex
                 <td></td>
                 <td>  <br> Limit of volume network bandwidth.  <br> Need to mention in multiple of 1024 Kbps.  <br> To set no limit, 0 is to be passed.  </td>
             </tr>
+                    <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=1 > iops_limit </td>
+                <td> int  </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>  <br> Limit of volume IOPS.  <br> Minimum IOPS limit is 11 and specify 0 for unlimited iops.  </td>
+            </tr>
                             <tr>
-            <td colspan=2 > protection_domain_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The ID of the protection domain.  <br> During creation of a volume, if more than one storage pool exists with the same name then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with protection_domain_name. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > verifycert</td>
-            <td> bool  </td>
-            <td></td>
-            <td> True </td>
-            <td></td>
-            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > allow_multiple_mappings</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Specifies whether to allow multiple mappings or not.  <br> If the volume is mapped to one SDC then for every new mapping allow_multiple_mappings has to be passed as True. </td>
-        </tr>
-                    <tr>
             <td colspan=2 > sdc_state</td>
             <td> str  </td>
             <td></td>
             <td></td>
             <td> <ul> <li>mapped</li>  <li>unmapped</li> </ul></td>
             <td> <br> Mapping state of the SDC. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > snapshot_policy_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Name of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > compression_type</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>NORMAL</li>  <li>NONE</li> </ul></td>
-            <td> <br> Type of the compression method. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > password</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> The password of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > snapshot_policy_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> ID of the snapshot policy.  <br> To remove/detach snapshot policy, empty snapshot_policy_id/snapshot_policy_name is to be passed along with auto_snap_remove_type. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > gateway_host</td>
-            <td> str  </td>
-            <td> True </td>
-            <td></td>
-            <td></td>
-            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > use_rmcache</td>
-            <td> bool  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> Whether to use RM Cache or not. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > cap_unit</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td> <ul> <li>GB</li>  <li>TB</li> </ul></td>
-            <td> <br> The unit of the volume size. It defaults to 'GB'. </td>
         </tr>
                     <tr>
             <td colspan=2 > delete_snapshots</td>
@@ -4532,28 +4754,12 @@ Manage volumes on Dell PowerFlex
             <td> <br> State of the volume. </td>
         </tr>
                     <tr>
-            <td colspan=2 > storage_pool_name</td>
+            <td colspan=2 > gateway_host</td>
             <td> str  </td>
+            <td> True </td>
             <td></td>
             <td></td>
-            <td></td>
-            <td> <br> The name of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> During creation, if storage pool name is provided then either protection domain name or id must be mentioned along with it.  <br> Mutually exclusive with storage_pool_id. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > vol_new_name</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> New name of the volume. Used to rename the volume. </td>
-        </tr>
-                    <tr>
-            <td colspan=2 > storage_pool_id</td>
-            <td> str  </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <br> The ID of the storage pool.  <br> Either name or the id of the storage pool is required for creating a volume.  <br> Mutually exclusive with storage_pool_name. </td>
+            <td> <br> IP or FQDN of the PowerFlex gateway host. </td>
         </tr>
                     <tr>
             <td colspan=2 > username</td>
@@ -4563,7 +4769,39 @@ Manage volumes on Dell PowerFlex
             <td></td>
             <td> <br> The username of the PowerFlex gateway host. </td>
         </tr>
-                                                                                            </table>
+                    <tr>
+            <td colspan=2 > password</td>
+            <td> str  </td>
+            <td> True </td>
+            <td></td>
+            <td></td>
+            <td> <br> The password of the PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > verifycert</td>
+            <td> bool  </td>
+            <td></td>
+            <td> True </td>
+            <td></td>
+            <td> <br> Boolean variable to specify whether or not to validate SSL certificate.  <br> True - Indicates that the SSL certificate should be verified.  <br> False - Indicates that the SSL certificate should not be verified. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > port</td>
+            <td> int  </td>
+            <td></td>
+            <td> 443 </td>
+            <td></td>
+            <td> <br> Port number through which communication happens with PowerFlex gateway host. </td>
+        </tr>
+                    <tr>
+            <td colspan=2 > timeout</td>
+            <td> int  </td>
+            <td></td>
+            <td> 120 </td>
+            <td></td>
+            <td> <br> Time after which connection will get terminated.  <br> It is to be mentioned in seconds. </td>
+        </tr>
+                                                    </table>
 
 ### Notes
 * The check_mode is not supported.
@@ -4682,51 +4920,36 @@ Manage volumes on Dell PowerFlex
 ```
 
 ### Return Values
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 <table>
     <tr>
-        <th colspan=3>Key</th>
+        <th colspan=4>Key</th>
         <th>Type</th>
         <th>Returned</th>
         <th width="100%">Description</th>
     </tr>
-                                            <tr>
-            <td colspan=3 > volume_details </td>
+                                                                                            <tr>
+            <td colspan=4 > changed </td>
+            <td>  bool </td>
+            <td> always </td>
+            <td> Whether or not the resource has changed. </td>
+        </tr>
+                    <tr>
+            <td colspan=4 > volume_details </td>
             <td>  complex </td>
             <td> When volume exists </td>
             <td> Details of the volume. </td>
         </tr>
                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > snapshotPolicyId </td>
+                <td colspan=3 > id </td>
                 <td> str </td>
                 <td>success</td>
-                <td> ID of the snapshot policy associated with volume. </td>
+                <td> The ID of the volume. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > snapshotsList </td>
-                <td> str </td>
-                <td>success</td>
-                <td> List of snapshots associated with the volume. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > snapshotPolicyName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Name of the snapshot policy associated with volume. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sizeInGb </td>
-                <td> int </td>
-                <td>success</td>
-                <td> Size of the volume in Gb. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > mappedSdcInfo </td>
+                <td colspan=3 > mappedSdcInfo </td>
                 <td> complex </td>
                 <td>success</td>
                 <td> The details of the mapped SDC. </td>
@@ -4734,15 +4957,7 @@ Manage volumes on Dell PowerFlex
                                          <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > limitBwInMbps </td>
-                    <td> int </td>
-                    <td>success</td>
-                    <td> Bandwidth limit for the SDC. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > accessMode </td>
+                    <td colspan=2 > accessMode </td>
                     <td> str </td>
                     <td>success</td>
                     <td> mapping access mode for the specified volume. </td>
@@ -4750,23 +4965,15 @@ Manage volumes on Dell PowerFlex
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > sdcName </td>
-                    <td> str </td>
+                    <td colspan=2 > limitBwInMbps </td>
+                    <td> int </td>
                     <td>success</td>
-                    <td> Name of the SDC. </td>
+                    <td> Bandwidth limit for the SDC. </td>
                 </tr>
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > sdcIp </td>
-                    <td> str </td>
-                    <td>success</td>
-                    <td> IP of the SDC. </td>
-                </tr>
-                                             <tr>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > limitIops </td>
+                    <td colspan=2 > limitIops </td>
                     <td> int </td>
                     <td>success</td>
                     <td> IOPS limit for the SDC. </td>
@@ -4774,67 +4981,121 @@ Manage volumes on Dell PowerFlex
                                              <tr>
                     <td class="elbow-placeholder">&nbsp;</td>
                     <td class="elbow-placeholder">&nbsp;</td>
-                    <td colspan=1 > sdcId </td>
+                    <td colspan=2 > sdcId </td>
                     <td> str </td>
                     <td>success</td>
                     <td> ID of the SDC. </td>
                 </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > sdcIp </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> IP of the SDC. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > sdcName </td>
+                    <td> str </td>
+                    <td>success</td>
+                    <td> Name of the SDC. </td>
+                </tr>
                                                             <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > id </td>
+                <td colspan=3 > name </td>
                 <td> str </td>
                 <td>success</td>
-                <td> The ID of the volume. </td>
+                <td> Name of the volume. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > protectionDomainName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Name of the protection domain in which volume resides. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > storagePoolName </td>
-                <td> str </td>
-                <td>success</td>
-                <td> Name of the storage pool in which volume resides. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > storagePoolId </td>
-                <td> str </td>
-                <td>success</td>
-                <td> ID of the storage pool in which volume resides. </td>
-            </tr>
-                                <tr>
-                <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > protectionDomainId </td>
+                <td colspan=3 > protectionDomainId </td>
                 <td> str </td>
                 <td>success</td>
                 <td> ID of the protection domain in which volume resides. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > sizeInKb </td>
+                <td colspan=3 > protectionDomainName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the protection domain in which volume resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sizeInGb </td>
+                <td> int </td>
+                <td>success</td>
+                <td> Size of the volume in Gb. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > sizeInKb </td>
                 <td> int </td>
                 <td>success</td>
                 <td> Size of the volume in Kb. </td>
             </tr>
                                 <tr>
                 <td class="elbow-placeholder">&nbsp;</td>
-                <td colspan=2 > name </td>
+                <td colspan=3 > snapshotPolicyId </td>
                 <td> str </td>
                 <td>success</td>
-                <td> Name of the volume. </td>
+                <td> ID of the snapshot policy associated with volume. </td>
             </tr>
-                                        <tr>
-            <td colspan=3 > changed </td>
-            <td>  bool </td>
-            <td> always </td>
-            <td> Whether or not the resource has changed. </td>
-        </tr>
-                                                                    </table>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > snapshotPolicyName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the snapshot policy associated with volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > snapshotsList </td>
+                <td> str </td>
+                <td>success</td>
+                <td> List of snapshots associated with the volume. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > statistics </td>
+                <td> complex </td>
+                <td>success</td>
+                <td> Statistics details of the storage pool. </td>
+            </tr>
+                                         <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > numOfChildVolumes </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Number of child volumes. </td>
+                </tr>
+                                             <tr>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td class="elbow-placeholder">&nbsp;</td>
+                    <td colspan=2 > numOfMappedSdcs </td>
+                    <td> int </td>
+                    <td>success</td>
+                    <td> Number of mapped Sdcs of the volume. </td>
+                </tr>
+                                                            <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > storagePoolId </td>
+                <td> str </td>
+                <td>success</td>
+                <td> ID of the storage pool in which volume resides. </td>
+            </tr>
+                                <tr>
+                <td class="elbow-placeholder">&nbsp;</td>
+                <td colspan=3 > storagePoolName </td>
+                <td> str </td>
+                <td>success</td>
+                <td> Name of the storage pool in which volume resides. </td>
+            </tr>
+                                        </table>
 
 ### Authors
 * P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>

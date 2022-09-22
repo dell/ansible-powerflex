@@ -26,7 +26,7 @@ basic.AnsibleModule = MagicMock()
 from ansible_collections.dellemc.powerflex.plugins.modules.mdm_cluster import PowerFlexMdmCluster
 
 
-class TestPowerflexProtectionDomain():
+class TestPowerflexMDMCluster():
 
     get_module_args = MockMdmClusterApi.MDM_CLUSTER_COMMON_ARGS
     add_mdm_ip = "xx.3x.xx.xx"

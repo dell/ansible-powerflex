@@ -137,7 +137,7 @@ Array_Details:
             description: Defragmentation enabled.
             type: bool
         enterpriseFeaturesEnabled:
-            description: Enterprise eatures enabled.
+            description: Enterprise features enabled.
             type: bool
         id:
             description: The ID of the system.
@@ -370,20 +370,409 @@ Storage_Pools:
     returned: always
     type: list
     contains:
+        mediaType:
+            description: Type of devices in the storage pool.
+            type: str
+        useRfcache:
+            description: Enable/Disable RFcache on a specific storage pool.
+            type: bool
+        useRmcache:
+            description: Enable/Disable RMcache on a specific storage pool.
+            type: bool
         id:
-            description: storage pool id.
+            description: ID of the storage pool under protection domain.
             type: str
         name:
-            description: storage pool name.
+            description: Name of the storage pool under protection domain.
             type: str
+        protectionDomainId:
+            description: ID of the protection domain in which pool resides.
+            type: str
+        protectionDomainName:
+            description: Name of the protection domain in which pool resides.
+            type: str
+        "statistics":
+            description: Statistics details of the storage pool.
+            type: complex
+            contains:
+                "capacityInUseInKb":
+                    description: Total capacity of the storage pool.
+                    type: str
+                "unusedCapacityInKb":
+                    description: Unused capacity of the storage pool.
+                    type: str
+                "deviceIds":
+                    description: Device Ids of the storage pool.
+                    type: list
     sample: [
         {
+            "addressSpaceUsage": "Normal",
+            "addressSpaceUsageType": "DeviceCapacityLimit",
+            "backgroundScannerBWLimitKBps": 3072,
+            "backgroundScannerMode": "DataComparison",
+            "bgScannerCompareErrorAction": "ReportAndFix",
+            "bgScannerReadErrorAction": "ReportAndFix",
+            "capacityAlertCriticalThreshold": 90,
+            "capacityAlertHighThreshold": 80,
+            "capacityUsageState": "Normal",
+            "capacityUsageType": "NetCapacity",
+            "checksumEnabled": false,
+            "compressionMethod": "Invalid",
+            "dataLayout": "MediumGranularity",
+            "externalAccelerationType": "None",
+            "fglAccpId": null,
+            "fglExtraCapacity": null,
+            "fglMaxCompressionRatio": null,
+            "fglMetadataSizeXx100": null,
+            "fglNvdimmMetadataAmortizationX100": null,
+            "fglNvdimmWriteCacheSizeInMb": null,
+            "fglOverProvisioningFactor": null,
+            "fglPerfProfile": null,
+            "fglWriteAtomicitySize": null,
+            "fragmentationEnabled": true,
             "id": "e0d8f6c900000000",
-            "name": "pool1"
-        },
-        {
-            "id": "e0d96c1f00000002",
-            "name": "pool1"
+            "links": [
+                {
+                    "href": "/api/instances/StoragePool::e0d8f6c900000000",
+                    "rel": "self"
+                },
+                {
+                    "href": "/api/instances/StoragePool::e0d8f6c900000000
+                            /relationships/Statistics",
+                    "rel": "/api/StoragePool/relationship/Statistics"
+                },
+                {
+                    "href": "/api/instances/StoragePool::e0d8f6c900000000
+                            /relationships/SpSds",
+                    "rel": "/api/StoragePool/relationship/SpSds"
+                },
+                {
+                    "href": "/api/instances/StoragePool::e0d8f6c900000000
+                            /relationships/Volume",
+                    "rel": "/api/StoragePool/relationship/Volume"
+                },
+                {
+                    "href": "/api/instances/StoragePool::e0d8f6c900000000
+                            /relationships/Device",
+                    "rel": "/api/StoragePool/relationship/Device"
+                },
+                {
+                    "href": "/api/instances/StoragePool::e0d8f6c900000000
+                            /relationships/VTree",
+                    "rel": "/api/StoragePool/relationship/VTree"
+                },
+                {
+                    "href": "/api/instances/ProtectionDomain::9300c1f900000000",
+                    "rel": "/api/parent/relationship/protectionDomainId"
+                }
+            ],
+            "statistics": {
+                    "BackgroundScannedInMB": 3466920,
+                    "activeBckRebuildCapacityInKb": 0,
+                    "activeEnterProtectedMaintenanceModeCapacityInKb": 0,
+                    "aggregateCompressionLevel": "Uncompressed",
+                    "atRestCapacityInKb": 1248256,
+                    "backgroundScanCompareErrorCount": 0,
+                    "backgroundScanFixedCompareErrorCount": 0,
+                    "bckRebuildReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "bckRebuildWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "capacityAvailableForVolumeAllocationInKb": 369098752,
+                    "capacityInUseInKb": 2496512,
+                    "capacityInUseNoOverheadInKb": 2496512,
+                    "capacityLimitInKb": 845783040,
+                    "compressedDataCompressionRatio": 0.0,
+                    "compressionRatio": 1.0,
+                    "currentFglMigrationSizeInKb": 0,
+                    "deviceIds": [
+                    ],
+                    "enterProtectedMaintenanceModeCapacityInKb": 0,
+                    "enterProtectedMaintenanceModeReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "enterProtectedMaintenanceModeWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "exitProtectedMaintenanceModeReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "exitProtectedMaintenanceModeWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "exposedCapacityInKb": 0,
+                    "failedCapacityInKb": 0,
+                    "fwdRebuildReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "fwdRebuildWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "inMaintenanceCapacityInKb": 0,
+                    "inMaintenanceVacInKb": 0,
+                    "inUseVacInKb": 184549376,
+                    "inaccessibleCapacityInKb": 0,
+                    "logWrittenBlocksInKb": 0,
+                    "maxCapacityInKb": 845783040,
+                    "migratingVolumeIds": [
+                    ],
+                    "migratingVtreeIds": [
+                    ],
+                    "movingCapacityInKb": 0,
+                    "netCapacityInUseInKb": 1248256,
+                    "normRebuildCapacityInKb": 0,
+                    "normRebuildReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "normRebuildWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "numOfDeviceAtFaultRebuilds": 0,
+                    "numOfDevices": 3,
+                    "numOfIncomingVtreeMigrations": 0,
+                    "numOfVolumes": 8,
+                    "numOfVolumesInDeletion": 0,
+                    "numOfVtrees": 8,
+                    "overallUsageRatio": 73.92289,
+                    "pendingBckRebuildCapacityInKb": 0,
+                    "pendingEnterProtectedMaintenanceModeCapacityInKb": 0,
+                    "pendingExitProtectedMaintenanceModeCapacityInKb": 0,
+                    "pendingFwdRebuildCapacityInKb": 0,
+                    "pendingMovingCapacityInKb": 0,
+                    "pendingMovingInBckRebuildJobs": 0,
+                    "persistentChecksumBuilderProgress": 100.0,
+                    "persistentChecksumCapacityInKb": 414720,
+                    "primaryReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "primaryReadFromDevBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "primaryReadFromRmcacheBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "primaryVacInKb": 92274688,
+                    "primaryWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "protectedCapacityInKb": 2496512,
+                    "protectedVacInKb": 184549376,
+                    "provisionedAddressesInKb": 2496512,
+                    "rebalanceCapacityInKb": 0,
+                    "rebalanceReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "rebalanceWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "rfacheReadHit": 0,
+                    "rfacheWriteHit": 0,
+                    "rfcacheAvgReadTime": 0,
+                    "rfcacheAvgWriteTime": 0,
+                    "rfcacheIoErrors": 0,
+                    "rfcacheIosOutstanding": 0,
+                    "rfcacheIosSkipped": 0,
+                    "rfcacheReadMiss": 0,
+                    "rmPendingAllocatedInKb": 0,
+                    "rmPendingThickInKb": 0,
+                    "rplJournalCapAllowed": 0,
+                    "rplTotalJournalCap": 0,
+                    "rplUsedJournalCap": 0,
+                    "secondaryReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "secondaryReadFromDevBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "secondaryReadFromRmcacheBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "secondaryVacInKb": 92274688,
+                    "secondaryWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "semiProtectedCapacityInKb": 0,
+                    "semiProtectedVacInKb": 0,
+                    "snapCapacityInUseInKb": 0,
+                    "snapCapacityInUseOccupiedInKb": 0,
+                    "snapshotCapacityInKb": 0,
+                    "spSdsIds": [
+                        "abdfe71b00030001",
+                        "abdce71d00040001",
+                        "abdde71e00050001"
+                    ],
+                    "spareCapacityInKb": 84578304,
+                    "targetOtherLatency": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "targetReadLatency": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "targetWriteLatency": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "tempCapacityInKb": 0,
+                    "tempCapacityVacInKb": 0,
+                    "thickCapacityInUseInKb": 0,
+                    "thinAndSnapshotRatio": 73.92289,
+                    "thinCapacityAllocatedInKm": 184549376,
+                    "thinCapacityInUseInKb": 0,
+                    "thinUserDataCapacityInKb": 2496512,
+                    "totalFglMigrationSizeInKb": 0,
+                    "totalReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "totalWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "trimmedUserDataCapacityInKb": 0,
+                    "unreachableUnusedCapacityInKb": 0,
+                    "unusedCapacityInKb": 758708224,
+                    "userDataCapacityInKb": 2496512,
+                    "userDataCapacityNoTrimInKb": 2496512,
+                    "userDataReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "userDataSdcReadLatency": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "userDataSdcTrimLatency": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "userDataSdcWriteLatency": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "userDataTrimBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "userDataWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "volMigrationReadBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "volMigrationWriteBwc": {
+                        "numOccured": 0,
+                        "numSeconds": 0,
+                        "totalWeightInKb": 0
+                    },
+                    "volumeAddressSpaceInKb": 922XXXXX,
+                    "volumeAllocationLimitInKb": 3707XXXXX,
+                    "volumeIds": [
+                        "456afc7900XXXXXXXX"
+                    ],
+                    "vtreeAddresSpaceInKb": 92274688,
+                    "vtreeIds": [
+                        "32b1681bXXXXXXXX",
+                    ]
+            },
+            "mediaType": "HDD",
+            "name": "pool1",
+            "numOfParallelRebuildRebalanceJobsPerDevice": 2,
+            "persistentChecksumBuilderLimitKb": 3072,
+            "persistentChecksumEnabled": true,
+            "persistentChecksumState": "Protected",
+            "persistentChecksumValidateOnRead": false,
+            "protectedMaintenanceModeIoPriorityAppBwPerDeviceThresholdInKbps": null,
+            "protectedMaintenanceModeIoPriorityAppIopsPerDeviceThreshold": null,
+            "protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps": 10240,
+            "protectedMaintenanceModeIoPriorityNumOfConcurrentIosPerDevice": 1,
+            "protectedMaintenanceModeIoPriorityPolicy": "limitNumOfConcurrentIos",
+            "protectedMaintenanceModeIoPriorityQuietPeriodInMsec": null,
+            "protectionDomainId": "9300c1f900000000",
+            "protectionDomainName": "domain1",
+            "rebalanceEnabled": true,
+            "rebalanceIoPriorityAppBwPerDeviceThresholdInKbps": null,
+            "rebalanceIoPriorityAppIopsPerDeviceThreshold": null,
+            "rebalanceIoPriorityBwLimitPerDeviceInKbps": 10240,
+            "rebalanceIoPriorityNumOfConcurrentIosPerDevice": 1,
+            "rebalanceIoPriorityPolicy": "favorAppIos",
+            "rebalanceIoPriorityQuietPeriodInMsec": null,
+            "rebuildEnabled": true,
+            "rebuildIoPriorityAppBwPerDeviceThresholdInKbps": null,
+            "rebuildIoPriorityAppIopsPerDeviceThreshold": null,
+            "rebuildIoPriorityBwLimitPerDeviceInKbps": 10240,
+            "rebuildIoPriorityNumOfConcurrentIosPerDevice": 1,
+            "rebuildIoPriorityPolicy": "limitNumOfConcurrentIos",
+            "rebuildIoPriorityQuietPeriodInMsec": null,
+            "replicationCapacityMaxRatio": 32,
+            "rmcacheWriteHandlingMode": "Cached",
+            "sparePercentage": 10,
+            "useRfcache": false,
+            "useRmcache": false,
+            "vtreeMigrationIoPriorityAppBwPerDeviceThresholdInKbps": null,
+            "vtreeMigrationIoPriorityAppIopsPerDeviceThreshold": null,
+            "vtreeMigrationIoPriorityBwLimitPerDeviceInKbps": 10240,
+            "vtreeMigrationIoPriorityNumOfConcurrentIosPerDevice": 1,
+            "vtreeMigrationIoPriorityPolicy": "favorAppIos",
+            "vtreeMigrationIoPriorityQuietPeriodInMsec": null,
+            "zeroPaddingEnabled": true
         }
     ]
 Volumes:
@@ -392,15 +781,163 @@ Volumes:
     type: list
     contains:
         id:
-            description: volume id.
+            description: The ID of the volume.
             type: str
+        mappedSdcInfo:
+            description: The details of the mapped SDC.
+            type: complex
+            contains:
+                sdcId:
+                    description: ID of the SDC.
+                    type: str
+                sdcName:
+                    description: Name of the SDC.
+                    type: str
+                sdcIp:
+                    description: IP of the SDC.
+                    type: str
+                accessMode:
+                    description: mapping access mode for the specified volume.
+                    type: str
+                limitIops:
+                    description: IOPS limit for the SDC.
+                    type: int
+                limitBwInMbps:
+                    description: Bandwidth limit for the SDC.
+                    type: int
         name:
-            description: volume name.
+            description: Name of the volume.
             type: str
+        sizeInKb:
+            description: Size of the volume in Kb.
+            type: int
+        sizeInGb:
+            description: Size of the volume in Gb.
+            type: int
+        storagePoolId:
+            description: ID of the storage pool in which volume resides.
+            type: str
+        storagePoolName:
+            description: Name of the storage pool in which volume resides.
+            type: str
+        protectionDomainId:
+            description: ID of the protection domain in which volume resides.
+            type: str
+        protectionDomainName:
+            description: Name of the protection domain in which volume resides.
+            type: str
+        snapshotPolicyId:
+            description: ID of the snapshot policy associated with volume.
+            type: str
+        snapshotPolicyName:
+            description: Name of the snapshot policy associated with volume.
+            type: str
+        snapshotsList:
+            description: List of snapshots associated with the volume.
+            type: str
+        "statistics":
+            description: Statistics details of the storage pool.
+            type: complex
+            contains:
+                "numOfChildVolumes":
+                    description: Number of child volumes.
+                    type: int
+                "numOfMappedSdcs":
+                    description: Number of mapped Sdcs of the volume.
+                    type: int
     sample: [
         {
-            "id": "cdd883cf00000002",
-            "name": "ansible-volume-1"
+            "accessModeLimit": "ReadWrite",
+            "ancestorVolumeId": null,
+            "autoSnapshotGroupId": null,
+            "compressionMethod": "Invalid",
+            "consistencyGroupId": null,
+            "creationTime": 1661234220,
+            "dataLayout": "MediumGranularity",
+            "id": "456afd7XXXXXXX",
+            "lockedAutoSnapshot": false,
+            "lockedAutoSnapshotMarkedForRemoval": false,
+            "managedBy": "ScaleIO",
+            "mappedSdcInfo": [
+                {
+                "accessMode": "ReadWrite",
+                "isDirectBufferMapping": false,
+                "limitBwInMbps": 0,
+                "limitIops": 0,
+                "sdcId": "c42425cbXXXXX",
+                "sdcIp": "10.XXX.XX.XX",
+                "sdcName": null
+                }
+            ],
+            "name": "vol-1",
+            "notGenuineSnapshot": false,
+            "originalExpiryTime": 0,
+            "pairIds": null,
+            "replicationJournalVolume": false,
+            "replicationTimeStamp": 0,
+            "retentionLevels": [
+            ],
+            "secureSnapshotExpTime": 0,
+            "sizeInKb": 8388608,
+            "snplIdOfAutoSnapshot": null,
+            "snplIdOfSourceVolume": null,
+            "statistics": {
+                "childVolumeIds": [
+                ],
+                "descendantVolumeIds": [
+                ],
+                "initiatorSdcId": null,
+                "mappedSdcIds": [
+                "c42425XXXXXX"
+                ],
+                "numOfChildVolumes": 0,
+                "numOfDescendantVolumes": 0,
+                "numOfMappedSdcs": 1,
+                "registrationKey": null,
+                "registrationKeys": [
+                ],
+                "replicationJournalVolume": false,
+                "replicationState": "UnmarkedForReplication",
+                "reservationType": "NotReserved",
+                "rplTotalJournalCap": 0,
+                "rplUsedJournalCap": 0,
+                "userDataReadBwc": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+                },
+                "userDataSdcReadLatency": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+                },
+                "userDataSdcTrimLatency": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+                },
+                "userDataSdcWriteLatency": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+                },
+                "userDataTrimBwc": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+                },
+                "userDataWriteBwc": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+                }
+            },
+            "storagePoolId": "7630a248XXXXXXX",
+            "timeStampIsAccurate": false,
+            "useRmcache": false,
+            "volumeReplicationState": "UnmarkedForReplication",
+            "volumeType": "ThinProvisioned",
+            "vtreeId": "32b168bXXXXXX"
         }
     ]
 Devices:
@@ -586,6 +1123,12 @@ class PowerFlexInfo(object):
                 pool = self.powerflex_conn.storage_pool.get(filter_fields=filter_dict)
             else:
                 pool = self.powerflex_conn.storage_pool.get()
+
+            if pool:
+                statistics_map = self.powerflex_conn.utility.get_statistics_for_all_storagepools()
+                list_of_pool_ids_in_statistics = statistics_map.keys()
+                for item in pool:
+                    item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_pool_ids_in_statistics else {}
             return result_list(pool)
 
         except Exception as e:
@@ -604,6 +1147,12 @@ class PowerFlexInfo(object):
                 volumes = self.powerflex_conn.volume.get(filter_fields=filter_dict)
             else:
                 volumes = self.powerflex_conn.volume.get()
+
+            if volumes:
+                statistics_map = self.powerflex_conn.utility.get_statistics_for_all_volumes()
+                list_of_vol_ids_in_statistics = statistics_map.keys()
+                for item in volumes:
+                    item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_vol_ids_in_statistics else {}
             return result_list(volumes)
 
         except Exception as e:
@@ -756,12 +1305,7 @@ def result_list(entity):
         LOG.info('Successfully listed.')
         for item in entity:
             if item['name']:
-                result.append(
-                    {
-                        "name": item['name'],
-                        "id": item['id']
-                    }
-                )
+                result.append(item)
             else:
                 result.append({"id": item['id']})
         return result

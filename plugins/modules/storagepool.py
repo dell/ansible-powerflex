@@ -174,6 +174,19 @@ storage_pool_details:
         protectionDomainName:
             description: Name of the protection domain in which pool resides.
             type: str
+        "statistics":
+            description: Statistics details of the storage pool.
+            type: complex
+            contains:
+                "capacityInUseInKb":
+                    description: Total capacity of the storage pool.
+                    type: str
+                "unusedCapacityInKb":
+                    description: Unused capacity of the storage pool.
+                    type: str
+                "deviceIds":
+                    description: Device Ids of the storage pool.
+                    type: list
     sample: {
         "addressSpaceUsage": "Normal",
         "addressSpaceUsageType": "DeviceCapacityLimit",
@@ -235,6 +248,272 @@ storage_pool_details:
                 "rel": "/api/parent/relationship/protectionDomainId"
             }
         ],
+        "statistics": {
+                "BackgroundScannedInMB": 3466920,
+                "activeBckRebuildCapacityInKb": 0,
+                "activeEnterProtectedMaintenanceModeCapacityInKb": 0,
+                "aggregateCompressionLevel": "Uncompressed",
+                "atRestCapacityInKb": 1248256,
+                "backgroundScanCompareErrorCount": 0,
+                "backgroundScanFixedCompareErrorCount": 0,
+                "bckRebuildReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "bckRebuildWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "capacityAvailableForVolumeAllocationInKb": 369098752,
+                "capacityInUseInKb": 2496512,
+                "capacityInUseNoOverheadInKb": 2496512,
+                "capacityLimitInKb": 845783040,
+                "compressedDataCompressionRatio": 0.0,
+                "compressionRatio": 1.0,
+                "currentFglMigrationSizeInKb": 0,
+                "deviceIds": [
+                ],
+                "enterProtectedMaintenanceModeCapacityInKb": 0,
+                "enterProtectedMaintenanceModeReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "enterProtectedMaintenanceModeWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "exitProtectedMaintenanceModeReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "exitProtectedMaintenanceModeWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "exposedCapacityInKb": 0,
+                "failedCapacityInKb": 0,
+                "fwdRebuildReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "fwdRebuildWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "inMaintenanceCapacityInKb": 0,
+                "inMaintenanceVacInKb": 0,
+                "inUseVacInKb": 184549376,
+                "inaccessibleCapacityInKb": 0,
+                "logWrittenBlocksInKb": 0,
+                "maxCapacityInKb": 845783040,
+                "migratingVolumeIds": [
+                ],
+                "migratingVtreeIds": [
+                ],
+                "movingCapacityInKb": 0,
+                "netCapacityInUseInKb": 1248256,
+                "normRebuildCapacityInKb": 0,
+                "normRebuildReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "normRebuildWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "numOfDeviceAtFaultRebuilds": 0,
+                "numOfDevices": 3,
+                "numOfIncomingVtreeMigrations": 0,
+                "numOfVolumes": 8,
+                "numOfVolumesInDeletion": 0,
+                "numOfVtrees": 8,
+                "overallUsageRatio": 73.92289,
+                "pendingBckRebuildCapacityInKb": 0,
+                "pendingEnterProtectedMaintenanceModeCapacityInKb": 0,
+                "pendingExitProtectedMaintenanceModeCapacityInKb": 0,
+                "pendingFwdRebuildCapacityInKb": 0,
+                "pendingMovingCapacityInKb": 0,
+                "pendingMovingInBckRebuildJobs": 0,
+                "persistentChecksumBuilderProgress": 100.0,
+                "persistentChecksumCapacityInKb": 414720,
+                "primaryReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "primaryReadFromDevBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "primaryReadFromRmcacheBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "primaryVacInKb": 92274688,
+                "primaryWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "protectedCapacityInKb": 2496512,
+                "protectedVacInKb": 184549376,
+                "provisionedAddressesInKb": 2496512,
+                "rebalanceCapacityInKb": 0,
+                "rebalanceReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "rebalanceWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "rfacheReadHit": 0,
+                "rfacheWriteHit": 0,
+                "rfcacheAvgReadTime": 0,
+                "rfcacheAvgWriteTime": 0,
+                "rfcacheIoErrors": 0,
+                "rfcacheIosOutstanding": 0,
+                "rfcacheIosSkipped": 0,
+                "rfcacheReadMiss": 0,
+                "rmPendingAllocatedInKb": 0,
+                "rmPendingThickInKb": 0,
+                "rplJournalCapAllowed": 0,
+                "rplTotalJournalCap": 0,
+                "rplUsedJournalCap": 0,
+                "secondaryReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "secondaryReadFromDevBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "secondaryReadFromRmcacheBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "secondaryVacInKb": 92274688,
+                "secondaryWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "semiProtectedCapacityInKb": 0,
+                "semiProtectedVacInKb": 0,
+                "snapCapacityInUseInKb": 0,
+                "snapCapacityInUseOccupiedInKb": 0,
+                "snapshotCapacityInKb": 0,
+                "spSdsIds": [
+                    "abdfe71b00030001",
+                    "abdce71d00040001",
+                    "abdde71e00050001"
+                ],
+                "spareCapacityInKb": 84578304,
+                "targetOtherLatency": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "targetReadLatency": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "targetWriteLatency": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "tempCapacityInKb": 0,
+                "tempCapacityVacInKb": 0,
+                "thickCapacityInUseInKb": 0,
+                "thinAndSnapshotRatio": 73.92289,
+                "thinCapacityAllocatedInKm": 184549376,
+                "thinCapacityInUseInKb": 0,
+                "thinUserDataCapacityInKb": 2496512,
+                "totalFglMigrationSizeInKb": 0,
+                "totalReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "totalWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "trimmedUserDataCapacityInKb": 0,
+                "unreachableUnusedCapacityInKb": 0,
+                "unusedCapacityInKb": 758708224,
+                "userDataCapacityInKb": 2496512,
+                "userDataCapacityNoTrimInKb": 2496512,
+                "userDataReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "userDataSdcReadLatency": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "userDataSdcTrimLatency": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "userDataSdcWriteLatency": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "userDataTrimBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "userDataWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "volMigrationReadBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "volMigrationWriteBwc": {
+                    "numOccured": 0,
+                    "numSeconds": 0,
+                    "totalWeightInKb": 0
+                },
+                "volumeAddressSpaceInKb": 922XXXXX,
+                "volumeAllocationLimitInKb": 3707XXXXX,
+                "volumeIds": [
+                    "456afc7900XXXXXXXX"
+                ],
+                "vtreeAddresSpaceInKb": 92274688,
+                "vtreeIds": [
+                    "32b1681bXXXXXXXX",
+                ]
+        },
         "mediaType": "HDD",
         "name": "pool1",
         "numOfParallelRebuildRebalanceJobsPerDevice": 2,
@@ -387,6 +666,8 @@ class PowerFlexStoragePool(object):
                     self.module.fail_json(msg=err_msg)
                 elif len(pool_details) == 1:
                     pool_details = pool_details[0]
+                    statistics = self.powerflex_conn.storage_pool.get_statistics(pool_details['id'])
+                    pool_details['statistics'] = statistics if statistics else {}
                     pd_id = pool_details['protectionDomainId']
                     pd_name = self.get_protection_domain(
                         protection_domain_id=pd_id)['name']

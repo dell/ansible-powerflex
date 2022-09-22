@@ -35,7 +35,7 @@ options:
     - The ID of the volume.
     - Except create operation, all other operations can be performed
       using vol_id.
-    - Mutually exclusive with vol_id.
+    - Mutually exclusive with vol_name.
     type: str
   storage_pool_name:
     description:
@@ -123,7 +123,7 @@ options:
     type: str
   allow_multiple_mappings:
     description:
-    - Specifies whether to allow multiple mappings or not.
+    - Specifies whether to allow or not allow multiple mappings.
     - If the volume is mapped to one SDC then for every new mapping
       allow_multiple_mappings has to be passed as True.
     type: bool
@@ -366,6 +366,16 @@ volume_details:
         snapshotsList:
             description: List of snapshots associated with the volume.
             type: str
+        "statistics":
+            description: Statistics details of the storage pool.
+            type: complex
+            contains:
+                "numOfChildVolumes":
+                    description: Number of child volumes.
+                    type: int
+                "numOfMappedSdcs":
+                    description: Number of mapped Sdcs of the volume.
+                    type: int
     sample: {
         "accessModeLimit": "ReadWrite",
         "ancestorVolumeId": null,
@@ -468,6 +478,57 @@ volume_details:
                 "vtreeId": "6e86255c00000001"
             }
         ],
+        "statistics": {
+            "childVolumeIds": [
+            ],
+            "descendantVolumeIds": [
+            ],
+            "initiatorSdcId": null,
+            "mappedSdcIds": [
+            "c42425XXXXXX"
+            ],
+            "numOfChildVolumes": 0,
+            "numOfDescendantVolumes": 0,
+            "numOfMappedSdcs": 1,
+            "registrationKey": null,
+            "registrationKeys": [
+            ],
+            "replicationJournalVolume": false,
+            "replicationState": "UnmarkedForReplication",
+            "reservationType": "NotReserved",
+            "rplTotalJournalCap": 0,
+            "rplUsedJournalCap": 0,
+            "userDataReadBwc": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+            },
+            "userDataSdcReadLatency": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+            },
+            "userDataSdcTrimLatency": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+            },
+            "userDataSdcWriteLatency": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+            },
+            "userDataTrimBwc": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+            },
+            "userDataWriteBwc": {
+                "numOccured": 0,
+                "numSeconds": 0,
+                "totalWeightInKb": 0
+            }
+        },
         "snplIdOfAutoSnapshot": null,
         "snplIdOfSourceVolume": null,
         "storagePoolId": "e0d8f6c900000000",
@@ -1418,6 +1479,10 @@ class PowerFlexVolume(object):
             list_of_snaps = self.powerflex_conn.volume.get(
                 filter_fields={'ancestorVolumeId': volume_details[0]['id']})
             volume_details[0]['snapshotsList'] = list_of_snaps
+
+            # Append statistics
+            statistics = self.powerflex_conn.volume.get_statistics(volume_details[0]['id'])
+            volume_details[0]['statistics'] = statistics if statistics else {}
 
             return volume_details[0]
 
