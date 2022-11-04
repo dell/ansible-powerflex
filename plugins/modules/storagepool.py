@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -34,28 +35,28 @@ options:
     - The name of the storage pool.
     - If more than one storage pool is found with the same name then
       protection domain id/name is required to perform the task.
-    - Mutually exclusive with storage_pool_id.
+    - Mutually exclusive with I(storage_pool_id).
     type: str
   storage_pool_id:
     description:
     - The id of the storage pool.
     - It is auto generated, hence should not be provided during
       creation of a storage pool.
-    - Mutually exclusive with storage_pool_name.
+    - Mutually exclusive with I(storage_pool_name).
     type: str
   protection_domain_name:
     description:
     - The name of the protection domain.
     - During creation of a pool, either protection domain name or id must be
       mentioned.
-    - Mutually exclusive with protection_domain_id.
+    - Mutually exclusive with I(protection_domain_id).
     type: str
   protection_domain_id:
     description:
     - The id of the protection domain.
     - During creation of a pool, either protection domain name or id must
       be mentioned.
-    - Mutually exclusive with protection_domain_name.
+    - Mutually exclusive with I(protection_domain_name).
     type: str
   media_type:
     description:
@@ -83,7 +84,7 @@ options:
     required: true
 notes:
   - TRANSITIONAL media type is supported only during modification.
-  - The check_mode is not supported.
+  - The I(check_mode) is not supported.
 '''
 
 EXAMPLES = r'''
@@ -93,7 +94,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     storage_pool_name: "sample_pool_name"
     protection_domain_name: "sample_protection_domain"
     state: "present"
@@ -103,7 +104,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     storage_pool_id: "abcd1234ab12r"
     state: "present"
 
@@ -112,7 +113,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     storage_pool_name: "ansible_test_pool"
     protection_domain_id: "1c957da800000000"
     media_type: "HDD"
@@ -123,7 +124,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     storage_pool_name: "ansible_test_pool"
     protection_domain_id: "1c957da800000000"
     use_rmcache: True
@@ -135,11 +136,10 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     storage_pool_id: "abcd1234ab12r"
     storage_pool_new_name: "new_ansible_pool"
     state: "present"
-
 '''
 
 RETURN = r'''
@@ -151,7 +151,7 @@ changed:
 storage_pool_details:
     description: Details of the storage pool.
     returned: When storage pool exists
-    type: complex
+    type: dict
     contains:
         mediaType:
             description: Type of devices in the storage pool.
@@ -176,7 +176,7 @@ storage_pool_details:
             type: str
         "statistics":
             description: Statistics details of the storage pool.
-            type: complex
+            type: dict
             contains:
                 "capacityInUseInKb":
                     description: Total capacity of the storage pool.
@@ -564,8 +564,6 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
 
 LOG = utils.get_logger('storagepool')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexStoragePool(object):
     """Class with StoragePool operations"""
@@ -588,11 +586,7 @@ class PowerFlexStoragePool(object):
                                     mutually_exclusive=mut_ex_args,
                                     required_one_of=required_one_of_args)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            err_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(err_msg)
-            self.module.fail_json(msg=err_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
@@ -783,7 +777,7 @@ class PowerFlexStoragePool(object):
             media_type = 'Transitional'
 
         result = dict(
-            storage_pool_details=None
+            storage_pool_details={}
         )
         changed = False
         pd_details = None

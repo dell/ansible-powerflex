@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -46,7 +47,7 @@ options:
   filters:
     description:
     - List of filters to support filtered output for storage entities.
-    - Each filter is a list of filter_key, filter_operator, filter_value.
+    - Each filter is a list of I(filter_key), I(filter_operator), I(filter_value).
     - Supports passing of multiple filters.
     type: list
     elements: dict
@@ -68,37 +69,37 @@ options:
         type: str
         required: True
 notes:
-  - The check_mode is supported.
+  - The I(check_mode) is supported.
 '''
 
 EXAMPLES = r'''
- - name: Get detailed list of PowerFlex entities
-   dellemc.powerflex.info:
-     gateway_host: "{{gateway_host}}"
-     username: "{{username}}"
-     password: "{{password}}"
-     verifycert: "{{verifycert}}"
-     gather_subset:
-       - vol
-       - storage_pool
-       - protection_domain
-       - sdc
-       - sds
-       - snapshot_policy
-       - device
+- name: Get detailed list of PowerFlex entities
+  dellemc.powerflex.info:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    gather_subset:
+      - vol
+      - storage_pool
+      - protection_domain
+      - sdc
+      - sds
+      - snapshot_policy
+      - device
 
- - name: Get a subset list of PowerFlex volumes
-   dellemc.powerflex.info:
-     gateway_host: "{{gateway_host}}"
-     username: "{{username}}"
-     password: "{{password}}"
-     verifycert: "{{verifycert}}"
-     gather_subset:
-       - vol
-     filters:
-       - filter_key: "name"
-         filter_operator: "equal"
-         filter_value: "ansible_test"
+- name: Get a subset list of PowerFlex volumes
+  dellemc.powerflex.info:
+    gateway_host: "{{gateway_host}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    gather_subset:
+      - vol
+    filters:
+      - filter_key: "name"
+        filter_operator: "equal"
+        filter_value: "ansible_test"
 '''
 
 RETURN = r'''
@@ -391,17 +392,17 @@ Storage_Pools:
         protectionDomainName:
             description: Name of the protection domain in which pool resides.
             type: str
-        "statistics":
+        statistics:
             description: Statistics details of the storage pool.
-            type: complex
+            type: dict
             contains:
-                "capacityInUseInKb":
+                capacityInUseInKb:
                     description: Total capacity of the storage pool.
                     type: str
-                "unusedCapacityInKb":
+                unusedCapacityInKb:
                     description: Unused capacity of the storage pool.
                     type: str
-                "deviceIds":
+                deviceIds:
                     description: Device Ids of the storage pool.
                     type: list
     sample: [
@@ -785,7 +786,7 @@ Volumes:
             type: str
         mappedSdcInfo:
             description: The details of the mapped SDC.
-            type: complex
+            type: dict
             contains:
                 sdcId:
                     description: ID of the SDC.
@@ -837,7 +838,7 @@ Volumes:
             type: str
         "statistics":
             description: Statistics details of the storage pool.
-            type: complex
+            type: dict
             contains:
                 "numOfChildVolumes":
                     description: Number of child volumes.
@@ -973,8 +974,6 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
 
 LOG = utils.get_logger('info')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexInfo(object):
     """Class with Info operations"""
@@ -995,11 +994,7 @@ class PowerFlexInfo(object):
         self.module = AnsibleModule(argument_spec=self.module_params,
                                     supports_check_mode=True)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            err_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(err_msg)
-            self.module.fail_json(msg=err_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(

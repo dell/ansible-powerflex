@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -26,20 +27,20 @@ options:
   sdc_name:
     description:
     - Name of the SDC.
-    - Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.
-    - Mutually exclusive with sdc_id and sdc_ip.
+    - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip) for get/rename operation.
+    - Mutually exclusive with I(sdc_id) and I(sdc_ip).
     type: str
   sdc_id:
     description:
     - ID of the SDC.
-    - Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.
-    - Mutually exclusive with sdc_name and sdc_ip.
+    - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip) for get/rename operation.
+    - Mutually exclusive with I(sdc_name) and I(sdc_ip).
     type: str
   sdc_ip:
     description:
     - IP of the SDC.
-    - Specify either sdc_name, sdc_id or sdc_ip for get/rename operation.
-    - Mutually exclusive with sdc_id and sdc_name.
+    - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip) for get/rename operation.
+    - Mutually exclusive with I(sdc_id) and I(sdc_name).
     type: str
   sdc_new_name:
     description:
@@ -52,7 +53,7 @@ options:
     required: True
     type: str
 notes:
-  - The check_mode is not supported.
+  - The I(check_mode) is not supported.
 '''
 
 EXAMPLES = r'''
@@ -61,7 +62,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     sdc_ip: "{{sdc_ip}}"
     state: "present"
 
@@ -70,7 +71,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     sdc_name: "centos_sdc"
     sdc_new_name: "centos_sdc_renamed"
     state: "present"
@@ -86,7 +87,7 @@ changed:
 sdc_details:
     description: Details of the SDC.
     returned: When SDC exists
-    type: complex
+    type: dict
     contains:
         id:
             description: The ID of the SDC.
@@ -169,8 +170,6 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
 
 LOG = utils.get_logger('sdc')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexSdc(object):
     """Class with SDC operations"""
@@ -191,11 +190,7 @@ class PowerFlexSdc(object):
             mutually_exclusive=mutually_exclusive,
             required_one_of=required_one_of)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            err_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(err_msg)
-            self.module.fail_json(msg=err_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
@@ -305,7 +300,7 @@ class PowerFlexSdc(object):
         changed = False
         result = dict(
             changed=False,
-            sdc_details=None
+            sdc_details={}
         )
 
         self.validate_parameters(sdc_name, sdc_id, sdc_ip)

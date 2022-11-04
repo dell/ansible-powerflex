@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -28,67 +29,67 @@ options:
   device_name:
     description:
     - Device name.
-    - Mutually exclusive with device_id.
+    - Mutually exclusive with I(device_id).
     type: str
   device_id:
     description:
     - Device ID.
-    - Mutually exclusive with device_name.
+    - Mutually exclusive with I(device_name).
     type: str
   sds_name:
     description:
     - The name of the SDS.
     - Required while adding a device.
-    - Mutually exclusive with sds_id.
+    - Mutually exclusive with I(sds_id).
     type: str
   sds_id:
     description:
     - The ID of the SDS.
     - Required while adding a device.
-    - Mutually exclusive with sds_name.
+    - Mutually exclusive with I(sds_name).
     type: str
   storage_pool_name:
     description:
     - Storage Pool name.
     - Used while adding a storage device.
-    - Mutually exclusive with storage_pool_id, acceleration_pool_id and
-      acceleration_pool_name.
+    - Mutually exclusive with I(storage_pool_id), I(acceleration_pool_id) and
+      I(acceleration_pool_name).
     type: str
   storage_pool_id:
     description:
     - Storage Pool ID.
     - Used while adding a storage device.
-    - Media type supported are SSD and HDD.
-    - Mutually exclusive with storage_pool_name, acceleration_pool_id and
-      acceleration_pool_name.
+    - Media type supported are C(SSD) and C(HDD).
+    - Mutually exclusive with I(storage_pool_name), I(acceleration_pool_id) and
+      I(acceleration_pool_name).
     type: str
   acceleration_pool_name:
     description:
     - Acceleration Pool Name.
     - Used while adding an acceleration device.
-    - Media type supported are SSD and NVDIMM.
-    - Mutually exclusive with storage_pool_id, storage_pool_name and
-      acceleration_pool_name.
+    - Media type supported are C(SSD) and C(NVDIMM).
+    - Mutually exclusive with I(storage_pool_id), I(storage_pool_name) and
+      I(acceleration_pool_name).
     type: str
   acceleration_pool_id:
     description:
     - Acceleration Pool ID.
     - Used while adding an acceleration device.
-    - Media type supported are SSD and NVDIMM.
-    - Mutually exclusive with acceleration_pool_name, storage_pool_name and
-      storage_pool_id.
+    - Media type supported are C(SSD) and C(NVDIMM).
+    - Mutually exclusive with I(acceleration_pool_name), I(storage_pool_name) and
+      I(storage_pool_id).
     type: str
   protection_domain_name:
     description:
     - Protection domain name.
-    - Used while identifying a storage pool along with storage_pool_name.
-    - Mutually exclusive with protection_domain_id.
+    - Used while identifying a storage pool along with I(storage_pool_name).
+    - Mutually exclusive with I(protection_domain_id).
     type: str
   protection_domain_id:
     description:
     - Protection domain ID.
-    - Used while identifying a storage pool along with storage_pool_name.
-    - Mutually exclusive with protection_domain_name.
+    - Used while identifying a storage pool along with I(storage_pool_name).
+    - Mutually exclusive with I(protection_domain_name).
     type: str
   external_acceleration_type:
     description:
@@ -111,12 +112,12 @@ options:
 notes:
   - The value for device_id is generated only after successful addition of the
     device.
-  - Unique ways to identify a device - (current_pathname , sds_id) or
-    (current_pathname , sds_name) or (device_name , sds_name) or
-    (device_name , sds_id) or device_id.
+  - Unique ways to identify a device - (I(current_pathname) , I(sds_id)) or
+    (I(current_pathname) , I(sds_name)) or (I(device_name) , I(sds_name)) or
+    (I(device_name) , I(sds_id)) or I(device_id).
   - It is recommended to install Rfcache driver for SSD device on SDS in
     order to add it to an acceleration pool.
-  - The check_mode is not supported.
+  - The I(check_mode) is not supported.
 '''
 
 EXAMPLES = r'''
@@ -125,7 +126,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     current_pathname: "/dev/sdb"
     sds_name: "node1"
@@ -140,7 +141,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     device_id: "d7fe088900000000"
     state: "present"
@@ -149,7 +150,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     current_pathname: "/dev/sdb"
     sds_name: "node0"
@@ -159,7 +160,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     current_pathname: "/dev/sdb"
     sds_id: "5717d71800000000"
@@ -169,7 +170,7 @@ EXAMPLES = r'''
    gateway_host: "{{gateway_host}}"
    username: "{{username}}"
    password: "{{password}}"
-   verifycert: "{{verifycert}}"
+   validate_certs: "{{validate_certs}}"
    port: "{{port}}"
    device_id: "76eb7e2f00010000"
    state: "absent"
@@ -178,7 +179,7 @@ EXAMPLES = r'''
    gateway_host: "{{gateway_host}}"
    username: "{{username}}"
    password: "{{password}}"
-   verifycert: "{{verifycert}}"
+   validate_certs: "{{validate_certs}}"
    port: "{{port}}"
    current_pathname: "/dev/sdb"
    sds_name: "node1"
@@ -194,7 +195,7 @@ changed:
 device_details:
     description: Details of the device.
     returned: When device exists
-    type: complex
+    type: dict
     contains:
         accelerationPoolId:
             description: Acceleration pool ID.
@@ -429,8 +430,6 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
 
 LOG = utils.get_logger('device')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexDevice(object):
     """Class with device operations"""
@@ -458,11 +457,7 @@ class PowerFlexDevice(object):
             supports_check_mode=False,
             mutually_exclusive=mut_ex_args)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            error_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(error_msg)
-            self.module.fail_json(msg=error_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
@@ -877,7 +872,7 @@ class PowerFlexDevice(object):
         changed = False
         result = dict(
             changed=False,
-            device_details=None
+            device_details={}
         )
 
         # validate input parameters

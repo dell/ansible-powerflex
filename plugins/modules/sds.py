@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -26,29 +27,29 @@ options:
     - The name of the SDS.
     - Mandatory for create operation.
     - It is unique across the PowerFlex array.
-    - Mutually exclusive with sds_id.
+    - Mutually exclusive with I(sds_id).
     type: str
   sds_id:
     description:
     - The ID of the SDS.
     - Except create operation, all other operations can be performed
-      using sds_id.
-    - Mutually exclusive with sds_name.
+      using I(sds_id).
+    - Mutually exclusive with I(sds_name).
     type: str
   protection_domain_name:
     description:
     - The name of the protection domain.
-    - Mutually exclusive with protection_domain_id.
+    - Mutually exclusive with I(protection_domain_id).
     type: str
   protection_domain_id:
     description:
     - The ID of the protection domain.
-    - Mutually exclusive with protection_domain_name.
+    - Mutually exclusive with I(protection_domain_name).
     type: str
   sds_ip_list:
     description:
     - Dictionary of IPs and their roles for the SDS.
-    - At least one IP-role is  mandatory while creating a SDS.
+    - At least one IP-role is mandatory while creating a SDS.
     - IP-roles can be updated as well.
     type: list
     elements: dict
@@ -92,7 +93,7 @@ options:
     - Performance profile to apply to the SDS.
     - The HighPerformance profile configures a predefined set of parameters
       for very high performance use cases.
-    - Default value by API is "HighPerformance".
+    - Default value by API is C(HighPerformance).
     choices: ['Compact', 'HighPerformance']
     type: str
   state:
@@ -113,7 +114,7 @@ notes:
     'sdsOnly').
   - SDS can be created with RF cache disabled, but, be aware that the RF cache
     is not always updated. In this case, the user should re-try the operation.
-  - The check_mode is not supported.
+  - The I(check_mode) is not supported.
 '''
 
 EXAMPLES = r'''
@@ -122,7 +123,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_name: "node0"
     protection_domain_name: "domain1"
@@ -137,7 +138,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_name: "node1"
     protection_domain_name: "domain1"
@@ -155,7 +156,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_name: "node0"
     state: "present"
@@ -165,7 +166,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_id: "5718253c00000004"
     state: "present"
@@ -175,7 +176,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_name: "node0"
     sds_new_name: "node0_new"
@@ -190,7 +191,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_id: "5718253c00000004"
     sds_new_name: "node0_new"
@@ -205,7 +206,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_name: "node0"
     sds_ip_list:
@@ -219,7 +220,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_name: "node0"
     sds_ip_list:
@@ -233,7 +234,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_name: "node0"
     state: "absent"
@@ -243,7 +244,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     sds_id: "5718253c00000004"
     state: "absent"
@@ -258,7 +259,7 @@ changed:
 sds_details:
     description: Details of the SDS.
     returned: When SDS exists
-    type: complex
+    type: dict
     contains:
         authenticationError:
             description: Indicates authentication error.
@@ -482,8 +483,6 @@ import copy
 
 LOG = utils.get_logger('sds')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexSDS(object):
     """Class with SDS operations"""
@@ -508,11 +507,7 @@ class PowerFlexSDS(object):
             required_together=required_together_args,
             required_one_of=required_one_of_args)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            error_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(error_msg)
-            self.module.fail_json(msg=error_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
@@ -981,7 +976,7 @@ class PowerFlexSDS(object):
         changed = False
         result = dict(
             changed=False,
-            sds_details=None
+            sds_details={}
         )
 
         # get SDS details

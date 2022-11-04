@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -28,14 +29,14 @@ options:
     - The name of the volume.
     - Mandatory for create operation.
     - It is unique across the PowerFlex array.
-    - Mutually exclusive with vol_id.
+    - Mutually exclusive with I(vol_id).
     type: str
   vol_id:
     description:
     - The ID of the volume.
     - Except create operation, all other operations can be performed
-      using vol_id.
-    - Mutually exclusive with vol_name.
+      using I(vol_id).
+    - Mutually exclusive with I(vol_name).
     type: str
   storage_pool_name:
     description:
@@ -44,14 +45,14 @@ options:
       volume.
     - During creation, if storage pool name is provided then either
       protection domain name or id must be mentioned along with it.
-    - Mutually exclusive with storage_pool_id.
+    - Mutually exclusive with I(storage_pool_id).
     type: str
   storage_pool_id:
     description:
     - The ID of the storage pool.
     - Either name or the id of the storage pool is required for creating
       a volume.
-    - Mutually exclusive with storage_pool_name.
+    - Mutually exclusive with I(storage_pool_name).
     type: str
   protection_domain_name:
     description:
@@ -59,7 +60,7 @@ options:
     - During creation of a volume, if more than one storage pool exists with
       the same name then either protection domain name or id must be
       mentioned along with it.
-    - Mutually exclusive with protection_domain_id.
+    - Mutually exclusive with I(protection_domain_id).
     type: str
   protection_domain_id:
     description:
@@ -67,7 +68,7 @@ options:
     - During creation of a volume, if more than one storage pool exists with
       the same name then either protection domain name or id must be
       mentioned along with it.
-    - Mutually exclusive with protection_domain_name.
+    - Mutually exclusive with I(protection_domain_name).
     type: str
   vol_type:
     description:
@@ -87,24 +88,24 @@ options:
     description:
     - Name of the snapshot policy.
     - To remove/detach snapshot policy, empty
-      snapshot_policy_id/snapshot_policy_name is to be passed along with
-      auto_snap_remove_type.
+      I(snapshot_policy_id)/I(snapshot_policy_name) is to be passed along with
+      I(auto_snap_remove_type).
     type: str
   snapshot_policy_id:
     description:
     - ID of the snapshot policy.
     - To remove/detach snapshot policy, empty
-      snapshot_policy_id/snapshot_policy_name is to be passed along with
-      auto_snap_remove_type.
+      I(snapshot_policy_id)/I(snapshot_policy_name) is to be passed along with
+      I(auto_snap_remove_type).
     type: str
   auto_snap_remove_type:
     description:
     - Whether to remove or detach the snapshot policy.
     - To remove/detach snapshot policy, empty
-      snapshot_policy_id/snapshot_policy_name is to be passed along with
-      auto_snap_remove_type.
+      I(snapshot_policy_id)/I(snapshot_policy_name) is to be passed along with
+      I(auto_snap_remove_type).
     - If the snapshot policy name/id is passed empty then
-      auto_snap_remove_type is defaulted to 'detach'.
+      I(auto_snap_remove_type) is defaulted to C(detach).
     choices: ['remove', 'detach']
     type: str
   size:
@@ -125,7 +126,7 @@ options:
     description:
     - Specifies whether to allow or not allow multiple mappings.
     - If the volume is mapped to one SDC then for every new mapping
-      allow_multiple_mappings has to be passed as True.
+      I(allow_multiple_mappings) has to be passed as True.
     type: bool
   sdc:
     description:
@@ -136,20 +137,20 @@ options:
       sdc_name:
         description:
         - Name of the SDC.
-        - Specify either sdc_name, sdc_id or sdc_ip.
-        - Mutually exclusive with sdc_id and sdc_ip.
+        - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip).
+        - Mutually exclusive with I(sdc_id) and I(sdc_ip).
         type: str
       sdc_id:
         description:
         - ID of the SDC.
-        - Specify either sdc_name, sdc_id or sdc_ip.
-        - Mutually exclusive with sdc_name and sdc_ip.
+        - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip).
+        - Mutually exclusive with I(sdc_name) and I(sdc_ip).
         type: str
       sdc_ip:
         description:
         - IP of the SDC.
-        - Specify either sdc_name, sdc_id or sdc_ip.
-        - Mutually exclusive with sdc_id and sdc_ip.
+        - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip).
+        - Mutually exclusive with I(sdc_id) and I(sdc_ip).
         type: str
       access_mode:
         description:
@@ -174,10 +175,10 @@ options:
     type: str
   delete_snapshots:
     description:
-    - If True, the volume and all its dependent snapshots will be deleted.
-    - If False, only the volume will be deleted.
-    - It can be specified only when the state is absent.
-    - It defaults to False, if not specified.
+    - If C(True), the volume and all its dependent snapshots will be deleted.
+    - If C(False), only the volume will be deleted.
+    - It can be specified only when the I(state) is C(absent).
+    - It defaults to C(False), if not specified.
     type: bool
   state:
     description:
@@ -186,7 +187,7 @@ options:
     required: True
     type: str
 notes:
-  - The check_mode is not supported.
+  - The I(check_mode) is not supported.
 '''
 
 EXAMPLES = r'''
@@ -195,7 +196,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
     storage_pool_name: "pool_1"
@@ -211,7 +212,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
     allow_multiple_mappings: True
@@ -226,7 +227,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
     sdc:
@@ -239,7 +240,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
     protection_domain_name: "pd_1"
@@ -259,7 +260,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_id: "fe6c8b7100000005"
     state: "present"
@@ -269,7 +270,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
     storage_pool_name: "pool_1"
@@ -282,7 +283,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
     delete_snapshots: False
@@ -293,7 +294,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
     delete_snapshots: True
@@ -309,14 +310,14 @@ changed:
 volume_details:
     description: Details of the volume.
     returned: When volume exists
-    type: complex
+    type: dict
     contains:
         id:
             description: The ID of the volume.
             type: str
         mappedSdcInfo:
             description: The details of the mapped SDC.
-            type: complex
+            type: dict
             contains:
                 sdcId:
                     description: ID of the SDC.
@@ -328,7 +329,7 @@ volume_details:
                     description: IP of the SDC.
                     type: str
                 accessMode:
-                    description: mapping access mode for the specified volume.
+                    description: Mapping access mode for the specified volume.
                     type: str
                 limitIops:
                     description: IOPS limit for the SDC.
@@ -368,7 +369,7 @@ volume_details:
             type: str
         "statistics":
             description: Statistics details of the storage pool.
-            type: complex
+            type: dict
             contains:
                 "numOfChildVolumes":
                     description: Number of child volumes.
@@ -548,8 +549,6 @@ import copy
 
 LOG = utils.get_logger('volume')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexVolume(object):
     """Class with volume operations"""
@@ -580,11 +579,7 @@ class PowerFlexVolume(object):
             required_together=required_together_args,
             required_one_of=required_one_of_args)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            err_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(err_msg)
-            self.module.fail_json(msg=err_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
@@ -1281,7 +1276,7 @@ class PowerFlexVolume(object):
         changed = False
         result = dict(
             changed=False,
-            volume_details=None
+            volume_details={}
         )
         self.validate_parameters(auto_snap_remove_type, snap_pol_id,
                                  snap_pol_name, delete_snapshots, state)
