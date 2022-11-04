@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Copyright: (c) 2020, Dell Technologies.
+# Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
@@ -24,10 +24,11 @@ class ModuleDocFragment(object):
             required: True
             description:
             - The password of the PowerFlex gateway host.
-        verifycert:
+        validate_certs:
             type: bool
             default: True
-            required: False
+            aliases:
+            - verifycert
             description:
             - Boolean variable to specify whether or not to validate SSL
               certificate.
@@ -37,9 +38,8 @@ class ModuleDocFragment(object):
         port:
             description:
             - Port number through which communication happens with PowerFlex
-             gateway host.
+              gateway host.
             type: int
-            required: False
             default: 443
         timeout:
             description:
@@ -49,7 +49,10 @@ class ModuleDocFragment(object):
             required: False
             default: 120
     requirements:
-      - A Dell PowerFlex storage system version 3.5 and later. Ansible 2.11, 2.12 or 2.13
+      - A Dell PowerFlex storage system version 3.5 or later.
+      - Ansible-core 2.11 or later.
+      - PyPowerFlex 1.5.0.
+      - Python 3.8, 3.9 or 3.10.
     notes:
       - The modules present in the collection named as 'dellemc.powerflex'
         are built to support the Dell PowerFlex storage platform.

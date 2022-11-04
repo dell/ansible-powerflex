@@ -64,4 +64,5 @@ class MockProtectionDomainApi:
 
     @staticmethod
     def version_pd_failed_msg():
-        return "Please install the required python packages python-dateutil"
+        return "Getting PyPowerFlex SDK version, failed with Error The 'PyPowerFlex' distribution was " \
+               "not found and is required by the application"
