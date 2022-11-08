@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2022, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -25,14 +26,14 @@ options:
   mdm_name:
     description:
     - The name of the MDM. It is unique across the PowerFlex array.
-    - Mutually exclusive with mdm_id.
+    - Mutually exclusive with I(mdm_id).
     - If mdm_name passed in add standby operation, then same name will be
       assigned to the new standby mdm.
     type: str
   mdm_id:
     description:
     - The ID of the MDM.
-    - Mutually exclusive with mdm_name.
+    - Mutually exclusive with I(mdm_name).
     type: str
   mdm_new_name:
     description:
@@ -78,9 +79,9 @@ options:
         elements: str
   is_primary:
     description:
-    - Set is_primary as True to change MDM cluster ownership from the current
+    - Set I(is_primary) as C(True) to change MDM cluster ownership from the current
       master MDM to different MDM.
-    - Set is_primary as False, will return MDM cluster details.
+    - Set I(is_primary) as C(False), will return MDM cluster details.
     - New owner MDM must be an MDM with a manager role.
     type: bool
   cluster_mode:
@@ -105,7 +106,7 @@ options:
       mdm_type:
         description:
         - Type of the MDM.
-        - Either mdm_id or mdm_name must be passed with mdm_type.
+        - Either I(mdm_id) or I(mdm_name) must be passed with mdm_type.
         required: True
         choices: ['Secondary', 'TieBreaker']
         type: str
@@ -120,13 +121,13 @@ options:
     - The order of interfaces must be matched with virtual IPs assigned to the
       cluster.
     - Interfaces of the primary and secondary type MDMs are allowed to modify.
-    - The virtual_ip_interfaces is mutually exclusive with clear_interfaces.
+    - The I(virtual_ip_interfaces) is mutually exclusive with I(clear_interfaces).
     type: list
     elements: str
   clear_interfaces:
     description:
     - Clear all virtual IP interfaces.
-    - The clear_interfaces is mutually exclusive with virtual_ip_interfaces.
+    - The I(clear_interfaces) is mutually exclusive with I(virtual_ip_interfaces).
     type: bool
   performance_profile:
     description:
@@ -140,16 +141,16 @@ options:
     required: True
     type: str
 notes:
-  - Parameters mdm_name or mdm_id are mandatory for rename and modify virtual IP
+  - Parameters I(mdm_name) or I(mdm_id) are mandatory for rename and modify virtual IP
     interfaces.
-  - Parameters mdm_name or mdm_id are not required while modifying performance
+  - Parameters I(mdm_name) or I(mdm_id) are not required while modifying performance
     profile.
   - For change MDM cluster ownership operation, only changed as True will be
     returned and for idempotency case MDM cluster details will be returned.
   - Reinstall all SDC after changing ownership to some newly added MDM.
   - To add manager standby MDM, MDM package must be installed with manager
     role.
-  - The check mode is supported.
+  - The I(check_mode) is supported.
 '''
 
 EXAMPLES = r'''
@@ -158,7 +159,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     mdm_name: "mdm_1"
     standby_mdm:
@@ -174,7 +175,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     mdm_name: "mdm_1"
     state: "absent"
@@ -184,7 +185,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     cluster_mode: "FiveNodes"
     mdm:
@@ -200,7 +201,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     cluster_mode: "ThreeNodes"
     mdm:
@@ -216,7 +217,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     state: "present"
 
@@ -225,7 +226,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     mdm_name: "mdm_2"
     is_primary: True
@@ -236,7 +237,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     performance_profile: "HighPerformance"
     state: "present"
@@ -246,7 +247,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     mdm_name: "mdm_1"
     mdm_new_name: "new_mdm_1"
@@ -257,7 +258,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     mdm_name: "mdm_1"
     virtual_ip_interface:
@@ -269,7 +270,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     mdm_name: "mdm_1"
     clear_interfaces: True
@@ -285,7 +286,7 @@ changed:
 mdm_cluster_details:
     description: Details of the MDM cluster.
     returned: When MDM cluster exists
-    type: complex
+    type: dict
     contains:
         id:
             description: The ID of the MDM cluster.
@@ -298,7 +299,7 @@ mdm_cluster_details:
             type: str
         master:
             description: The details of the master MDM.
-            type: complex
+            type: dict
             contains:
                 id:
                     description: ID of the MDM.
@@ -427,7 +428,7 @@ mdm_cluster_details:
                     description: Version of MDM.
                     type: str
                 virtualInterfaces:
-                    description: List of virtual interfaces
+                    description: List of virtual interfaces.
                     type: list
                 opensslVersion:
                     description: OpenSSL version.
@@ -531,8 +532,6 @@ import copy
 
 LOG = utils.get_logger('mdm_cluster')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexMdmCluster(object):
     """Class with MDM cluster operations"""
@@ -554,11 +553,7 @@ class PowerFlexMdmCluster(object):
             mutually_exclusive=mut_ex_args,
             required_together=required_together_args)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            err_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(err_msg)
-            self.module.fail_json(msg=err_msg)
+        utils.ensure_required_libs(self.module)
 
         self.not_exist_msg = "MDM {0} does not exists in MDM cluster."
         self.exist_msg = "MDM already exists in the MDM cluster"

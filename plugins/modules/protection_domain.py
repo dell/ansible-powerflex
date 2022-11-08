@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2022, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -24,14 +25,14 @@ options:
     - The name of the protection domain.
     - Mandatory for create operation.
     - It is unique across the PowerFlex array.
-    - Mutually exclusive with protection_domain_id.
+    - Mutually exclusive with I(protection_domain_id).
     type: str
   protection_domain_id:
     description:
     - The ID of the protection domain.
     - Except for create operation, all other operations can be performed
       using protection_domain_id.
-    - Mutually exclusive with protection_domain_name.
+    - Mutually exclusive with I(protection_domain_name).
     type: str
   protection_domain_new_name:
     description:
@@ -101,7 +102,7 @@ notes:
     been dissociated from the protection domain.
   - If the protection domain set to inactive, then no operation can be
     performed on protection domain.
-  - The check_mode is not supported.
+  - The I(check_mode) is not supported.
 '''
 
 EXAMPLES = r'''
@@ -110,7 +111,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     protection_domain_name: "domain1"
     state: "present"
@@ -120,7 +121,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     protection_domain_name: "domain1"
     is_active: true
@@ -142,7 +143,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     protection_domain_name: "domain1"
     state: "present"
@@ -152,7 +153,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     protection_domain_id: "5718253c00000004"
     state: "present"
@@ -162,7 +163,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     protection_domain_name: "domain1"
     protection_domain_new_name: "domain1_new"
@@ -181,7 +182,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     protection_domain_name: "domain1_new"
     state: "absent"
@@ -196,7 +197,7 @@ changed:
 protection_domain_details:
     description: Details of the protection domain.
     returned: When protection domain exists
-    type: complex
+    type: dict
     contains:
         fglDefaultMetadataCacheSize:
             description: FGL metadata cache size.
@@ -491,8 +492,6 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
 
 LOG = utils.get_logger('protection_domain')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexProtectionDomain(object):
     """Class with protection domain operations"""
@@ -514,11 +513,7 @@ class PowerFlexProtectionDomain(object):
             mutually_exclusive=mut_ex_args,
             required_one_of=required_one_of_args)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            error_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(error_msg)
-            self.module.fail_json(msg=error_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
