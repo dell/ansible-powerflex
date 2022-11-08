@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -28,7 +29,7 @@ options:
     description:
     - The name of the snapshot.
     - Mandatory for create operation.
-    - Specify either snapshot name or ID (but not both) for any operation.
+    - Specify either I(snapshot_name) or I(snapshot_id) (but not both) for any operation.
     type: str
   snapshot_id:
     description:
@@ -37,7 +38,7 @@ options:
   vol_name:
     description:
     - The name of the volume for which snapshot will be taken.
-    - Specify either vol_name or vol_id while creating snapshot.
+    - Specify either I(vol_name) or I(vol_id) while creating snapshot.
     type: str
   vol_id:
     description:
@@ -47,8 +48,8 @@ options:
     description:
     - Specifies whether mapping of the created snapshot volume will have
       read-write access or limited to read-only access.
-    - If true, snapshot is created with read-only access.
-    - If false, snapshot is created with read-write access.
+    - If C(true), snapshot is created with read-only access.
+    - If C(false), snapshot is created with read-write access.
     type: bool
   size:
     description:
@@ -56,7 +57,7 @@ options:
     type: int
   cap_unit:
     description:
-     - The unit of the volume size. It defaults to 'GB', if not specified..
+    - The unit of the volume size. It defaults to C(GB), if not specified.
     choices: ['GB' , 'TB']
     type: str
   snapshot_new_name:
@@ -76,7 +77,7 @@ options:
     type: int
   retention_unit:
     description:
-    - The unit for retention. It defaults to 'hours', if not specified.
+    - The unit for retention. It defaults to C(hours), if not specified.
     choices: [hours, days]
     type: str
   sdc:
@@ -88,20 +89,20 @@ options:
       sdc_name:
         description:
         - Name of the SDC.
-        - Specify either sdc_name, sdc_id or sdc_ip.
-        - Mutually exclusive with sdc_id and sdc_ip.
+        - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip).
+        - Mutually exclusive with I(sdc_id) and I(sdc_ip).
         type: str
       sdc_id:
         description:
         - ID of the SDC.
-        - Specify either sdc_name, sdc_id or sdc_ip.
-        - Mutually exclusive with sdc_name and sdc_ip.
+        - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip).
+        - Mutually exclusive with I(sdc_name) and I(sdc_ip).
         type: str
       sdc_ip:
         description:
         - IP of the SDC.
-        - Specify either sdc_name, sdc_id or sdc_ip.
-        - Mutually exclusive with sdc_id and sdc_ip.
+        - Specify either I(sdc_name), I(sdc_id) or I(sdc_ip).
+        - Mutually exclusive with I(sdc_id) and I(sdc_ip).
         type: str
       access_mode:
         description:
@@ -127,7 +128,7 @@ options:
   remove_mode:
     description:
     - Removal mode for the snapshot.
-    - It defaults to 'ONLY_ME', if not specified.
+    - It defaults to C(ONLY_ME), if not specified.
     choices: ['ONLY_ME', 'INCLUDING_DESCENDANTS']
     type: str
   state:
@@ -137,7 +138,7 @@ options:
     required: True
     type: str
 notes:
-  - The check_mode is not supported.
+  - The I(check_mode) is not supported.
 '''
 
 EXAMPLES = r'''
@@ -146,7 +147,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     snapshot_name: "ansible_snapshot"
     vol_name: "ansible_volume"
     read_only: False
@@ -158,7 +159,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     state: "present"
 
@@ -167,7 +168,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
         - sdc_ip: "198.10.xxx.xxx"
@@ -181,7 +182,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
     - sdc_ip: "198.10.xxx.xxx"
@@ -199,7 +200,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     size: 16
     state: "present"
@@ -209,7 +210,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
       - sdc_ip: "198.10.xxx.xxx"
@@ -222,7 +223,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     snapshot_new_name: "ansible_renamed_snapshot_10"
     state: "present"
@@ -232,7 +233,7 @@ EXAMPLES = r'''
     gateway_host: "{{gateway_host}}"
     username: "{{username}}"
     password: "{{password}}"
-    verifycert: "{{verifycert}}"
+    validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     remove_mode: "ONLY_ME"
     state: "absent"
@@ -248,7 +249,7 @@ changed:
 snapshot_details:
     description: Details of the snapshot.
     returned: When snapshot exists
-    type: complex
+    type: dict
     contains:
         ancestorVolumeId:
             description: The ID of the root of the specified volume's V-Tree.
@@ -264,7 +265,7 @@ snapshot_details:
             type: str
         mappedSdcInfo:
             description: The details of the mapped SDC.
-            type: complex
+            type: dict
             contains:
                 sdcId:
                     description: ID of the SDC.
@@ -276,7 +277,7 @@ snapshot_details:
                     description: IP of the SDC.
                     type: str
                 accessMode:
-                    description: mapping access mode for the specified snapshot.
+                    description: Mapping access mode for the specified snapshot.
                     type: str
                 limitIops:
                     description: IOPS limit for the SDC.
@@ -374,8 +375,6 @@ import copy
 
 LOG = utils.get_logger('snapshot')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
-
 
 class PowerFlexSnapshot(object):
     """Class with Snapshot operations"""
@@ -402,11 +401,7 @@ class PowerFlexSnapshot(object):
             required_together=required_together,
             required_one_of=required_one_of)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            err_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(err_msg)
-            self.module.fail_json(msg=err_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
@@ -954,7 +949,7 @@ class PowerFlexSnapshot(object):
         is_modified = False
         result = dict(
             changed=False,
-            snapshot_details=None
+            snapshot_details={}
         )
 
         self.validate_parameters()
