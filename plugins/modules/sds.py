@@ -58,13 +58,13 @@ options:
         description:
         - IP address of the SDS.
         type: str
-        required: True
+        required: true
       role:
         description:
         - Role assigned to the SDS IP address.
         choices: ['sdsOnly', 'sdcOnly', 'all']
         type: str
-        required: True
+        required: true
   sds_ip_state:
     description:
     - State of IP with respect to the SDS.
@@ -100,7 +100,7 @@ options:
     description:
     - State of the SDS.
     choices: ['present', 'absent']
-    required: True
+    required: true
     type: str
 notes:
   - The maximum limit for the IPs that can be associated with an SDS is 8.

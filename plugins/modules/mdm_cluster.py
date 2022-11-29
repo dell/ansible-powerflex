@@ -48,13 +48,13 @@ options:
         description:
         - List of MDM IPs that will be assigned to new MDM. It can contain
           IPv4 addresses.
-        required: True
+        required: true
         type: list
         elements: str
       role:
         description:
         - Role of new MDM.
-        required: True
+        required: true
         choices: ['Manager', 'TieBreaker']
         type: str
       management_ips:
@@ -79,9 +79,9 @@ options:
         elements: str
   is_primary:
     description:
-    - Set I(is_primary) as C(True) to change MDM cluster ownership from the current
+    - Set I(is_primary) as C(true) to change MDM cluster ownership from the current
       master MDM to different MDM.
-    - Set I(is_primary) as C(False), will return MDM cluster details.
+    - Set I(is_primary) as C(false), will return MDM cluster details.
     - New owner MDM must be an MDM with a manager role.
     type: bool
   cluster_mode:
@@ -107,7 +107,7 @@ options:
         description:
         - Type of the MDM.
         - Either I(mdm_id) or I(mdm_name) must be passed with mdm_type.
-        required: True
+        required: true
         choices: ['Secondary', 'TieBreaker']
         type: str
   mdm_state:
@@ -138,7 +138,7 @@ options:
     description:
     - State of the MDM cluster.
     choices: ['present', 'absent']
-    required: True
+    required: true
     type: str
 notes:
   - Parameters I(mdm_name) or I(mdm_id) are mandatory for rename and modify virtual IP

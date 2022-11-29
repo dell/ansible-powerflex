@@ -50,7 +50,7 @@ options:
     description:
     - State of the SDC.
     choices: ['present', 'absent']
-    required: True
+    required: true
     type: str
 notes:
   - The I(check_mode) is not supported.

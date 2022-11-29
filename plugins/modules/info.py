@@ -33,13 +33,13 @@ options:
     description:
     - List of string variables to specify the Powerflex storage system
       entities for which information is required.
-    - Volumes - vol.
-    - Storage pools - storage_pool.
-    - Protection domains - protection_domain.
-    - SDCs - sdc.
-    - SDSs - sds.
-    - Snapshot policies - snapshot_policy.
-    - Devices - device.
+    - Volumes - C(vol).
+    - Storage pools - C(storage_pool).
+    - Protection domains - C(protection_domain).
+    - SDCs - C(sdc).
+    - SDSs - C(sds).
+    - Snapshot policies - C(snapshot_policy).
+    - Devices - C(device).
     choices: [vol, storage_pool, protection_domain, sdc, sds,
              snapshot_policy, device]
     type: list
@@ -56,18 +56,18 @@ options:
         description:
         - Name identifier of the filter.
         type: str
-        required: True
+        required: true
       filter_operator:
         description:
         - Operation to be performed on filter key.
         type: str
         choices: [equal]
-        required: True
+        required: true
       filter_value:
         description:
         - Value of the filter key.
         type: str
-        required: True
+        required: true
 notes:
   - The I(check_mode) is supported.
 '''
