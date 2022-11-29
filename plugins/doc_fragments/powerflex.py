@@ -26,14 +26,14 @@ class ModuleDocFragment(object):
             - The password of the PowerFlex gateway host.
         validate_certs:
             type: bool
-            default: True
+            default: true
             aliases:
             - verifycert
             description:
             - Boolean variable to specify whether or not to validate SSL
               certificate.
-            - True - Indicates that the SSL certificate should be verified.
-            - False - Indicates that the SSL certificate should not be
+            - C(true) - Indicates that the SSL certificate should be verified.
+            - C(false) - Indicates that the SSL certificate should not be
               verified.
         port:
             description:
