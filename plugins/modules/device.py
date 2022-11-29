@@ -107,7 +107,7 @@ options:
     description:
     - State of the device.
     choices: ['present', 'absent']
-    required: True
+    required: true
     type: str
 notes:
   - The value for device_id is generated only after successful addition of the
