@@ -112,9 +112,8 @@ options:
 notes:
   - The value for device_id is generated only after successful addition of the
     device.
-  - Unique ways to identify a device - (I(current_pathname) , I(sds_id)) or
-    (I(current_pathname) , I(sds_name)) or (I(device_name) , I(sds_name)) or
-    (I(device_name) , I(sds_id)) or I(device_id).
+  - To uniquely identify a device, either I(device_id) can be passed or one of
+    I(current_pathname) or I(device_name) must be passed with I(sds_id) or I(sds_name).
   - It is recommended to install Rfcache driver for SSD device on SDS in
     order to add it to an acceleration pool.
   - The I(check_mode) is not supported.
@@ -123,7 +122,7 @@ notes:
 EXAMPLES = r'''
 - name: Add a device
   dellemc.powerflex.device:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -138,7 +137,7 @@ EXAMPLES = r'''
     state: "present"
 - name: Get device details using device_id
   dellemc.powerflex.device:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -147,7 +146,7 @@ EXAMPLES = r'''
     state: "present"
 - name: Get device details using (current_pathname, sds_name)
   dellemc.powerflex.device:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -157,7 +156,7 @@ EXAMPLES = r'''
     state: "present"
 - name: Get device details using (current_pathname, sds_id)
   dellemc.powerflex.device:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -167,7 +166,7 @@ EXAMPLES = r'''
     state: "present"
 - name: Remove a device using device_id
   dellemc.powerflex.device:
-   gateway_host: "{{gateway_host}}"
+   hostname: "{{hostname}}"
    username: "{{username}}"
    password: "{{password}}"
    validate_certs: "{{validate_certs}}"
@@ -176,7 +175,7 @@ EXAMPLES = r'''
    state: "absent"
 - name: Remove a device using (current_pathname, sds_id)
   dellemc.powerflex.device:
-   gateway_host: "{{gateway_host}}"
+   hostname: "{{hostname}}"
    username: "{{username}}"
    password: "{{password}}"
    validate_certs: "{{validate_certs}}"

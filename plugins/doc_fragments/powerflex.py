@@ -9,21 +9,23 @@ class ModuleDocFragment(object):
     # Documentation fragment for PowerFlex
     DOCUMENTATION = r'''
     options:
-        gateway_host:
-            required: True
+        hostname:
+            required: true
             description:
-            - IP or FQDN of the PowerFlex gateway host.
+            - IP or FQDN of the PowerFlex host.
             type: str
+            aliases:
+            - gateway_host
         username:
             type: str
-            required: True
+            required: true
             description:
-            - The username of the PowerFlex gateway host.
+            - The username of the PowerFlex host.
         password:
             type: str
-            required: True
+            required: true
             description:
-            - The password of the PowerFlex gateway host.
+            - The password of the PowerFlex host.
         validate_certs:
             type: bool
             default: true
@@ -38,7 +40,7 @@ class ModuleDocFragment(object):
         port:
             description:
             - Port number through which communication happens with PowerFlex
-              gateway host.
+              host.
             type: int
             default: 443
         timeout:
@@ -50,9 +52,9 @@ class ModuleDocFragment(object):
             default: 120
     requirements:
       - A Dell PowerFlex storage system version 3.5 or later.
-      - Ansible-core 2.11 or later.
-      - PyPowerFlex 1.5.0.
-      - Python 3.8, 3.9 or 3.10.
+      - Ansible-core 2.12 or later.
+      - PyPowerFlex 1.6.0.
+      - Python 3.9, 3.10 or 3.11.
     notes:
       - The modules present in the collection named as 'dellemc.powerflex'
         are built to support the Dell PowerFlex storage platform.

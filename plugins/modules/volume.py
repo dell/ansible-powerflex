@@ -193,7 +193,7 @@ notes:
 EXAMPLES = r'''
 - name: Create a volume
   dellemc.powerflex.volume:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -209,7 +209,7 @@ EXAMPLES = r'''
 
 - name: Map a SDC to volume
   dellemc.powerflex.volume:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -224,7 +224,7 @@ EXAMPLES = r'''
 
 - name: Unmap a SDC to volume
   dellemc.powerflex.volume:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -237,7 +237,7 @@ EXAMPLES = r'''
 
 - name: Map multiple SDCs to a volume
   dellemc.powerflex.volume:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -257,7 +257,7 @@ EXAMPLES = r'''
 
 - name: Get the details of the volume
   dellemc.powerflex.volume:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -267,7 +267,7 @@ EXAMPLES = r'''
 
 - name: Modify the details of the Volume
   dellemc.powerflex.volume:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -280,7 +280,7 @@ EXAMPLES = r'''
 
 - name: Delete the Volume
   dellemc.powerflex.volume:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -291,7 +291,7 @@ EXAMPLES = r'''
 
 - name: Delete the Volume and all its dependent snapshots
   dellemc.powerflex.volume:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"

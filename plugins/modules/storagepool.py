@@ -91,7 +91,7 @@ EXAMPLES = r'''
 
 - name: Get the details of storage pool by name
   dellemc.powerflex.storagepool:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -101,7 +101,7 @@ EXAMPLES = r'''
 
 - name: Get the details of storage pool by id
   dellemc.powerflex.storagepool:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -110,7 +110,7 @@ EXAMPLES = r'''
 
 - name: Create a new storage pool by name
   dellemc.powerflex.storagepool:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -121,7 +121,7 @@ EXAMPLES = r'''
 
 - name: Modify a storage pool by name
   dellemc.powerflex.storagepool:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -133,7 +133,7 @@ EXAMPLES = r'''
 
 - name: Rename storage pool by id
   dellemc.powerflex.storagepool:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
