@@ -14,7 +14,7 @@ __metaclass__ = type
 
 class MockVolumeApi:
     VOLUME_COMMON_ARGS = {
-        "gateway_host": "**.***.**.***",
+        "hostname": "**.***.**.***",
         "vol_name": None,
         "vol_id": None,
         "vol_type": None,

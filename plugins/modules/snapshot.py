@@ -144,7 +144,7 @@ notes:
 EXAMPLES = r'''
 - name: Create snapshot
   dellemc.powerflex.snapshot:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -156,7 +156,7 @@ EXAMPLES = r'''
 
 - name: Get snapshot details using snapshot id
   dellemc.powerflex.snapshot:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -165,7 +165,7 @@ EXAMPLES = r'''
 
 - name: Map snapshot to SDC
   dellemc.powerflex.snapshot:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -179,7 +179,7 @@ EXAMPLES = r'''
 
 - name: Modify the attributes of SDC mapped to snapshot
   dellemc.powerflex.snapshot:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -197,7 +197,7 @@ EXAMPLES = r'''
 
 - name: Extend the size of snapshot
   dellemc.powerflex.snapshot:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -207,7 +207,7 @@ EXAMPLES = r'''
 
 - name: Unmap SDCs from snapshot
   dellemc.powerflex.snapshot:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -220,7 +220,7 @@ EXAMPLES = r'''
 
 - name: Rename snapshot
   dellemc.powerflex.snapshot:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -230,7 +230,7 @@ EXAMPLES = r'''
 
 - name: Delete snapshot
   dellemc.powerflex.snapshot:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"

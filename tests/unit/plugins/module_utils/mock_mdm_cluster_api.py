@@ -16,7 +16,7 @@ class MockMdmClusterApi:
     MODULE_UTILS_PATH = 'ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.utils'
 
     MDM_CLUSTER_COMMON_ARGS = {
-        "gateway_host": "**.***.**.***",
+        "hostname": "**.***.**.***",
         "mdm_id": None,
         "mdm_name": None,
         "mdm_new_name": None,

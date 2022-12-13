@@ -28,7 +28,7 @@ from ansible_collections.dellemc.powerflex.plugins.modules.protection_domain imp
 class TestPowerflexProtectionDomain():
 
     get_module_args = {
-        'gateway_host': '**.***.**.***',
+        'hostname': '**.***.**.***',
         'protection_domain_id': '7bd6457000000000',
         'protection_domain_name': None,
         'protection_domain_new_name': None,
