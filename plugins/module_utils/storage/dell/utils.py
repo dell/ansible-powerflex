@@ -7,6 +7,7 @@ __metaclass__ = type
 
 import logging
 import math
+import re
 from decimal import Decimal
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.logging_handler \
     import CustomRotatingFileHandler
@@ -50,7 +51,7 @@ def get_powerflex_gateway_host_parameters():
     ansible modules on PowerFlex Storage System"""
 
     return dict(
-        gateway_host=dict(type='str', required=True),
+        hostname=dict(type='str', aliases=['gateway_host'], required=True),
         username=dict(type='str', required=True),
         password=dict(type='str', required=True, no_log=True),
         validate_certs=dict(type='bool', aliases=['verifycert'], required=False, default=True),
@@ -64,7 +65,7 @@ def get_powerflex_gateway_host_connection(module_params):
 
     if HAS_POWERFLEX_SDK:
         conn = PowerFlexClient(
-            gateway_address=module_params['gateway_host'],
+            gateway_address=module_params['hostname'],
             gateway_port=module_params['port'],
             verify_certificate=module_params['validate_certs'],
             username=module_params['username'],
@@ -86,10 +87,10 @@ def ensure_required_libs(module):
                          exception=PKG_RSRC_IMP_ERR)
 
     if not HAS_POWERFLEX_SDK:
-        module.fail_json(msg=missing_required_lib("PyPowerFlex V 1.5.0 or above"),
+        module.fail_json(msg=missing_required_lib("PyPowerFlex V 1.6.0 or above"),
                          exception=POWERFLEX_SDK_IMP_ERR)
 
-    min_ver = '1.5.0'
+    min_ver = '1.6.0'
     try:
         curr_version = pkg_resources.require("PyPowerFlex")[0].version
         supported_version = (parse_version(curr_version) >= parse_version(min_ver))
@@ -168,3 +169,18 @@ def get_size_in_gb(size, cap_units):
     size = Decimal(size_in_bytes / GB_IN_BYTES)
     size_in_gb = round(size)
     return size_in_gb
+
+
+def is_version_less_than_3_6(version):
+    """Verifies if powerflex version is less than 3.6"""
+    version = re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
+    return \
+        pkg_resources.parse_version(version) < pkg_resources.parse_version('3.6')
+
+
+def is_invalid_name(name):
+    """Validates string against regex pattern"""
+    if name is not None:
+        regexp = re.compile(r'^[a-zA-Z0-9!@#$%^~*_-]*$')
+        if not regexp.search(name):
+            return True

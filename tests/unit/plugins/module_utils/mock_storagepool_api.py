@@ -13,7 +13,7 @@ __metaclass__ = type
 
 class MockStoragePoolApi:
     STORAGE_POOL_COMMON_ARGS = {
-        "gateway_host": "**.***.**.***",
+        "hostname": "**.***.**.***",
         "storage_pool_name": None,
         "storage_pool_id": None,
         "storage_pool_new_name": None,

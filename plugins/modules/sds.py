@@ -120,7 +120,7 @@ notes:
 EXAMPLES = r'''
 - name: Create SDS
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -135,7 +135,7 @@ EXAMPLES = r'''
 
 - name: Create SDS with all parameters
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -153,7 +153,7 @@ EXAMPLES = r'''
 
 - name: Get SDS details using name
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -163,7 +163,7 @@ EXAMPLES = r'''
 
 - name: Get SDS details using ID
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -173,7 +173,7 @@ EXAMPLES = r'''
 
 - name: Modify SDS attributes using name
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -188,7 +188,7 @@ EXAMPLES = r'''
 
 - name: Modify SDS attributes using ID
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -203,7 +203,7 @@ EXAMPLES = r'''
 
 - name: Add IP and role to an SDS
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -217,7 +217,7 @@ EXAMPLES = r'''
 
 - name: Remove IP and role from an SDS
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -231,7 +231,7 @@ EXAMPLES = r'''
 
 - name: Delete SDS using name
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -241,7 +241,7 @@ EXAMPLES = r'''
 
 - name: Delete SDS using ID
   dellemc.powerflex.sds:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"

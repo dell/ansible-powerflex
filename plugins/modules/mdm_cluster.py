@@ -156,7 +156,7 @@ notes:
 EXAMPLES = r'''
 - name: Add a standby MDM
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -172,7 +172,7 @@ EXAMPLES = r'''
 
 - name: Remove a standby MDM
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -182,7 +182,7 @@ EXAMPLES = r'''
 
 - name: Switch cluster mode from 3 node to 5 node MDM cluster
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -198,7 +198,7 @@ EXAMPLES = r'''
 
 - name: Switch cluster mode from 5 node to 3 node MDM cluster
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -214,7 +214,7 @@ EXAMPLES = r'''
 
 - name: Get the details of the MDM cluster
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -223,7 +223,7 @@ EXAMPLES = r'''
 
 - name: Change ownership of MDM cluster
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -234,7 +234,7 @@ EXAMPLES = r'''
 
 - name: Modify performance profile
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -244,7 +244,7 @@ EXAMPLES = r'''
 
 - name: Rename the MDM
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -255,7 +255,7 @@ EXAMPLES = r'''
 
 - name: Modify virtual IP interface of the MDM
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -267,7 +267,7 @@ EXAMPLES = r'''
 
 - name: Clear virtual IP interface of the MDM
   dellemc.powerflex.mdm_cluster:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
