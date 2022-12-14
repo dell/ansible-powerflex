@@ -9,6 +9,8 @@ Mock Api response for Unit tests of info module on Dell Technologies (Dell) Powe
 from __future__ import (absolute_import, division, print_function)
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_storagepool_api import MockStoragePoolApi
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_volume_api import MockVolumeApi
+from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_replication_consistency_group_api \
+    import MockReplicationConsistencyGroupApi
 
 
 __metaclass__ = type
@@ -16,7 +18,7 @@ __metaclass__ = type
 
 class MockInfoApi:
     INFO_COMMON_ARGS = {
-        "gateway_host": "**.***.**.***",
+        "hostname": "**.***.**.***",
         "gather_subset": [],
         "filters": None
     }
@@ -221,9 +223,13 @@ class MockInfoApi:
         'test_pool_id_1': MockStoragePoolApi.STORAGE_POOL_STATISTICS
     }
 
+    RCG_LIST = MockReplicationConsistencyGroupApi.get_rcg_details()
+
     @staticmethod
     def get_exception_response(response_type):
         if response_type == 'volume_get_details':
             return "Get volumes list from powerflex array failed with error "
         elif response_type == 'sp_get_details':
             return "Get storage pool list from powerflex array failed with error "
+        elif response_type == 'rcg_get_details':
+            return "Get replication consistency group list from powerflex array failed with error "

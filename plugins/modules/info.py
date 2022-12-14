@@ -40,8 +40,9 @@ options:
     - SDSs - C(sds).
     - Snapshot policies - C(snapshot_policy).
     - Devices - C(device).
+    - Replication consistency groups - C(rcg).
     choices: [vol, storage_pool, protection_domain, sdc, sds,
-             snapshot_policy, device]
+             snapshot_policy, device, rcg]
     type: list
     elements: str
   filters:
@@ -75,7 +76,7 @@ notes:
 EXAMPLES = r'''
 - name: Get detailed list of PowerFlex entities
   dellemc.powerflex.info:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -87,10 +88,11 @@ EXAMPLES = r'''
       - sds
       - snapshot_policy
       - device
+      - rcg
 
 - name: Get a subset list of PowerFlex volumes
   dellemc.powerflex.info:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -966,6 +968,133 @@ Devices:
             "name": "device22"
         }
     ]
+Replication_Consistency_Groups:
+    description: Details of rcgs.
+    returned: always
+    type: list
+    contains:
+        id:
+            description: The ID of the replication consistency group.
+            type: str
+        name:
+            description: The name of the replication consistency group.
+            type: str
+        protectionDomainId:
+            description: The Protection Domain ID of the replication consistency group.
+            type: str
+        peerMdmId:
+            description: The ID of the peer MDM of the replication consistency group.
+            type: str
+        remoteId:
+            description: The ID of the remote replication consistency group.
+            type: str
+        remoteMdmId:
+            description: The ID of the remote MDM of the replication consistency group.
+            type: str
+        currConsistMode:
+            description: The current consistency mode of the replication consistency group.
+            type: str
+        freezeState:
+            description: The freeze state of the replication consistency group.
+            type: str
+        lifetimeState:
+            description: The Lifetime state of the replication consistency group.
+            type: str
+        pauseMode:
+            description: The Lifetime state of the replication consistency group.
+            type: str
+        snapCreationInProgress:
+            description: Whether the process of snapshot creation of the replication consistency group is in progress or not.
+            type: bool
+        lastSnapGroupId:
+            description: ID of the last snapshot of the replication consistency group.
+            type: str
+        lastSnapCreationRc:
+            description: The return code of the last snapshot of the replication consistency group.
+            type: int
+        targetVolumeAccessMode:
+            description: The access mode of the target volume of the replication consistency group.
+            type: str
+        remoteProtectionDomainId:
+            description: The ID of the remote Protection Domain.
+            type: str
+        remoteProtectionDomainName:
+            description: The Name of the remote Protection Domain.
+            type: str
+        failoverType:
+            description: The type of failover of the replication consistency group.
+            type: str
+        failoverState:
+            description: The state of failover of the replication consistency group.
+            type: str
+        activeLocal:
+            description: Whether the local replication consistency group is active.
+            type: bool
+        activeRemote:
+            description: Whether the remote replication consistency group is active
+            type: bool
+        abstractState:
+            description: The abstract state of the replication consistency group.
+            type: str
+        localActivityState:
+            description: The state of activity of the local replication consistency group.
+            type: str
+        remoteActivityState:
+            description: The state of activity of the remote replication consistency group..
+            type: str
+        inactiveReason:
+            description: The reason for the inactivity of the replication consistency group.
+            type: int
+        rpoInSeconds:
+            description: The RPO value of the replication consistency group in seconds.
+            type: int
+        replicationDirection:
+            description: The direction of the replication of the replication consistency group.
+            type: str
+        disasterRecoveryState:
+            description: The state of disaster recovery of the local replication consistency group.
+            type: str
+        remoteDisasterRecoveryState:
+            description: The state of disaster recovery of the remote replication consistency group.
+            type: str
+        error:
+            description: The error code of the replication consistency group.
+            type: int
+        type:
+            description: The type of the replication consistency group.
+            type: str
+    sample: {
+        "protectionDomainId": "b969400500000000",
+        "peerMdmId": "6c3d94f600000000",
+        "remoteId": "2130961a00000000",
+        "remoteMdmId": "0e7a082862fedf0f",
+        "currConsistMode": "Consistent",
+        "freezeState": "Unfrozen",
+        "lifetimeState": "Normal",
+        "pauseMode": "None",
+        "snapCreationInProgress": false,
+        "lastSnapGroupId": "e58280b300000001",
+        "lastSnapCreationRc": "SUCCESS",
+        "targetVolumeAccessMode": "NoAccess",
+        "remoteProtectionDomainId": "4eeb304600000000",
+        "remoteProtectionDomainName": "domain1",
+        "failoverType": "None",
+        "failoverState": "None",
+        "activeLocal": true,
+        "activeRemote": true,
+        "abstractState": "Ok",
+        "localActivityState": "Active",
+        "remoteActivityState": "Active",
+        "inactiveReason": 11,
+        "rpoInSeconds": 30,
+        "replicationDirection": "LocalToRemote",
+        "disasterRecoveryState": "None",
+        "remoteDisasterRecoveryState": "None",
+        "error": 65,
+        "name": "test_rcg",
+        "type": "User",
+        "id": "aadc17d500000000"
+    }
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -1132,6 +1261,32 @@ class PowerFlexInfo(object):
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
+    def get_replication_consistency_group_list(self, filter_dict=None):
+        """ Get the list of replication consistency group on a given PowerFlex storage
+            system """
+
+        try:
+            LOG.info('Getting replication consistency group list ')
+            if filter_dict:
+                rcgs = self.powerflex_conn.replication_consistency_group.get(filter_fields=filter_dict)
+            else:
+                rcgs = self.powerflex_conn.replication_consistency_group.get()
+            if rcgs:
+                api_version = self.powerflex_conn.system.get()[0]['mdmCluster']['master']['versionInfo']
+                statistics_map = \
+                    self.powerflex_conn.replication_consistency_group.get_all_statistics(utils.is_version_less_than_3_6(api_version))
+                list_of_rcg_ids_in_statistics = statistics_map.keys()
+                for rcg in rcgs:
+                    rcg.pop('links', None)
+                    rcg['statistics'] = statistics_map[rcg['id']] if rcg['id'] in list_of_rcg_ids_in_statistics else {}
+                return result_list(rcgs)
+
+        except Exception as e:
+            msg = 'Get replication consistency group list from powerflex array failed with' \
+                  ' error %s' % (str(e))
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
     def get_volumes_list(self, filter_dict=None):
         """ Get the list of volumes on a given PowerFlex storage
             system """
@@ -1262,6 +1417,7 @@ class PowerFlexInfo(object):
         snapshot_policy = []
         protection_domain = []
         device = []
+        rcgs = []
 
         subset = self.module.params['gather_subset']
         if subset is not None:
@@ -1279,6 +1435,8 @@ class PowerFlexInfo(object):
                 snapshot_policy = self.get_snapshot_policy_list(filter_dict=filter_dict)
             if 'device' in subset:
                 device = self.get_devices_list(filter_dict=filter_dict)
+            if 'rcg' in subset:
+                rcgs = self.get_replication_consistency_group_list(filter_dict=filter_dict)
 
         self.module.exit_json(
             Array_Details=array_details,
@@ -1289,7 +1447,8 @@ class PowerFlexInfo(object):
             Volumes=vol,
             Snapshot_Policies=snapshot_policy,
             Protection_Domains=protection_domain,
-            Devices=device
+            Devices=device,
+            Replication_Consistency_Groups=rcgs
         )
 
 
@@ -1315,7 +1474,7 @@ def get_powerflex_info_parameters():
         gather_subset=dict(type='list', required=False, elements='str',
                            choices=['vol', 'storage_pool',
                                     'protection_domain', 'sdc', 'sds',
-                                    'snapshot_policy', 'device']),
+                                    'snapshot_policy', 'device', 'rcg']),
         filters=dict(type='list', required=False, elements='dict',
                      options=dict(filter_key=dict(type='str', required=True, no_log=False),
                                   filter_operator=dict(

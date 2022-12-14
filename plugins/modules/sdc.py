@@ -59,7 +59,7 @@ notes:
 EXAMPLES = r'''
 - name: Get SDC details using SDC ip
   dellemc.powerflex.sdc:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -68,7 +68,7 @@ EXAMPLES = r'''
 
 - name: Rename SDC using SDC name
   dellemc.powerflex.sdc:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"

@@ -108,7 +108,7 @@ notes:
 EXAMPLES = r'''
 - name: Create protection domain
   dellemc.powerflex.protection_domain:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -118,7 +118,7 @@ EXAMPLES = r'''
 
 - name: Create protection domain with all parameters
   dellemc.powerflex.protection_domain:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -140,7 +140,7 @@ EXAMPLES = r'''
 
 - name: Get protection domain details using name
   dellemc.powerflex.protection_domain:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -150,7 +150,7 @@ EXAMPLES = r'''
 
 - name: Get protection domain details using ID
   dellemc.powerflex.protection_domain:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -160,7 +160,7 @@ EXAMPLES = r'''
 
 - name: Modify protection domain attributes
   dellemc.powerflex.protection_domain:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
@@ -179,7 +179,7 @@ EXAMPLES = r'''
 
 - name: Delete protection domain using name
   dellemc.powerflex.protection_domain:
-    gateway_host: "{{gateway_host}}"
+    hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
