@@ -11,6 +11,8 @@ from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_volume_api import MockVolumeApi
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_replication_consistency_group_api \
     import MockReplicationConsistencyGroupApi
+from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_replication_pair_api \
+    import MockReplicationPairApi
 
 
 __metaclass__ = type
@@ -224,6 +226,7 @@ class MockInfoApi:
     }
 
     RCG_LIST = MockReplicationConsistencyGroupApi.get_rcg_details()
+    PAIR_LIST = MockReplicationPairApi.get_pair_details()
 
     @staticmethod
     def get_exception_response(response_type):
@@ -233,3 +236,5 @@ class MockInfoApi:
             return "Get storage pool list from powerflex array failed with error "
         elif response_type == 'rcg_get_details':
             return "Get replication consistency group list from powerflex array failed with error "
+        elif response_type == 'replication_pair_get_details':
+            return "Get replication pair list from powerflex array failed with error "

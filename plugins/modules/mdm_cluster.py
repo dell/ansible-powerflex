@@ -605,7 +605,7 @@ class PowerFlexMdmCluster(object):
         try:
             log_msg = "Modifying MDM virtual interfaces to %s " \
                       "or %s" % (str(modify_list), clear)
-            LOG.info(log_msg)
+            LOG.debug(log_msg)
             if not self.module.check_mode:
                 self.powerflex_conn.system.modify_virtual_ip_interface(
                     mdm_id=mdm_id, virtual_ip_interfaces=modify_list,
@@ -752,7 +752,8 @@ class PowerFlexMdmCluster(object):
                 if mdm_details is None:
                     err_msg = self.not_exist_msg.format(name_or_id)
                     self.module.fail_json(msg=err_msg)
-                secondarys.append(mdm_details['id'])
+                else:
+                    secondarys.append(mdm_details['id'])
         return secondarys
 
     def cluster_expand_list(self, mdm, cluster_details):
@@ -785,10 +786,11 @@ class PowerFlexMdmCluster(object):
                 if mdm_details is None:
                     err_msg = self.not_exist_msg.format(name_or_id)
                     self.module.fail_json(msg=err_msg)
-                add_tb.append(mdm_details['id'])
+                else:
+                    add_tb.append(mdm_details['id'])
 
         log_msg = "expand List are: %s, %s" % (add_secondary, add_tb)
-        LOG.info(log_msg)
+        LOG.debug(log_msg)
         return add_secondary, add_tb
 
     def cluster_reduce_list(self, mdm, cluster_details):
@@ -820,10 +822,11 @@ class PowerFlexMdmCluster(object):
                 if mdm_details is None:
                     err_msg = self.not_exist_msg.format(name_or_id)
                     self.module.fail_json(msg=err_msg)
-                remove_tb.append(mdm_details['id'])
+                else:
+                    remove_tb.append(mdm_details['id'])
 
         log_msg = "Reduce List are: %s, %s." % (remove_secondary, remove_tb)
-        LOG.info(log_msg)
+        LOG.debug(log_msg)
         return remove_secondary, remove_tb
 
     def perform_add_standby(self, mdm_name, standby_payload):
@@ -961,21 +964,24 @@ class PowerFlexMdmCluster(object):
     def find_mdm_in_secondarys(self, mdm_name=None, mdm_id=None,
                                cluster_details=None, name_or_id=None):
         """Whether MDM exists with mdm_name or id in secondary MDMs"""
-        for mdm in cluster_details['slaves']:
-            if ('name' in mdm and mdm_name == mdm['name']) or \
-                    mdm_id == mdm['id']:
-                LOG.info("MDM %s found in Secondarys MDM.", name_or_id)
-                return mdm
+
+        if 'slaves' in cluster_details:
+            for mdm in cluster_details['slaves']:
+                if ('name' in mdm and mdm_name == mdm['name']) or \
+                        mdm_id == mdm['id']:
+                    LOG.info("MDM %s found in Secondarys MDM.", name_or_id)
+                    return mdm
 
     def find_mdm_in_tb(self, mdm_name=None, mdm_id=None,
                        cluster_details=None, name_or_id=None):
         """Whether MDM exists with mdm_name or id in tie-breaker MDMs"""
 
-        for mdm in cluster_details['tieBreakers']:
-            if ('name' in mdm and mdm_name == mdm['name']) or \
-                    mdm_id == mdm['id']:
-                LOG.info("MDM %s found in tieBreakers MDM.", name_or_id)
-                return mdm
+        if 'tieBreakers' in cluster_details:
+            for mdm in cluster_details['tieBreakers']:
+                if ('name' in mdm and mdm_name == mdm['name']) or \
+                        mdm_id == mdm['id']:
+                    LOG.info("MDM %s found in tieBreakers MDM.", name_or_id)
+                    return mdm
 
     def find_mdm_in_standby(self, mdm_name=None, mdm_id=None,
                             cluster_details=None, name_or_id=None):

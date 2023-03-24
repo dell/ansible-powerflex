@@ -35,6 +35,11 @@ plugins:
       name: replication_consistency_group
       namespace: ''
       version_added: 1.5.0
+    replication_pair:
+      description: Manage replication pairs on Dell PowerFlex
+      name: replication_pair
+      namespace: ''
+      version_added: 1.6.0
     sdc:
       description: Manage SDCs on Dell PowerFlex
       name: sdc
@@ -64,4 +69,4 @@ plugins:
   shell: {}
   strategy: {}
   vars: {}
-version: 1.5.0
+version: 1.6.0

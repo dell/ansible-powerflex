@@ -5,6 +5,19 @@ Dellemc.PowerFlex Change Logs
 .. contents:: Topics
 
 
+v1.6.0
+======
+
+Minor Changes
+-------------
+
+- Info module is enhanced to support the listing of replication pairs.
+
+New Modules
+-----------
+
+- dellemc.powerflex.replication_pair - Manage replication pairs on Dell PowerFlex
+
 v1.5.0
 ======
 

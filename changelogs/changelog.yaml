@@ -41,8 +41,8 @@ releases:
   1.2.0:
     changes:
       minor_changes:
-      - Names of previously released modules have been changed from dellemc_powerflex_\<module
-        name> to \<module name>.
+      - Names of previously released modules have been changed from dellemc_powerflex_\<module name>
+        to \<module name>.
     modules:
     - description: Manage Protection Domain on Dell PowerFlex
       name: protection_domain
@@ -80,3 +80,12 @@ releases:
       name: replication_consistency_group
       namespace: ''
     release_date: '2022-12-22'
+  1.6.0:
+    changes:
+      minor_changes:
+      - Info module is enhanced to support the listing of replication pairs.
+    modules:
+    - description: Manage replication pairs on Dell PowerFlex
+      name: replication_pair
+      namespace: ''
+    release_date: '2023-03-31'
