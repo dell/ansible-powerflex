@@ -41,8 +41,9 @@ options:
     - Snapshot policies - C(snapshot_policy).
     - Devices - C(device).
     - Replication consistency groups - C(rcg).
+    - Replication pairs - C(replication_pair).
     choices: [vol, storage_pool, protection_domain, sdc, sds,
-             snapshot_policy, device, rcg]
+             snapshot_policy, device, rcg, replication_pair]
     type: list
     elements: str
   filters:
@@ -89,6 +90,7 @@ EXAMPLES = r'''
       - snapshot_policy
       - device
       - rcg
+      - replication_pair
 
 - name: Get a subset list of PowerFlex volumes
   dellemc.powerflex.info:
@@ -1095,6 +1097,56 @@ Replication_Consistency_Groups:
         "type": "User",
         "id": "aadc17d500000000"
     }
+Replication_pairs:
+    description: Details of the replication pairs.
+    returned: Always
+    type: list
+    contains:
+        id:
+            description: The ID of the replication pair.
+            type: str
+        name:
+            description: The name of the replication pair.
+            type: str
+        remoteId:
+            description: The ID of the remote replication pair.
+            type: str
+        localVolumeId:
+            description: The ID of the local volume.
+            type: str
+        replicationConsistencyGroupId:
+            description: The ID of the replication consistency group.
+            type: str
+        copyType:
+            description: The copy type of the replication pair.
+            type: str
+        initialCopyState:
+            description: The inital copy state of the replication pair.
+            type: str
+        localActivityState:
+            description: The state of activity of the local replication pair.
+            type: str
+        remoteActivityState:
+            description: The state of activity of the remote replication pair.
+            type: str
+    sample: {
+        "copyType": "OnlineCopy",
+        "id": "23aa0bc900000001",
+        "initialCopyPriority": -1,
+        "initialCopyState": "Done",
+        "lifetimeState": "Normal",
+        "localActivityState": "RplEnabled",
+        "localVolumeId": "e2bc1fab00000008",
+        "name": null,
+        "peerSystemName": null,
+        "remoteActivityState": "RplEnabled",
+        "remoteCapacityInMB": 8192,
+        "remoteId": "a058446700000001",
+        "remoteVolumeId": "1cda7af20000000d",
+        "remoteVolumeName": "vol",
+        "replicationConsistencyGroupId": "e2ce036b00000002",
+        "userRequestedPauseTransmitInitCopy": false
+    }
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -1287,6 +1339,33 @@ class PowerFlexInfo(object):
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
+    def get_replication_pair_list(self, filter_dict=None):
+        """ Get the list of replication pairs on a given PowerFlex storage
+            system """
+
+        try:
+            LOG.info('Getting replication pair list ')
+            if filter_dict:
+                pairs = self.powerflex_conn.replication_pair.get(filter_fields=filter_dict)
+            else:
+                pairs = self.powerflex_conn.replication_pair.get()
+            if pairs:
+                for pair in pairs:
+                    pair.pop('links', None)
+                    local_volume = self.powerflex_conn.volume.get(filter_fields={'id': pair['localVolumeId']})
+                    if local_volume:
+                        pair['localVolumeName'] = local_volume[0]['name']
+                    pair['replicationConsistencyGroupName'] = \
+                        self.powerflex_conn.replication_consistency_group.get(filter_fields={'id': pair['replicationConsistencyGroupId']})[0]['name']
+                    pair['statistics'] = self.powerflex_conn.replication_pair.get_statistics(pair['id'])
+                return pairs
+
+        except Exception as e:
+            msg = 'Get replication pair list from powerflex array failed with' \
+                  ' error %s' % (str(e))
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
     def get_volumes_list(self, filter_dict=None):
         """ Get the list of volumes on a given PowerFlex storage
             system """
@@ -1418,6 +1497,7 @@ class PowerFlexInfo(object):
         protection_domain = []
         device = []
         rcgs = []
+        replication_pair = []
 
         subset = self.module.params['gather_subset']
         if subset is not None:
@@ -1437,6 +1517,8 @@ class PowerFlexInfo(object):
                 device = self.get_devices_list(filter_dict=filter_dict)
             if 'rcg' in subset:
                 rcgs = self.get_replication_consistency_group_list(filter_dict=filter_dict)
+            if 'replication_pair' in subset:
+                replication_pair = self.get_replication_pair_list(filter_dict=filter_dict)
 
         self.module.exit_json(
             Array_Details=array_details,
@@ -1448,7 +1530,8 @@ class PowerFlexInfo(object):
             Snapshot_Policies=snapshot_policy,
             Protection_Domains=protection_domain,
             Devices=device,
-            Replication_Consistency_Groups=rcgs
+            Replication_Consistency_Groups=rcgs,
+            Replication_Pairs=replication_pair
         )
 
 
@@ -1474,7 +1557,7 @@ def get_powerflex_info_parameters():
         gather_subset=dict(type='list', required=False, elements='str',
                            choices=['vol', 'storage_pool',
                                     'protection_domain', 'sdc', 'sds',
-                                    'snapshot_policy', 'device', 'rcg']),
+                                    'snapshot_policy', 'device', 'rcg', 'replication_pair']),
         filters=dict(type='list', required=False, elements='dict',
                      options=dict(filter_key=dict(type='str', required=True, no_log=False),
                                   filter_operator=dict(

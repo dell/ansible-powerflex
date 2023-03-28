@@ -225,7 +225,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_name: "rcg_test"
-    action: "pause"
+    pause: True
     pause_mode: "StopDataTransfer"
 
 - name: Resume replication consistency group
@@ -236,7 +236,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_name: "rcg_test"
-    action: "resume"
+    pause: False
 
 - name: Freeze replication consistency group
   dellemc.powerflex.replication_consistency_group:
@@ -246,7 +246,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_name: "rcg_test"
-    action: "freeze"
+    freeze: True
 
 - name: UnFreeze replication consistency group
   dellemc.powerflex.replication_consistency_group:
@@ -256,7 +256,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_name: "rcg_test"
-    action: "unfreeze"
+    freeze: False
 
 - name: Delete replication consistency group
   dellemc.powerflex.replication_consistency_group:
