@@ -2,7 +2,7 @@
 
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-"""Unit Tests for volume module on PowerFlex"""
+"""Unit Tests for replication consistency group module on PowerFlex"""
 
 from __future__ import (absolute_import, division, print_function)
 from unittest.mock import Mock

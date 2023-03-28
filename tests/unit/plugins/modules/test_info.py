@@ -128,3 +128,24 @@ class TestPowerflexInfo():
         )
         info_module_mock.perform_module_operation()
         assert MockInfoApi.get_exception_response('rcg_get_details') in info_module_mock.module.fail_json.call_args[1]['msg']
+
+    def test_get_replication_pair_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['replication_pair']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.replication_pair.get = MagicMock(
+            return_value=MockInfoApi.PAIR_LIST)
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.replication_pair.get.assert_called()
+
+    def test_get_replication_pair_details_throws_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['replication_pair']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.replication_pair.get = MagicMock(
+            side_effect=MockApiException
+        )
+        info_module_mock.perform_module_operation()
+        assert MockInfoApi.get_exception_response('replication_pair_get_details') in info_module_mock.module.fail_json.call_args[1]['msg']
