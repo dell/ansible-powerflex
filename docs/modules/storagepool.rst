@@ -21,8 +21,8 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.12 or later.
-- PyPowerFlex 1.6.0.
+- Ansible-core 2.13 or later.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -173,8 +173,8 @@ Examples
         validate_certs: "{{validate_certs}}"
         storage_pool_name: "ansible_test_pool"
         protection_domain_id: "1c957da800000000"
-        use_rmcache: True
-        use_rfcache: True
+        use_rmcache: true
+        use_rfcache: true
         state: "present"
 
     - name: Rename storage pool by id

@@ -23,6 +23,7 @@ class MockReplicationConsistencyGroupApi:
                         "verifycert": None, "port": None, "protection_domain_name": None,
                         "protection_domain_id": None},
         "target_volume_access_mode": None, "is_consistent": None,
+        "rcg_state": None, "force": None,
         "state": None
     }
     RCG_ID = "aadc17d500000000"

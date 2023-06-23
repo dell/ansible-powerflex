@@ -12,7 +12,7 @@ replication_consistency_group -- Manage replication consistency groups on Dell P
 Synopsis
 --------
 
-Managing replication consistency groups on PowerFlex storage system includes getting details, creating, modifying, creating snapshots, pause, resume, freeze, unfreeze, activate, inactivate and deleting a replication consistency group.
+Managing replication consistency groups on PowerFlex storage system includes getting details, creating, modifying, creating snapshots, pause, resume, freeze, unfreeze, activate, failover, reverse, restore, sync, switchover, inactivate and deleting a replication consistency group.
 
 
 
@@ -21,8 +21,8 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.12 or later.
-- PyPowerFlex 1.6.0.
+- Ansible-core 2.13 or later.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -73,15 +73,41 @@ Parameters
   pause (optional, bool, None)
     Pause or resume the RCG.
 
+    This parameter is deprecated. Use rcg_state instead.
+
+
+  rcg_state (optional, str, None)
+    Specify an action for RCG.
+
+    Failover the RCG.
+
+    Reverse the RCG.
+
+    Restore the RCG.
+
+    Switchover the RCG.
+
+    Pause or resume the RCG.
+
+    Freeze or unfreeze the RCG.
+
+    Synchronize the RCG.
+
+
+  force (optional, bool, None)
+    Force switchover the RCG.
+
 
   freeze (optional, bool, None)
     Freeze or unfreeze the RCG.
+
+    This parameter is deprecated. Use rcg_state instead.
 
 
   pause_mode (optional, str, None)
     Pause mode.
 
-    It is required if pause is set as True.
+    It is required if pause is set as true.
 
 
   target_volume_access_mode (optional, str, None)
@@ -187,7 +213,7 @@ Notes
    - The *check_mode* is supported.
    - Idempotency is not supported for create snapshot operation.
    - There is a delay in reflection of final state of RCG after few update operations on RCG.
-   - In 3.6 and above, the replication consistency group will return back to consistent mode on changing to inconsistent mode if consistence barrier arrives. Hence idempotency on setting to inconsistent mode will return changed as True.
+   - In 3.6 and above, the replication consistency group will return back to consistent mode on changing to inconsistent mode if consistence barrier arrives. Hence idempotency on setting to inconsistent mode will return changed as true.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -217,7 +243,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         rcg_id: "{{rcg_id}}"
-        create_snapshot: True
+        create_snapshot: true
         state: "present"
 
     - name: Create a replication consistency group
@@ -250,7 +276,7 @@ Examples
         rpo: 60
         target_volume_access_mode: "ReadOnly"
         activity_mode: "Inactive"
-        is_consistent: True
+        is_consistent: true
 
     - name: Rename replication consistency group
       dellemc.powerflex.replication_consistency_group:
@@ -270,7 +296,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         rcg_name: "rcg_test"
-        pause: True
+        rcg_state: "pause"
         pause_mode: "StopDataTransfer"
 
     - name: Resume replication consistency group
@@ -281,7 +307,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         rcg_name: "rcg_test"
-        pause: False
+        rcg_state: "resume"
 
     - name: Freeze replication consistency group
       dellemc.powerflex.replication_consistency_group:
@@ -291,7 +317,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         rcg_name: "rcg_test"
-        freeze: True
+        rcg_state: "freeze"
 
     - name: UnFreeze replication consistency group
       dellemc.powerflex.replication_consistency_group:
@@ -301,7 +327,57 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         rcg_name: "rcg_test"
-        freeze: False
+        rcg_state: "unfreeze"
+
+    - name: Failover replication consistency group
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        port: "{{port}}"
+        rcg_name: "rcg_test"
+        rcg_state: "failover"
+
+    - name: Reverse replication consistency group
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        port: "{{port}}"
+        rcg_name: "rcg_test"
+        rcg_state: "reverse"
+
+    - name: Restore replication consistency group
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        port: "{{port}}"
+        rcg_name: "rcg_test"
+        rcg_state: "restore"
+
+    - name: Switchover replication consistency group
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        port: "{{port}}"
+        rcg_name: "rcg_test"
+        rcg_state: "switchover"
+
+    - name: Synchronize replication consistency group
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        port: "{{port}}"
+        rcg_name: "rcg_test"
+        rcg_state: "sync"
 
     - name: Delete replication consistency group
       dellemc.powerflex.replication_consistency_group:

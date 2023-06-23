@@ -21,8 +21,8 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.12 or later.
-- PyPowerFlex 1.6.0.
+- Ansible-core 2.13 or later.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -134,6 +134,14 @@ Parameters
     State of the device.
 
 
+  force (optional, bool, False)
+    Using the Force flag to add a device.
+
+    Use this flag, to overwrite existing data on the device.
+
+    Use this flag with caution, because all data on the device will be destroyed.
+
+
   hostname (True, str, None)
     IP or FQDN of the PowerFlex host.
 
@@ -200,6 +208,22 @@ Examples
         storage_pool_name: "pool1"
         protection_domain_name: "domain1"
         external_acceleration_type: "ReadAndWrite"
+        state: "present"
+    - name: Add a device with force flag
+      dellemc.powerflex.device:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        port: "{{port}}"
+        current_pathname: "/dev/sdb"
+        sds_name: "node1"
+        media_type: "HDD"
+        device_name: "device2"
+        storage_pool_name: "pool1"
+        protection_domain_name: "domain1"
+        external_acceleration_type: "ReadAndWrite"
+        force: true
         state: "present"
     - name: Get device details using device_id
       dellemc.powerflex.device:

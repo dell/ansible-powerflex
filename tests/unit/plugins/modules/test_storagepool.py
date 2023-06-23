@@ -11,8 +11,6 @@ __metaclass__ = type
 import pytest
 from mock.mock import MagicMock
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_storagepool_api import MockStoragePoolApi
-from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_sdk_response \
-    import MockSDKResponse
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_api_exception \
     import MockApiException
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \

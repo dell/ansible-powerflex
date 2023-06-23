@@ -21,8 +21,8 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.12 or later.
-- PyPowerFlex 1.6.0.
+- Ansible-core 2.13 or later.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -206,7 +206,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         snapshot_name: "ansible_snapshot"
         vol_name: "ansible_volume"
-        read_only: False
+        read_only: false
         desired_retention: 2
         state: "present"
 
@@ -229,7 +229,7 @@ Examples
         sdc:
             - sdc_ip: "198.10.xxx.xxx"
             - sdc_id: "663ac0d200000001"
-        allow_multiple_mappings: True
+        allow_multiple_mappings: true
         sdc_state: "mapped"
         state: "present"
 
@@ -247,7 +247,7 @@ Examples
         - sdc_id: "663ac0d200000001"
           iops_limit: 20
           bandwidth_limit: 2048
-        allow_multiple_mappings: True
+        allow_multiple_mappings: true
         sdc_state: "mapped"
         state: "present"
 

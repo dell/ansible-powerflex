@@ -126,7 +126,7 @@ options:
     description:
     - Specifies whether to allow or not allow multiple mappings.
     - If the volume is mapped to one SDC then for every new mapping
-      I(allow_multiple_mappings) has to be passed as True.
+      I(allow_multiple_mappings) has to be passed as true.
     type: bool
   sdc:
     description:
@@ -175,10 +175,10 @@ options:
     type: str
   delete_snapshots:
     description:
-    - If C(True), the volume and all its dependent snapshots will be deleted.
-    - If C(False), only the volume will be deleted.
+    - If C(true), the volume and all its dependent snapshots will be deleted.
+    - If C(false), only the volume will be deleted.
     - It can be specified only when the I(state) is C(absent).
-    - It defaults to C(False), if not specified.
+    - It defaults to C(false), if not specified.
     type: bool
   state:
     description:
@@ -203,7 +203,7 @@ EXAMPLES = r'''
     protection_domain_name: "pd_1"
     vol_type: "THICK_PROVISIONED"
     compression_type: "NORMAL"
-    use_rmcache: True
+    use_rmcache: true
     size: 16
     state: "present"
 
@@ -215,7 +215,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
-    allow_multiple_mappings: True
+    allow_multiple_mappings: true
     sdc:
       - sdc_id: "92A304DB-EFD7-44DF-A07E-D78134CC9764"
         access_mode: "READ_WRITE"
@@ -251,7 +251,7 @@ EXAMPLES = r'''
         iops_limit: 20
       - sdc_ip: "198.10.xxx.xxx"
         access_mode: "READ_ONLY"
-    allow_multiple_mappings: True
+    allow_multiple_mappings: true
     sdc_state: "mapped"
     state: "present"
 
@@ -286,7 +286,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
-    delete_snapshots: False
+    delete_snapshots: false
     state: "absent"
 
 - name: Delete the Volume and all its dependent snapshots
@@ -297,7 +297,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     vol_name: "sample_volume"
-    delete_snapshots: True
+    delete_snapshots: true
     state: "absent"
 '''
 

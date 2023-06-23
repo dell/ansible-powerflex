@@ -11,8 +11,6 @@ __metaclass__ = type
 import pytest
 from mock.mock import MagicMock
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_info_api import MockInfoApi
-from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_sdk_response \
-    import MockSDKResponse
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_api_exception \
     import MockApiException
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
@@ -149,3 +147,35 @@ class TestPowerflexInfo():
         )
         info_module_mock.perform_module_operation()
         assert MockInfoApi.get_exception_response('replication_pair_get_details') in info_module_mock.module.fail_json.call_args[1]['msg']
+
+    def test_get_snapshot_policy_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['snapshot_policy']
+        })
+        info_module_mock.module.params = self.get_module_args
+        snapshot_policy_resp = MockInfoApi.INFO_SNAPSHOT_POLICY_GET_LIST
+        info_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
+            return_value=snapshot_policy_resp
+        )
+        snapshot_policy_stat_resp = MockInfoApi.INFO_SNAPSHOT_POLICY_STATISTICS
+        info_module_mock.powerflex_conn.utility.get_statistics_for_all_snapshot_policies = MagicMock(
+            return_value=snapshot_policy_stat_resp
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.snapshot_policy.get.assert_called()
+        info_module_mock.powerflex_conn.utility.get_statistics_for_all_snapshot_policies.assert_called()
+
+    def test_get_snapshot_policy_details_with_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['snapshot_policy']
+        })
+        info_module_mock.module.params = self.get_module_args
+        snapshot_policy_resp = MockInfoApi.INFO_SNAPSHOT_POLICY_GET_LIST
+        info_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
+            return_value=snapshot_policy_resp
+        )
+        info_module_mock.powerflex_conn.utility.get_statistics_for_all_snapshot_policies = MagicMock(
+            side_effect=MockApiException
+        )
+        info_module_mock.perform_module_operation()
+        assert MockInfoApi.get_exception_response('snapshot_policy_get_details') in info_module_mock.module.fail_json.call_args[1]['msg']

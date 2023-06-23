@@ -48,12 +48,12 @@ class ModuleDocFragment(object):
             - Time after which connection will get terminated.
             - It is to be mentioned in seconds.
             type: int
-            required: False
+            required: false
             default: 120
     requirements:
       - A Dell PowerFlex storage system version 3.5 or later.
-      - Ansible-core 2.12 or later.
-      - PyPowerFlex 1.6.0.
+      - Ansible-core 2.13 or later.
+      - PyPowerFlex 1.8.0.
       - Python 3.9, 3.10 or 3.11.
     notes:
       - The modules present in the collection named as 'dellemc.powerflex'
