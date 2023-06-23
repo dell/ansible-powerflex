@@ -27,6 +27,7 @@ extends_documentation_fragment:
 
 author:
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 
 options:
   gather_subset:
@@ -1395,19 +1396,24 @@ class PowerFlexInfo(object):
             system """
 
         try:
-            LOG.info('Getting snapshot schedules list ')
+            LOG.info('Getting snapshot policies list ')
             if filter_dict:
-                snapshot_schedules = \
+                snapshot_policies = \
                     self.powerflex_conn.snapshot_policy.get(
                         filter_fields=filter_dict)
             else:
-                snapshot_schedules = \
+                snapshot_policies = \
                     self.powerflex_conn.snapshot_policy.get()
 
-            return result_list(snapshot_schedules)
+            if snapshot_policies:
+                statistics_map = self.powerflex_conn.utility.get_statistics_for_all_snapshot_policies()
+                list_of_snap_pol_ids_in_statistics = statistics_map.keys()
+                for item in snapshot_policies:
+                    item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_snap_pol_ids_in_statistics else {}
+            return result_list(snapshot_policies)
 
         except Exception as e:
-            msg = 'Get snapshot schedules list from powerflex array failed ' \
+            msg = 'Get snapshot policies list from powerflex array failed ' \
                   'with error %s' % (str(e))
             LOG.error(msg)
             self.module.fail_json(msg=msg)

@@ -1,6 +1,6 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 1.6.0
+### Release notes 1.7.0
 
 >   © 2023 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
@@ -28,7 +28,7 @@ Table 1. Revision history
 
 | Revision | Date           | Description                                                 |
 |----------|----------------|-------------------------------------------------------------|
-| 01       | March 2023  | Current release of Ansible Modules for Dell PowerFlex 1.6.0 |
+| 01       | June 2023  | Current release of Ansible Modules for Dell PowerFlex 1.7.0 |
 
 Product description
 -------------------
@@ -36,7 +36,7 @@ Product description
 The Ansible modules for Dell PowerFlex are used to automate and orchestrate
 the deployment, configuration, and management of Dell PowerFlex storage
 systems. The capabilities of Ansible modules are managing volumes,
-storage pools, SDCs, snapshots, SDSs, replication consistency groups, replication pairs, devices, protection domain and MDM 
+storage pools, SDCs, snapshots, snapshot policy, SDSs, replication consistency groups, replication pairs, devices, protection domain and MDM 
 cluster, and obtaining high-level information about a PowerFlex system information.
 The modules use playbooks to list, show, create, delete, and modify
 each of the entities.
@@ -44,8 +44,14 @@ each of the entities.
 New features and enhancements
 -----------------------------
 Along with the previous release deliverables, this release supports following features - 
-- Info module is enhanced to support the listing of replication pairs.
-- Added new module for replication pairs.
+- Added Ansible role to support installation and uninstallation of SDC.
+- Added sample playbooks for the modules.
+- Replication consistency group module is enhanced to support failover, restore, reverse, switchover, and sync operations.
+- Device module is enhanced to support force addition of device to the SDS.
+- Info module is enhanced to list statistics in snapshot policies.
+- SDC module is enhanced to configure performance profile and to remove SDC.
+- Updated modules to adhere with ansible community guidelines.
+- Added new module for snapshot policy.
 
 Known issues
 ------------
@@ -59,13 +65,12 @@ Limitations
 Distribution
 ------------
 The software package is available for download from the [Ansible Modules
-for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.6.0) page.
+for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.7.0) page.
 
 Documentation
 -------------
-The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.6.0/docs)
+The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.7.0/docs)
 page. It includes the following:
 
    - README
    - Release Notes (this document)
-   - Product Guide

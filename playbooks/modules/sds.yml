@@ -1,0 +1,142 @@
+---
+- name: SDS Operations
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    hostname: 'x.x.x.x'
+    username: 'admin'
+    password: 'Password'
+    validate_certs: false
+    host_port: 443
+
+  tasks:
+    - name: Create SDS
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_name: "node2"
+        protection_domain_name: "domain1"
+        sds_ip_list:
+          - ip: '**.**.**.**'
+            role: "all"
+        sds_ip_state: "present-in-sds"
+        state: "present"
+
+    - name: Create SDS with all parameters
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_name: "node2"
+        protection_domain_name: "domain1"
+        sds_ip_list:
+          - ip: '**.**.**.**'
+            role: "sdcOnly"
+        sds_ip_state: "present-in-sds"
+        rmcache_enabled: true
+        rmcache_size: 210
+        state: "present"
+
+    - name: Get SDS details using name
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_name: "node2"
+        state: "present"
+
+    - name: Get SDS details using ID
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_id: "5718e89500000002"
+        state: "present"
+
+    - name: Modify SDS attributes using name
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_name: "node2"
+        sds_new_name: "node2_new"
+        rfcache_enabled: false
+        rmcache_enabled: true
+        rmcache_size: 256
+        performance_profile: "HighPerformance"
+        state: "present"
+
+    - name: Modify SDS attributes using ID
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_id: "5718e89500000002"
+        sds_new_name: "node2"
+        rfcache_enabled: true
+        rmcache_enabled: true
+        rmcache_size: 210
+        performance_profile: "Compact"
+        state: "present"
+
+    - name: Add IP and role to an SDS
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_name: "node2"
+        sds_ip_list:
+          - ip: '**.**.**.**'
+            role: "sdcOnly"
+        sds_ip_state: "present-in-sds"
+        state: "present"
+
+    - name: Remove IP and role from an SDS
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_name: "node2"
+        sds_ip_list:
+          - ip: '**.**.**.**'
+            role: "sdcOnly"
+        sds_ip_state: "absent-in-sds"
+        state: "present"
+
+    - name: Delete SDS using name
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_name: "node2"
+        state: "absent"
+
+    - name: Delete SDS using ID
+      dellemc.powerflex.sds:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        sds_id: "5718e89500000002"
+        state: "absent"

@@ -6,6 +6,7 @@ plugins:
   callback: {}
   cliconf: {}
   connection: {}
+  filter: {}
   httpapi: {}
   inventory: {}
   lookup: {}
@@ -55,6 +56,11 @@ plugins:
       name: snapshot
       namespace: ''
       version_added: 1.0.0
+    snapshot_policy:
+      description: Manage snapshot policies on Dell PowerFlex
+      name: snapshot_policy
+      namespace: ''
+      version_added: 1.7.0
     storagepool:
       description: Managing Dell PowerFlex storage pool
       name: storagepool
@@ -68,5 +74,6 @@ plugins:
   netconf: {}
   shell: {}
   strategy: {}
+  test: {}
   vars: {}
-version: 1.6.0
+version: 1.7.0

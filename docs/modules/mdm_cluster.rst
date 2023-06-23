@@ -23,8 +23,8 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.12 or later.
-- PyPowerFlex 1.6.0.
+- Ansible-core 2.13 or later.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -177,7 +177,7 @@ Notes
 .. note::
    - Parameters *mdm_name* or *mdm_id* are mandatory for rename and modify virtual IP interfaces.
    - Parameters *mdm_name* or *mdm_id* are not required while modifying performance profile.
-   - For change MDM cluster ownership operation, only changed as True will be returned and for idempotency case MDM cluster details will be returned.
+   - For change MDM cluster ownership operation, only changed as true will be returned and for idempotency case MDM cluster details will be returned.
    - Reinstall all SDC after changing ownership to some newly added MDM.
    - To add manager standby MDM, MDM package must be installed with manager role.
    - The *check_mode* is supported.
@@ -267,7 +267,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         mdm_name: "mdm_2"
-        is_primary: True
+        is_primary: true
         state: "present"
 
     - name: Modify performance profile
@@ -311,7 +311,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         mdm_name: "mdm_1"
-        clear_interfaces: True
+        clear_interfaces: true
         state: "present"
 
 

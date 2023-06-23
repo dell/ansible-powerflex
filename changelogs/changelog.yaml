@@ -41,8 +41,8 @@ releases:
   1.2.0:
     changes:
       minor_changes:
-      - Names of previously released modules have been changed from dellemc_powerflex_\<module name>
-        to \<module name>.
+      - Names of previously released modules have been changed from dellemc_powerflex_\<module
+        name> to \<module name>.
     modules:
     - description: Manage Protection Domain on Dell PowerFlex
       name: protection_domain
@@ -89,3 +89,19 @@ releases:
       name: replication_pair
       namespace: ''
     release_date: '2023-03-31'
+  1.7.0:
+    changes:
+      minor_changes:
+      - Added Ansible role to support installation and uninstallation of SDC.
+      - Added sample playbooks for the modules.
+      - Device module is enhanced to support force addition of device to the SDS.
+      - Info module is enhanced to list statistics in snapshot policies.
+      - Replication consistency group module is enhanced to support failover, restore,
+        reverse, switchover, and sync operations.
+      - SDC module is enhanced to configure performance profile and to remove SDC.
+      - Updated modules to adhere with ansible community guidelines.
+    modules:
+    - description: Manage snapshot policies on Dell PowerFlex
+      name: snapshot_policy
+      namespace: ''
+    release_date: '2023-06-30'

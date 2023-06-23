@@ -127,8 +127,8 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     storage_pool_name: "ansible_test_pool"
     protection_domain_id: "1c957da800000000"
-    use_rmcache: True
-    use_rfcache: True
+    use_rmcache: true
+    use_rfcache: true
     state: "present"
 
 - name: Rename storage pool by id

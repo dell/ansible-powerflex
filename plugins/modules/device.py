@@ -109,6 +109,14 @@ options:
     choices: ['present', 'absent']
     required: true
     type: str
+  force:
+    description:
+    - Using the Force flag to add a device.
+    - Use this flag, to overwrite existing data on the device.
+    - Use this flag with caution, because all data on the device will be
+      destroyed.
+    type: bool
+    default: false
 notes:
   - The value for device_id is generated only after successful addition of the
     device.
@@ -134,6 +142,22 @@ EXAMPLES = r'''
     storage_pool_name: "pool1"
     protection_domain_name: "domain1"
     external_acceleration_type: "ReadAndWrite"
+    state: "present"
+- name: Add a device with force flag
+  dellemc.powerflex.device:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    port: "{{port}}"
+    current_pathname: "/dev/sdb"
+    sds_name: "node1"
+    media_type: "HDD"
+    device_name: "device2"
+    storage_pool_name: "pool1"
+    protection_domain_name: "domain1"
+    external_acceleration_type: "ReadAndWrite"
+    force: true
     state: "present"
 - name: Get device details using device_id
   dellemc.powerflex.device:
@@ -715,12 +739,11 @@ class PowerFlexDevice(object):
 
             self.powerflex_conn.device.create(
                 current_pathname=current_pathname,
-                sds_id=sds_id,
-                acceleration_pool_id=acceleration_pool_id,
+                sds_id=sds_id, acceleration_pool_id=acceleration_pool_id,
                 external_acceleration_type=external_acceleration_type,
-                media_type=media_type,
-                name=device_name,
-                storage_pool_id=storage_pool_id)
+                media_type=media_type, name=device_name,
+                storage_pool_id=storage_pool_id,
+                force=self.module.params['force'])
             return True
         except Exception as e:
             error_msg = "Adding device %s operation failed with " \
@@ -1076,21 +1099,15 @@ def get_powerflex_device_parameters():
     """This method provide parameter required for the device module on
     PowerFlex"""
     return dict(
-        current_pathname=dict(),
-        device_name=dict(),
-        device_id=dict(),
-        sds_name=dict(),
-        sds_id=dict(),
-        storage_pool_name=dict(),
-        storage_pool_id=dict(),
-        acceleration_pool_id=dict(),
-        acceleration_pool_name=dict(),
-        protection_domain_name=dict(),
-        protection_domain_id=dict(),
-        external_acceleration_type=dict(choices=['Invalid', 'None', 'Read',
-                                                 'Write', 'ReadAndWrite']),
+        current_pathname=dict(), device_name=dict(), device_id=dict(),
+        sds_name=dict(), sds_id=dict(), storage_pool_name=dict(),
+        storage_pool_id=dict(), acceleration_pool_id=dict(),
+        acceleration_pool_name=dict(), protection_domain_name=dict(),
+        protection_domain_id=dict(), external_acceleration_type=dict(
+            choices=['Invalid', 'None', 'Read', 'Write', 'ReadAndWrite']),
         media_type=dict(choices=['HDD', 'SSD', 'NVDIMM']),
-        state=dict(required=True, type='str', choices=['present', 'absent'])
+        state=dict(required=True, type='str', choices=['present', 'absent']),
+        force=dict(type='bool', default=False)
     )
 
 
