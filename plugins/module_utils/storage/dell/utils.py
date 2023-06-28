@@ -17,13 +17,6 @@ from ansible.module_utils.basic import missing_required_lib
 """import PyPowerFlex lib"""
 try:
     from PyPowerFlex import PowerFlexClient
-    from PyPowerFlex.objects.sds import Sds
-    from PyPowerFlex.objects import protection_domain
-    from PyPowerFlex.objects import storage_pool
-    from PyPowerFlex.objects import sdc
-    from PyPowerFlex.objects import volume
-    from PyPowerFlex.objects import system
-    from PyPowerFlex.objects.system import SnapshotDef
 
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = True, None
 except ImportError:
@@ -40,7 +33,7 @@ except ImportError:
 
 """importing dateutil"""
 try:
-    import dateutil.relativedelta
+    import dateutil.relativedelta  # noqa   # pylint: disable=unused-import
     HAS_DATEUTIL, DATEUTIL_IMP_ERR = True, None
 except ImportError:
     HAS_DATEUTIL, DATEUTIL_IMP_ERR = False, traceback.format_exc()
@@ -184,3 +177,19 @@ def is_invalid_name(name):
         regexp = re.compile(r'^[a-zA-Z0-9!@#$%^~*_-]*$')
         if not regexp.search(name):
             return True
+
+
+def get_time_minutes(time, time_unit):
+    """Convert the given time to minutes"""
+
+    if time is not None and time > 0:
+        if time_unit in ('Hour'):
+            return time * 60
+        elif time_unit in ('Day'):
+            return time * 60 * 24
+        elif time_unit in ('Week'):
+            return time * 60 * 24 * 7
+        else:
+            return time
+    else:
+        return 0

@@ -21,8 +21,8 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.12 or later.
-- PyPowerFlex 1.6.0.
+- Ansible-core 2.13 or later.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -56,6 +56,12 @@ Parameters
 
   sdc_new_name (optional, str, None)
     New name of the SDC. Used to rename the SDC.
+
+
+  performance_profile (optional, str, None)
+    Define the performance profile as *Compact* or *HighPerformance*.
+
+    The high performance profile configures a predefined set of parameters for very high performance use cases.
 
 
   state (True, str, None)
@@ -129,6 +135,25 @@ Examples
         sdc_name: "centos_sdc"
         sdc_new_name: "centos_sdc_renamed"
         state: "present"
+
+    - name: Modify performance profile of SDC using SDC name
+      dellemc.powerflex.sdc:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        sdc_name: "centos_sdc"
+        performance_profile: "Compact"
+        state: "present"
+
+    - name: Remove SDC using SDC name
+      dellemc.powerflex.sdc:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        sdc_name: "centos_sdc"
+        state: "absent"
 
 
 

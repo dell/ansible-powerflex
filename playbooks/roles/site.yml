@@ -1,0 +1,12 @@
+---
+- name: "Install PowerFlex Common"
+  hosts: sdc
+  roles:
+    - powerflex_common
+
+- name: "Install and configure PowerFlex SDC"
+  hosts: sdc
+  vars_files:
+    - vars_files/connection.yml
+  roles:
+    - powerflex_sdc

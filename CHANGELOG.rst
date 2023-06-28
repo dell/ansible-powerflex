@@ -5,6 +5,25 @@ Dellemc.PowerFlex Change Logs
 .. contents:: Topics
 
 
+v1.7.0
+======
+
+Minor Changes
+-------------
+
+- Added Ansible role to support installation and uninstallation of SDC.
+- Added sample playbooks for the modules.
+- Device module is enhanced to support force addition of device to the SDS.
+- Info module is enhanced to list statistics in snapshot policies.
+- Replication consistency group module is enhanced to support failover, restore, reverse, switchover, and sync operations.
+- SDC module is enhanced to configure performance profile and to remove SDC.
+- Updated modules to adhere with ansible community guidelines.
+
+New Modules
+-----------
+
+- dellemc.powerflex.snapshot_policy - Manage snapshot policies on Dell PowerFlex
+
 v1.6.0
 ======
 

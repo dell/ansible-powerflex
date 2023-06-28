@@ -5,7 +5,6 @@
 """Unit Tests for replication pair module on PowerFlex"""
 
 from __future__ import (absolute_import, division, print_function)
-from unittest.mock import Mock
 
 __metaclass__ = type
 
