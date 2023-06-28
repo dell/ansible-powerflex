@@ -150,7 +150,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     snapshot_name: "ansible_snapshot"
     vol_name: "ansible_volume"
-    read_only: False
+    read_only: false
     desired_retention: 2
     state: "present"
 
@@ -173,7 +173,7 @@ EXAMPLES = r'''
     sdc:
         - sdc_ip: "198.10.xxx.xxx"
         - sdc_id: "663ac0d200000001"
-    allow_multiple_mappings: True
+    allow_multiple_mappings: true
     sdc_state: "mapped"
     state: "present"
 
@@ -191,7 +191,7 @@ EXAMPLES = r'''
     - sdc_id: "663ac0d200000001"
       iops_limit: 20
       bandwidth_limit: 2048
-    allow_multiple_mappings: True
+    allow_multiple_mappings: true
     sdc_state: "mapped"
     state: "present"
 

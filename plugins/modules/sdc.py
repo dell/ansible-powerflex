@@ -46,6 +46,12 @@ options:
     description:
     - New name of the SDC. Used to rename the SDC.
     type: str
+  performance_profile:
+    description:
+    - Define the performance profile as I(Compact) or I(HighPerformance).
+    - The high performance profile configures a predefined set of parameters for very high performance use cases.
+    choices: ['Compact', 'HighPerformance']
+    type: str
   state:
     description:
     - State of the SDC.
@@ -75,6 +81,25 @@ EXAMPLES = r'''
     sdc_name: "centos_sdc"
     sdc_new_name: "centos_sdc_renamed"
     state: "present"
+
+- name: Modify performance profile of SDC using SDC name
+  dellemc.powerflex.sdc:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    sdc_name: "centos_sdc"
+    performance_profile: "Compact"
+    state: "present"
+
+- name: Remove SDC using SDC name
+  dellemc.powerflex.sdc:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    sdc_name: "centos_sdc"
+    state: "absent"
 '''
 
 RETURN = r'''
@@ -285,6 +310,47 @@ class PowerFlexSdc(object):
                 error_msg = "Please provide valid %s" % param
                 self.module.fail_json(msg=error_msg)
 
+    def remove(self, sdc_id):
+        """Remove the SDC"""
+        try:
+            LOG.info(msg=f"Removing SDC {sdc_id}")
+            self.powerflex_conn.sdc.delete(sdc_id)
+            return True
+        except Exception as e:
+            errormsg = f"Removing SDC {sdc_id} failed with error {str(e)}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
+
+    def set_performance_profile(self, sdc_id, performance_profile):
+        """Set performance profile of SDC"""
+        try:
+            LOG.info(msg=f"Setting performance profile of SDC {sdc_id}")
+            self.powerflex_conn.sdc.set_performance_profile(sdc_id, performance_profile)
+            return True
+        except Exception as e:
+            errormsg = f"Modifying performance profile of SDC {sdc_id} failed with error {str(e)}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
+
+    def validate_input(self, sdc_details, sdc_new_name, state, id_ip_name):
+        if state == 'present' and not sdc_details:
+            error_msg = 'Could not find any SDC instance with ' \
+                        'identifier %s.' % id_ip_name
+            LOG.error(error_msg)
+            self.module.fail_json(msg=error_msg)
+
+        if sdc_new_name and len(sdc_new_name.strip()) == 0:
+            self.module.fail_json(msg="Provide valid SDC name to rename to.")
+
+    def perform_modify(self, sdc_details, sdc_new_name, performance_profile):
+        changed = False
+        if sdc_new_name is not None and sdc_new_name != sdc_details['name']:
+            changed = self.rename_sdc(sdc_details['id'], sdc_new_name)
+
+        if performance_profile and performance_profile != sdc_details['perfProfile']:
+            changed = self.set_performance_profile(sdc_details['id'], performance_profile)
+        return changed
+
     def perform_module_operation(self):
         """
         Perform different actions on SDC based on parameters passed in
@@ -294,6 +360,7 @@ class PowerFlexSdc(object):
         sdc_id = self.module.params['sdc_id']
         sdc_ip = self.module.params['sdc_ip']
         sdc_new_name = self.module.params['sdc_new_name']
+        performance_profile = self.module.params['performance_profile']
         state = self.module.params['state']
 
         # result is a dictionary to contain end state and SDC details
@@ -304,40 +371,22 @@ class PowerFlexSdc(object):
         )
 
         self.validate_parameters(sdc_name, sdc_id, sdc_ip)
-
         sdc_details = self.get_sdc(sdc_name=sdc_name, sdc_id=sdc_id,
                                    sdc_ip=sdc_ip)
-        if sdc_name:
-            id_ip_name = sdc_name
-        elif sdc_ip:
-            id_ip_name = sdc_ip
-        else:
-            id_ip_name = sdc_id
+        id_ip_name = sdc_name or sdc_ip or sdc_id
 
-        if state == 'present' and not sdc_details:
-            error_msg = 'Could not find any SDC instance with ' \
-                        'identifier %s.' % id_ip_name
-            LOG.error(error_msg)
-            self.module.fail_json(msg=error_msg)
+        self.validate_input(sdc_details, sdc_new_name, state, id_ip_name)
 
         if state == 'absent' and sdc_details:
-            error_msg = 'Removal of SDC is not allowed through Ansible ' \
-                        'module.'
-            LOG.error(error_msg)
-            self.module.fail_json(msg=error_msg)
+            changed = self.remove(sdc_details['id'])
 
-        if state == 'present' and sdc_details and sdc_new_name is not None:
-            if len(sdc_new_name.strip()) == 0:
-                self.module.fail_json(msg="Please provide valid SDC name.")
+        if state == 'present' and sdc_details:
+            changed = self.perform_modify(sdc_details, sdc_new_name, performance_profile)
 
-            changed = self.rename_sdc(sdc_details['id'], sdc_new_name)
-
-            if changed:
-                sdc_name = sdc_new_name
-
-        if state == 'present':
-            result['sdc_details'] = self.get_sdc(sdc_name=sdc_name,
-                                                 sdc_id=sdc_id, sdc_ip=sdc_ip)
+        if changed:
+            sdc_details = self.get_sdc(sdc_name=sdc_new_name or sdc_name,
+                                       sdc_id=sdc_id, sdc_ip=sdc_ip)
+        result['sdc_details'] = sdc_details
         result['changed'] = changed
         self.module.exit_json(**result)
 
@@ -349,7 +398,7 @@ def get_powerflex_sdc_parameters():
         sdc_id=dict(),
         sdc_ip=dict(),
         sdc_name=dict(),
-        sdc_new_name=dict(),
+        sdc_new_name=dict(), performance_profile=dict(choices=['Compact', 'HighPerformance']),
         state=dict(required=True, type='str', choices=['present', 'absent'])
     )
 

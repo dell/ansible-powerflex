@@ -21,8 +21,8 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.12 or later.
-- PyPowerFlex 1.6.0.
+- Ansible-core 2.13 or later.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -174,8 +174,8 @@ Notes
 
 .. note::
    - The *check_mode* is supported.
+   - In 4.0 the creation of replication pair fails when *copy_type* is specified as ``OfflineCopy``.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
-   - In 4.0 the creation of replication pair fails when I(copy_type) is specified as C(OfflineCopy).
 
 
 
@@ -238,7 +238,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         pair_name: "pair1"
-        pause: True
+        pause: true
 
     - name: Resume replication pair
       dellemc.powerflex.replication_pair:
@@ -248,7 +248,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         pair_name: "pair1"
-        pause: False
+        pause: false
 
     - name: Delete replication pair
       dellemc.powerflex.replication_pair:

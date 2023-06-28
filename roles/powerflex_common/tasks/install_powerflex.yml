@@ -1,0 +1,3 @@
+---
+- name: Include installation file based on distribution
+  ansible.builtin.include_tasks: "install_powerflex_{{ ansible_distribution }}.yml"

@@ -5,7 +5,6 @@
 """Unit Tests for replication consistency group module on PowerFlex"""
 
 from __future__ import (absolute_import, division, print_function)
-from unittest.mock import Mock
 
 __metaclass__ = type
 
@@ -170,7 +169,7 @@ class TestPowerflexReplicationConsistencyGroup():
             replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
 
     def test_pause_rcg(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "pause": True,
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'pause',
                                      "pause_mode": "StopDataTransfer", "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
@@ -180,7 +179,7 @@ class TestPowerflexReplicationConsistencyGroup():
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.pause.assert_called()
 
     def test_pause_rcg_throws_exception(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "pause": True,
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'pause',
                                      "pause_mode": "StopDataTransfer", "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
@@ -193,7 +192,7 @@ class TestPowerflexReplicationConsistencyGroup():
             replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
 
     def test_resume_rcg(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "pause": False, "state": "present"})
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'resume', "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details(pause_mode="StopDataTransfer"))
@@ -201,7 +200,7 @@ class TestPowerflexReplicationConsistencyGroup():
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.resume.assert_called()
 
     def test_resume_rcg_throws_exception(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "pause": False, "state": "present"})
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'resume', "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details(pause_mode="StopDataTransfer"))
@@ -213,7 +212,7 @@ class TestPowerflexReplicationConsistencyGroup():
             replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
 
     def test_freeze_rcg(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "freeze": True, "state": "present"})
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'freeze', "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
@@ -221,7 +220,7 @@ class TestPowerflexReplicationConsistencyGroup():
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.freeze.assert_called()
 
     def test_freeze_rcg_throws_exception(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "freeze": True, "state": "present"})
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'freeze', "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
@@ -233,7 +232,7 @@ class TestPowerflexReplicationConsistencyGroup():
             replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
 
     def test_unfreeze_rcg(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "freeze": False, "state": "present"})
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'unfreeze', "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details(freeze_state="Frozen")
@@ -242,7 +241,7 @@ class TestPowerflexReplicationConsistencyGroup():
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.unfreeze.assert_called()
 
     def test_unfreeze_rcg_throws_exception(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "freeze": False, "state": "present"})
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'unfreeze', "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details(freeze_state="Frozen"))
@@ -311,7 +310,7 @@ class TestPowerflexReplicationConsistencyGroup():
             replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
 
     def test_pause_rcg_without_pause_mode(self, replication_consistency_group_module_mock):
-        self.get_module_args.update({"rcg_name": "test_rcg", "pause": True, "state": "present"})
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'pause', "state": "present"})
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
@@ -340,5 +339,109 @@ class TestPowerflexReplicationConsistencyGroup():
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
         replication_consistency_group_module_mock.powerflex_conn.protection_domain.get = MagicMock(return_value=[{"name": "pd_id"}])
         replication_consistency_group_module_mock.perform_module_operation()
-        assert "Specify pause as True to pause replication consistency group" in \
+        assert "Specify rcg_state as 'pause' to pause replication consistency group" in \
+            replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
+
+    def test_failover_rcg(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": "failover", "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
+            return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.perform_module_operation()
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.failover.assert_called()
+
+    def test_failover_rcg_throws_exception(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": "failover", "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
+            return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.failover = \
+            MagicMock(side_effect=MockApiException)
+        replication_consistency_group_module_mock.perform_module_operation()
+        assert "Failover replication consistency group " + MockReplicationConsistencyGroupApi.RCG_ID \
+            + MockReplicationConsistencyGroupApi.FAIL_MSG in \
+            replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
+
+    def test_restore_rcg(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": "restore", "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        rcg_details = MockReplicationConsistencyGroupApi.get_rcg_details()
+        rcg_details[0]['failoverType'] = 'Failover'
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(return_value=rcg_details)
+        replication_consistency_group_module_mock.perform_module_operation()
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.restore.assert_called()
+
+    def test_restore_rcg_throws_exception(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": "restore", "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        rcg_details = MockReplicationConsistencyGroupApi.get_rcg_details()
+        rcg_details[0]['failoverType'] = 'Failover'
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(return_value=rcg_details)
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.restore = \
+            MagicMock(side_effect=MockApiException)
+        replication_consistency_group_module_mock.perform_module_operation()
+        assert "Restore replication consistency group " + MockReplicationConsistencyGroupApi.RCG_ID \
+            + MockReplicationConsistencyGroupApi.FAIL_MSG in \
+            replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
+
+    def test_reverse_rcg(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": "reverse", "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        rcg_details = MockReplicationConsistencyGroupApi.get_rcg_details()
+        rcg_details[0]['failoverType'] = 'Failover'
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(return_value=rcg_details)
+        replication_consistency_group_module_mock.perform_module_operation()
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.reverse.assert_called()
+
+    def test_reverse_rcg_throws_exception(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": "reverse", "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        rcg_details = MockReplicationConsistencyGroupApi.get_rcg_details()
+        rcg_details[0]['failoverType'] = 'Failover'
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(return_value=rcg_details)
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.reverse = \
+            MagicMock(side_effect=MockApiException)
+        replication_consistency_group_module_mock.perform_module_operation()
+        assert "Reverse replication consistency group " + MockReplicationConsistencyGroupApi.RCG_ID \
+            + MockReplicationConsistencyGroupApi.FAIL_MSG in \
+            replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
+
+    def test_switchover_rcg(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": "switchover", "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
+            return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.perform_module_operation()
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.switchover.assert_called()
+
+    def test_switchover_rcg_throws_exception(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": "switchover", "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
+            return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.switchover = \
+            MagicMock(side_effect=MockApiException)
+        replication_consistency_group_module_mock.perform_module_operation()
+        assert "Switchover replication consistency group " + MockReplicationConsistencyGroupApi.RCG_ID \
+            + MockReplicationConsistencyGroupApi.FAIL_MSG in \
+            replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']
+
+    def test_sync_rcg(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'sync', "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
+            return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.perform_module_operation()
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.sync.assert_called()
+
+    def test_sync_rcg_throws_exception(self, replication_consistency_group_module_mock):
+        self.get_module_args.update({"rcg_name": "test_rcg", "rcg_state": 'sync', "state": "present"})
+        replication_consistency_group_module_mock.module.params = self.get_module_args
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
+            return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.sync = \
+            MagicMock(side_effect=MockApiException)
+        replication_consistency_group_module_mock.perform_module_operation()
+        assert "Synchronization of replication consistency group " + MockReplicationConsistencyGroupApi.RCG_ID \
+            + MockReplicationConsistencyGroupApi.FAIL_MSG in \
             replication_consistency_group_module_mock.module.fail_json.call_args[1]['msg']

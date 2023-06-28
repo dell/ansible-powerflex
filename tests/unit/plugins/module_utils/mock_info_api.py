@@ -13,6 +13,8 @@ from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_
     import MockReplicationConsistencyGroupApi
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_replication_pair_api \
     import MockReplicationPairApi
+from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_snapshot_policy_api \
+    import MockSnapshotPolicyApi
 
 
 __metaclass__ = type
@@ -219,6 +221,12 @@ class MockInfoApi:
         'test_vol_id_1': MockVolumeApi.VOLUME_STATISTICS
     }
 
+    INFO_SNAPSHOT_POLICY_GET_LIST = MockSnapshotPolicyApi.SNAPSHOT_POLICY_GET_LIST
+
+    INFO_SNAPSHOT_POLICY_STATISTICS = {
+        'test_snap_pol_id_1': MockSnapshotPolicyApi.SNAPSHOT_POLICY_STATISTICS
+    }
+
     INFO_STORAGE_POOL_GET_LIST = MockStoragePoolApi.STORAGE_POOL_GET_LIST
 
     INFO_STORAGE_POOL_STATISTICS = {
@@ -232,6 +240,8 @@ class MockInfoApi:
     def get_exception_response(response_type):
         if response_type == 'volume_get_details':
             return "Get volumes list from powerflex array failed with error "
+        elif response_type == 'snapshot_policy_get_details':
+            return "Get snapshot policies list from powerflex array failed with error "
         elif response_type == 'sp_get_details':
             return "Get storage pool list from powerflex array failed with error "
         elif response_type == 'rcg_get_details':

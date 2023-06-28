@@ -23,8 +23,8 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.12 or later.
-- PyPowerFlex 1.6.0.
+- Ansible-core 2.13 or later.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -133,7 +133,7 @@ Parameters
   allow_multiple_mappings (optional, bool, None)
     Specifies whether to allow or not allow multiple mappings.
 
-    If the volume is mapped to one SDC then for every new mapping *allow_multiple_mappings* has to be passed as True.
+    If the volume is mapped to one SDC then for every new mapping *allow_multiple_mappings* has to be passed as true.
 
 
   sdc (optional, list, None)
@@ -188,13 +188,13 @@ Parameters
 
 
   delete_snapshots (optional, bool, None)
-    If ``True``, the volume and all its dependent snapshots will be deleted.
+    If ``true``, the volume and all its dependent snapshots will be deleted.
 
-    If ``False``, only the volume will be deleted.
+    If ``false``, only the volume will be deleted.
 
     It can be specified only when the *state* is ``absent``.
 
-    It defaults to ``False``, if not specified.
+    It defaults to ``false``, if not specified.
 
 
   state (True, str, None)
@@ -262,7 +262,7 @@ Examples
         protection_domain_name: "pd_1"
         vol_type: "THICK_PROVISIONED"
         compression_type: "NORMAL"
-        use_rmcache: True
+        use_rmcache: true
         size: 16
         state: "present"
 
@@ -274,7 +274,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         vol_name: "sample_volume"
-        allow_multiple_mappings: True
+        allow_multiple_mappings: true
         sdc:
           - sdc_id: "92A304DB-EFD7-44DF-A07E-D78134CC9764"
             access_mode: "READ_WRITE"
@@ -310,7 +310,7 @@ Examples
             iops_limit: 20
           - sdc_ip: "198.10.xxx.xxx"
             access_mode: "READ_ONLY"
-        allow_multiple_mappings: True
+        allow_multiple_mappings: true
         sdc_state: "mapped"
         state: "present"
 
@@ -345,7 +345,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         vol_name: "sample_volume"
-        delete_snapshots: False
+        delete_snapshots: false
         state: "absent"
 
     - name: Delete the Volume and all its dependent snapshots
@@ -356,7 +356,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         port: "{{port}}"
         vol_name: "sample_volume"
-        delete_snapshots: True
+        delete_snapshots: true
         state: "absent"
 
 

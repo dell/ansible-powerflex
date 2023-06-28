@@ -16,7 +16,8 @@ short_description: Manage replication consistency groups on Dell PowerFlex
 description:
 - Managing replication consistency groups on PowerFlex storage system includes
   getting details, creating, modifying, creating snapshots, pause, resume, freeze, unfreeze,
-  activate, inactivate and deleting a replication consistency group.
+  activate, failover, reverse, restore, sync, switchover,
+  inactivate and deleting a replication consistency group.
 author:
 - Trisha Datta (@Trisha-Datta) <ansible.team@dell.com>
 - Jennifer John (@Jennifer-John) <ansible.team@dell.com>
@@ -61,15 +62,35 @@ options:
   pause:
     description:
     - Pause or resume the RCG.
+    - This parameter is deprecated. Use rcg_state instead.
+    type: bool
+  rcg_state:
+    description:
+    - Specify an action for RCG.
+    - Failover the RCG.
+    - Reverse the RCG.
+    - Restore the RCG.
+    - Switchover the RCG.
+    - Pause or resume the RCG.
+    - Freeze or unfreeze the RCG.
+    - Synchronize the RCG.
+    choices: ['failover', 'reverse', 'restore',
+              'switchover', 'sync', 'pause',
+              'resume', 'freeze', 'unfreeze']
+    type: str
+  force:
+    description:
+    - Force switchover the RCG.
     type: bool
   freeze:
     description:
     - Freeze or unfreeze the RCG.
+    - This parameter is deprecated. Use rcg_state instead.
     type: bool
   pause_mode:
     description:
     - Pause mode.
-    - It is required if pause is set as True.
+    - It is required if pause is set as true.
     choices: ['StopDataTransfer', 'OnlyTrackChanges']
     type: str
   target_volume_access_mode:
@@ -150,7 +171,7 @@ notes:
 - Idempotency is not supported for create snapshot operation.
 - There is a delay in reflection of final state of RCG after few update operations on RCG.
 - In 3.6 and above, the replication consistency group will return back to consistent mode on changing to inconsistent mode
-  if consistence barrier arrives. Hence idempotency on setting to inconsistent mode will return changed as True.
+  if consistence barrier arrives. Hence idempotency on setting to inconsistent mode will return changed as true.
 '''
 
 EXAMPLES = r'''
@@ -172,7 +193,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_id: "{{rcg_id}}"
-    create_snapshot: True
+    create_snapshot: true
     state: "present"
 
 - name: Create a replication consistency group
@@ -205,7 +226,7 @@ EXAMPLES = r'''
     rpo: 60
     target_volume_access_mode: "ReadOnly"
     activity_mode: "Inactive"
-    is_consistent: True
+    is_consistent: true
 
 - name: Rename replication consistency group
   dellemc.powerflex.replication_consistency_group:
@@ -225,7 +246,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_name: "rcg_test"
-    pause: True
+    rcg_state: "pause"
     pause_mode: "StopDataTransfer"
 
 - name: Resume replication consistency group
@@ -236,7 +257,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_name: "rcg_test"
-    pause: False
+    rcg_state: "resume"
 
 - name: Freeze replication consistency group
   dellemc.powerflex.replication_consistency_group:
@@ -246,7 +267,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_name: "rcg_test"
-    freeze: True
+    rcg_state: "freeze"
 
 - name: UnFreeze replication consistency group
   dellemc.powerflex.replication_consistency_group:
@@ -256,7 +277,57 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     rcg_name: "rcg_test"
-    freeze: False
+    rcg_state: "unfreeze"
+
+- name: Failover replication consistency group
+  dellemc.powerflex.replication_consistency_group:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    port: "{{port}}"
+    rcg_name: "rcg_test"
+    rcg_state: "failover"
+
+- name: Reverse replication consistency group
+  dellemc.powerflex.replication_consistency_group:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    port: "{{port}}"
+    rcg_name: "rcg_test"
+    rcg_state: "reverse"
+
+- name: Restore replication consistency group
+  dellemc.powerflex.replication_consistency_group:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    port: "{{port}}"
+    rcg_name: "rcg_test"
+    rcg_state: "restore"
+
+- name: Switchover replication consistency group
+  dellemc.powerflex.replication_consistency_group:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    port: "{{port}}"
+    rcg_name: "rcg_test"
+    rcg_state: "switchover"
+
+- name: Synchronize replication consistency group
+  dellemc.powerflex.replication_consistency_group:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    port: "{{port}}"
+    rcg_name: "rcg_test"
+    rcg_state: "sync"
 
 - name: Delete replication consistency group
   dellemc.powerflex.replication_consistency_group:
@@ -442,8 +513,8 @@ class PowerFlexReplicationConsistencyGroup(object):
 
     def get_rcg(self, rcg_name=None, rcg_id=None):
         """Get rcg details
-            :param rcg_name: Name of the rcg
-            :param rcg_id: ID of the rcg
+            :param rcg_name: Name of the RCG
+            :param rcg_id: ID of the RCG
             :return: RCG details
         """
         name_or_id = rcg_id if rcg_id else rcg_name
@@ -585,22 +656,22 @@ class PowerFlexReplicationConsistencyGroup(object):
             :param rcg_details: RCG details.
             :param pause: Pause or resume RCG.
             :param pause_mode: Specifies the pause mode if pause is True.
-            :return: Boolean indicates if rcg action is successful
+            :return: Boolean indicates if RCG action is successful
         """
         if pause and rcg_details['pauseMode'] == 'None':
             if not pause_mode:
                 self.module.fail_json(msg="Specify pause_mode to perform pause on replication consistency group.")
             return self.pause(rcg_id, pause_mode)
 
-        if not pause and rcg_details['pauseMode'] != 'None':
+        if not pause and (rcg_details['pauseMode'] != 'None' or rcg_details['failoverType'] in ['Failover', 'Switchover']):
             return self.resume(rcg_id)
 
     def freeze_or_unfreeze_rcg(self, rcg_id, rcg_details, freeze):
-        """Perform specified rcg action
+        """Perform specified RCG action
             :param rcg_id: Unique identifier of the RCG.
             :param rcg_details: RCG details.
             :param freeze: Freeze or unfreeze RCG.
-            :return: Boolean indicates if rcg action is successful
+            :return: Boolean indicates if RCG action is successful
         """
         if freeze and rcg_details['freezeState'].lower() == 'unfrozen':
             return self.freeze(rcg_id)
@@ -648,6 +719,98 @@ class PowerFlexReplicationConsistencyGroup(object):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
+    def failover(self, rcg_id):
+        """Perform failover
+            :param rcg_id: Unique identifier of the RCG.
+            :return: Boolean indicates if RCG failover is successful
+        """
+        try:
+            if not self.module.check_mode:
+                self.powerflex_conn.replication_consistency_group.failover(rcg_id)
+            return True
+        except Exception as e:
+            errormsg = f"Failover replication consistency group {rcg_id} failed with error {e}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
+
+    def reverse(self, rcg_id):
+        """Perform reverse
+            :param rcg_id: Unique identifier of the RCG.
+            :return: Boolean indicates if RCG reverse is successful
+        """
+        try:
+            if not self.module.check_mode:
+                self.powerflex_conn.replication_consistency_group.reverse(rcg_id)
+            return True
+        except Exception as e:
+            errormsg = f"Reverse replication consistency group {rcg_id} failed with error {e}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
+
+    def restore(self, rcg_id):
+        """Perform restore
+            :param rcg_id: Unique identifier of the RCG.
+            :return: Boolean indicates if RCG restore is successful
+        """
+        try:
+            if not self.module.check_mode:
+                self.powerflex_conn.replication_consistency_group.restore(rcg_id)
+            return True
+        except Exception as e:
+            errormsg = f"Restore replication consistency group {rcg_id} failed with error {e}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
+
+    def switchover(self, rcg_id, force):
+        """Perform switchover
+            :param rcg_id: Unique identifier of the RCG.
+            :param force: Force switchover.
+            :return: Boolean indicates if RCG switchover is successful
+        """
+        try:
+            if not self.module.check_mode:
+                self.powerflex_conn.replication_consistency_group.switchover(rcg_id, force)
+            return True
+        except Exception as e:
+            errormsg = f"Switchover replication consistency group {rcg_id} failed with error {e}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
+
+    def perform_rcg_action(self, rcg_id, rcg_details):
+        """Perform failover, reverse, restore or switchover
+            :param rcg_id: Unique identifier of the RCG.
+            :param rcg_details: RCG details.
+            :return: Boolean indicates if RCG action is successful
+        """
+        rcg_state = self.module.params['rcg_state']
+        force = self.module.params['force']
+
+        if rcg_state == 'failover' and rcg_details['failoverType'] != 'Failover':
+            return self.failover(rcg_id)
+
+        if rcg_state == 'switchover' and rcg_details['failoverType'] != 'Switchover':
+            return self.switchover(rcg_id, force)
+
+        if rcg_state == 'reverse' and rcg_details['failoverType']:
+            return self.reverse(rcg_id)
+
+        if rcg_state == 'restore' and rcg_details['failoverType'] != 'None':
+            return self.restore(rcg_id)
+
+    def sync(self, rcg_id):
+        """Perform sync
+            :param rcg_id: Unique identifier of the RCG.
+            :return: Boolean indicates if RCG sync is successful
+        """
+        try:
+            if not self.module.check_mode:
+                self.powerflex_conn.replication_consistency_group.sync(rcg_id)
+            return True
+        except Exception as e:
+            errormsg = f"Synchronization of replication consistency group {rcg_id} failed with error {e}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
+
     def set_consistency(self, rcg_id, rcg_details, is_consistent):
         """Set rcg to specified mode
             :param rcg_id: Unique identifier of the RCG.
@@ -689,7 +852,7 @@ class PowerFlexReplicationConsistencyGroup(object):
     def delete_rcg(self, rcg_id):
         """Delete RCG
             :param rcg_id: Unique identifier of the RCG.
-            :return: Boolean indicates if delete rcg operation is successful
+            :return: Boolean indicates if delete RCG operation is successful
         """
         try:
             if not self.module.check_mode:
@@ -753,17 +916,55 @@ class PowerFlexReplicationConsistencyGroup(object):
                  rcg_params['remote_peer']['protection_domain_name'] is not None):
             self.module.fail_json(msg='Enter remote protection_domain_name or protection_domain_id to create replication consistency group')
 
+    def get_pause_and_freeze_value(self):
+        """
+        Get Pause and Freeze values
+        :return: Boolean for pause and freeze
+        :rtype: (bool,bool)
+        """
+        rcg_state = self.module.params['rcg_state']
+        pause = self.module.params['pause']
+        freeze = self.module.params['freeze']
+
+        if pause is not None:
+            self.module.deprecate(
+                msg="Use 'rcg_state' param instead of 'pause'",
+                version="2.0.0",
+                collection_name="dellemc.powerflex"
+            )
+
+        if freeze is not None:
+            self.module.deprecate(
+                msg="Use 'rcg_state' param instead of 'freeze'",
+                version="2.0.0",
+                collection_name="dellemc.powerflex"
+            )
+
+        if rcg_state == 'pause':
+            pause = True
+        if rcg_state == 'resume':
+            pause = False
+        if rcg_state == 'freeze':
+            freeze = True
+        if rcg_state == 'unfreeze':
+            freeze = False
+
+        if self.module.params['pause_mode'] and not pause:
+            self.module.fail_json(msg="Specify rcg_state as 'pause' to pause replication consistency group")
+
+        return pause, freeze
+
     def modify_rcg(self, rcg_id, rcg_details):
+        rcg_state = self.module.params['rcg_state']
         create_snapshot = self.module.params['create_snapshot']
         rpo = self.module.params['rpo']
         target_volume_access_mode = self.module.params['target_volume_access_mode']
-        pause = self.module.params['pause']
-        freeze = self.module.params['freeze']
         is_consistent = self.module.params['is_consistent']
         activity_mode = self.module.params['activity_mode']
         new_rcg_name = self.module.params['new_rcg_name']
         changed = False
 
+        pause, freeze = self.get_pause_and_freeze_value()
         if create_snapshot is True:
             changed = self.create_rcg_snapshot(rcg_id)
         if rpo and rcg_details['rpoInSeconds'] and \
@@ -788,6 +989,11 @@ class PowerFlexReplicationConsistencyGroup(object):
             changed = True
         if new_rcg_name and self.rename_rcg(rcg_id, rcg_details, new_rcg_name):
             changed = True
+        if rcg_state == 'sync' and self.sync(rcg_id):
+            changed = True
+
+        rcg_action_status = self.perform_rcg_action(rcg_id, rcg_details)
+        changed = changed or rcg_action_status
 
         return changed
 
@@ -800,8 +1006,6 @@ class PowerFlexReplicationConsistencyGroup(object):
             for param in params:
                 if rcg_params[param] and utils.is_invalid_name(rcg_params[param]):
                     self.module.fail_json(msg='Enter a valid %s' % param)
-            if rcg_params['pause_mode'] and rcg_params['pause'] is None:
-                self.module.fail_json(msg='Specify pause as True to pause replication consistency group')
         except Exception as e:
             error_msg = "Validating input parameters failed with " \
                         "error '%s'" % (str(e))
@@ -879,7 +1083,13 @@ def get_powerflex_replication_consistency_group_parameters():
         rpo=dict(type='int'), protection_domain_id=dict(),
         protection_domain_name=dict(), new_rcg_name=dict(),
         activity_mode=dict(choices=['Active', 'Inactive']),
-        pause=dict(type='bool'), freeze=dict(type='bool'),
+        pause=dict(type='bool', removed_in_version='2.0.0', removed_from_collection='dellemc.powerflex'),
+        freeze=dict(type='bool', removed_in_version='2.0.0', removed_from_collection='dellemc.powerflex'),
+        force=dict(type='bool'),
+        rcg_state=dict(choices=['failover', 'reverse',
+                                'restore', 'switchover',
+                                'sync', 'pause', 'resume',
+                                'freeze', 'unfreeze']),
         pause_mode=dict(choices=['StopDataTransfer', 'OnlyTrackChanges']),
         target_volume_access_mode=dict(choices=['ReadOnly', 'NoAccess']),
         is_consistent=dict(type='bool'),

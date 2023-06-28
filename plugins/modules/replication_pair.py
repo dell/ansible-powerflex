@@ -77,7 +77,7 @@ options:
         - Copy type.
         choices: ['Identical', 'OnlineCopy', 'OnlineHashCopy', 'OfflineCopy']
         type: str
-        required: True
+        required: true
       name:
         description:
         - Name of replication pair.
@@ -190,7 +190,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     pair_name: "pair1"
-    pause: True
+    pause: true
 
 - name: Resume replication pair
   dellemc.powerflex.replication_pair:
@@ -200,7 +200,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     pair_name: "pair1"
-    pause: False
+    pause: false
 
 - name: Delete replication pair
   dellemc.powerflex.replication_pair:

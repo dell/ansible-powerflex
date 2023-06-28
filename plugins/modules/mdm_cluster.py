@@ -145,7 +145,7 @@ notes:
     interfaces.
   - Parameters I(mdm_name) or I(mdm_id) are not required while modifying performance
     profile.
-  - For change MDM cluster ownership operation, only changed as True will be
+  - For change MDM cluster ownership operation, only changed as true will be
     returned and for idempotency case MDM cluster details will be returned.
   - Reinstall all SDC after changing ownership to some newly added MDM.
   - To add manager standby MDM, MDM package must be installed with manager
@@ -229,7 +229,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     mdm_name: "mdm_2"
-    is_primary: True
+    is_primary: true
     state: "present"
 
 - name: Modify performance profile
@@ -273,7 +273,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     port: "{{port}}"
     mdm_name: "mdm_1"
-    clear_interfaces: True
+    clear_interfaces: true
     state: "present"
 '''
 
@@ -1052,6 +1052,12 @@ class PowerFlexMdmCluster(object):
             if resp is not None:
                 mdm_cluster_details['perfProfile'] = resp['perfProfile']
 
+            # Append list of configured MDM IP addresses
+            gateway_configuration_details = self.powerflex_conn.system.\
+                get_gateway_configuration_details()
+            if gateway_configuration_details is not None:
+                mdm_cluster_details['mdmAddresses'] = gateway_configuration_details['mdmAddresses']
+
             return mdm_cluster_details
 
         except Exception as e:
@@ -1063,30 +1069,32 @@ class PowerFlexMdmCluster(object):
     def check_ip_in_secondarys(self, standby_ip, cluster_details):
         """whether standby IPs present in secondary MDMs"""
 
-        for secondary_mdm in cluster_details['slaves']:
-            current_secondary_ips = secondary_mdm['ips']
-            for ips in standby_ip:
-                if ips in current_secondary_ips:
-                    LOG.info(self.exist_msg)
-                    return False
+        if 'slaves' in cluster_details:
+            for secondary_mdm in cluster_details['slaves']:
+                current_secondary_ips = secondary_mdm['ips']
+                for ips in standby_ip:
+                    if ips in current_secondary_ips:
+                        LOG.info(self.exist_msg)
+                        return False
         return True
 
     def check_ip_in_tbs(self, standby_ip, cluster_details):
         """whether standby IPs present in tie-breaker MDMs"""
 
-        for tb_mdm in cluster_details['tieBreakers']:
-            current_tb_ips = tb_mdm['ips']
-            for ips in standby_ip:
-                if ips in current_tb_ips:
-                    LOG.info(self.exist_msg)
-                    return False
+        if 'tieBreakers' in cluster_details:
+            for tb_mdm in cluster_details['tieBreakers']:
+                current_tb_ips = tb_mdm['ips']
+                for ips in standby_ip:
+                    if ips in current_tb_ips:
+                        LOG.info(self.exist_msg)
+                        return False
         return True
 
     def check_ip_in_standby(self, standby_ip, cluster_details):
         """whether standby IPs present in standby MDMs"""
 
         if 'standbyMDMs' in cluster_details:
-            for stb_mdm in cluster_details['tieBreakers']:
+            for stb_mdm in cluster_details['standbyMDMs']:
                 current_stb_ips = stb_mdm['ips']
                 for ips in standby_ip:
                     if ips in current_stb_ips:
