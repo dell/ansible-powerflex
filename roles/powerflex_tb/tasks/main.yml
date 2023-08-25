@@ -1,0 +1,8 @@
+---
+- name: Install TB
+  ansible.builtin.include_tasks: install_tb.yml
+  when: powerflex_tb_state == 'present'
+
+- name: Uninstall TB
+  ansible.builtin.include_tasks: uninstall_tb.yml
+  when: powerflex_tb_state == 'absent'

@@ -1,0 +1,17 @@
+---
+- name: Get configured MDM IP addresses
+  dellemc.powerflex.mdm_cluster:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    state: "present"
+  register: powerflex_lia_result
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+
+- name: Set fact - powerflex_lia_mdm_ips
+  ansible.builtin.set_fact:
+    powerflex_lia_mdm_ips: "{{ powerflex_lia_result.mdm_cluster_details.mdmAddresses | join(',') }}"
+
+- name: Include install_powerflex.yml
+  ansible.builtin.include_tasks: ../../powerflex_common/tasks/install_powerflex.yml
