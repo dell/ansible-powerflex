@@ -1,3 +1,0 @@
-powerflex_sdc_name: sdc_test
-powerflex_sdc_performance_profile: Compact
-powerflex_sdc_state: present

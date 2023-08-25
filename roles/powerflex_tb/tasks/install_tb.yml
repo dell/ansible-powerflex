@@ -1,0 +1,150 @@
+---
+- name: Get configured MDM IP addresses
+  dellemc.powerflex.mdm_cluster:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    state: "present"
+  register: powerflex_tb_mdm_result
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+
+- name: Set fact - powerflex_mdm_ips
+  ansible.builtin.set_fact:
+    powerflex_tb_mdm_ips: "{{ powerflex_tb_mdm_result.mdm_cluster_details.mdmAddresses | join(',') }}"
+
+- name: Include install_powerflex.yml
+  ansible.builtin.include_tasks: ../../powerflex_common/tasks/install_powerflex.yml
+
+- name: Include set_tb_ips.yml
+  ansible.builtin.include_tasks: set_tb_ips.yml
+
+- name: Get ScaleIO version
+  ansible.builtin.shell: set -o pipefail && scli --version  | sed 's/ (Debug)//g' | sed 's/.* //g' | sed 's/\_.*//g'
+  register: powerflex_tb_scaleio_version
+  tags: register
+  changed_when: powerflex_tb_scaleio_version.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+
+- name: Login with password
+  ansible.builtin.command: scli --login --username {{ username }} --password "{{ password }}"
+  run_once: true
+  register: powerflex_tb_login_output
+  changed_when: powerflex_tb_login_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+
+- name: Add primary TB
+  dellemc.powerflex.mdm_cluster:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    port: "{{ port }}"
+    mdm_name: "{{ powerflex_tb_primary_name }}"
+    standby_mdm:
+      mdm_ips:
+        - "{{ powerflex_tb_primary_ip }}"
+      role: "TieBreaker"
+      management_ips:
+        - "{{ powerflex_tb_primary_ip }}"
+    state: "present"
+  register: powerflex_tb_primary_output
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+
+- name: Add secondary TB
+  dellemc.powerflex.mdm_cluster:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    port: "{{ port }}"
+    mdm_name: "{{ powerflex_tb_secondary_name }}"
+    standby_mdm:
+      mdm_ips:
+        - "{{ powerflex_tb_secondary_ip }}"
+      role: "TieBreaker"
+      management_ips:
+        - "{{ powerflex_tb_secondary_ip }}"
+    state: "present"
+  register: powerflex_tb_secondary_output
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+  when: powerflex_tb_secondary_ip is defined
+
+- name: Switch to cluster three node
+  ansible.builtin.command: |
+    scli --switch_cluster_mode --cluster_mode "3_node" --add_slave_mdm_ip
+    "{{ powerflex_tb_mdm_secondary_ip }}" --add_tb_ip "{{ powerflex_tb_primary_ip }}"
+  run_once: true
+  register: powerflex_tb_cluster_to_three_output
+  changed_when: powerflex_tb_cluster_to_three_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_primary_output.mdm_cluster_details.clusterMode != "ThreeNodes" and powerflex_tb_cluster_mode  == "ThreeNodes"
+
+- name: Switch to cluster five node
+  ansible.builtin.command: |
+    scli --switch_cluster_mode --cluster_mode "5_node" --add_slave_mdm_ip
+    "{{ powerflex_tb_mdm_secondary_ip }}","{{ powerflex_tb_mdm_tertiary_ip }}" --add_tb_ip "{{ powerflex_tb_primary_ip }}","{{ powerflex_tb_secondary_ip }}"
+  run_once: true
+  register: powerflex_tb_cluster_to_five_output
+  changed_when: powerflex_tb_cluster_to_five_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_primary_output.mdm_cluster_details.clusterMode != "FiveNodes" and powerflex_tb_cluster_mode == "FiveNodes"
+
+- name: Create the protection domain
+  dellemc.powerflex.protection_domain:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    port: "{{ port }}"
+    protection_domain_name: "{{ powerflex_protection_domain_name }}"
+    state: "present"
+  register: powerflex_tb_add_pd_output
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+
+- name: Add fault set
+  ansible.builtin.command: scli --add_fault_set --protection_domain_name "{{ powerflex_protection_domain_name }}" --fault_set_name "{{ item }}"
+  with_items: "{{ powerflex_fault_sets }}"
+  run_once: true
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  register: powerflex_tb_add_fs_output
+  ignore_errors: true
+  changed_when: powerflex_tb_add_fs_output.rc == 0
+  when:
+    - powerflex_fault_sets is defined
+
+- name: Create a new storage pool in R2 version
+  dellemc.powerflex.storagepool:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    storage_pool_name: "{{ powerflex_storage_pool_name }}"
+    protection_domain_name: "{{ powerflex_protection_domain_name }}"
+    state: "present"
+  register: powerflex_tb_storage_pool_output
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+  when: powerflex_tb_scaleio_version.stdout == "R2"
+
+- name: Create a new storage pool in R3 version
+  dellemc.powerflex.storagepool:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    storage_pool_name: "{{ powerflex_storage_pool_name }}"
+    protection_domain_name: "{{ powerflex_protection_domain_name }}"
+    media_type: "{{ powerflex_media_type }}"
+    state: "present"
+  register: powerflex_tb_storage_pool_output
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+  when: powerflex_tb_scaleio_version.stdout == "R3"
+
+- name: Enable zero-padding
+  ansible.builtin.command: |
+    scli --modify_zero_padding_policy --protection_domain_name
+    {{ powerflex_protection_domain_name }} --storage_pool_name {{ powerflex_storage_pool_name }} --enable_zero_padding
+  run_once: true
+  register: powerflex_tb_enable_zero_padding_output
+  changed_when: powerflex_tb_enable_zero_padding_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"

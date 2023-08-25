@@ -1,9 +1,0 @@
----
-- name: Remove SDC
-  hosts: sdc
-  vars_files:
-    - vars_files/connection.yml
-  roles:
-    - role: powerflex_sdc
-      vars:
-        powerflex_sdc_state: absent

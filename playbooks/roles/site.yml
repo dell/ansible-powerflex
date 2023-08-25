@@ -1,12 +1,38 @@
 ---
 - name: "Install PowerFlex Common"
-  hosts: sdc
+  hosts: all
   roles:
     - powerflex_common
 
-- name: "Install and configure PowerFlex SDC"
+- name: Install and configure PowerFlex MDM
+  hosts: mdm
+  roles:
+    - powerflex_mdm
+
+- name: Install and configure PowerFlex TB
+  hosts: tb
+  vars_files:
+    - vars_files/connection.yml
+  roles:
+    - powerflex_tb
+
+- name: Install and configure PowerFlex SDC
   hosts: sdc
   vars_files:
     - vars_files/connection.yml
   roles:
     - powerflex_sdc
+
+- name: Install and configure PowerFlex LIA
+  hosts: lia
+  vars_files:
+    - vars_files/connection.yml
+  roles:
+    - powerflex_lia
+
+- name: Install and configure PowerFlex SDS
+  hosts: sds
+  vars_files:
+    - vars_files/connection.yml
+  roles:
+    - powerflex_sds

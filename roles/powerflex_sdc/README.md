@@ -34,7 +34,7 @@ dellemc.powerflex
   <tr>
     <td>hostname</td>
     <td>true</td>
-    <td>IP or FQDN of the PowerFlex host</td>
+    <td>IP or FQDN of the PowerFlex gateway</td>
     <td></td>
     <td>str</td>
     <td>10.1.1.1</td>
@@ -42,7 +42,7 @@ dellemc.powerflex
   <tr>
     <td>username</td>
     <td>true</td>
-    <td>The username of the PowerFlex host</td>
+    <td>The username of the PowerFlex gateway</td>
     <td></td>
     <td>str</td>
     <td>admin</td>
@@ -50,7 +50,7 @@ dellemc.powerflex
   <tr>
     <td>password</td>
     <td>true</td>
-    <td>The password of the PowerFlex host</td>
+    <td>The password of the PowerFlex gateway</td>
     <td></td>
     <td>str</td>
     <td>password</td>
@@ -83,7 +83,8 @@ dellemc.powerflex
     <td>powerflex_common_file_install_location</td>
     <td>true</td>
     <td>Location of installation and rpm gpg files to be installed.
-    <br>The required, compatible installation software package based on the operating system of the node.</td>
+    <br>The required, compatible installation software package based on the operating system of the node.
+    <br>The files can be downloaded from the Dell Product support page for PowerFlex software.</td>
     <td></td>
     <td>str</td>
     <td>/var/tmp</td>
@@ -214,9 +215,9 @@ dellemc.powerflex
 ## Examples
 ----
 ```
-  - name: "Install and configure powerflex SDC"
+  - name: Install and configure powerflex SDC
     ansible.builtin.import_role:
-      name: "powerflex_sdc"
+      name: powerflex_sdc
     vars:
       hostname: "{{ hostname }}"
       username: "{{ username }}"
@@ -226,28 +227,28 @@ dellemc.powerflex
       powerflex_common_file_install_location: "/opt/scaleio/rpm"
       powerflex_sdc_name: sdc_test
       powerflex_sdc_performance_profile: Compact
-      sdc_state: present
+      powerflex_sdc_state: present
 
-  - name: "Uninstall powerflex SDC"
+  - name: Uninstall powerflex SDC
     ansible.builtin.import_role:
-      name: "powerflex_sdc"
+      name: powerflex_sdc
     vars:
       hostname: "{{ hostname }}"
       username: "{{ username }}"
       password: "{{ password }}"
       validate_certs: "{{ validate_certs }}"
       port: "{{ port }}"
-      sdc_state: 'absent'
+      powerflex_sdc_state: absent
 
 ```
 
 ## Usage instructions
 ----
-### To install dependency packages and SDC on node:
+### To install all dependency packages, including SDC, on node:
   ansible-playbook -i inventory site.yml
 
 ### To uninstall SDC:
-  ansible-playbook -i inventory uninstall_powerflex_sdc.yml
+  ansible-playbook -i inventory uninstall_powerflex.yml
 
 Sample playbooks and inventory can be found in the playbooks directory.
 

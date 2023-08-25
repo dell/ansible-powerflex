@@ -5,6 +5,17 @@ Dellemc.PowerFlex Change Logs
 .. contents:: Topics
 
 
+v1.8.0
+======
+
+Minor Changes
+-------------
+
+- Added Ansible role to support installation and uninstallation of LIA.
+- Added Ansible role to support installation and uninstallation of MDM.
+- Added Ansible role to support installation and uninstallation of SDS.
+- Added Ansible role to support installation and uninstallation of TB.
+
 v1.7.0
 ======
 
