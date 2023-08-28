@@ -14,7 +14,7 @@
         name: "powerflex_tb"
       vars:
         powerflex_tb_state: present
-      register: result
+      register: powerflex_tb_results
 
     - name: "Verifying installation package"
       ansible.builtin.assert:

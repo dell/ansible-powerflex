@@ -12,7 +12,7 @@
         powerflex_sdc_state: present
       ignore_unreachable: true
       ignore_errors: true
-      register: wrong_credentials_output
+      register: powerflex_sdc_wrong_credentials_output
 
     - name: "Verifying failure of install package with wrong credentials"
       ansible.builtin.assert:

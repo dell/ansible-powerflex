@@ -1,5 +1,5 @@
 ---
-- name: sds_installation
+- name: SDS installation
   hosts: sds
   vars_files:
     - ../../../../playbooks/roles/vars_files/connection.yml

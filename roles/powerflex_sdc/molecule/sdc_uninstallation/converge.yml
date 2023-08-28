@@ -6,7 +6,7 @@
   gather_facts: true
   tasks:
     - name: "Uninstall powerflex SDC"
-      register: uninstall_powerflex_sdc_output
+      register: powerflex_sdc_uninstall_outputs
       ansible.builtin.import_role:
         name: "powerflex_sdc"
       vars:

@@ -1,11 +1,11 @@
 ---
-- name: sds_installation
+- name: SDS uninstallation
   hosts: sds
   vars_files:
     - ../../../../playbooks/roles/vars_files/connection.yml
   tasks:
     - name: Uninstall powerflex SDS
-      register: uninstall_powerflex_sds_output
+      register: powerflex_sds_uninstall_outputs
       ansible.builtin.import_role:
         name: powerflex_sds
       vars:

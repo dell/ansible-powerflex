@@ -213,5 +213,5 @@ Sample playbooks and inventory can be found in the playbooks directory.
 ## Author Information
 ------------------
 
-Dell Technologies <br>
+Dell Technologies
 Ananthu S Kuttattu (ansible.team@Dell.com)  2023
