@@ -11,7 +11,7 @@
       vars:
         powerflex_common_file_install_location: "/opt/empty"
         powerflex_lia_state: present
-      register: lia_no_rpm_result
+      register: powerflex_lia_no_rpm_result
       ignore_errors: true
 
     - name: Verifying failure of install package with respect to no rpm file in normal mode
@@ -25,7 +25,7 @@
       vars:
         powerflex_common_file_install_location: "/opt/aaab"
         powerflex_lia_state: present
-      register: lia_wrong_file_path_result
+      register: powerflex_lia_wrong_file_path_result
       ignore_errors: true
 
     - name: Verifying failure of install package with wrong file path in normal mode

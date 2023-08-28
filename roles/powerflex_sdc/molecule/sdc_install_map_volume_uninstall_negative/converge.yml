@@ -31,7 +31,7 @@
       vars:
         powerflex_sdc_name: "{{ sdc_name }}"
         powerflex_sdc_state: present
-      register: result
+      register: powerflex_sdc_result_molecule
 
 - name: Mapping SDC to volume
   hosts: localhost
@@ -63,7 +63,7 @@
   gather_facts: true
   tasks:
     - name: "Uninstall powerflex SDC"
-      register: uninstall_powerflex_sdc_output
+      register: powerflex_sdc_uninstall_outputs
       ansible.builtin.import_role:
         name: "powerflex_sdc"
       ignore_errors: true
