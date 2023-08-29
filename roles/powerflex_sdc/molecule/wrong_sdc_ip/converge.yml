@@ -12,7 +12,7 @@
         powerflex_sdc_state: present
       ignore_unreachable: true
       ignore_errors: true
-      register: wrong_sdc_ip_output
+      register: powerflex_sdc_wrong_ip_output
 
     - name: "Verifying failure of install package with wrong SDC IP"
       ansible.builtin.assert:

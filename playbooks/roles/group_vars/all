@@ -12,3 +12,26 @@ powerflex_sdc_driver_sync_module_sigcheck: 1
 powerflex_sdc_driver_sync_emc_public_gpg_key_src: ../../../files/RPM-GPG-KEY-powerflex_2.0.*.0
 powerflex_sdc_driver_sync_emc_public_gpg_key_dest: '/bin/emc/scaleio/scini_sync/emc_key.pub'
 powerflex_sdc_driver_sync_sync_pattern: .*
+powerflex_sdc_state: present
+# powerflex mdm role params
+powerflex_mdm_state: present
+powerflex_mdm_password: 'Password123'
+i_am_sure: 1
+powerflex_mdm_virtual_ip: ''
+# powerflex lia params
+powerflex_lia_state: present
+powerflex_lia_token: Cluster1!
+# powerflex tb params
+powerflex_tb_state: present
+# powerflex sds params
+powerflex_sds_number: 1
+powerflex_sds_disks: { ansible_available_disks: ['/dev/sdb'] }
+powerflex_sds_disks_type: HDD
+powerflex_sds_protection_domain: domain1
+powerflex_sds_storage_pool: pool1
+powerflex_sds_role: all
+powerflex_sds_device_media_type: HDD
+powerflex_sds_device_name: '/dev/sdb'
+powerflex_sds_external_acceleration_type: ReadAndWrite
+#powerflex_sds_fault_set: sample_fault_set
+powerflex_sds_state: present

@@ -2,4 +2,6 @@ exclude_paths:
   - changelogs/
   - .github/
   - meta/
-  - roles/powerflex_sdc/molecule/
+  - roles/powerflex_sdc/molecule/sdc_installation_invalid_path_rpm/converge.yml
+  - roles/powerflex_sds/molecule/sds_installation/converge.yml
+  - roles/powerflex_lia/molecule/lia_installation_invalid_path_rpm/converge.yml

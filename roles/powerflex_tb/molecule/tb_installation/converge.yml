@@ -1,0 +1,71 @@
+---
+- name: TB installation
+  hosts: tb
+  vars_files:
+    - ../../../../playbooks/roles/vars_files/connection.yml
+  gather_facts: true
+  tasks:
+    - name: Install common packages
+      ansible.builtin.import_role:
+        name: powerflex_common
+
+    - name: "Install PowerFlex TieBreaker"
+      ansible.builtin.import_role:
+        name: "powerflex_tb"
+      vars:
+        powerflex_tb_state: present
+      register: powerflex_tb_results
+
+    - name: "Verifying installation package"
+      ansible.builtin.assert:
+        that:
+          - " 'Installed' in powerflex_common_install_package_output.results[0]"
+      when: not ansible_check_mode and powerflex_common_install_package_output.changed
+
+    - name: "Verifying cluster mode switch from 1 node to 3 node MDM cluster"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_cluster_to_three_output.stdout == "Successfully switched the cluster mode."
+      when: not ansible_check_mode and powerflex_tb_cluster_to_three_output.changed and powerflex_tb_cluster_mode == "ThreeNodes"
+
+    - name: "Verifying cluster mode switch from 1 node to 5 node MDM cluster"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_cluster_to_five_output.stdout == "Successfully switched the cluster mode."
+      when: not ansible_check_mode and powerflex_tb_cluster_to_five_output.changed and powerflex_tb_cluster_mode == "FiveNodes"
+
+    - name: "Verifying protection domain creation"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_add_pd_output.protection_domain_details.name == powerflex_protection_domain_name
+      when: not ansible_check_mode and powerflex_tb_add_pd_output.changed
+
+    - name: "Verifying storage pool R2 creation"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_storage_pool_output.storage_pool_details.name == powerflex_storage_pool_name
+      when: not ansible_check_mode and powerflex_tb_storage_pool_output.changed
+
+    - name: "Verifying storage pool R3 creation"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_storage_pool_output.storage_pool_details.name == powerflex_storage_pool_name
+      when: not ansible_check_mode and powerflex_tb_storage_pool_output.changed and powerflex_media_type is not none
+
+    - name: "Verifying protection domain creation in Idempotency"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_add_pd_output.protection_domain_details.name == powerflex_protection_domain_name
+      when: not ansible_check_mode and not powerflex_tb_add_pd_output.changed
+
+    - name: "Verifying storage pool R2 creation in Idempotency"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_storage_pool_output.storage_pool_details.name == powerflex_storage_pool_name
+      when: not ansible_check_mode and not powerflex_tb_storage_pool_output.changed
+
+    - name: "Verifying storage pool R3 creation in Idempotency"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_storage_pool_output.storage_pool_details.name == powerflex_storage_pool_name
+      when: not ansible_check_mode and not powerflex_tb_storage_pool_output.changed and powerflex_media_type is not none

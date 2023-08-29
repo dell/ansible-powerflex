@@ -17,7 +17,7 @@ from ansible.module_utils.basic import missing_required_lib
 """import PyPowerFlex lib"""
 try:
     from PyPowerFlex import PowerFlexClient
-
+    from PyPowerFlex.objects.system import SnapshotDef  # pylint: disable=unused-import
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = True, None
 except ImportError:
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = False, traceback.format_exc()
