@@ -10,7 +10,7 @@
         name: "powerflex_sdc"
       vars:
         powerflex_sdc_state: present
-      register: result
+      register: powerflex_sdc_result_molecule
 
     - name: "Verifying installation package"
       ansible.builtin.assert:

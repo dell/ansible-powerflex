@@ -44,8 +44,7 @@
 
 - name: Install package
   register: powerflex_common_install_package_output
-  environment:
-    MDM_IP: "{{ powerflex_mdm_ips }}"
+  environment: "{{ powerflex_role_environment }}"
   ansible.builtin.package:
     deb: "{{ powerflex_common_package_file.files[0].path }}"
     state: "present"

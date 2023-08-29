@@ -1,0 +1,77 @@
+---
+- name: Include set_tb_ips.yml
+  ansible.builtin.include_tasks: set_tb_ips.yml
+
+- name: Get configured MDM IP addresses
+  dellemc.powerflex.mdm_cluster:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    state: "present"
+  register: powerflex_tb_mdm_result
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+
+- name: Login with new password
+  ansible.builtin.command: scli --login --username {{ username }} --password "{{ password }}"
+  run_once: true
+  register: powerflex_tb_login_output
+  changed_when: powerflex_tb_login_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+
+- name: Switch from three to cluster one node
+  ansible.builtin.command: |
+    scli --switch_cluster_mode --cluster_mode "1_node" --remove_slave_mdm_ip
+    "{{ powerflex_tb_mdm_secondary_ip }}" --remove_tb_ip "{{ powerflex_tb_primary_ip }}"
+  run_once: true
+  register: powerflex_tb_cluster_to_one_output
+  changed_when: powerflex_tb_cluster_to_one_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_mdm_result.mdm_cluster_details.clusterMode == "ThreeNodes"
+
+- name: Switch from five to cluster one node
+  ansible.builtin.command: |
+    scli --switch_cluster_mode --cluster_mode "1_node" --remove_slave_mdm_ip
+    "{{ powerflex_tb_mdm_secondary_ip }}","{{ powerflex_tb_mdm_tertiary_ip }}" --remove_tb_ip "{{ powerflex_tb_primary_ip }}","{{ powerflex_tb_secondary_ip }}"
+  run_once: true
+  register: powerflex_tb_cluster_to_one_output
+  changed_when: powerflex_tb_cluster_to_one_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_mdm_result.mdm_cluster_details.clusterMode == "FiveNodes"
+
+- name: Remove primary tb from standby mdm
+  ansible.builtin.command: scli --remove_standby_mdm --remove_mdm_ip "{{ powerflex_tb_primary_ip }}"
+  run_once: true
+  register: powerflex_tb_remove_primary_tb_output
+  changed_when: powerflex_tb_remove_primary_tb_output.rc == 0
+  ignore_errors: true
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+
+- name: Remove secondary tb from standby mdm
+  ansible.builtin.command: scli --remove_standby_mdm --remove_mdm_ip "{{ powerflex_tb_secondary_ip }}"
+  run_once: true
+  register: powerflex_tb_remove_secondary_tb_output
+  changed_when: powerflex_tb_remove_secondary_tb_output.rc == 0
+  ignore_errors: true
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_secondary_ip is defined
+
+- name: Uninstall package
+  register: powerflex_tb_uninstall_output
+  environment:
+    I_AM_SURE: "{{ i_am_sure | int }}"
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: "absent"
+  with_items:
+    - EMC-ScaleIO-mdm
+  when: ansible_distribution in ("RedHat", "CentOS", "SLES")
+
+- name: Uninstall deb package
+  register: powerflex_tb_uninstall_output
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - EMC-ScaleIO-mdm
+  when: ansible_distribution == "Ubuntu"

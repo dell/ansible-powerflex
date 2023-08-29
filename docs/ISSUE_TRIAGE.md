@@ -43,7 +43,7 @@ Should explain what happened, what was expected and how to reproduce it together
 
  - Ansible Version: [e.g. 2.14]
  - Python Version [e.g. 3.11]
- - Ansible modules for Dell PowerFlex Version: [e.g. 1.7.0]
+ - Ansible modules for Dell PowerFlex Version: [e.g. 1.8.0]
  - PowerFlex SDK version: [e.g. PyPowerFlex 1.8.0]
  - Any other additional information...
 
