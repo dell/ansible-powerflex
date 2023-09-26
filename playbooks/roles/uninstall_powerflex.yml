@@ -17,12 +17,26 @@
   vars:
     powerflex_sds_state: absent
 
+- name: Uninstall PowerFlex SDR
+  hosts: sdr
+  roles:
+    - powerflex_sdr
+  vars:
+    powerflex_sdr_state: absent
+
 - name: Unistall PowerFlex LIA
   hosts: lia
   roles:
     - powerflex_lia
   vars:
     powerflex_lia_state: absent
+
+- name: Unistall PowerFlex web UI
+  hosts: webui
+  roles:
+    - powerflex_webui
+  vars:
+    powerflex_webui_state: absent
 
 - name: Install and configure PowerFlex TB
   hosts: tb
@@ -32,6 +46,13 @@
     - powerflex_tb
   vars:
     powerflex_tb_state: absent
+
+- name: Uninstall PowerFlex gateway
+  hosts: gateway
+  roles:
+    - powerflex_gateway
+  vars:
+    powerflex_gateway_state: absent
 
 - name: Unistall PowerFlex MDM
   hosts: mdm

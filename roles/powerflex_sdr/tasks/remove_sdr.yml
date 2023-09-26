@@ -1,0 +1,70 @@
+---
+- name: Include the sdr_set_facts.yml
+  ansible.builtin.include_tasks: sdr_set_facts.yml
+
+- name: Login to mdm
+  ansible.builtin.command: >
+    scli --login --mdm_ip {{ powerflex_mdm_primary_ip }}
+    --username admin
+    --password "{{ powerflex_mdm_password }}"
+    --approve_certificate
+  run_once: true
+  register: powerflex_initial_login
+  delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+  changed_when: powerflex_initial_login.rc == 0
+  no_log: true
+
+- name: Output msg of previous task login to mdm
+  ansible.builtin.debug:
+    var: powerflex_initial_login.stdout
+  delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+
+- name: Checking if SDR already exists or not
+  ansible.builtin.command: >
+    scli --mdm_ip {{ powerflex_mdm_primary_ip }}
+    --query_sdr
+    --sdr_name "{{ powerflex_sdr_hostname }}"
+  delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+  register: check_sdr_exists
+  failed_when: false
+  changed_when: check_sdr_exists.rc == 0
+
+- name: Skipping remove SDR if does not exist
+  ansible.builtin.debug:
+    msg: "SDR name {{ powerflex_sdr_hostname }} does not exist, will skip removing SDR."
+  when: check_sdr_exists.rc == 7
+  delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+
+- name: Removing SDR
+  ansible.builtin.command: >
+    scli --remove_sdr --mdm_ip {{ powerflex_mdm_primary_ip }}
+    --sdr_name "{{ powerflex_sdr_hostname }}"
+  register: powerflex_remove_sdr_output
+  delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+  changed_when: powerflex_remove_sdr_output.rc == 0
+  when: check_sdr_exists.rc == 0
+
+- name: Uninstall package
+  register: powerflex_sdr_uninstall_output
+  environment:
+    I_AM_SURE: "{{ i_am_sure | int }}"
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: "absent"
+  with_items:
+    - EMC-ScaleIO-sdr
+  when: ansible_distribution in ("RedHat", "CentOS", "SLES")
+
+- name: Uninstall deb package
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - emc-scaleio-sdr
+  when: ansible_distribution == "Ubuntu"
+
+- name: Logging out of the mdm
+  ansible.builtin.command: scli --logout
+  register: powerflex_mdm_logout
+  delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+  changed_when: powerflex_mdm_logout.rc == 0
