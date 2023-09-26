@@ -8,3 +8,17 @@ exclude_paths:
   - roles/powerflex_gateway/molecule/gateway_installation_invalid_path_rpm/converge.yml
   - roles/powerflex_sdr/molecule/sdr_installation_invalid_path_rpm/converge.yml
   - roles/powerflex_webui/molecule/webui_installation_invalid_path_rpm/converge.yml
+  - roles/powerflex_gateway/defaults/
+  - roles/powerflex_gateway/vars/
+  - roles/powerflex_lia/defaults/
+  - roles/powerflex_lia/vars/
+  - roles/powerflex_mdm/defaults/
+  - roles/powerflex_mdm/vars/
+  - roles/powerflex_sdc/defaults/
+  - roles/powerflex_sdc/vars/
+  - roles/powerflex_sdr/defaults/
+  - roles/powerflex_sdr/vars/
+  - roles/powerflex_sds/defaults/
+  - roles/powerflex_sds/vars/
+  - roles/powerflex_tb/defaults/
+  - roles/powerflex_tb/vars/
