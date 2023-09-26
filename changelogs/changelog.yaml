@@ -113,3 +113,10 @@ releases:
       - Added Ansible role to support installation and uninstallation of SDS.
       - Added Ansible role to support installation and uninstallation of TB.
     release_date: '2023-08-31'
+  1.9.0:
+    changes:
+      minor_changes:
+      - Added Ansible role to support installation and uninstallation of Gateway.
+      - Added Ansible role to support installation and uninstallation of SDR.
+      - Added Ansible role to support installation and uninstallation of Web UI.
+    release_date: '2023-09-29'

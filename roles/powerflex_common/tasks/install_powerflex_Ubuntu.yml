@@ -48,3 +48,4 @@
   ansible.builtin.package:
     deb: "{{ powerflex_common_package_file.files[0].path }}"
     state: "present"
+    disable_gpg_check: "{{ powerflex_gateway_disable_gpg_check | default(false) }}"

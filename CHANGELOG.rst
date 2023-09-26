@@ -5,6 +5,16 @@ Dellemc.PowerFlex Change Logs
 .. contents:: Topics
 
 
+v1.9.0
+======
+
+Minor Changes
+-------------
+
+- Added Ansible role to support installation and uninstallation of Gateway.
+- Added Ansible role to support installation and uninstallation of SDR.
+- Added Ansible role to support installation and uninstallation of Web UI.
+
 v1.8.0
 ======
 
