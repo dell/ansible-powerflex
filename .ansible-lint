@@ -22,3 +22,5 @@ exclude_paths:
   - roles/powerflex_sds/vars/
   - roles/powerflex_tb/defaults/
   - roles/powerflex_tb/vars/
+  - roles/powerflex_webui/defaults/
+  - roles/powerflex_webui/vars/
