@@ -16,7 +16,7 @@
       ansible.builtin.assert:
         that:
           - " 'Removed:' in powerflex_sdr_uninstall_output.results[0].results[0]"
-      when: 
+      when:
         - not ansible_check_mode
         - powerflex_sdr_uninstall_output.changed
         - ansible_distribution in ("RedHat", "CentOS", "SLES")
