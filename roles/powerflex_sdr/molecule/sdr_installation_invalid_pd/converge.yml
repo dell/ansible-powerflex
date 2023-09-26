@@ -7,7 +7,7 @@
   tasks:
     - name: Install and configure powerflex SDR without protection domain
       vars:
-          error_msg: "Please provide powerflex_protection_domain_name and powerflex_storage_pool_name in parameter for installing SDR."
+        error_msg: "Please provide powerflex_protection_domain_name and powerflex_storage_pool_name in parameter for installing SDR."
       block:
         - name: Powerflex SDR
           ansible.builtin.import_role:
