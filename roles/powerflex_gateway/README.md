@@ -73,7 +73,7 @@ dellemc.powerflex
     <td>443</td>
   </tr>
   <tr>
-    <td>powerflex_virtual_ip</td>
+    <td>powerflex_gateway_virtual_ip</td>
     <td>false</td>
     <td>Virtual IP address of Powerflex gateway.<br></td>
     <td></td>
@@ -115,7 +115,7 @@ dellemc.powerflex
       name: powerflex_gateway
     vars:
       powerflex_common_file_install_location: "/opt/scaleio/rpm"
-      powerflex_gateway_password: password
+      powerflex_gateway_admin_password: password
       powerflex_gateway_state: present
 
   - name: Uninstall powerflex gateway

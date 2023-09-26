@@ -30,7 +30,7 @@ argument_specs:
         type: int
         description: PowerFlex gateway HTTPS port.
         default: 443
-      powerflex_virtual_ip:
+      powerflex_gateway_virtual_ip:
         type: str
         description: Virtual IP address of PowerFlex gateway.
       powerflex_gateway_virtual_interface:
