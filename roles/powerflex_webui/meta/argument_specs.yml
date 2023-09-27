@@ -28,7 +28,7 @@ argument_specs:
         type: bool
         default: false
       timeout:
-        description: Timeout.
+        description: Time after which connection will get terminated.
         type: int
         default: 120
       powerflex_common_file_install_location:
@@ -45,6 +45,8 @@ argument_specs:
       powerflex_webui_state:
         description:
           - Specifies the state of the web UI.
+          - present will install the web UI if not already installed.
+          - absent will uninstall the web UI if installed.
         type: str
         choices: ['absent', 'present']
         default: present
