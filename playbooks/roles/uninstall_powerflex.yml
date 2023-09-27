@@ -38,7 +38,7 @@
   vars:
     powerflex_webui_state: absent
 
-- name: Uninstall and configure PowerFlex TB
+- name: Uninstall PowerFlex TB
   hosts: tb
   vars_files:
     - vars_files/connection.yml
