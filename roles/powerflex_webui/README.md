@@ -58,7 +58,7 @@ dellemc.powerflex
   <tr>
     <td>port</td>
     <td>false</td>
-    <td>Port</td>
+    <td>The port of the PowerFlex gateway.</td>
     <td></td>
     <td>int</td>
     <td>443</td>
@@ -74,7 +74,7 @@ dellemc.powerflex
   <tr>
     <td>timeout</td>
     <td>false</td>
-    <td>Timeout</td>
+    <td>Time after which connection will get terminated.</td>
     <td></td>
     <td>int</td>
     <td>120</td>
@@ -99,7 +99,8 @@ dellemc.powerflex
   <tr>
     <td>powerflex_webui_state</td>
     <td>false</td>
-    <td>Specify state of web UI.<br></td>
+    <td>Specify state of web UI.
+    <br>present will install the web UI and absent will uninstall the web UI.</td>
     <td>absent, present</td>
     <td>str</td>
     <td>present</td>
@@ -130,6 +131,8 @@ dellemc.powerflex
       powerflex_webui_state: absent
 
 ```
+## Notes
+- Supported only in PowerFlex version 3.6
 
 ## Usage instructions
 ----
