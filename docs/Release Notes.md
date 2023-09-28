@@ -1,6 +1,6 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 1.8.0
+### Release notes 1.9.0
 
 >   © 2023 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
@@ -26,9 +26,9 @@ The table in this section lists the revision history of this document.
 
 Table 1. Revision history
 
-| Revision | Date           | Description                                                 |
-|----------|----------------|-------------------------------------------------------------|
-| 01       | August 2023  | Current release of Ansible Modules for Dell PowerFlex 1.8.0 |
+| Revision | Date            | Description                                                 |
+|----------|-----------------|-------------------------------------------------------------|
+| 01       | September 2023  | Current release of Ansible Modules for Dell PowerFlex 1.9.0 |
 
 Product description
 -------------------
@@ -44,10 +44,9 @@ each of the entities.
 New features and enhancements
 -----------------------------
 Along with the previous release deliverables, this release supports following features - 
-- Added Ansible role to support installation and uninstallation of LIA.
-- Added Ansible role to support installation and uninstallation of MDM.
-- Added Ansible role to support installation and uninstallation of SDS.
-- Added Ansible role to support installation and uninstallation of TB.
+- Added Ansible role to support installation and uninstallation of Gateway.
+- Added Ansible role to support installation and uninstallation of SDR.
+- Added Ansible role to support installation and uninstallation of Web UI.
 
 Known issues
 ------------
@@ -61,11 +60,11 @@ Limitations
 Distribution
 ------------
 The software package is available for download from the [Ansible Modules
-for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.8.0) page.
+for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.9.0) page.
 
 Documentation
 -------------
-The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.8.0/docs)
+The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/1.9.0/docs)
 page. It includes the following:
 
    - README

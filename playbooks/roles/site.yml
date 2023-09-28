@@ -9,12 +9,24 @@
   roles:
     - powerflex_mdm
 
+- name: Install and configure PowerFlex gateway
+  hosts: gateway
+  roles:
+    - powerflex_gateway
+
 - name: Install and configure PowerFlex TB
   hosts: tb
   vars_files:
     - vars_files/connection.yml
   roles:
     - powerflex_tb
+
+- name: Install and configure PowerFlex Web UI
+  hosts: webui
+  vars_files:
+    - vars_files/connection.yml
+  roles:
+    - powerflex_webui
 
 - name: Install and configure PowerFlex SDC
   hosts: sdc
@@ -36,3 +48,8 @@
     - vars_files/connection.yml
   roles:
     - powerflex_sds
+
+- name: Install PowerFlex SDR
+  hosts: sdr
+  roles:
+    - powerflex_sdr
