@@ -33,5 +33,15 @@ powerflex_sds_role: all
 powerflex_sds_device_media_type: HDD
 powerflex_sds_device_name: '/dev/sdb'
 powerflex_sds_external_acceleration_type: ReadAndWrite
-#powerflex_sds_fault_set: sample_fault_set
 powerflex_sds_state: present
+# powerflex webui params
+powerflex_webui_state: present
+# powerflex gateway role params
+powerflex_gateway_state: present
+powerflex_gateway_admin_password: Password123
+powerflex_gateway_http_port: 80
+powerflex_gateway_https_port: 443
+powerflex_gateway_is_redundant: false
+#powerflex sdr params
+powerflex_protection_domain_name: domain1
+powerflex_storage_pool_name: pool1

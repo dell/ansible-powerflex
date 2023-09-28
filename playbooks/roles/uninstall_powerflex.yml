@@ -1,5 +1,5 @@
 ---
-- name: Unistall PowerFlex SDC
+- name: Uninstall PowerFlex SDC
   hosts: sdc
   vars_files:
     - vars_files/connection.yml
@@ -8,7 +8,7 @@
   vars:
     powerflex_sdc_state: absent
 
-- name: Unistall PowerFlex SDS
+- name: Uninstall PowerFlex SDS
   hosts: sds
   vars_files:
     - vars_files/connection.yml
@@ -17,14 +17,28 @@
   vars:
     powerflex_sds_state: absent
 
-- name: Unistall PowerFlex LIA
+- name: Uninstall PowerFlex SDR
+  hosts: sdr
+  roles:
+    - powerflex_sdr
+  vars:
+    powerflex_sdr_state: absent
+
+- name: Uninstall PowerFlex LIA
   hosts: lia
   roles:
     - powerflex_lia
   vars:
     powerflex_lia_state: absent
 
-- name: Install and configure PowerFlex TB
+- name: Uninstall PowerFlex web UI
+  hosts: webui
+  roles:
+    - powerflex_webui
+  vars:
+    powerflex_webui_state: absent
+
+- name: Uninstall PowerFlex TB
   hosts: tb
   vars_files:
     - vars_files/connection.yml
@@ -33,7 +47,14 @@
   vars:
     powerflex_tb_state: absent
 
-- name: Unistall PowerFlex MDM
+- name: Uninstall PowerFlex gateway
+  hosts: gateway
+  roles:
+    - powerflex_gateway
+  vars:
+    powerflex_gateway_state: absent
+
+- name: Uninstall PowerFlex MDM
   hosts: mdm
   roles:
     - powerflex_mdm

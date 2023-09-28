@@ -6,6 +6,9 @@ node2 ansible_host=10.x.x.y ansible_port=22 ansible_ssh_pass=password ansible_us
 node0
 node1
 
+[gateway]
+node2
+
 [tb]
 node2
 
@@ -18,6 +21,14 @@ node1
 node2
 
 [sds]
+node0
+node1
+node2
+
+[webui]
+node1
+
+[sdr]
 node0
 node1
 node2
