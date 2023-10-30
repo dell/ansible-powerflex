@@ -31,25 +31,6 @@
           pass_through_mode: "Write"
         state: "present"
 
-    - name: Create Protection Domain - Idempotency
-      dellemc.powerflex.protection_domain:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        protection_domain_name: "domain_1"
-        network_limits:
-          rebuild_limit: 10240
-          rebalance_limit: 10240
-          vtree_migration_limit: 10240
-          overall_limit: 20480
-          bandwidth_unit: "KBps"
-        rf_cache_limits:
-          page_size: 32
-          pass_through_mode: "Write"
-        state: "present"
-
     - name: Get Protection Domain
       dellemc.powerflex.protection_domain:
         hostname: "{{ hostname }}"

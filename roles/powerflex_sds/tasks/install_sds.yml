@@ -6,12 +6,16 @@
     password: "{{ password }}"
     validate_certs: "{{ validate_certs }}"
     state: "present"
-  register: powerflex_sds_result
+  register: powerflex_sds_mdm_ip_result
   delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+
+- name: Set fact - PowerFlex version
+  ansible.builtin.set_fact:
+    powerflex_sds_array_version: "{{ powerflex_sds_mdm_ip_result.mdm_cluster_details.master.versionInfo[1] }}"
 
 - name: Set fact - powerflex_sds_mdm_ips
   ansible.builtin.set_fact:
-    powerflex_sds_mdm_ips: "{{ powerflex_sds_result.mdm_cluster_details.mdmAddresses | join(',') }}"
+    powerflex_sds_mdm_ips: "{{ powerflex_sds_mdm_ip_result.mdm_cluster_details.mdmAddresses | join(',') }}"
 
 - name: Include install_powerflex.yml
   ansible.builtin.include_tasks: ../../powerflex_common/tasks/install_powerflex.yml
@@ -30,12 +34,21 @@
   ansible.builtin.set_fact:
     disks: "{{ powerflex_sds_disks }}"
 
-- name: Login to mdm
+- name: Login to MDM for PowerFlex version 4.x
+  ansible.builtin.command: scli --login --management_system_ip {{ hostname }} --username {{ username }} --password {{ password }} --approve_certificate
+  run_once: true
+  register: powerflex_sds_login_output
+  changed_when: powerflex_sds_login_output.rc == 0
+  delegate_to: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
+  when: powerflex_sds_array_version != "3"
+
+- name: Login to MDM for PowerFlex version below 4.x
   ansible.builtin.command: scli --login --username {{ username }} --password {{ password }} --approve_certificate
   run_once: true
   register: powerflex_sds_login_output
   changed_when: powerflex_sds_login_output.rc == 0
   delegate_to: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
+  when: powerflex_sds_array_version == "3"
 
 - name: Create SDS
   dellemc.powerflex.sds:
@@ -54,9 +67,9 @@
   delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
   when: powerflex_sds_fault_set is not defined
 
-- name: Add SDS with fault set
+- name: Add SDS with fault set for PowerFlex version 4.x
   ansible.builtin.command:
-    scli --add_sds --mdm_ip {{ powerflex_mdm_ips }}
+    scli --add_sds --management_system_ip {{ hostname }}
     --sds_ip {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
     --storage_pool_name {{ powerflex_sds_storage_pool }} --sds_name "{{ inventory_hostname }}"
     --protection_domain_name {{ powerflex_sds_protection_domain }} --fault_set_name {{ powerflex_sds_fault_set }}
@@ -64,7 +77,19 @@
   changed_when: ('already in use' in add_sds.stderr) or (add_sds.rc == 0)
   delegate_to: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
   ignore_errors: true
-  when: powerflex_sds_fault_set is defined
+  when: powerflex_sds_fault_set is defined and powerflex_sds_array_version != "3"
+
+- name: Add SDS with fault set for PowerFlex version below 4.x
+  ansible.builtin.command:
+    scli --add_sds --mdm_ip {{ powerflex_sds_mdm_ips }}
+    --sds_ip {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
+    --storage_pool_name {{ powerflex_sds_storage_pool }} --sds_name "{{ inventory_hostname }}"
+    --protection_domain_name {{ powerflex_sds_protection_domain }} --fault_set_name {{ powerflex_sds_fault_set }}
+  register: add_sds
+  changed_when: ('already in use' in add_sds.stderr) or (add_sds.rc == 0)
+  delegate_to: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
+  ignore_errors: true
+  when: powerflex_sds_fault_set is defined and powerflex_sds_array_version == "3"
 
 - name: Add a device
   dellemc.powerflex.device:

@@ -176,11 +176,11 @@ EXAMPLES = r'''
         copy_type: "OnlineCopy"
         name: "pair1"
     remote_peer:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: "{{validate_certs}}"
-        port: "{{port}}"
+      hostname: "{{hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      validate_certs: "{{validate_certs}}"
+      port: "{{port}}"
 
 - name: Pause replication pair
   dellemc.powerflex.replication_pair:

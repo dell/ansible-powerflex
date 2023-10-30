@@ -41,25 +41,6 @@
           password: "{{ password }}"
           validate_certs: "{{ validate_certs }}"
 
-    - name: Add replication pair to RCG - Idempotency
-      register: result
-      dellemc.powerflex.replication_pair:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        pairs:
-          - source_volume_name: "ans_test_vol"
-            target_volume_name: "ans_env8_vol"
-            copy_type: "OnlineCopy"
-            name: "test_pair"
-        rcg_name: "test_rcg"
-        remote_peer:
-          hostname: "{{ remote_hostname }}"
-          username: "{{ username }}"
-          password: "{{ password }}"
-          validate_certs: "{{ validate_certs }}"
-
     - name: Pause Replication pair
       register: result
       dellemc.powerflex.replication_pair:
@@ -70,27 +51,7 @@
         pair_name: "test_pair"
         pause: true
 
-    - name: Pause Replication pair - Idempotency
-      register: result
-      dellemc.powerflex.replication_pair:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        pair_name: "test_pair"
-        pause: true
-
     - name: Resume Replication pair
-      register: result
-      dellemc.powerflex.replication_pair:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        pair_name: "test_pair"
-        pause: false
-
-    - name: Resume Replication pair - idempotency
       register: result
       dellemc.powerflex.replication_pair:
         hostname: "{{ hostname }}"

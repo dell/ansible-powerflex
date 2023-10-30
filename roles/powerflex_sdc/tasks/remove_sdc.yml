@@ -1,4 +1,9 @@
 ---
+- name: Set fact # noqa var-naming[no-role-prefix]
+  ansible.builtin.set_fact:
+    ansible_distribution: "WindowsOS"
+  when: " 'Windows' in ansible_distribution"
+
 - name: Include uninstall_sdc.yml
   ansible.builtin.include_tasks: uninstall_sdc.yml
 

@@ -4,7 +4,7 @@
     powerflex_mdm_ips: "{{ hostvars[groups['mdm'][0]]['ansible_host'] }},{{ hostvars[groups['mdm'][1]]['ansible_host'] }}"
 
 - name: Install java
-  ansible.builtin.include_tasks: "../../powerflex_common/tasks/install_powerflex_java_{{ ansible_distribution }}.yml"
+  ansible.builtin.include_tasks: "../../powerflex_common/tasks/install_java_{{ ansible_distribution }}.yml"
   when: not powerflex_gateway_skip_java
 
 - name: Set gateway admin password
@@ -18,7 +18,7 @@
   ansible.builtin.include_tasks: install_keepalived.yml
   when: powerflex_gateway_is_redundant == "true"
 
-- name: Configure gateway with mdm addresses
+- name: Configure gateway with MDM addresses
   ansible.builtin.lineinfile:
     name: "{{ powerflex_gateway_user_properties_file }}"
     regexp: '^mdm.ip.addresses'
