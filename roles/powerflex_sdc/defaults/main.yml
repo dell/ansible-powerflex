@@ -1,4 +1,5 @@
 ---
+powerflex_common_win_package_location: "C:\\Windows\\Temp"
 powerflex_sdc_driver_sync_repo_address: 'ftp://ftp.emc.com/'
 powerflex_sdc_driver_sync_repo_user: 'QNzgdxXix'
 powerflex_sdc_driver_sync_repo_password: 'Aw3wFAwAq3'
@@ -16,4 +17,5 @@ powerflex_sdc_name: sdc_test
 powerflex_sdc_performance_profile: Compact
 file_glob_name: sdc
 i_am_sure: 1
+powerflex_sdc_esxi_guid: "d422ecab-af6f-4e0c-a059-333ac89cfb42"
 powerflex_role_environment:

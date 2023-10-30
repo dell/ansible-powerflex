@@ -19,6 +19,8 @@
 
 - name: Uninstall PowerFlex SDR
   hosts: sdr
+  vars_files:
+    - vars_files/connection.yml
   roles:
     - powerflex_sdr
   vars:

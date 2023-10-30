@@ -120,3 +120,12 @@ releases:
       - Added Ansible role to support installation and uninstallation of SDR.
       - Added Ansible role to support installation and uninstallation of Web UI.
     release_date: '2023-09-29'
+  2.0.0:
+    changes:
+      minor_changes:
+      - Added support for PowerFlex Denver version(4.5.x)
+      - Added support for SDC installation on ESXi, Rocky Linux and Windows OS.
+      - Added Ansible role to support installation and uninstallation of Active MQ.
+      - Added Ansible role to support creation and deletion of protection domain,
+        storage pool and fault set.
+    release_date: '2023-10-31'

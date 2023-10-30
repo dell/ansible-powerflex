@@ -1,17 +1,22 @@
 ---
-- name: Get configured MDM IP addresses
-  dellemc.powerflex.mdm_cluster:
-    hostname: "{{ hostname }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: "{{ validate_certs }}"
-    state: "present"
-  register: powerflex_lia_result
-  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
-
-- name: Set fact - powerflex_lia_mdm_ips
+- name: Set facts for MDM counts
   ansible.builtin.set_fact:
-    powerflex_lia_mdm_ips: "{{ powerflex_lia_result.mdm_cluster_details.mdmAddresses | join(',') }}"
+    mdm_count: "{{ groups['mdm'] | length }}"
+
+- name: Set facts for powerflex_lia_tertiary_ip
+  ansible.builtin.set_fact:
+    powerflex_lia_tertiary_ip: "{{ hostvars[groups['mdm'][2]]['ansible_host'] }}"
+  when: mdm_count | int > 2
+
+- name: Set facts for powerflex_lia_mdm_ips if mdm_count is 2
+  ansible.builtin.set_fact:
+    powerflex_lia_mdm_ips: "{{ hostvars[groups['mdm'][0]]['ansible_host'] }},{{ hostvars[groups['mdm'][1]]['ansible_host'] }}"
+  when: mdm_count | int == 2
+
+- name: Set facts for powerflex_lia_mdm_ips if mdm_count is more than 2
+  ansible.builtin.set_fact:
+    powerflex_lia_mdm_ips: "{{ hostvars[groups['mdm'][0]]['ansible_host'] }},{{ hostvars[groups['mdm'][1]]['ansible_host'] }},{{ powerflex_lia_tertiary_ip }}"
+  when: mdm_count | int > 2
 
 - name: Include install_powerflex.yml
   ansible.builtin.include_tasks: ../../powerflex_common/tasks/install_powerflex.yml

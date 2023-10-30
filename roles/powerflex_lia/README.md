@@ -2,6 +2,15 @@
 
 Role to manage the installation and uninstallation of Powerflex LIA.
 
+## Table of contents
+
+* [Requirements](#requirements)
+* [Ansible collections](#ansible-collections)
+* [Role Variables](#role-variables)
+* [Examples](#examples)
+* [Usage instructions](#usage-instructions)
+* [Author Information](#author-information)
+
 ## Requirements
 
 ```
@@ -133,10 +142,24 @@ dellemc.powerflex
 ## Usage instructions
 ----
 ### To install all dependency packages, including LIA, on node:
+- PowerFlex 3.6:
+  ```
   ansible-playbook -i inventory site.yml
+  ```
+- PowerFlex 4.5:
+  ```
+  ansible-playbook -i inventory site_powerflex45.yml
+  ```
 
 ### To uninstall LIA:
+- PowerFlex 3.6:
+  ```
   ansible-playbook -i inventory uninstall_powerflex.yml
+  ```
+- PowerFlex 4.5:
+  ```
+  ansible-playbook -i inventory uninstall_powerflex45.yml
+  ```
 
 Sample playbooks and inventory can be found in the playbooks directory.
 

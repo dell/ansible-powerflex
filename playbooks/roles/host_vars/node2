@@ -1,7 +1,6 @@
 # SDC params
 powerflex_sdc_name: sdc_test
 powerflex_sdc_performance_profile: Compact
-
 #TB params
 powerflex_tb_primary_name: primary_tb
 powerflex_tb_secondary_name: secondary_tb

@@ -48,22 +48,6 @@
           - 20
         state: "present"
 
-    - name: Create a snapshot policy - Idempotency
-      dellemc.powerflex.snapshot_policy:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_policy_name: "{{ snapshot_policy_name }}"
-        access_mode: "READ_WRITE"
-        secure_snapshots: false
-        auto_snapshot_creation_cadence:
-          time: 1
-          unit: "Hour"
-        num_of_retained_snapshots_per_level:
-          - 20
-        state: "present"
-
     - name: Get snapshot policy details using name
       dellemc.powerflex.snapshot_policy:
         hostname: "{{ hostname }}"
@@ -108,19 +92,6 @@
         num_of_retained_snapshots_per_level:
           - 40
 
-    - name: Modify a snapshot policy - Idempotency
-      dellemc.powerflex.snapshot_policy:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_policy_name: "{{ snapshot_policy_name }}"
-        auto_snapshot_creation_cadence:
-          time: 2
-          unit: "Hour"
-        num_of_retained_snapshots_per_level:
-          - 40
-
     - name: Rename a snapshot policy
       dellemc.powerflex.snapshot_policy:
         hostname: "{{ hostname }}"
@@ -128,15 +99,6 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         snapshot_policy_name: "{{ snapshot_policy_name }}"
-        new_name: "{{ snapshot_policy_name_new }}"
-
-    - name: Rename a snapshot policy - Idempotency
-      dellemc.powerflex.snapshot_policy:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_policy_name: "{{ snapshot_policy_name_new }}"
         new_name: "{{ snapshot_policy_name_new }}"
 
     - name: Add source volume - check mode
@@ -153,18 +115,6 @@
       check_mode: true
 
     - name: Add source volume
-      dellemc.powerflex.snapshot_policy:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_policy_name: "{{ snapshot_policy_name_new }}"
-        source_volume:
-          - name: "{{ source_volume_name1 }}"
-          - name: "{{ source_volume_name2 }}"
-            state: "present"
-
-    - name: Add source volume Idempotency
       dellemc.powerflex.snapshot_policy:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -207,21 +157,6 @@
             auto_snap_removal_action: 'Remove'
             state: "absent"
 
-    - name: Remove source volume - Idempotency
-      dellemc.powerflex.snapshot_policy:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_policy_name: "{{ snapshot_policy_name_new }}"
-        source_volume:
-          - name: "{{ source_volume_name1 }}"
-            auto_snap_removal_action: 'Remove'
-            state: "absent"
-          - name: "{{ source_volume_name2 }}"
-            auto_snap_removal_action: 'Remove'
-            state: "absent"
-
     - name: Pause snapshot policy - check mode
       dellemc.powerflex.snapshot_policy:
         hostname: "{{ hostname }}"
@@ -233,15 +168,6 @@
       check_mode: true
 
     - name: Pause snapshot policy
-      dellemc.powerflex.snapshot_policy:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_policy_name: "{{ snapshot_policy_name_new }}"
-        pause: true
-
-    - name: Pause snapshot policy - Idempotency
       dellemc.powerflex.snapshot_policy:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -269,15 +195,6 @@
         snapshot_policy_name: "{{ snapshot_policy_name_new }}"
         pause: false
 
-    - name: Resume snapshot policy - Idempotency
-      dellemc.powerflex.snapshot_policy:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_policy_name: "{{ snapshot_policy_name_new }}"
-        pause: false
-
     - name: Delete snapshot policy - check mode
       dellemc.powerflex.snapshot_policy:
         hostname: "{{ hostname }}"
@@ -295,13 +212,4 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         snapshot_policy_name: "{{ snapshot_policy_name_new }}"
-        state: "absent"
-
-    - name: Delete snapshot policy - Idempotency
-      dellemc.powerflex.snapshot_policy:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_policy_id: "{{ result.snapshot_policy_details.id }}"
         state: "absent"
