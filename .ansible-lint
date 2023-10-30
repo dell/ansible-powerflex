@@ -24,3 +24,7 @@ exclude_paths:
   - roles/powerflex_tb/vars/
   - roles/powerflex_webui/defaults/
   - roles/powerflex_webui/vars/
+  - roles/powerflex_activemq/defaults/
+  - roles/powerflex_activemq/vars/
+  - roles/powerflex_config/defaults/
+  - roles/powerflex_config/vars/

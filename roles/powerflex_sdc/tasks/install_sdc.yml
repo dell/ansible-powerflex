@@ -6,15 +6,19 @@
     password: "{{ password }}"
     validate_certs: "{{ validate_certs }}"
     state: "present"
-  register: powerflex_sdc_result
+  register: powerflex_sdc_mdm_ip_result
   delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
 
 - name: Set fact - powerflex_sdc_mdm_ips
   ansible.builtin.set_fact:
-    powerflex_sdc_mdm_ips: "{{ powerflex_sdc_result.mdm_cluster_details.mdmAddresses | join(',') }}"
+    powerflex_sdc_mdm_ips: "{{ powerflex_sdc_mdm_ip_result.mdm_cluster_details.mdmAddresses | join(',') }}"
 
 - name: Include install_powerflex.yml
   ansible.builtin.include_tasks: ../../powerflex_common/tasks/install_powerflex.yml
+
+- name: Register SDC and Set MDM IP addresses by register_esxi_sdc.yml
+  ansible.builtin.include_tasks: register_esxi_sdc.yml
+  when: ansible_distribution == "VMkernel"
 
 - name: Include configure_sdc.yml
   ansible.builtin.include_tasks: configure_sdc.yml
@@ -29,6 +33,7 @@
   when:
     - powerflex_sdc_driver_sync_user_private_rsa_key_src is defined
     - powerflex_sdc_driver_sync_user_private_rsa_key_src | length > 0
+    - " 'WindowsOS' not in ansible_distribution"
 
 - name: Copy powerflex_sdc_driver_sync_repo_public_rsa_key_src for driver_sync.conf
   ansible.builtin.copy:
@@ -40,6 +45,7 @@
   when:
     - powerflex_sdc_driver_sync_repo_public_rsa_key_src is defined
     - powerflex_sdc_driver_sync_repo_public_rsa_key_src | length > 0
+    - " 'WindowsOS' not in ansible_distribution"
 
 - name: Copy powerflex_sdc_driver_sync_emc_public_gpg_key_src for driver_sync.conf
   ansible.builtin.copy:
@@ -53,6 +59,7 @@
   when:
     - powerflex_sdc_driver_sync_emc_public_gpg_key_src is defined
     - powerflex_sdc_driver_sync_emc_public_gpg_key_src | length > 0
+    - " 'WindowsOS' not in ansible_distribution"
 
 - name: Copy driver_sync.conf template in place
   register: powerflex_sdc_driver_sync_output
@@ -63,3 +70,6 @@
     owner: "root"
     group: "root"
   notify: restart scini
+  when:
+    - ansible_distribution != "VMkernel"
+    - " 'WindowsOS' not in ansible_distribution"

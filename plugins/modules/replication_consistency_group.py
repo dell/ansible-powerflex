@@ -929,14 +929,14 @@ class PowerFlexReplicationConsistencyGroup(object):
         if pause is not None:
             self.module.deprecate(
                 msg="Use 'rcg_state' param instead of 'pause'",
-                version="2.0.0",
+                version="3.0.0",
                 collection_name="dellemc.powerflex"
             )
 
         if freeze is not None:
             self.module.deprecate(
                 msg="Use 'rcg_state' param instead of 'freeze'",
-                version="2.0.0",
+                version="3.0.0",
                 collection_name="dellemc.powerflex"
             )
 
@@ -1083,8 +1083,8 @@ def get_powerflex_replication_consistency_group_parameters():
         rpo=dict(type='int'), protection_domain_id=dict(),
         protection_domain_name=dict(), new_rcg_name=dict(),
         activity_mode=dict(choices=['Active', 'Inactive']),
-        pause=dict(type='bool', removed_in_version='2.0.0', removed_from_collection='dellemc.powerflex'),
-        freeze=dict(type='bool', removed_in_version='2.0.0', removed_from_collection='dellemc.powerflex'),
+        pause=dict(type='bool', removed_in_version='3.0.0', removed_from_collection='dellemc.powerflex'),
+        freeze=dict(type='bool', removed_in_version='3.0.0', removed_from_collection='dellemc.powerflex'),
         force=dict(type='bool'),
         rcg_state=dict(choices=['failover', 'reverse',
                                 'restore', 'switchover',

@@ -21,3 +21,8 @@ argument_specs:
       powerflex_mdm_virtual_ip:
         type: str
         description: Virtual IP address of MDM.
+      powerflex_mdm_cert_password:
+        type: str
+        description:
+          - Password to generate cli certificate for MDM.
+          - Required while installing MDM for Powerlex 4.x.

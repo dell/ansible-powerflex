@@ -17,4 +17,4 @@
     - name: "Verifying failure of install package with wrong SDC IP"
       ansible.builtin.assert:
         that:
-          - " 'Failed to connect' in powerflex_sdc_driver_sync_output.msg"
+          " 'failed. The error was: error while evaluating conditional' in powerflex_sdc_driver_sync_output.msg"

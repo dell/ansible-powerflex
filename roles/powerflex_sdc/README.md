@@ -2,11 +2,22 @@
 
 Role to manage the installation and uninstallation of Powerflex SDC.
 
+## Table of contents
+
+* [Requirements](#requirements)
+* [Ansible collections](#ansible-collections)
+* [Role Variables](#role-variables)
+* [Examples](#examples)
+* [Notes](#notes)
+* [Usage instructions](#usage-instructions)
+* [Author Information](#author-information)
+
 ## Requirements
 
 ```
 ansible
 python
+pywinrm==0.4.3
 ```
 
 ## Ansible collections
@@ -15,6 +26,7 @@ Collections required to use the role.
 
 ```
 dellemc.powerflex
+ansible.windows
 ```
 
 ## Role Variables
@@ -88,6 +100,15 @@ dellemc.powerflex
     <td></td>
     <td>str</td>
     <td>/var/tmp</td>
+  </tr>
+  <tr>
+    <td>powerflex_common_win_package_location</td>
+    <td>false</td>
+    <td>Location of SDC windows package on the node.
+    <br>SDC windows package will be copied to this location on installation.</td>
+    <td></td>
+    <td>str</td>
+    <td>C:\\Windows\\Temp</td>
   </tr>
   <tr>
     <td>powerflex_sdc_driver_sync_repo_address</td>
@@ -202,6 +223,18 @@ dellemc.powerflex
     <td>Compact</td>
   </tr>
   <tr>
+    <td>powerflex_sdc_esxi_guid</td>
+    <td>false</td>
+    <td>Specifies the unique GUID for the ESXi SDC node.
+    <br>It is required only with ESXi node.
+    <br>To configure ESXi node as SDC, generate one GUID per server.
+    <br>Tools that are freely available online can generate these strings.
+    <br>If the value is different, then update in main.yml of defaults.</td>
+    <td></td>
+    <td>str</td>
+    <td>d422ecab-af6f-4e0c-a059-333ac89cfb42</td>
+  </tr>
+  <tr>
     <td>powerflex_sdc_state</td>
     <td>false</td>
     <td>Specify state of SDC<br></td>
@@ -242,18 +275,37 @@ dellemc.powerflex
 
 ```
 
+## Notes
+- Generate GUID using https://www.guidgenerator.com/online-guid-generator.aspx. Use the default GUID settings.
+- While adding ESXi server as SDC, this procedure requires two server reboots.
+
 ## Usage instructions
 ----
 ### To install all dependency packages, including SDC, on node:
+- PowerFlex 3.6:
+  ```
   ansible-playbook -i inventory site.yml
+  ```
+- PowerFlex 4.5:
+  ```
+  ansible-playbook -i inventory site_powerflex45.yml
+  ```
 
 ### To uninstall SDC:
+- PowerFlex 3.6:
+  ```
   ansible-playbook -i inventory uninstall_powerflex.yml
+  ```
+- PowerFlex 4.5:
+  ```
+  ansible-playbook -i inventory uninstall_powerflex45.yml
+  ```
 
 Sample playbooks and inventory can be found in the playbooks directory.
 
 ## Author Information
 ------------------
 
-Dell Technologies
-Jennifer John (ansible.team@Dell.com)  2023
+Dell Technologies <br>
+Jennifer John (ansible.team@Dell.com)  2023 <br>
+Bhavneet Sharma (ansible.team@Dell.com)  2023

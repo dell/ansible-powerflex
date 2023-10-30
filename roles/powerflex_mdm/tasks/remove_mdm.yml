@@ -2,6 +2,17 @@
 - name: Include the mdm_set_facts.yml
   ansible.builtin.include_tasks: mdm_set_facts.yml
 
+- name: List the rpm file
+  register: powerflex_mdm_package_file_version
+  ansible.builtin.find:
+    paths: "/var/tmp/"
+    patterns: "*{{ file_glob_name }}*.rpm"
+
+- name: Extract file versions
+  ansible.builtin.set_fact:
+    version: "{{ powerflex_mdm_package_file_version.files[0].path | regex_search('mdm-(\\d+)', '\\1') }}"
+  when: powerflex_mdm_package_file_version.files | length > 0
+
 - name: MDM Cluster login
   ansible.builtin.command: >
     scli --login --mdm_ip {{ powerflex_mdm_primary_ip }}
@@ -11,8 +22,19 @@
   register: powerflex_mdm_cluster_login
   changed_when: powerflex_mdm_cluster_login.rc == 0
   delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+  when: version[0] < "4"
 
-- name: Remove secondary mdm
+- name: Login to primary MDM node
+  register: powerflex_mdm_primary_login
+  ansible.builtin.command: >
+    scli --login --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ powerflex_mdm_cert_password }}
+  delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+  run_once: true
+  ignore_errors: true
+  changed_when: powerflex_mdm_primary_login.rc == 0
+  when: version[0] >= "4"
+
+- name: Remove secondary MDM
   ansible.builtin.command: >
     scli --remove_standby_mdm --remove_mdm_ip {{ powerflex_mdm_secondary_ip }}
   run_once: true
@@ -22,7 +44,7 @@
   when: powerflex_mdm_secondary_ip is defined
   changed_when: powerflex_mdm_remove_secondary.rc == 0
 
-- name: Remove tertiary mdm
+- name: Remove tertiary MDM
   ansible.builtin.command: >
     scli --remove_standby_mdm --remove_mdm_ip {{ powerflex_mdm_tertiary_ip }}
   run_once: true

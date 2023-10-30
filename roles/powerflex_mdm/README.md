@@ -2,6 +2,16 @@
 
 Role to manage the installation and uninstallation of Powerflex MDM.
 
+## Table of contents
+
+* [Requirements](#requirements)
+* [Ansible collections](#ansible-collections)
+* [Role Variables](#role-variables)
+* [Examples](#examples)
+* [Usage instructions](#usage-instructions)
+* [Notes](#notes)
+* [Author Information](#author-information)
+
 ## Requirements
 
 ```
@@ -15,6 +25,8 @@ Collections required to use the role.
 
 ```
 dellemc.powerflex
+ansible.posix
+community.general
 ```
 
 ## Role Variables
@@ -65,6 +77,15 @@ dellemc.powerflex
     <td>str</td>
     <td></td>
   </tr>
+  <tr>
+    <td>powerflex_mdm_cert_password</td>
+    <td>false</td>
+    <td>The password to generate the certificate cli.
+    <br>Required while installing MDM for Powerlex 4.x.<br></td>
+    <td></td>
+    <td>str</td>
+    <td>Password123!</td>
+  </tr>
 </tbody>
 </table>
 
@@ -90,19 +111,32 @@ dellemc.powerflex
 ## Usage instructions
 ----
 ### To install all dependency packages, including mdm, on node:
+- PowerFlex 3.6:
   ```
   ansible-playbook -i inventory site.yml
   ```
+- PowerFlex 4.5:
+  ```
+  ansible-playbook -i inventory site_powerflex45.yml
+  ```
 
 ### To uninstall mdm:
+- PowerFlex 3.6:
   ```
   ansible-playbook -i inventory uninstall_powerflex.yml
+  ```
+- PowerFlex 4.5:
+  ```
+  ansible-playbook -i inventory uninstall_powerflex45.yml
   ```
 
 Sample playbooks and inventory can be found in the playbooks directory.
 
+## Notes
+- The ```community.general``` collection must be installed for MDM installation on SLES OS.
+
 ## Author Information
 ------------------
 
-Dell Technologies
+Dell Technologies <br>
 Bhavneet Sharma (ansible.team@Dell.com)  2023

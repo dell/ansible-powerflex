@@ -37,25 +37,6 @@
       ansible.builtin.set_fact:
         vol_id: "{{ result.volume_details.id }}"
 
-    - name: Create a volume Idempotency Case
-      register: result
-      dellemc.powerflex.volume:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        vol_name: "{{ vol_name }}"
-        storage_pool_name: "{{ storage_pool_name }}"
-        protection_domain_name: "{{ protection_domain_name }}"
-        snapshot_policy_name: "{{ snapshot_policy_name }}"
-        sdc:
-          - sdc_ip: '**.**.**.**'
-          - sdc_id: "663ac0d200000001"
-        allow_multiple_mappings: true
-        sdc_state: "mapped"
-        size: 8
-        state: "present"
-
     - name: Get volume details using volume id
       dellemc.powerflex.volume:
         hostname: "{{ hostname }}"
@@ -84,16 +65,6 @@
         size: 16
         state: "present"
 
-    - name: Modify the size idempotency case
-      dellemc.powerflex.volume:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        vol_name: "{{ vol_name }}"
-        size: 16
-        state: "present"
-
     - name: Map volume to SDC and remove snapshot policy
       dellemc.powerflex.volume:
         hostname: "{{ hostname }}"
@@ -110,42 +81,7 @@
         sdc_state: "mapped"
         state: "present"
 
-    - name: Map volume to SDC and remove snapshot policy idempotency case
-      dellemc.powerflex.volume:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        vol_id: "{{ vol_id }}"
-        sdc:
-          - sdc_ip: '**.**.**.**'
-          - sdc_id: "663ac0d200000001"
-        allow_multiple_mappings: true
-        snapshot_policy_name: ""
-        auto_snap_remove_type: "remove"
-        sdc_state: "mapped"
-        state: "present"
-
-
     - name: Modify the attributes of SDC mapped to volume
-      dellemc.powerflex.volume:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        vol_id: "{{ vol_id }}"
-        sdc:
-          - sdc_ip: '**.**.**.**'
-            iops_limit: 11
-            bandwidth_limit: 4096
-          - sdc_id: "663ac0d200000001"
-            iops_limit: 20
-            bandwidth_limit: 2048
-        allow_multiple_mappings: true
-        sdc_state: "mapped"
-        state: "present"
-
-    - name: Modify the attributes of SDC mapped to volume Idempotency
       dellemc.powerflex.volume:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -176,19 +112,6 @@
         sdc_state: "unmapped"
         state: "present"
 
-    - name: Unmap SDCs from volume idempotency case
-      dellemc.powerflex.volume:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        vol_id: "{{ vol_id }}"
-        sdc:
-          - sdc_ip: '**.**.**.**'
-          - sdc_id: "663ac0d200000001"
-        sdc_state: "unmapped"
-        state: "present"
-
     - name: Rename volume
       dellemc.powerflex.volume:
         hostname: "{{ hostname }}"
@@ -199,27 +122,7 @@
         vol_new_name: "ansible_renamed_volume"
         state: "present"
 
-    - name: Rename volume idempotency case
-      dellemc.powerflex.volume:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        vol_id: "{{ vol_id }}"
-        vol_new_name: "ansible_renamed_volume"
-        state: "present"
-
     - name: Delete volume
-      dellemc.powerflex.volume:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        vol_id: "{{ vol_id }}"
-        delete_snapshots: true
-        state: "absent"
-
-    - name: Delete volume idempotency
       dellemc.powerflex.volume:
         hostname: "{{ hostname }}"
         username: "{{ username }}"

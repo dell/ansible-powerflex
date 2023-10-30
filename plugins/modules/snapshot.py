@@ -171,8 +171,8 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
-        - sdc_ip: "198.10.xxx.xxx"
-        - sdc_id: "663ac0d200000001"
+      - sdc_ip: "198.10.xxx.xxx"
+      - sdc_id: "663ac0d200000001"
     allow_multiple_mappings: true
     sdc_state: "mapped"
     state: "present"
@@ -185,12 +185,12 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     snapshot_id: "fe6cb28200000007"
     sdc:
-    - sdc_ip: "198.10.xxx.xxx"
-      iops_limit: 11
-      bandwidth_limit: 4096
-    - sdc_id: "663ac0d200000001"
-      iops_limit: 20
-      bandwidth_limit: 2048
+      - sdc_ip: "198.10.xxx.xxx"
+        iops_limit: 11
+        bandwidth_limit: 4096
+      - sdc_id: "663ac0d200000001"
+        iops_limit: 20
+        bandwidth_limit: 2048
     allow_multiple_mappings: true
     sdc_state: "mapped"
     state: "present"
