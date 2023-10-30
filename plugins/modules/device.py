@@ -190,23 +190,23 @@ EXAMPLES = r'''
     state: "present"
 - name: Remove a device using device_id
   dellemc.powerflex.device:
-   hostname: "{{hostname}}"
-   username: "{{username}}"
-   password: "{{password}}"
-   validate_certs: "{{validate_certs}}"
-   port: "{{port}}"
-   device_id: "76eb7e2f00010000"
-   state: "absent"
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    port: "{{port}}"
+    device_id: "76eb7e2f00010000"
+    state: "absent"
 - name: Remove a device using (current_pathname, sds_id)
   dellemc.powerflex.device:
-   hostname: "{{hostname}}"
-   username: "{{username}}"
-   password: "{{password}}"
-   validate_certs: "{{validate_certs}}"
-   port: "{{port}}"
-   current_pathname: "/dev/sdb"
-   sds_name: "node1"
-   state: "absent"
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    port: "{{port}}"
+    current_pathname: "/dev/sdb"
+    sds_name: "node1"
+    state: "absent"
 '''
 
 RETURN = r'''

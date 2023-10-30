@@ -262,7 +262,7 @@ EXAMPLES = r'''
     port: "{{port}}"
     mdm_name: "mdm_1"
     virtual_ip_interface:
-        - "ens224"
+      - "ens224"
     state: "present"
 
 - name: Clear virtual IP interface of the MDM

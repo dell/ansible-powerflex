@@ -2,6 +2,16 @@
 
 Role to manage the installation and uninstallation of Powerflex Web UI.
 
+## Table of contents
+
+* [Requirements](#requirements)
+* [Ansible collections](#ansible-collections)
+* [Role Variables](#role-variables)
+* [Examples](#examples)
+* [Notes](#notes)
+* [Usage instructions](#usage-instructions)
+* [Author Information](#author-information)
+
 ## Requirements
 
 ```
@@ -132,7 +142,7 @@ dellemc.powerflex
 
 ```
 ## Notes
-- Supported only in PowerFlex version 3.6
+- Supported only in PowerFlex version 3.6.
 
 ## Usage instructions
 ----

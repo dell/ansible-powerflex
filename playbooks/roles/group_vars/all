@@ -1,4 +1,6 @@
 powerflex_common_file_install_location: "/var/tmp"
+powerflex_common_esxi_files_location: "/tmp/"
+powerflex_common_win_package_location: "C:\\Windows\\Temp"
 # powerflex sdc params
 powerflex_sdc_driver_sync_repo_address: 'ftp://ftp.emc.com/'
 powerflex_sdc_driver_sync_repo_user: 'QNzgdxXix'
@@ -16,6 +18,7 @@ powerflex_sdc_state: present
 # powerflex mdm role params
 powerflex_mdm_state: present
 powerflex_mdm_password: 'Password123'
+powerflex_mdm_cert_password: 'Password123!'
 i_am_sure: 1
 powerflex_mdm_virtual_ip: ''
 # powerflex lia params

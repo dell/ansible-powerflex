@@ -537,6 +537,14 @@ class PowerFlexProtectionDomain(object):
                 err_msg = msg.format(n_item)
                 self.module.fail_json(msg=err_msg)
 
+        if self.module.params['network_limits'] is not None:
+            if self.module.params['network_limits']['overall_limit'] is not None and \
+                    self.module.params['network_limits']['overall_limit'] < 0:
+                error_msg = "Overall limit cannot be negative. " \
+                            "Provide a valid value "
+                LOG.info(error_msg)
+                self.module.fail_json(msg=error_msg)
+
     def is_id_or_new_name_in_create(self):
         """Checking if protection domain id or new names present in create """
 

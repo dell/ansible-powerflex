@@ -43,17 +43,6 @@
         mdm_new_name: "node_renamed"
         state: "present"
 
-    - name: Rename MDM cluster - Idempotency
-      dellemc.powerflex.mdm_cluster:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        mdm_id: "1c13c3847c971201"
-        mdm_new_name: "node_renamed"
-        state: "present"
-
     - name: Remove standby MDM
       dellemc.powerflex.mdm_cluster:
         hostname: "{{ hostname }}"
@@ -143,22 +132,6 @@
         state: "present"
 
     - name: Switch cluster mode to ThreeNodes
-      dellemc.powerflex.mdm_cluster:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        cluster_mode: "ThreeNodes"
-        mdm:
-          - mdm_name: "mdm_manger_node"
-            mdm_type: "Secondary"
-          - mdm_name: "mdm_tiebreaker_node"
-            mdm_type: "TieBreaker"
-        mdm_state: "absent-in-cluster"
-        state: "present"
-
-    - name: Switch cluster mode to ThreeNodes - Idempotency
       dellemc.powerflex.mdm_cluster:
         hostname: "{{ hostname }}"
         username: "{{ username }}"

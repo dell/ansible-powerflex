@@ -2,6 +2,16 @@
 
 Role to manage the installation and uninstallation of Powerflex TB.
 
+## Table of contents
+
+* [Requirements](#requirements)
+* [Ansible collections](#ansible-collections)
+* [Role Variables](#role-variables)
+* [Examples](#examples)
+* [Notes](#notes)
+* [Usage instructions](#usage-instructions)
+* [Author Information](#author-information)
+
 ## Requirements
 
 ```
@@ -121,38 +131,6 @@ dellemc.powerflex
     <td>str</td>
     <td>ThreeNodes</td>
   </tr>
-  <tr>
-    <td>powerflex_protection_domain_name</td>
-    <td>false</td>
-    <td>Name of the protection domain.<br></td>
-    <td></td>
-    <td>str</td>
-    <td>tb_protection_domain</td>
-  </tr>
-  <tr>
-    <td>powerflex_fault_sets</td>
-    <td>false</td>
-    <td>List of fault sets.<br></td>
-    <td></td>
-    <td>list</td>
-    <td>['fs1','fs2','fs3']</td>
-  </tr>
-  <tr>
-    <td>powerflex_media_type</td>
-    <td>false</td>
-    <td>Media type of the storage pool.<br></td>
-    <td>'SSD', 'HDD', 'TRANSITIONAL'</td>
-    <td>str</td>
-    <td>SSD</td>>
-  </tr>
-  <tr>
-    <td>powerflex_storage_pool_name</td>
-    <td>false</td>
-    <td>Name of the storage pool.<br></td>
-    <td></td>
-    <td>str</td>
-    <td>tb_storage_pool</td>
-  </tr>
 </tbody>
 </table>
 
@@ -171,13 +149,6 @@ dellemc.powerflex
       powerflex_tb_primary_name: "primary_tb"
       powerflex_tb_secondary_name: "secondary_tb"
       powerflex_tb_cluster_mode: "ThreeNodes"
-      powerflex_protection_domain_name: "tb_protection_domain"
-      powerflex_fault_sets:
-        - 'fs1'
-        - 'fs2'
-        - 'fs3'
-      powerflex_media_type: 'SSD'
-      powerflex_storage_pool_name: "tb_storage_pool"
       powerflex_common_file_install_location: "/var/tmp"
       powerflex_tb_state: present
 
@@ -194,21 +165,34 @@ dellemc.powerflex
 
 ```
 
-## Usage instructions
-----
-### To install all dependency packages, including TB, on node:
-  ansible-playbook -i inventory site.yml
-
-### To uninstall TB:
-  ansible-playbook -i inventory uninstall_powerflex.yml
-
-Sample playbooks and inventory can be found in the playbooks directory.
-
 ## Notes
 ----
 
 - As a pre-requisite, the Gateway must be installed.
-- TRANSITIONAL media type is supported only during modification.
+
+## Usage instructions
+----
+### To install all dependency packages, including TB, on node:
+- PowerFlex 3.6:
+  ```
+  ansible-playbook -i inventory site.yml
+  ```
+- PowerFlex 4.5:
+  ```
+  ansible-playbook -i inventory site_powerflex45.yml
+  ```
+
+### To uninstall TB:
+- PowerFlex 3.6:
+  ```
+  ansible-playbook -i inventory uninstall_powerflex.yml
+  ```
+- PowerFlex 4.5:
+  ```
+  ansible-playbook -i inventory uninstall_powerflex45.yml
+  ```
+
+Sample playbooks and inventory can be found in the playbooks directory.
 
 ## Author Information
 ------------------

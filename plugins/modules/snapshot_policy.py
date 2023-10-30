@@ -127,7 +127,7 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     snapshot_policy_name: "snapshot_policy_name_1"
     access_mode: "READ_WRITE"
-    secure_snapshots: False
+    secure_snapshots: false
     auto_snapshot_creation_cadence:
       time: 1
       unit: "Hour"
@@ -198,7 +198,7 @@ EXAMPLES = r'''
         state: "absent"
       - id: "source_volume_id_2"
         auto_snap_removal_action: 'Remove'
-        detach_locked_auto_snapshots: True
+        detach_locked_auto_snapshots: true
         state: "absent"
 
 - name: Pause a snapshot policy
@@ -208,7 +208,7 @@ EXAMPLES = r'''
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
     snapshot_policy_name: "{{snapshot_policy_name}}"
-    pause: True
+    pause: true
 
 - name: Resume a snapshot policy
   dellemc.powerflex.snapshot_policy:
@@ -217,7 +217,7 @@ EXAMPLES = r'''
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
     snapshot_policy_name: "{{snapshot_policy_name}}"
-    pause: False
+    pause: false
 
 - name: Delete a snapshot policy
   dellemc.powerflex.snapshot_policy:
@@ -227,7 +227,6 @@ EXAMPLES = r'''
     validate_certs: "{{validate_certs}}"
     snapshot_policy_name: "snapshot_policy_name"
     state: "absent"
-
 '''
 
 RETURN = r'''

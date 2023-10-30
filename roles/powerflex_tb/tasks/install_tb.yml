@@ -6,12 +6,12 @@
     password: "{{ password }}"
     validate_certs: "{{ validate_certs }}"
     state: "present"
-  register: powerflex_tb_mdm_result
+  register: powerflex_tb_mdm_ip_result
   delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
 
 - name: Set fact - powerflex_mdm_ips
   ansible.builtin.set_fact:
-    powerflex_tb_mdm_ips: "{{ powerflex_tb_mdm_result.mdm_cluster_details.mdmAddresses | join(',') }}"
+    powerflex_tb_mdm_ips: "{{ powerflex_tb_mdm_ip_result.mdm_cluster_details.mdmAddresses | join(',') }}"
 
 - name: Include install_powerflex.yml
   ansible.builtin.include_tasks: ../../powerflex_common/tasks/install_powerflex.yml
@@ -89,62 +89,3 @@
   changed_when: powerflex_tb_cluster_to_five_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
   when: powerflex_tb_primary_output.mdm_cluster_details.clusterMode != "FiveNodes" and powerflex_tb_cluster_mode == "FiveNodes"
-
-- name: Create the protection domain
-  dellemc.powerflex.protection_domain:
-    hostname: "{{ hostname }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: "{{ validate_certs }}"
-    port: "{{ port }}"
-    protection_domain_name: "{{ powerflex_protection_domain_name }}"
-    state: "present"
-  register: powerflex_tb_add_pd_output
-  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
-
-- name: Add fault set
-  ansible.builtin.command: scli --add_fault_set --protection_domain_name "{{ powerflex_protection_domain_name }}" --fault_set_name "{{ item }}"
-  with_items: "{{ powerflex_fault_sets }}"
-  run_once: true
-  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
-  register: powerflex_tb_add_fs_output
-  ignore_errors: true
-  changed_when: powerflex_tb_add_fs_output.rc == 0
-  when:
-    - powerflex_fault_sets is defined
-
-- name: Create a new storage pool in R2 version
-  dellemc.powerflex.storagepool:
-    hostname: "{{ hostname }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: "{{ validate_certs }}"
-    storage_pool_name: "{{ powerflex_storage_pool_name }}"
-    protection_domain_name: "{{ powerflex_protection_domain_name }}"
-    state: "present"
-  register: powerflex_tb_storage_pool_output
-  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
-  when: powerflex_tb_scaleio_version.stdout == "R2"
-
-- name: Create a new storage pool in R3 version
-  dellemc.powerflex.storagepool:
-    hostname: "{{ hostname }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: "{{ validate_certs }}"
-    storage_pool_name: "{{ powerflex_storage_pool_name }}"
-    protection_domain_name: "{{ powerflex_protection_domain_name }}"
-    media_type: "{{ powerflex_media_type }}"
-    state: "present"
-  register: powerflex_tb_storage_pool_output
-  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
-  when: powerflex_tb_scaleio_version.stdout == "R3"
-
-- name: Enable zero-padding
-  ansible.builtin.command: |
-    scli --modify_zero_padding_policy --protection_domain_name
-    {{ powerflex_protection_domain_name }} --storage_pool_name {{ powerflex_storage_pool_name }} --enable_zero_padding
-  run_once: true
-  register: powerflex_tb_enable_zero_padding_output
-  changed_when: powerflex_tb_enable_zero_padding_output.rc == 0
-  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"

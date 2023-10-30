@@ -23,32 +23,11 @@
         media_type: "HDD"
         state: "present"
 
-    - name: Create a new Storage pool (Idempotency case)
-      dellemc.powerflex.storagepool:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        storage_pool_name: "{{ pool_name }}"
-        protection_domain_name: "{{ protection_domain_name }}"
-        media_type: "HDD"
-        state: "present"
-
     - name: Set pool id
       ansible.builtin.set_fact:
         pool_id: "{{ result.storage_pool_details.id }}"
 
     - name: Rename Storage pool by id
-      dellemc.powerflex.storagepool:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        storage_pool_id: "{{ pool_id }}"
-        storage_pool_new_name: "new_ansible_pool"
-        state: "present"
-
-    - name: Rename Storage pool by id (Idempotency case)
       dellemc.powerflex.storagepool:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -70,18 +49,6 @@
 
 
     - name: Modify a Storage pool by name
-      dellemc.powerflex.storagepool:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        storage_pool_name: "ansible_test_pool"
-        protection_domain_name: "{{ protection_domain_name }}"
-        use_rmcache: true
-        use_rfcache: true
-        state: "present"
-
-    - name: Modify a Storage pool by name (Idempotency case)
       dellemc.powerflex.storagepool:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
