@@ -120,7 +120,7 @@ releases:
       - Added Ansible role to support installation and uninstallation of SDR.
       - Added Ansible role to support installation and uninstallation of Web UI.
     release_date: '2023-09-29'
-  2.0.0:
+  2.0.1:
     changes:
       minor_changes:
       - Added support for PowerFlex Denver version(4.5.x)
