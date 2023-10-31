@@ -1,6 +1,6 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 2.0.0
+### Release notes 2.0.1
 
 >   © 2023 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
@@ -28,7 +28,7 @@ Table 1. Revision history
 
 | Revision | Date            | Description                                                 |
 |----------|-----------------|-------------------------------------------------------------|
-| 01       | October 2023    | Current release of Ansible Modules for Dell PowerFlex 2.0.0 |
+| 01       | October 2023    | Current release of Ansible Modules for Dell PowerFlex 2.0.1 |
 
 Product description
 -------------------
@@ -62,11 +62,11 @@ Limitations
 Distribution
 ------------
 The software package is available for download from the [Ansible Modules
-for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.0.0) page.
+for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.0.1) page.
 
 Documentation
 -------------
-The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.0.0/docs)
+The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.0.1/docs)
 page. It includes the following:
 
    - README
