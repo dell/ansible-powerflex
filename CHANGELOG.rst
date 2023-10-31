@@ -4,7 +4,7 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
-v2.0.0
+v2.0.1
 ======
 
 Minor Changes
