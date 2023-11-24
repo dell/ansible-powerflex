@@ -4,16 +4,25 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
+
+v2.1.0
+======
+
+Minor Changes
+-------------
+
+- Added support for PowerFlex Denver version(4.5.x) to TB and Config role.
+
 v2.0.1
 ======
 
 Minor Changes
 -------------
 
+- Added Ansible role to support creation and deletion of protection domain, storage pool and fault set.
+- Added Ansible role to support installation and uninstallation of Active MQ.
 - Added support for PowerFlex Denver version(4.5.x)
 - Added support for SDC installation on ESXi, Rocky Linux and Windows OS.
-- Added Ansible role to support installation and uninstallation of Active MQ.
-- Added Ansible role to support creation and deletion of protection domain, storage pool and fault set.
 
 v1.9.0
 ======

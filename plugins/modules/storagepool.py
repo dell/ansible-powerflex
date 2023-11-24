@@ -88,7 +88,6 @@ notes:
 '''
 
 EXAMPLES = r'''
-
 - name: Get the details of storage pool by name
   dellemc.powerflex.storagepool:
     hostname: "{{hostname}}"

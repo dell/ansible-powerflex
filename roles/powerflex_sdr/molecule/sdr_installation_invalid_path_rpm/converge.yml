@@ -26,6 +26,7 @@
         powerflex_common_file_install_location: "/opt/aaab"
         powerflex_sdr_state: present
       ignore_errors: true
+      register: powerflex_sdr_wrong_path_result
 
     - name: Verifying failure of install package with wrong file path
       ansible.builtin.assert:
