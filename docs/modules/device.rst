@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.13 or later.
+- Ansible-core 2.14 or later.
 - PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
@@ -256,23 +256,23 @@ Examples
         state: "present"
     - name: Remove a device using device_id
       dellemc.powerflex.device:
-       hostname: "{{hostname}}"
-       username: "{{username}}"
-       password: "{{password}}"
-       validate_certs: "{{validate_certs}}"
-       port: "{{port}}"
-       device_id: "76eb7e2f00010000"
-       state: "absent"
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        port: "{{port}}"
+        device_id: "76eb7e2f00010000"
+        state: "absent"
     - name: Remove a device using (current_pathname, sds_id)
       dellemc.powerflex.device:
-       hostname: "{{hostname}}"
-       username: "{{username}}"
-       password: "{{password}}"
-       validate_certs: "{{validate_certs}}"
-       port: "{{port}}"
-       current_pathname: "/dev/sdb"
-       sds_name: "node1"
-       state: "absent"
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        port: "{{port}}"
+        current_pathname: "/dev/sdb"
+        sds_name: "node1"
+        state: "absent"
 
 
 

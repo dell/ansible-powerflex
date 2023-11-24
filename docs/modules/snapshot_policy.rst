@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.13 or later.
+- Ansible-core 2.14 or later.
 - PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
@@ -177,7 +177,7 @@ Examples
         validate_certs: "{{validate_certs}}"
         snapshot_policy_name: "snapshot_policy_name_1"
         access_mode: "READ_WRITE"
-        secure_snapshots: False
+        secure_snapshots: false
         auto_snapshot_creation_cadence:
           time: 1
           unit: "Hour"
@@ -248,7 +248,7 @@ Examples
             state: "absent"
           - id: "source_volume_id_2"
             auto_snap_removal_action: 'Remove'
-            detach_locked_auto_snapshots: True
+            detach_locked_auto_snapshots: true
             state: "absent"
 
     - name: Pause a snapshot policy
@@ -258,7 +258,7 @@ Examples
         password: "{{password}}"
         validate_certs: "{{validate_certs}}"
         snapshot_policy_name: "{{snapshot_policy_name}}"
-        pause: True
+        pause: true
 
     - name: Resume a snapshot policy
       dellemc.powerflex.snapshot_policy:
@@ -267,7 +267,7 @@ Examples
         password: "{{password}}"
         validate_certs: "{{validate_certs}}"
         snapshot_policy_name: "{{snapshot_policy_name}}"
-        pause: False
+        pause: false
 
     - name: Delete a snapshot policy
       dellemc.powerflex.snapshot_policy:
@@ -277,7 +277,6 @@ Examples
         validate_certs: "{{validate_certs}}"
         snapshot_policy_name: "snapshot_policy_name"
         state: "absent"
-
 
 
 

@@ -4,8 +4,10 @@ galaxy_info:
   description: Role to configure the protection domain, fault set and storage pool.
   company: Dell Technologies
   license: GPL-3.0-only
+  role_name: powerflex_config
+  namespace: dellemc
 
-  min_ansible_version: "2.13"
+  min_ansible_version: "2.14.0"
   platforms:
     - name: EL
       versions:
