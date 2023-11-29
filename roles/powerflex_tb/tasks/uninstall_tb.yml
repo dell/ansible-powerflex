@@ -1,25 +1,14 @@
 ---
-- name: Include set_tb_ips.yml
-  ansible.builtin.include_tasks: set_tb_ips.yml
-
-- name: Get configured MDM IP addresses
-  dellemc.powerflex.mdm_cluster:
-    hostname: "{{ hostname }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: "{{ validate_certs }}"
-    state: "present"
-  register: powerflex_tb_mdm_result
-  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
-
-- name: Login with new password
+# Switch from three or five to cluster one node for PowerFlex version 3.6
+- name: Login to primary MDM node of PowerFlex version 3.x
   ansible.builtin.command: scli --login --username {{ username }} --password "{{ password }}"
   run_once: true
   register: powerflex_tb_login_output
   changed_when: powerflex_tb_login_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_scli_version[0] == '3'
 
-- name: Switch from three to cluster one node
+- name: Switch cluster mode from three nodes to one node
   ansible.builtin.command: |
     scli --switch_cluster_mode --cluster_mode "1_node" --remove_slave_mdm_ip
     "{{ powerflex_tb_mdm_secondary_ip }}" --remove_tb_ip "{{ powerflex_tb_primary_ip }}"
@@ -27,9 +16,9 @@
   register: powerflex_tb_cluster_to_one_output
   changed_when: powerflex_tb_cluster_to_one_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
-  when: powerflex_tb_mdm_result.mdm_cluster_details.clusterMode == "ThreeNodes"
+  when: powerflex_tb_mdm_cluster_mode[0] == "3_node" and powerflex_tb_scli_version[0] == '3'
 
-- name: Switch from five to cluster one node
+- name: Switch cluster mode from five nodes to one node
   ansible.builtin.command: |
     scli --switch_cluster_mode --cluster_mode "1_node" --remove_slave_mdm_ip
     "{{ powerflex_tb_mdm_secondary_ip }}","{{ powerflex_tb_mdm_tertiary_ip }}" --remove_tb_ip "{{ powerflex_tb_primary_ip }}","{{ powerflex_tb_secondary_ip }}"
@@ -37,8 +26,39 @@
   register: powerflex_tb_cluster_to_one_output
   changed_when: powerflex_tb_cluster_to_one_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
-  when: powerflex_tb_mdm_result.mdm_cluster_details.clusterMode == "FiveNodes"
+  when: powerflex_tb_mdm_cluster_mode[0] == "5_node" and powerflex_tb_scli_version[0] == '3'
 
+# Switch from three or five to cluster one node for PowerFlex version 4.5
+- name: Login to primary MDM node of PowerFlex version 4.5
+  ansible.builtin.command: >
+    scli --login --management_system_ip {{ hostname }} --username {{ username }} --password {{ password }}
+  run_once: true
+  register: powerflex_tb_login_output
+  changed_when: powerflex_tb_login_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_scli_version[0] >= '4'
+
+- name: Switch cluster mode from three nodes to one node
+  ansible.builtin.command: |
+    scli --switch_cluster_mode --cluster_mode "1_node" --remove_secondary_mdm_ip
+    "{{ powerflex_tb_mdm_secondary_ip }}" --remove_tb_ip "{{ powerflex_tb_primary_ip }}"
+  run_once: true
+  register: powerflex_tb_cluster_three_to_one_output
+  changed_when: powerflex_tb_cluster_three_to_one_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_mdm_cluster_mode[0] == "3_node" and powerflex_tb_scli_version[0] >= '4'
+
+- name: Switch cluster mode from five nodes to one node
+  ansible.builtin.command: |
+    scli --switch_cluster_mode --cluster_mode "1_node" --remove_secondary_mdm_ip
+    "{{ powerflex_tb_mdm_secondary_ip }}","{{ powerflex_tb_mdm_tertiary_ip }}" --remove_tb_ip "{{ powerflex_tb_primary_ip }}","{{ powerflex_tb_secondary_ip }}"
+  run_once: true
+  register: powerflex_tb_cluster_five_to_one_output
+  changed_when: powerflex_tb_cluster_five_to_one_output.rc == 0
+  delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  when: powerflex_tb_mdm_cluster_mode[0] == "5_node" and powerflex_tb_scli_version[0] >= '4'
+
+# Remove the standby MDMs
 - name: Remove primary tb from standby mdm
   ansible.builtin.command: scli --remove_standby_mdm --remove_mdm_ip "{{ powerflex_tb_primary_ip }}"
   run_once: true

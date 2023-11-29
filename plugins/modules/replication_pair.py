@@ -138,7 +138,6 @@ notes:
 '''
 
 EXAMPLES = r'''
-
 - name: Get replication pair details
   dellemc.powerflex.replication_pair:
     hostname: "{{hostname}}"

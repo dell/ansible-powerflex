@@ -26,6 +26,7 @@ powerflex_lia_state: present
 powerflex_lia_token: Cluster1!
 # powerflex tb params
 powerflex_tb_state: present
+powerflex_tb_cert_password: "{{ powerflex_mdm_cert_password }}"
 # powerflex sds params
 powerflex_sds_number: 1
 powerflex_sds_disks: { ansible_available_disks: ['/dev/sdb'] }

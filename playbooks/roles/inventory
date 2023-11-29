@@ -21,6 +21,9 @@ node2
 [tb]
 node2
 
+[config]
+node1
+
 [sdc]
 node2
 

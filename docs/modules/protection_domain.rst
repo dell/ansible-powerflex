@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.5 or later.
-- Ansible-core 2.13 or later.
+- Ansible-core 2.14 or later.
 - PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 

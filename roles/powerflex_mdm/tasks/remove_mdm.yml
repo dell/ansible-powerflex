@@ -13,7 +13,7 @@
     version: "{{ powerflex_mdm_package_file_version.files[0].path | regex_search('mdm-(\\d+)', '\\1') }}"
   when: powerflex_mdm_package_file_version.files | length > 0
 
-- name: MDM Cluster login
+- name: MDM Cluster login below PowerFlex 4.x
   ansible.builtin.command: >
     scli --login --mdm_ip {{ powerflex_mdm_primary_ip }}
     --username admin --password {{ powerflex_mdm_password }} --approve_certificate
@@ -24,10 +24,10 @@
   delegate_to: "{{ powerflex_mdm_primary_hostname }}"
   when: version[0] < "4"
 
-- name: Login to primary MDM node
+- name: Login to primary MDM node for PowerFlex 4.x
   register: powerflex_mdm_primary_login
   ansible.builtin.command: >
-    scli --login --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ powerflex_mdm_cert_password }}
+    scli --login --username {{ username }} --management_system_ip {{ hostname }} --password "{{ password }}"
   delegate_to: "{{ powerflex_mdm_primary_hostname }}"
   run_once: true
   ignore_errors: true

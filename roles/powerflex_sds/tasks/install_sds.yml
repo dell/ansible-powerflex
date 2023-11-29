@@ -16,6 +16,7 @@
 - name: Set fact - powerflex_sds_mdm_ips
   ansible.builtin.set_fact:
     powerflex_sds_mdm_ips: "{{ powerflex_sds_mdm_ip_result.mdm_cluster_details.mdmAddresses | join(',') }}"
+    powerflex_sds_primary_mdm_hostname: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
 
 - name: Include install_powerflex.yml
   ansible.builtin.include_tasks: ../../powerflex_common/tasks/install_powerflex.yml
@@ -39,7 +40,7 @@
   run_once: true
   register: powerflex_sds_login_output
   changed_when: powerflex_sds_login_output.rc == 0
-  delegate_to: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
+  delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
   when: powerflex_sds_array_version != "3"
 
 - name: Login to MDM for PowerFlex version below 4.x
@@ -47,7 +48,7 @@
   run_once: true
   register: powerflex_sds_login_output
   changed_when: powerflex_sds_login_output.rc == 0
-  delegate_to: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
+  delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
   when: powerflex_sds_array_version == "3"
 
 - name: Create SDS
@@ -75,7 +76,7 @@
     --protection_domain_name {{ powerflex_sds_protection_domain }} --fault_set_name {{ powerflex_sds_fault_set }}
   register: add_sds
   changed_when: ('already in use' in add_sds.stderr) or (add_sds.rc == 0)
-  delegate_to: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
+  delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
   ignore_errors: true
   when: powerflex_sds_fault_set is defined and powerflex_sds_array_version != "3"
 
@@ -87,7 +88,7 @@
     --protection_domain_name {{ powerflex_sds_protection_domain }} --fault_set_name {{ powerflex_sds_fault_set }}
   register: add_sds
   changed_when: ('already in use' in add_sds.stderr) or (add_sds.rc == 0)
-  delegate_to: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
+  delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
   ignore_errors: true
   when: powerflex_sds_fault_set is defined and powerflex_sds_array_version == "3"
 

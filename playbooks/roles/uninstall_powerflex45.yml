@@ -39,6 +39,8 @@
   hosts: mdm
   roles:
     - powerflex_mdm
+  vars_files:
+    - vars_files/connection.yml
   vars:
     powerflex_mdm_state: absent
 
