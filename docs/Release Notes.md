@@ -1,6 +1,6 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 2.0.1
+### Release notes 2.1.0
 
 >   © 2023 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
@@ -28,7 +28,7 @@ Table 1. Revision history
 
 | Revision | Date            | Description                                                 |
 |----------|-----------------|-------------------------------------------------------------|
-| 01       | October 2023    | Current release of Ansible Modules for Dell PowerFlex 2.0.1 |
+| 01       | November 2023    | Current release of Ansible Modules for Dell PowerFlex 2.1.0 |
 
 Product description
 -------------------
@@ -44,11 +44,7 @@ each of the entities.
 New features and enhancements
 -----------------------------
 Along with the previous release deliverables, this release supports following features - 
-- Added support for PowerFlex Denver version(4.5.x)
-- Added support for SDC installation on ESXi, Rocky Linux and Windows OS.
-- Added Ansible role to support installation and uninstallation of Active MQ.
-- Added Ansible role to support creation and deletion of protection domain,
-  storage pool and fault set.
+- Added support for PowerFlex Denver version(4.5.x) to TB and Config role.
 
 Known issues
 ------------
@@ -62,11 +58,11 @@ Limitations
 Distribution
 ------------
 The software package is available for download from the [Ansible Modules
-for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.0.1) page.
+for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.1.0) page.
 
 Documentation
 -------------
-The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.0.1/docs)
+The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.1.0/docs)
 page. It includes the following:
 
    - README

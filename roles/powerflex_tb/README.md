@@ -91,7 +91,7 @@ dellemc.powerflex
   </tr>
   <tr>
     <td>powerflex_common_file_install_location</td>
-    <td>true</td>
+    <td>false</td>
     <td>Location of installation and rpm gpg files to be installed.
     <br>The required, compatible installation software package based on the operating system of the node.
     <br> The files can be downloaded from the Dell Product support page for PowerFlex software.</td>
@@ -109,7 +109,7 @@ dellemc.powerflex
   </tr>
   <tr>
     <td>powerflex_tb_primary_name</td>
-    <td>true</td>
+    <td>false</td>
     <td>Name of the primary TB.<br></td>
     <td></td>
     <td>str</td>
@@ -125,11 +125,19 @@ dellemc.powerflex
   </tr>
   <tr>
     <td>powerflex_tb_cluster_mode</td>
-    <td>true</td>
+    <td>false</td>
     <td>Mode of the cluster.<br></td>
     <td>ThreeNodes, FiveNodes</td>
     <td>str</td>
     <td>ThreeNodes</td>
+  </tr>
+  <tr>
+    <td>powerflex_tb_cert_password</td>
+    <td>false</td>
+    <td>The CLI certificate password for login to the primary MDM.<br></td>
+    <td></td>
+    <td>str</td>
+    <td></td>
   </tr>
 </tbody>
 </table>
@@ -168,7 +176,8 @@ dellemc.powerflex
 ## Notes
 ----
 
-- As a pre-requisite, the Gateway must be installed.
+- As a pre-requisite for PowerFlex 3.6, the Gateway must be installed.
+- For PowerFlex 4.x, after installing the TB perform initial configuration steps on PowerFlex Manager GUI. These steps can be found in Install and Update of Dell PowerFlex 4.x from Dell Support page.
 
 ## Usage instructions
 ----
@@ -197,5 +206,5 @@ Sample playbooks and inventory can be found in the playbooks directory.
 ## Author Information
 ------------------
 
-Dell Technologies
+Dell Technologies <br>
 Ananthu S Kuttattu (ansible.team@Dell.com)  2023

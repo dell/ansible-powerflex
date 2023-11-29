@@ -12,6 +12,7 @@
         powerflex_common_file_install_location: "/opt/empty"
         powerflex_webui_state: present
       ignore_errors: true
+      register: powerflex_webui_install_config_no_rpm_result
 
     - name: Verifying failure of install package with respect to no rpm file
       ansible.builtin.assert:
@@ -25,6 +26,7 @@
         powerflex_common_file_install_location: "/opt/aaab"
         powerflex_webui_state: present
       ignore_errors: true
+      register: powerflex_webui_install_config_wrong_path_result
 
     - name: Verifying failure of install package with wrong file path
       ansible.builtin.assert:

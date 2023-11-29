@@ -80,10 +80,10 @@ def ensure_required_libs(module):
                          exception=PKG_RSRC_IMP_ERR)
 
     if not HAS_POWERFLEX_SDK:
-        module.fail_json(msg=missing_required_lib("PyPowerFlex V 1.6.0 or above"),
+        module.fail_json(msg=missing_required_lib("PyPowerFlex V 1.8.0 or above"),
                          exception=POWERFLEX_SDK_IMP_ERR)
 
-    min_ver = '1.6.0'
+    min_ver = '1.8.0'
     try:
         curr_version = pkg_resources.require("PyPowerFlex")[0].version
         supported_version = (parse_version(curr_version) >= parse_version(min_ver))

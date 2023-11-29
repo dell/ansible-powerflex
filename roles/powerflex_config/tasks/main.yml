@@ -1,15 +1,34 @@
 ---
+- name: Get configured MDM IP addresses
+  dellemc.powerflex.mdm_cluster:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    state: "present"
+  register: powerflex_config_mdm_ip_result
+  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
 
-- name: Set fact - PowerFlex config MDM primary hostname.
+- name: Set fact - PowerFlex version and MDM primary hostname
   ansible.builtin.set_fact:
+    powerflex_config_array_version: "{{ powerflex_config_mdm_ip_result.mdm_cluster_details.master.versionInfo[1] }}"
     powerflex_config_mdm_primary_hostname: "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
 
-- name: Login to primary MDM.
+- name: Login to primary MDM of PowerFlex 3.6
   ansible.builtin.command: scli --login --username {{ username }} --password "{{ password }}"
   run_once: true
   register: powerflex_config_login_output
   changed_when: powerflex_config_login_output.rc == 0
   delegate_to: "{{ powerflex_config_mdm_primary_hostname }}"
+  when: powerflex_config_array_version == '3'
+
+- name: Login to primary MDM of PowerFlex 4.5
+  ansible.builtin.command: scli --login --username {{ username }} --management_system_ip {{ hostname }} --password "{{ password }}"
+  run_once: true
+  register: powerflex_config_login_output
+  changed_when: powerflex_config_login_output.rc == 0
+  delegate_to: "{{ powerflex_config_mdm_primary_hostname }}"
+  when: powerflex_config_array_version == '4'
 
 - name: Create the protection domain
   dellemc.powerflex.protection_domain:
