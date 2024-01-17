@@ -96,6 +96,16 @@ options:
     - Default value by API is C(HighPerformance).
     choices: ['Compact', 'HighPerformance']
     type: str
+  fault_set_name:
+    description:
+    - Name of fault set
+    - Mutually exclusive with fault_set_id
+    type: str
+  fault_set_id:
+    description:
+    - ID of fault set
+    - Mutually exclusive with fault_set_name
+    type: str    
   state:
     description:
     - State of the SDS.
@@ -117,6 +127,7 @@ notes:
   - The I(check_mode) is not supported.
 '''
 
+### TODO - Add Example with FaultSet 
 EXAMPLES = r'''
 - name: Create SDS
   dellemc.powerflex.sds:
@@ -493,7 +504,8 @@ class PowerFlexSDS(object):
         self.module_params.update(get_powerflex_sds_parameters())
 
         mut_ex_args = [['sds_name', 'sds_id'],
-                       ['protection_domain_name', 'protection_domain_id']]
+                       ['protection_domain_name', 'protection_domain_id']
+                       ['fault_set_name', 'fault_set_id']]
 
         required_together_args = [['sds_ip_list', 'sds_ip_state']]
 
@@ -606,6 +618,41 @@ class PowerFlexSDS(object):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
+    def get_fault_set(self, fault_set_name=None, fault_set_id=None, protection_domain_id=None):
+        """Get fault set details
+            :param fault_set_name: Name of the fault set
+            :param fault_set_id: Id of the fault set
+            :param protection_domain_id: ID of the protection domain
+            :return: Protection domain details
+            :rtype: dict
+        """
+        name_or_id = fault_set_id if fault_set_id \
+            else fault_set_name
+        try:
+            fs_details = {}
+            if fault_set_id:
+                fs_details = self.powerflex_conn.fault_set.get(
+                    filter_fields={'id': name_or_id, 'protectionDomainId': protection_domain_id})
+
+            if fault_set_name:
+                fs_details = self.powerflex_conn.fault_set.get(
+                    filter_fields={'name': name_or_id, 'protectionDomainId': protection_domain_id})
+
+            if not fs_details:
+                error_msg = "Unable to find the fault set with " \
+                            "'%s'. Please enter a valid fault set " \
+                            "name/id." % name_or_id
+                LOG.error(error_msg)
+                self.module.fail_json(msg=error_msg)
+
+            return fs_details[0]
+
+        except Exception as e:
+            error_msg = "Failed to get the protection domain '%s' with " \
+                        "error '%s'" % (name_or_id, str(e))
+            LOG.error(error_msg)
+            self.module.fail_json(msg=error_msg)
+
     def restructure_ip_role_dict(self, sds_ip_list):
         """Restructure IP role dict
             :param sds_ip_list: List of one or more IP addresses and
@@ -620,7 +667,7 @@ class PowerFlexSDS(object):
         return new_sds_ip_list
 
     def create_sds(self, protection_domain_id, sds_ip_list, sds_ip_state,
-                   sds_name, rmcache_enabled=None, rmcache_size=None):
+                   sds_name, rmcache_enabled=None, rmcache_size=None, fault_set_id=None):
         """Create SDS
             :param protection_domain_id: ID of the Protection Domain
             :type protection_domain_id: str
@@ -636,6 +683,8 @@ class PowerFlexSDS(object):
             :type rmcache_enabled: bool
             :param rmcache_size: Read RAM cache size (in MB)
             :type rmcache_size: int
+            :param fault_set_id: ID of the Fault Set
+            :type fault_set_id: str
             :return: Boolean indicating if create operation is successful
         """
         try:
@@ -676,9 +725,11 @@ class PowerFlexSDS(object):
                              " sds_ip_list: %s,"
                              " sds_name: %s,"
                              " rmcache_enabled: %s, "
-                             " rmcache_size_KB: %s"
+                             " rmcache_size_KB: %s, "
+                             " fault_set_id: %s"
                              % (protection_domain_id, sds_ip_list,
-                                sds_name, rmcache_enabled, rmcache_size))
+                                sds_name, rmcache_enabled, rmcache_size,
+                                fault_set_id))
             LOG.info("Creating SDS with params: %s", create_params)
 
             self.powerflex_conn.sds.create(
@@ -686,7 +737,8 @@ class PowerFlexSDS(object):
                 sds_ips=sds_ip_list,
                 name=sds_name,
                 rmcache_enabled=rmcache_enabled,
-                rmcache_size_in_kb=rmcache_size)
+                rmcache_size_in_kb=rmcache_size,
+                fault_set_id=fault_set_id)
             return True
 
         except Exception as e:
@@ -970,6 +1022,8 @@ class PowerFlexSDS(object):
         sds_ip_list = copy.deepcopy(self.module.params['sds_ip_list'])
         sds_ip_state = self.module.params['sds_ip_state']
         performance_profile = self.module.params['performance_profile']
+        fault_set_name = self.module.params['fault_set_name']
+        fault_set_id = self.module.params['fault_set_id']        
         state = self.module.params['state']
 
         # result is a dictionary to contain end state and SDS details
@@ -995,6 +1049,15 @@ class PowerFlexSDS(object):
                   "name '%s'" % (protection_domain_id, protection_domain_name)
             LOG.info(msg)
 
+        if fault_set_name:
+            fs_details = self.get_fault_set(fault_set_name=fault_set_name, protection_domain_id=protection_domain_id)
+            if fs_details:
+                fault_set_id = fs_details['id']
+            msg = "Fetched the fault set details with id '%s', " \
+                "name '%s'" % (fault_set_id, fault_set_name)
+            LOG.info(msg)
+
+
         # create operation
         create_changed = False
         if state == 'present' and not sds_details:
@@ -1016,7 +1079,7 @@ class PowerFlexSDS(object):
             create_changed = self.create_sds(protection_domain_id,
                                              sds_ip_list, sds_ip_state,
                                              sds_name, rmcache_enabled,
-                                             rmcache_size)
+                                             rmcache_size, fault_set_id)
             if create_changed:
                 sds_details = self.get_sds_details(sds_name)
                 sds_id = sds_details['id']
@@ -1114,6 +1177,14 @@ class PowerFlexSDS(object):
                     and sds_details[0]['rmcacheSizeInKb']:
                 rmcache_size_mb = sds_details[0]['rmcacheSizeInKb'] / 1024
                 sds_details[0]['rmcacheSizeInMb'] = int(rmcache_size_mb)
+             
+            # Append fault set name
+            if 'faultSetId' in sds_details[0] \
+                    and sds_details[0]['faultSetId']:
+                fs_details = self.get_fault_set(
+                    fault_set_id=sds_details[0]['faultSetId'],
+                    protection_domain_id=sds_details[0]['protectionDomainId'])
+                sds_details[0]['faultSetName'] = fs_details['name']
 
             return sds_details[0]
 
@@ -1145,6 +1216,8 @@ def get_powerflex_sds_parameters():
         rmcache_enabled=dict(type='bool'),
         rmcache_size=dict(type='int'),
         performance_profile=dict(choices=['Compact', 'HighPerformance']),
+        fault_set_name=dict(),
+        fault_set_id=dict(),        
         state=dict(required=True, type='str', choices=['present', 'absent'])
     )
 

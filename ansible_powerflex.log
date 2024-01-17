@@ -1,0 +1,23 @@
+2024-01-16 14:13:26,049 info.py INFO : Got the PowerFlex system connection object instance
+2024-01-16 14:13:26,049 info.py INFO : The check_mode flag False
+2024-01-16 14:13:26,049 info.py INFO : Getting API details 
+2024-01-16 14:13:26,049 info.py INFO : Getting array details 
+2024-01-16 14:13:28,648 info.py INFO : Getting SDC list 
+2024-01-16 14:13:31,295 info.py INFO : Successfully listed.
+2024-01-16 14:13:31,296 info.py INFO : Getting fault set list 
+2024-01-16 14:13:33,811 info.py INFO : Successfully listed.
+2024-01-16 15:16:00,523 info.py INFO : Got the PowerFlex system connection object instance
+2024-01-16 15:16:00,523 info.py INFO : The check_mode flag False
+2024-01-16 15:16:00,523 info.py INFO : Getting API details 
+2024-01-16 15:16:00,523 info.py INFO : Getting array details 
+2024-01-16 15:16:03,094 info.py INFO : Getting SDC list 
+2024-01-16 15:16:05,613 info.py INFO : Successfully listed.
+2024-01-16 15:16:05,613 info.py INFO : Getting fault set list 
+2024-01-16 15:16:08,110 info.py INFO : Successfully listed.
+2024-01-16 15:16:41,365 info.py INFO : Got the PowerFlex system connection object instance
+2024-01-16 15:16:41,366 info.py INFO : The check_mode flag False
+2024-01-16 15:16:41,366 info.py INFO : filters: {'name': 'at1zbs1t6cp2sds1d1fs3'}
+2024-01-16 15:16:41,366 info.py INFO : Getting API details 
+2024-01-16 15:16:41,366 info.py INFO : Getting array details 
+2024-01-16 15:16:43,901 info.py INFO : Getting fault set list 
+2024-01-16 15:16:46,484 info.py INFO : Successfully listed.
