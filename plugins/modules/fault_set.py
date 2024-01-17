@@ -54,24 +54,37 @@ notes:
 #### DS 15/10/22 - examples and return sections need to be completed....
 
 EXAMPLES = r'''
-- name: Get SDC details using SDC ip
-  dellemc.powerflex.sdc:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
-    sdc_ip: "{{sdc_ip}}"
-    state: "present"
 
-- name: Rename SDC using SDC name
-  dellemc.powerflex.sdc:
+- name: Create Fault Set on Protection Domain
+  dellemc.powerflex.fault_set:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
-    sdc_name: "centos_sdc"
-    sdc_new_name: "centos_sdc_renamed"
-    state: "present"
+    fault_set_name: "{{fault_set_name}}"
+    protection_domain_name: "{{pd_name}}"
+    state: present
+
+- name: Create Fault Set on Protection Domain
+  dellemc.powerflex.fault_set:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    fault_set_name: "{{fault_set_name}}"
+    protection_domain_id: "{{pd_id}}"
+    state: present    
+
+- name: Delete Fault Set on Protection Domain
+  dellemc.powerflex.fault_set:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    fault_set_name: "{{fault_set_name}}"
+    protection_domain_name: "{{pd_name}}"
+    state: present
+    
 '''
 
 RETURN = r'''
@@ -273,18 +286,15 @@ class PowerFlexFaultSet(object):
 
         if fault_set_name:
             id_name = fault_set_name
+            filter_fields ={'name': fault_set_name}
         else:
             id_name = fault_set_id
+            filter_fields= {'id': fault_set_id}
+        if protection_domain_id:
+            filter_fields['protectionDomainId'] = protection_domain_id
 
         try:
-            if fault_set_name:
-                fs_details = self.powerflex_conn.fault_set.get(
-                    filter_fields={'name': id_name, 'protectionDomainId': protection_domain_id})
-            else:
-                fs_details = self.powerflex_conn.fault_set.get(
-                    filter_fields={'id': id_name, 'protectionDomainId': protection_domain_id})
-
-            
+            fs_details = self.powerflex_conn.fault_set.get(filter_fields=filter_fields)
             if len(fs_details) == 0:
                 error_msg = f"Unable to find Fault Set with identifier {id_name} in Protection Domain {protection_domain_id}"
                 LOG.info(error_msg)
@@ -296,6 +306,16 @@ class PowerFlexFaultSet(object):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
+    def remove_fault_set(self,fault_set_id):
+        """Remove the Fault Set"""
+        try:
+            LOG.info(msg=f"Removing Fault Set {fault_set_id}")
+            self.powerflex_conn.fault_set.delete(fault_set_id)
+            return True
+        except Exception as e:
+            errormsg = f"Removing Fault Set {fault_set_id} failed with error {str(e)}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
 
     def perform_module_operation(self):
         """
@@ -317,7 +337,7 @@ class PowerFlexFaultSet(object):
 
         # I don't think this is neeeded for Fault Sets
         # self.validate_parameters(fault_set_name, fault_set_id, protection_domain_name, protection_domain_id)
-
+        pd_id = None
         if protection_domain_name:
             pd_id = self.get_protection_domain(protection_domain_name=protection_domain_name)
         elif protection_domain_id:
@@ -330,11 +350,10 @@ class PowerFlexFaultSet(object):
             fault_set_details = self.get_fault_set(fault_set_name=fault_set_name, fault_set_id=fault_set_id, protection_domain_id=pd_id)
 
         if state == 'absent' and fault_set_details:
-            error_msg = 'Removal of Fault Set not yet implemented.   Come back later.'
+            changed = self.remove_fault_set(fault_set_id=fault_set_id)
+            fault_set_details = {}
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
-
-        
 
         result['changed'] = changed
         result['fault_set_details'] = fault_set_details
