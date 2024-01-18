@@ -236,6 +236,8 @@ class MockInfoApi:
     RCG_LIST = MockReplicationConsistencyGroupApi.get_rcg_details()
     PAIR_LIST = MockReplicationPairApi.get_pair_details()
 
+    FAULT_SET_LIST = MockFaultSet.FAULT_SET_GET_LIST
+
     @staticmethod
     def get_exception_response(response_type):
         if response_type == 'volume_get_details':
