@@ -75,16 +75,24 @@ EXAMPLES = r'''
     protection_domain_id: "{{pd_id}}"
     state: present    
 
-- name: Delete Fault Set on Protection Domain
+- name: Delete Fault Set 
   dellemc.powerflex.fault_set:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
     fault_set_name: "{{fault_set_name}}"
-    protection_domain_name: "{{pd_name}}"
     state: present
     
+
+- name: Delete Fault Set 
+  dellemc.powerflex.fault_set:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    fault_set_id: "{{fault_set_name}}"
+    state: present
 '''
 
 RETURN = r'''
