@@ -188,7 +188,7 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
 
 LOG = utils.get_logger('fault_set')
 
-MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
+#MISSING_PACKAGES_CHECK = utils.pypowerflex_version_check()
 
 
 class PowerFlexFaultSet(object):
@@ -201,20 +201,20 @@ class PowerFlexFaultSet(object):
 
         mutually_exclusive = [['fault_set_name', 'fault_set_id'], ['protection_domain_name', 'protection_domain_id']]
 
-        required_one_of = [['fault_set_name', 'fault_set_id'], ['protection_domain_name', 'protection_domain_id']]
+        #required_one_of = [['fault_set_name', 'fault_set_id'], ['protection_domain_name', 'protection_domain_id']]
+        required_one_of = [['fault_set_name', 'fault_set_id']]
+        required_if=[('state', 'present', ('protect_domain_id', 'protection_domain_name'),True)]
+
 
         # initialize the Ansible module
         self.module = AnsibleModule(
             argument_spec=self.module_params,
             supports_check_mode=False,
             mutually_exclusive=mutually_exclusive,
-            required_one_of=required_one_of)
+            required_one_of=required_one_of,
+            required_if=required_if)
 
-        if MISSING_PACKAGES_CHECK and \
-                not MISSING_PACKAGES_CHECK['dependency_present']:
-            err_msg = MISSING_PACKAGES_CHECK['error_message']
-            LOG.error(err_msg)
-            self.module.fail_json(msg=err_msg)
+        utils.ensure_required_libs(self.module)
 
         try:
             self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
@@ -360,8 +360,6 @@ class PowerFlexFaultSet(object):
         if state == 'absent' and fault_set_details:
             changed = self.remove_fault_set(fault_set_id=fault_set_id)
             fault_set_details = {}
-            LOG.error(error_msg)
-            self.module.fail_json(msg=error_msg)
 
         result['changed'] = changed
         result['fault_set_details'] = fault_set_details
@@ -377,6 +375,7 @@ def get_powerflex_fault_set_parameters():
         protection_domain_name=dict(),
         protection_domain_id=dict(),
         state=dict(required=True, type='str', choices=['present', 'absent'])
+
     )
 
 
