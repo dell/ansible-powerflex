@@ -6,6 +6,10 @@
 """ Ansible module for managing Fault Sets on Dell Technologies (Dell) PowerFlex"""
 
 from __future__ import absolute_import, division, print_function
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell import (
+    utils,
+)
+from ansible.module_utils.basic import AnsibleModule
 
 __metaclass__ = type
 
@@ -15,7 +19,7 @@ version_added: '1.0.0'
 short_description: Manage Fault Sets on Dell PowerFlex
 description:
 - Creating fault sets on PowerFlex.
-author: 
+author:
 - Carlos Tronco (@ctronco) <ansible.team@dell.com>
 extends_documentation_fragment:
   - dellemc.powerflex.powerflex
@@ -49,6 +53,12 @@ options:
     - State of the Fault Set.
     choices: ['present', 'absent']
     required: True
+    type: str
+  zz:
+    description:
+    - dummy internal parameter 
+    - not used
+    - doesn't do anything
     type: str
 notes:
   - The I(check_mode) is not supported.
@@ -182,10 +192,6 @@ sdc_details:
         "versionInfo": "R3_6.0.0"
     }
 """
-from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell import (
-    utils,
-)
 
 LOG = utils.get_logger("fault_set")
 
@@ -206,7 +212,8 @@ class PowerFlexFaultSet(object):
         # Weird issue with require_if if only on option was tied to the requirement
         # so added dummy zz option to the list as workaround
         required_if = [
-            ("state", "present", ("protection_domain_id", "protection_domain_name"), True),
+            ("state", "present", ("protection_domain_id",
+             "protection_domain_name"), True),
             ("state", "present", ("fault_set_name", "zz"), True),
             ("state", "absent", ("fault_set_id", "zz"), True),
         ]
@@ -321,9 +328,11 @@ class PowerFlexFaultSet(object):
             filter_fields["protectionDomainId"] = protection_domain_id
 
         try:
-            fs_details = self.powerflex_conn.fault_set.get(filter_fields=filter_fields)
+            fs_details = self.powerflex_conn.fault_set.get(
+                filter_fields=filter_fields)
             if len(fs_details) == 0:
-                error_msg = "Unable to find Fault Set with identifier %s in Protection Domain %s" % (id_name, protection_domain_id)
+                error_msg = "Unable to find Fault Set with identifier %s in Protection Domain %s" % (
+                    id_name, protection_domain_id)
                 LOG.info(error_msg)
                 return None
             return fs_details[0]
@@ -395,6 +404,7 @@ class PowerFlexFaultSet(object):
         result["fault_set_details"] = fault_set_details
         self.module.exit_json(**result)
 
+
 def get_powerflex_fault_set_parameters():
     """This method provide parameter required for the Ansible FaultSet module on
     PowerFlex"""
@@ -404,14 +414,16 @@ def get_powerflex_fault_set_parameters():
         "protection_domain_name": {},
         "protection_domain_id": {},
         "state": {"required": True, "type": "str", "choices": ["present", "absent"]},
-        "zz": {"required": False, "type": "str", "default": "", "no_log": True},
+        "zz": {"required": False, "type": "str", "default": None, "no_log": True},
     }
+
 
 def main():
     """Create PowerFlex FaultSet object and perform actions on it
     based on user input from playbook"""
     obj = PowerFlexFaultSet()
     obj.perform_module_operation()
+
 
 if __name__ == "__main__":
     main()
