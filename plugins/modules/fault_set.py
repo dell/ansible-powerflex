@@ -322,7 +322,7 @@ class PowerFlexFaultSet(object):
         try:
             fs_details = self.powerflex_conn.fault_set.get(filter_fields=filter_fields)
             if len(fs_details) == 0:
-                error_msg = f"Unable to find Fault Set with identifier {id_name} in Protection Domain {protection_domain_id}"
+                error_msg = "Unable to find Fault Set with identifier %s in Protection Domain %s" % (id_name, protection_domain_id)"
                 LOG.info(error_msg)
                 return None
             return fs_details[0]
@@ -404,8 +404,7 @@ def get_powerflex_fault_set_parameters():
         "fault_set_id": {},
         "protection_domain_name": {},
         "protection_domain_id": {},
-        "state": {"required": True, "type": "str", "choices": ["present", "absent"]},
-        "zz": {}
+        "state": {"required": True, "type": "str", "choices": ["present", "absent"]}
     }
 
 def main():
