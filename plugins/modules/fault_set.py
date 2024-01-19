@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright: (c) 2021, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -8,18 +9,14 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-
-from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell import (
-    utils,
-)
-
 DOCUMENTATION = r"""
 module: fault_set
 version_added: '1.0.0'
 short_description: Manage Fault Sets on Dell PowerFlex
 description:
 - Creating fault sets on PowerFlex.
+author: 
+- Carlos Tronco (@ctronco) <ansible.team@dell.com>
 extends_documentation_fragment:
   - dellemc.powerflex.powerflex
 options:
@@ -185,11 +182,12 @@ sdc_details:
         "versionInfo": "R3_6.0.0"
     }
 """
-
-
+from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell import (
+    utils,
+)
 
 LOG = utils.get_logger("fault_set")
-
 
 class PowerFlexFaultSet(object):
     """Class with FaultSet operations"""
@@ -286,10 +284,9 @@ class PowerFlexFaultSet(object):
         :return: Boolean indicating if create operation is successful
         """
         try:
-            LOG.info(
-                "Creating fault set with name: %s on protection domain with id: %s",
-                (fault_set_name, protection_domain_id),
-            )
+            msg = "Creating fault set with name: %s on protection domain with id: %s" \
+                % (fault_set_name, protection_domain_id)
+            LOG.info(msg)
             self.powerflex_conn.fault_set.create(
                 name=fault_set_name, protection_domain_id=protection_domain_id
             )
@@ -361,8 +358,8 @@ class PowerFlexFaultSet(object):
 
         # result is a dictionary to contain end state and Fault Set details
         changed = False
-        result = {"changed" : False, "fault_set_details" : None}
-        #result = dict(changed=False, fault_set_details=None)
+        result = {"changed": False, "fault_set_details": None}
+
 
         pd_id = None
         if protection_domain_name:
@@ -402,19 +399,13 @@ class PowerFlexFaultSet(object):
 def get_powerflex_fault_set_parameters():
     """This method provide parameter required for the Ansible FaultSet module on
     PowerFlex"""
-    # return dict(
-    #     fault_set_name=dict(),
-    #     fault_set_id=dict(),
-    #     protection_domain_name=dict(),
-    #     protection_domain_id=dict(),
-    #     state=dict(required=True, type="str", choices=["present", "absent"]),
-    # )
     return {
         "fault_set_name": {},
         "fault_set_id": {},
-        "protection_domain_name" : {},
-        "protection_domain_id" : {},
-        "state" : {"required" : True, "type" : "str", "choices" : ["present", "absent"]}
+        "protection_domain_name": {},
+        "protection_domain_id": {},
+        "state": {"required": True, "type": "str", "choices": ["present", "absent"]},
+        "zz": {}
     }
 
 def main():
