@@ -127,7 +127,6 @@ notes:
   - The I(check_mode) is not supported.
 '''
 
-### TODO - Add Example with FaultSet 
 EXAMPLES = r'''
 - name: Create SDS
   dellemc.powerflex.sds:
@@ -153,6 +152,7 @@ EXAMPLES = r'''
     port: "{{port}}"
     sds_name: "node1"
     protection_domain_name: "domain1"
+    fault_set_name: "faultset1"
     sds_ip_list:
       - ip: "198.10.xxx.xxx"
         role: "sdcOnly"
@@ -1023,7 +1023,7 @@ class PowerFlexSDS(object):
         sds_ip_state = self.module.params['sds_ip_state']
         performance_profile = self.module.params['performance_profile']
         fault_set_name = self.module.params['fault_set_name']
-        fault_set_id = self.module.params['fault_set_id']        
+        fault_set_id = self.module.params['fault_set_id']
         state = self.module.params['state']
 
         # result is a dictionary to contain end state and SDS details
@@ -1177,7 +1177,7 @@ class PowerFlexSDS(object):
                     and sds_details[0]['rmcacheSizeInKb']:
                 rmcache_size_mb = sds_details[0]['rmcacheSizeInKb'] / 1024
                 sds_details[0]['rmcacheSizeInMb'] = int(rmcache_size_mb)
-             
+
             # Append fault set name
             if 'faultSetId' in sds_details[0] \
                     and sds_details[0]['faultSetId']:
@@ -1217,7 +1217,7 @@ def get_powerflex_sds_parameters():
         rmcache_size=dict(type='int'),
         performance_profile=dict(choices=['Compact', 'HighPerformance']),
         fault_set_name=dict(),
-        fault_set_id=dict(),        
+        fault_set_id=dict(),
         state=dict(required=True, type='str', choices=['present', 'absent'])
     )
 
