@@ -201,9 +201,13 @@ class PowerFlexFaultSet(object):
 
         mutually_exclusive = [['fault_set_name', 'fault_set_id'], ['protection_domain_name', 'protection_domain_id']]
 
-        #required_one_of = [['fault_set_name', 'fault_set_id'], ['protection_domain_name', 'protection_domain_id']]
-        required_one_of = [['fault_set_name', 'fault_set_id']]
-        required_if=[('state', 'present', ('protect_domain_id', 'protection_domain_name'),True)]
+        #Weird issue with require_if if only on option was tied to the requirement
+        # so added dummy zz option to the list as workaround
+        required_if=[
+            ('state', 'present', ('protect_domain_id', 'protection_domain_name'),True),
+            ('state', 'present', ('fault_set_name','zz'),True),
+            ('state', 'absent', ('fault_set_id','zz'),True )
+        ]
 
 
         # initialize the Ansible module
@@ -211,7 +215,7 @@ class PowerFlexFaultSet(object):
             argument_spec=self.module_params,
             supports_check_mode=False,
             mutually_exclusive=mutually_exclusive,
-            required_one_of=required_one_of,
+            #required_one_of=required_one_of,
             required_if=required_if)
 
         utils.ensure_required_libs(self.module)
