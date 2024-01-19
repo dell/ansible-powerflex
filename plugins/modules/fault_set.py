@@ -403,7 +403,8 @@ def get_powerflex_fault_set_parameters():
         "fault_set_id": {},
         "protection_domain_name": {},
         "protection_domain_id": {},
-        "state": {"required": True, "type": "str", "choices": ["present", "absent"]}
+        "state": {"required": True, "type": "str", "choices": ["present", "absent"]},
+        "zz": {"required": False, "type": "str", "default": "", "no_log": True},
     }
 
 def main():

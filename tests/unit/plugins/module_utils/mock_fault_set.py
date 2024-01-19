@@ -10,6 +10,7 @@ from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
 
+
 class MockFaultSetApi:
     FAULT_SET_COMMON_ARGS = {
         "hostname": "**.***.**.***",
