@@ -504,7 +504,7 @@ class PowerFlexSDS(object):
         self.module_params.update(get_powerflex_sds_parameters())
 
         mut_ex_args = [['sds_name', 'sds_id'],
-                       ['protection_domain_name', 'protection_domain_id']
+                       ['protection_domain_name', 'protection_domain_id'],
                        ['fault_set_name', 'fault_set_id']]
 
         required_together_args = [['sds_ip_list', 'sds_ip_state']]
