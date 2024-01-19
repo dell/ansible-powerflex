@@ -1157,7 +1157,7 @@ Fault Sets:
     contains:
         protectionDomainId:
             description: The ID of the protection domain.
-            type: str    
+            type: str
         name:
             description: device name.
             type: str
@@ -1185,7 +1185,7 @@ Fault Sets:
                 }
             ]
         },
-        {   
+        {
             "protectionDomainId": "da721a8300000000",
             "name": "at1zbs1t6cp2sds1d1fs3",
             "id": "eb44b70700000002",

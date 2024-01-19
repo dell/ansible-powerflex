@@ -105,7 +105,7 @@ options:
     description:
     - ID of fault set
     - Mutually exclusive with fault_set_name
-    type: str    
+    type: str
   state:
     description:
     - State of the SDS.
@@ -1056,7 +1056,6 @@ class PowerFlexSDS(object):
             msg = "Fetched the fault set details with id '%s', " \
                 "name '%s'" % (fault_set_id, fault_set_name)
             LOG.info(msg)
-
 
         # create operation
         create_changed = False
