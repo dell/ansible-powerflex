@@ -7,10 +7,8 @@ Mock Api response for Unit tests of volume module on Dell Technologies (Dell) Po
 """
 
 from __future__ import (absolute_import, division, print_function)
-#from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_storagepool_api import MockStoragePoolApi
 
 __metaclass__ = type
-
 
 class MockFaultSetApi:
     FAULT_SET_COMMON_ARGS = {
@@ -27,10 +25,9 @@ class MockFaultSetApi:
             "protectionDomainId": "test_pd_id_1",
             "name": "test_id_1_fault_set",
             "id": "test_id_1",
-            "links":[]
+            "links": []
         }
     ]
-
 
     @staticmethod
     def get_exception_response(response_type):

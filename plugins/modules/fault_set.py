@@ -189,6 +189,7 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell imp
 
 LOG = utils.get_logger("fault_set")
 
+
 class PowerFlexFaultSet(object):
     """Class with FaultSet operations"""
 
@@ -322,7 +323,7 @@ class PowerFlexFaultSet(object):
         try:
             fs_details = self.powerflex_conn.fault_set.get(filter_fields=filter_fields)
             if len(fs_details) == 0:
-                error_msg = "Unable to find Fault Set with identifier %s in Protection Domain %s" % (id_name, protection_domain_id)"
+                error_msg = "Unable to find Fault Set with identifier %s in Protection Domain %s" % (id_name, protection_domain_id)
                 LOG.info(error_msg)
                 return None
             return fs_details[0]
@@ -360,7 +361,6 @@ class PowerFlexFaultSet(object):
         changed = False
         result = {"changed": False, "fault_set_details": None}
 
-
         pd_id = None
         if protection_domain_name:
             pd_id = self.get_protection_domain(
@@ -395,7 +395,6 @@ class PowerFlexFaultSet(object):
         result["fault_set_details"] = fault_set_details
         self.module.exit_json(**result)
 
-
 def get_powerflex_fault_set_parameters():
     """This method provide parameter required for the Ansible FaultSet module on
     PowerFlex"""
@@ -412,7 +411,6 @@ def main():
     based on user input from playbook"""
     obj = PowerFlexFaultSet()
     obj.perform_module_operation()
-
 
 if __name__ == "__main__":
     main()
