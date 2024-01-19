@@ -7,7 +7,7 @@ Mock Api response for Unit tests of volume module on Dell Technologies (Dell) Po
 """
 
 from __future__ import (absolute_import, division, print_function)
-from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_storagepool_api import MockStoragePoolApi
+#from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_storagepool_api import MockStoragePoolApi
 
 __metaclass__ = type
 

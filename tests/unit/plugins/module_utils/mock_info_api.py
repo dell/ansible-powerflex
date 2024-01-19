@@ -15,6 +15,7 @@ from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_
     import MockReplicationPairApi
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_snapshot_policy_api \
     import MockSnapshotPolicyApi
+from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_fault_set import MockFaultSetApi    
 
 
 __metaclass__ = type
@@ -236,7 +237,7 @@ class MockInfoApi:
     RCG_LIST = MockReplicationConsistencyGroupApi.get_rcg_details()
     PAIR_LIST = MockReplicationPairApi.get_pair_details()
 
-    FAULT_SET_LIST = MockFaultSet.FAULT_SET_GET_LIST
+    FAULT_SET_LIST = MockFaultSetApi.FAULT_SET_GET_LIST
 
     @staticmethod
     def get_exception_response(response_type):
