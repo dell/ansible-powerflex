@@ -15,7 +15,7 @@ from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_
     import MockReplicationPairApi
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_snapshot_policy_api \
     import MockSnapshotPolicyApi
-from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_fault_set import MockFaultSetApi    
+from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_fault_set import MockFaultSetApi
 
 
 __metaclass__ = type
