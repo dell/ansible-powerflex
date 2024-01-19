@@ -6,10 +6,6 @@
 """ Ansible module for managing Fault Sets on Dell Technologies (Dell) PowerFlex"""
 
 from __future__ import absolute_import, division, print_function
-from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell import (
-    utils,
-)
-from ansible.module_utils.basic import AnsibleModule
 
 __metaclass__ = type
 
@@ -56,7 +52,7 @@ options:
     type: str
   zz:
     description:
-    - dummy internal parameter 
+    - dummy internal parameter
     - not used
     - doesn't do anything
     type: str
@@ -192,6 +188,13 @@ sdc_details:
         "versionInfo": "R3_6.0.0"
     }
 """
+
+
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell import (
+    utils,
+)
+from ansible.module_utils.basic import AnsibleModule
+
 
 LOG = utils.get_logger("fault_set")
 
