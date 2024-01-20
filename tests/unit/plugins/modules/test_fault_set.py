@@ -11,8 +11,6 @@ __metaclass__ = type
 import pytest
 from mock.mock import MagicMock
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_fault_set_api import MockFaultSetApi
-from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_api_exception \
-    import MockApiException
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 
@@ -45,7 +43,7 @@ class TestPowerflexFaultSet():
         fault_set_resp = MockFaultSetApi.FAULT_SET_GET_LIST
         fault_set_module_mock.powerflex_conn.fault_set.create = MagicMock(
             return_value=True
-        )                
+        )
         fault_set_module_mock.powerflex_conn.fault_set.get = MagicMock(
             return_value=fault_set_resp
         )
