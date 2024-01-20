@@ -30,7 +30,3 @@ class MockFaultSetApi:
         }
     ]
 
-    @staticmethod
-    def get_exception_response(response_type):
-        if response_type == 'get_details':
-            return "Failed to get the fault set  test_id_1 with error "
