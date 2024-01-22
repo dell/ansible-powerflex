@@ -2,11 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [ main, add_fault_set ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '0 3 * * *'
 
 jobs:
   build:
