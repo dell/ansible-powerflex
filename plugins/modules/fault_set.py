@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-DOCUMENTATION = r"""
+DOCUMENTATION = r'''
 module: fault_set
 version_added: '1.0.0'
 short_description: Manage Fault Sets on Dell PowerFlex
@@ -58,10 +58,10 @@ options:
     type: str
 notes:
   - The I(check_mode) is not supported.
-"""
+'''
 
 
-EXAMPLES = r"""
+EXAMPLES = r'''
 
 - name: Create Fault Set on Protection Domain
   dellemc.powerflex.fault_set:
@@ -90,7 +90,7 @@ EXAMPLES = r"""
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
     fault_set_name: "{{fault_set_name}}"
-    state: present
+    state: absent
 
 - name: Delete Fault Set
   dellemc.powerflex.fault_set:
@@ -98,96 +98,63 @@ EXAMPLES = r"""
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
-    fault_set_id: "{{fault_set_name}}"
-    state: present
-"""
+    fault_set_id: "{{fault_set_id}}"
+    state: absent
+'''
 
-RETURN = r"""
+RETURN = r'''
 changed:
     description: Whether or not the resource has changed.
     returned: always
     type: bool
     sample: 'false'
 
-sdc_details:
-    description: Details of the SDC.
-    returned: When SDC exists
-    type: complex
+fault_set_details:
+    description: Details of fault set.
+    returned: always
+    type: dict
     contains:
-        id:
-            description: The ID of the SDC.
+        protectionDomainId:
+            description: The ID of the protection domain.
             type: str
         name:
-            description: Name of the SDC.
+            description: device name.
             type: str
-        sdcIp:
-            description: IP of the SDC.
+        id:
+            description: device id.
             type: str
-        osType:
-            description: OS type of the SDC.
-            type: str
-        mapped_volumes:
-            description: The details of the mapped volumes.
+        links:
+            description: Fault set links.
             type: list
             contains:
-                id:
-                    description: The ID of the volume.
+                href:
+                    description: Fault Set instance URL.
                     type: str
-                name:
-                    description: The name of the volume.
-                    type: str
-                volumeType:
-                    description: Type of the volume.
-                    type: str
-        sdcApproved:
-            description: Indicates whether an SDC has approved access to the
-                         system.
-            type: bool
+                rel:
+                    description: Relationship of fault set with different
+                                 entities.
+                    type: str            
     sample: {
-        "id": "07335d3d00000006",
-        "installedSoftwareVersionInfo": "R3_6.0.0",
-        "kernelBuildNumber": null,
-        "kernelVersion": "3.10.0",
+        "protectionDomainId": "da721a8300000000",
+        "name": "fs_001",
+        "id": "eb44b70500000000",
         "links": [
+            { "rel": "self", "href": "/api/instances/FaultSet::eb44b70500000000" },
             {
-                "href": "/api/instances/Sdc::07335d3d00000006",
-                "rel": "self"
+                "rel": "/api/FaultSet/relationship/Statistics",
+                "href": "/api/instances/FaultSet::eb44b70500000000/relationships/Statistics"
             },
             {
-                "href": "/api/instances/Sdc::07335d3d00000006/relationships/
-                        Statistics",
-                "rel": "/api/Sdc/relationship/Statistics"
+                "rel": "/api/FaultSet/relationship/Sds",
+                "href": "/api/instances/FaultSet::eb44b70500000000/relationships/Sds"
             },
             {
-                "href": "/api/instances/Sdc::07335d3d00000006/relationships/
-                        Volume",
-                "rel": "/api/Sdc/relationship/Volume"
-            },
-            {
-                "href": "/api/instances/System::4a54a8ba6df0690f",
-                "rel": "/api/parent/relationship/systemId"
+                "rel": "/api/parent/relationship/protectionDomainId",
+                "href": "/api/instances/ProtectionDomain::da721a8300000000"
             }
-        ],
-        "mapped_volumes": [],
-        "mdmConnectionState": "Disconnected",
-        "memoryAllocationFailure": null,
-        "name": "LGLAP203",
-        "osType": "Linux",
-        "peerMdmId": null,
-        "perfProfile": "HighPerformance",
-        "sdcApproved": true,
-        "sdcApprovedIps": null,
-        "sdcGuid": "F8ECB844-23B8-4629-92BB-B6E49A1744CB",
-        "sdcIp": "N/A",
-        "sdcIps": null,
-        "sdcType": "AppSdc",
-        "sdrId": null,
-        "socketAllocationFailure": null,
-        "softwareVersionInfo": "R3_6.0.0",
-        "systemId": "4a54a8ba6df0690f",
-        "versionInfo": "R3_6.0.0"
-    }
-"""
+        }
+
+'''
 
 
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell import (
