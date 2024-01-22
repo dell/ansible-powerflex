@@ -133,7 +133,7 @@ fault_set_details:
                 rel:
                     description: Relationship of fault set with different
                                  entities.
-                    type: str            
+                    type: str
     sample: {
         "protectionDomainId": "da721a8300000000",
         "name": "fs_001",
