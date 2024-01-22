@@ -152,6 +152,7 @@ fault_set_details:
                 "rel": "/api/parent/relationship/protectionDomainId",
                 "href": "/api/instances/ProtectionDomain::da721a8300000000"
             }
+        ]
         }
 
 '''
