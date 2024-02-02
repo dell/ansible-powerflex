@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2021, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """ Ansible module for managing Fault Sets on Dell Technologies (Dell) PowerFlex"""
@@ -11,7 +11,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 module: fault_set
-version_added: '1.0.0'
+version_added: '2.2.0'
 short_description: Manage Fault Sets on Dell PowerFlex
 description:
 - Creating fault sets on PowerFlex.
