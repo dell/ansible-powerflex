@@ -14,7 +14,7 @@ module: fault_set
 version_added: '2.2.0'
 short_description: Manage Fault Sets on Dell PowerFlex
 description:
-- Creating fault sets on PowerFlex.
+- Managing fault sets on PowerFlex storage system includes getting details, creating, modifying, and deleting of fault set.
 author:
 - Carlos Tronco (@ctronco) <ansible.team@dell.com>
 extends_documentation_fragment:
@@ -29,20 +29,22 @@ options:
   fault_set_id:
     description:
     - ID of the Fault Set.
-    - Specify either fault_set_name or fault_set_id for remove operation.
     - Mutually exclusive with I(fault_set_name).
     type: str
   protection_domain_name:
     description:
     - Name of protection domain.
-    - Specify either protection_domain_name or protection_domain_id.
-    - Mutually exclusive with I(protection_domain_id).
+    - Specify either I(protection_domain_name) or I(protection_domain_id).
     type: str
   protection_domain_id:
     description:
     - ID of the protection domain.
-    - Specify either protection_domain_name or protection_domain_id.
-    - Mutually exclusive with I(protection_domain_name).
+    - Specify either I(protection_domain_name) or I(protection_domain_id).
+    type: str
+  fault_set_new_name:
+    description: 
+    - New name of the Fault Set.
+    - This parameter is used to rename the Fault Set.
     type: str
   state:
     description:
@@ -50,6 +52,7 @@ options:
     choices: ['present', 'absent']
     required: True
     type: str
+    default: present
   zz:
     description:
     - dummy internal parameter
@@ -57,7 +60,7 @@ options:
     - doesn't do anything
     type: str
 notes:
-  - The I(check_mode) is not supported.
+  - The I(check_mode) is supported.
 '''
 
 
@@ -73,15 +76,24 @@ EXAMPLES = r'''
     protection_domain_name: "{{pd_name}}"
     state: present
 
-- name: Create Fault Set on Protection Domain
+- name: Get Fault Set on Protection Domain
   dellemc.powerflex.fault_set:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     validate_certs: "{{validate_certs}}"
     fault_set_name: "{{fault_set_name}}"
-    protection_domain_id: "{{pd_id}}"
-    state: present
+
+- name: Rename Fault Set
+  dellemc.powerflex.fault_set:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    fault_set_name: "{{fault_set_name}}"
+    fault_set_new_name: "{{fault_set_new_name}}"
+    
+
 
 - name: Delete Fault Set
   dellemc.powerflex.fault_set:
@@ -118,10 +130,10 @@ fault_set_details:
             description: The ID of the protection domain.
             type: str
         name:
-            description: device name.
+            description: fault set name.
             type: str
         id:
-            description: device id.
+            description: fault set id.
             type: str
         links:
             description: Fault set links.
@@ -180,13 +192,11 @@ class PowerFlexFaultSet(object):
             ["protection_domain_name", "protection_domain_id"],
         ]
 
-        # Weird issue with require_if if only on option was tied to the requirement
-        # so added dummy zz option to the list as workaround
         required_if = [
             ("state", "present", ("protection_domain_id",
              "protection_domain_name"), True),
-            ("state", "present", ("fault_set_name", "zz"), True),
-            ("state", "absent", ("fault_set_id", "zz"), True),
+            ("state", "absent", ("fault_set_id", "fault_set_name"), True),
+            ("state", "present", ("fault_set_id", "fault_set_name"), True),
         ]
 
         # initialize the Ansible module
@@ -243,7 +253,7 @@ class PowerFlexFaultSet(object):
                 LOG.error(error_msg)
                 self.module.fail_json(msg=error_msg)
 
-            return pd_details[0]["id"]
+            return pd_details[0]
 
         except Exception as e:
             error_msg = (
@@ -326,6 +336,16 @@ class PowerFlexFaultSet(object):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
+    def rename_fault_set(self, fault_set_id, new_name):
+        try:
+            LOG.info(msg=f"Renaming Fault Set {fault_set_id} to {new_name}")
+            self.powerflex_conn.fault_set.rename(fault_set_id=fault_set_id, new_name=new_name)
+            return True
+        except Exception as e:
+            errormsg = f"Renaming Fault Set {fault_set_id} to {new_name} failed with error {str(e)}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
+
     def perform_module_operation(self):
         """
         Perform different actions on Fault Set based on parameters passed in
@@ -333,9 +353,11 @@ class PowerFlexFaultSet(object):
         """
         fault_set_name = self.module.params["fault_set_name"]
         fault_set_id = self.module.params["fault_set_id"]
+        fault_set_new_name = self.module.params["fault_set_new_name"]        
         protection_domain_name = self.module.params["protection_domain_name"]
         protection_domain_id = self.module.params["protection_domain_id"]
         state = self.module.params["state"]
+
 
         # result is a dictionary to contain end state and Fault Set details
         changed = False
@@ -343,18 +365,17 @@ class PowerFlexFaultSet(object):
 
         pd_id = None
         if protection_domain_name:
-            pd_id = self.get_protection_domain(
+            pd_info = self.get_protection_domain(
                 protection_domain_name=protection_domain_name
             )
         elif protection_domain_id:
-            pd_id = self.get_protection_domain(
+            pd_info = self.get_protection_domain(
                 protection_domain_id=protection_domain_id
             )
-
         fault_set_details = self.get_fault_set(
             fault_set_name=fault_set_name,
             fault_set_id=fault_set_id,
-            protection_domain_id=pd_id,
+            protection_domain_id=pd_info['id'],
         )
 
         if state == "present" and not fault_set_details:
@@ -366,9 +387,18 @@ class PowerFlexFaultSet(object):
                 fault_set_id=fault_set_id,
                 protection_domain_id=pd_id,
             )
+        if state == "present" and fault_set_details and fault_set_new_name:
+            changed = self.rename_fault_set(fault_set_id=fault_set_details["id"], new_name=fault_set_new_name)
+            fault_set_details = self.get_fault_set(
+                fault_set_name=fault_set_new_name,
+                fault_set_id=fault_set_id,
+                protection_domain_id=pd_id,
+            )
+        if state == "present":
+            fault_set_details.update({"protectionDomainName": pd_info["name"]})
 
         if state == "absent" and fault_set_details:
-            changed = self.remove_fault_set(fault_set_id=fault_set_id)
+            changed = self.remove_fault_set(fault_set_id=fault_set_details["id"])
             fault_set_details = {}
 
         result["changed"] = changed
@@ -382,10 +412,11 @@ def get_powerflex_fault_set_parameters():
     return {
         "fault_set_name": {},
         "fault_set_id": {},
+        "fault_set_new_name": {"required": False, "type": "str", "default": None},        
         "protection_domain_name": {},
         "protection_domain_id": {},
         "state": {"required": True, "type": "str", "choices": ["present", "absent"]},
-        "zz": {"required": False, "type": "str", "default": None, "no_log": True},
+        #"zz": {"required": False, "type": "str", "default": None, "no_log": True},
     }
 
 
