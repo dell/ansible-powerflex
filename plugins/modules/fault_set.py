@@ -23,7 +23,7 @@ options:
   fault_set_name:
     description:
     - Name of the Fault Set.
-    - Specify either fault_set_name or fault_set_id for remove operation.
+    - It is unuique across the PowerFlex array.
     - Mutually exclusive with I(fault_set_id).
     type: str
   fault_set_id:
@@ -53,12 +53,6 @@ options:
     required: True
     type: str
     default: present
-  zz:
-    description:
-    - dummy internal parameter
-    - not used
-    - doesn't do anything
-    type: str
 notes:
   - The I(check_mode) is supported.
 '''
@@ -94,7 +88,6 @@ EXAMPLES = r'''
     fault_set_new_name: "{{fault_set_new_name}}"
     
 
-
 - name: Delete Fault Set
   dellemc.powerflex.fault_set:
     hostname: "{{hostname}}"
@@ -129,6 +122,9 @@ fault_set_details:
         protectionDomainId:
             description: The ID of the protection domain.
             type: str
+        protectionDomainName:
+            description: The name of the protection domain.
+            type: str
         name:
             description: fault set name.
             type: str
@@ -148,6 +144,7 @@ fault_set_details:
                     type: str
     sample: {
         "protectionDomainId": "da721a8300000000",
+        "protectionDomainName": "pd_001",
         "name": "fs_001",
         "id": "eb44b70500000000",
         "links": [
@@ -202,7 +199,7 @@ class PowerFlexFaultSet(object):
         # initialize the Ansible module
         self.module = AnsibleModule(
             argument_spec=self.module_params,
-            supports_check_mode=False,
+            supports_check_mode=True,
             mutually_exclusive=mutually_exclusive,
             # required_one_of=required_one_of,
             required_if=required_if,

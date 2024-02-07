@@ -32,24 +32,24 @@ Parameters
 
   fault_set_id(optional, str, None)
         ID of the Fault Set being affected.
-        Specify either fault_set_name or fault_set_id for remove operation.
         Mutually exclusive with *fault_set_name*
         
   fault_set_name(optional, str, None)
         Name of the Fault Set.
-        Required when creating a fault set
-        Specify either fault_set_name or fault_set_id for remove operation.
+        It is unique across the Powerflex Array.        
         Mutually exclusive with *fault_set_id*
+
+  fault_set_new_name(optional, str, None)
+        New Name of the Fault Set.
+        This is used to rename the fault set.
 
   protection_domain_id (optional, str, None)
         ID of the protection domain
-        Specify either protection_domain_name or protection_domain_id when creating a fault set
-        Mutually exclusive with *protection_domain_name*
+        Specify either *protection_domain_name* or *protection_domain_id* when creating a fault set
 
   protection_domain_name(optional, str, None)
         Name of protection domain.
-        Specify either protection_domain_name or protection_domain_id when creating a fault set        
-        Mutually exclusive with *protection_domain_id*
+        Specify either *protection_domain_name* or *protection_domain_id* when creating a fault set        
   
   state (True, str, None)
         State of the Fault Set.
@@ -145,12 +145,16 @@ Return Values:
 changed(always, bool, false)
         Whether or not the resource has changed.
 
-fault_set_details (when fault set exists, dict, { 'protectionDomainId': 'da721a8300000000','name': 'fs_001','id': 'eb44b70500000000','links': [{ 'rel': 'self', 'href': '/api/instances/FaultSet::eb44b70500000000' }, {'rel': '/api/FaultSet/relationship/Statistics', 'href': '/api/instances/FaultSet::eb44b70500000000/relationships/Statistics'},{'rel': '/api/FaultSet/relationship/Sds', 'href': '/api/instances/FaultSet::eb44b70500000000/relationships/Sds' }, { 'rel': '/api/parent/relationship/protectionDomainId', 'href': '/api/instances/ProtectionDomain::da721a8300000000' }})
+fault_set_details (when fault set exists, dict, { 'protectionDomainId': 'da721a8300000000', 'protectionDomainName': 'pd001', 'name': 'fs_001','id': 'eb44b70500000000','links': [{ 'rel': 'self', 'href': '/api/instances/FaultSet::eb44b70500000000' }, {'rel': '/api/FaultSet/relationship/Statistics', 'href': '/api/instances/FaultSet::eb44b70500000000/relationships/Statistics'},{'rel': '/api/FaultSet/relationship/Sds', 'href': '/api/instances/FaultSet::eb44b70500000000/relationships/Sds' }, { 'rel': '/api/parent/relationship/protectionDomainId', 'href': '/api/instances/ProtectionDomain::da721a8300000000' }})
   Details of fault set.
   
   
   protectionDomainId(, str,):
     The ID of the protection domain.
+
+
+  protectionDomainName(, str,):
+    The name of the protection domain.
 
 
   name(, str,)

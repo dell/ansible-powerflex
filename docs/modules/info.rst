@@ -50,6 +50,9 @@ Parameters
     Replication consistency groups - ``rcg``.
 
     Replication pairs - ``replication_pair``.
+    
+    Fault Sets - ``fault_set``.
+
 
 
   filters (optional, list, None)
@@ -636,7 +639,36 @@ Replication_pairs (Always, list, {'copyType': 'OnlineCopy', 'id': '23aa0bc900000
   remoteActivityState (, str, )
     The state of activity of the remote replication pair.
 
+Fault_sets (Always, dict, { 'protectionDomainId': 'da721a8300000000', 'protectionDomainName': 'pd001', 'name': 'fs_001','id': 'eb44b70500000000','links': [{ 'rel': 'self', 'href': '/api/instances/FaultSet::eb44b70500000000' }, {'rel': '/api/FaultSet/relationship/Statistics', 'href': '/api/instances/FaultSet::eb44b70500000000/relationships/Statistics'},{'rel': '/api/FaultSet/relationship/Sds', 'href': '/api/instances/FaultSet::eb44b70500000000/relationships/Sds' }, { 'rel': '/api/parent/relationship/protectionDomainId', 'href': '/api/instances/ProtectionDomain::da721a8300000000' }})
+  Details of fault set.
+  
+  
+  protectionDomainId(, str,):
+    The ID of the protection domain.
 
+
+  protectionDomainId(, str,):
+    The name of the protection domain.
+
+
+  name(, str,)
+    fault set name.
+
+
+  id(, str,)
+    fault set  id
+
+
+  links (, list, )
+    Device links.
+
+
+    href (, str, )
+      Device instance URL.
+
+
+    rel (, str, )
+      Relationship of device with different entities.
 
 
 
