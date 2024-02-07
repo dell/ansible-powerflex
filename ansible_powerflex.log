@@ -1,9 +1,0 @@
-2024-02-06 16:32:27,313 info.py INFO : Got the PowerFlex system connection object instance
-2024-02-06 16:32:27,314 info.py INFO : The check_mode flag False
-2024-02-06 16:32:27,314 info.py INFO : Getting API details 
-2024-02-06 16:32:27,314 info.py INFO : Getting array details 
-2024-02-06 16:32:29,719 info.py INFO : Getting SDC list 
-2024-02-06 16:32:32,394 info.py INFO : Successfully listed.
-2024-02-06 16:32:32,394 info.py INFO : Getting fault set list 
-2024-02-06 16:32:34,955 info.py INFO : Getting protection domain list 
-2024-02-06 16:32:37,483 info.py ERROR : Get fault set list from powerflex array failed with error 'NoneType' object is not subscriptable
