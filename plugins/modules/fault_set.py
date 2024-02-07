@@ -388,7 +388,7 @@ class PowerFlexFaultSet(object):
                 protection_domain_id=pd_info["id"],
             )
         if state == "present" and fault_set_details and fault_set_new_name:
-            changed = self.rename_fault_set(fault_set_id=fault_set_details['d'], fault_set_new_name=fault_set_new_name)
+            changed = self.rename_fault_set(fault_set_id=fault_set_details['id'], fault_set_new_name=fault_set_new_name)
             fault_set_details = self.get_fault_set(
                 fault_set_name=fault_set_new_name,
                 fault_set_id=fault_set_id,
