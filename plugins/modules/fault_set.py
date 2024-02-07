@@ -336,10 +336,10 @@ class PowerFlexFaultSet(object):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def rename_fault_set(self, fault_set_id, new_name):
+    def rename_fault_set(self, fault_set_id, fault_set_new_name):
         try:
-            LOG.info(msg=f"Renaming Fault Set {fault_set_id} to {new_name}")
-            self.powerflex_conn.fault_set.rename(fault_set_id=fault_set_id, new_name=new_name)
+            LOG.info(msg=f"Renaming Fault Set {fault_set_id} to {fault_set_new_name}")
+            self.powerflex_conn.fault_set.rename(fault_set_id=fault_set_id, name=fault_set_new_name)
             return True
         except Exception as e:
             errormsg = f"Renaming Fault Set {fault_set_id} to {new_name} failed with error {str(e)}"
@@ -363,7 +363,7 @@ class PowerFlexFaultSet(object):
         changed = False
         result = {"changed": False, "fault_set_details": None}
 
-        pd_id = None
+        pd_info = {"id": None}
         if protection_domain_name:
             pd_info = self.get_protection_domain(
                 protection_domain_name=protection_domain_name
@@ -380,25 +380,25 @@ class PowerFlexFaultSet(object):
 
         if state == "present" and not fault_set_details:
             changed = self.create_fault_set(
-                fault_set_name=fault_set_name, protection_domain_id=pd_id
+                fault_set_name=fault_set_name, protection_domain_id=pd_info['id']
             )
             fault_set_details = self.get_fault_set(
                 fault_set_name=fault_set_name,
                 fault_set_id=fault_set_id,
-                protection_domain_id=pd_id,
+                protection_domain_id=pd_info["id"],
             )
         if state == "present" and fault_set_details and fault_set_new_name:
-            changed = self.rename_fault_set(fault_set_id=fault_set_details["id"], new_name=fault_set_new_name)
+            changed = self.rename_fault_set(fault_set_id=fault_set_details['d'], fault_set_new_name=fault_set_new_name)
             fault_set_details = self.get_fault_set(
                 fault_set_name=fault_set_new_name,
                 fault_set_id=fault_set_id,
-                protection_domain_id=pd_id,
+                protection_domain_id=pd_info['id'],
             )
         if state == "present":
-            fault_set_details.update({"protectionDomainName": pd_info["name"]})
+            fault_set_details.update({"protectionDomainName": pd_info['name']})
 
         if state == "absent" and fault_set_details:
-            changed = self.remove_fault_set(fault_set_id=fault_set_details["id"])
+            changed = self.remove_fault_set(fault_set_id=fault_set_details['id'])
             fault_set_details = {}
 
         result["changed"] = changed

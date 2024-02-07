@@ -1505,7 +1505,10 @@ class PowerFlexInfo(object):
                 fault_sets = self.powerflex_conn.fault_set.get(filter_fields=filter_dict)
             else:
                 fault_sets = self.powerflex_conn.fault_set.get()
-
+            for fs in fault_sets:
+                pd_filter = self.get_filters([{"filter_key":"id", "filter_operator":"equal", "filter_value": fs["protectionDomainId"]}])
+                pds = self.get_pd_list(filter_dict=pd_filter)
+                fs.update({"protectionDomainName": pds["name"]})
             return result_list(fault_sets)
 
         except Exception as e:
