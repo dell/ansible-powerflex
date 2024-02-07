@@ -1508,7 +1508,7 @@ class PowerFlexInfo(object):
             for fs in fault_sets:
                 pd_filter = self.get_filters([{"filter_key":"id", "filter_operator":"equal", "filter_value": fs["protectionDomainId"]}])
                 pds = self.get_pd_list(filter_dict=pd_filter)
-                fs.update({"protectionDomainName": pds["name"]})
+                fs.update({"protectionDomainName": pds[0]["name"]})
             return result_list(fault_sets)
 
         except Exception as e:
