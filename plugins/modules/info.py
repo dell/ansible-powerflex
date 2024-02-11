@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2021, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """Ansible module for Gathering information about Dell Technologies (Dell) PowerFlex"""
@@ -43,8 +43,12 @@ options:
     - Devices - C(device).
     - Replication consistency groups - C(rcg).
     - Replication pairs - C(replication_pair).
+    - Service templates - C(service_template).
+    - Managed devices - C(managed_device).
+    - Deployments - C(deployment).
     choices: [vol, storage_pool, protection_domain, sdc, sds,
-             snapshot_policy, device, rcg, replication_pair]
+             snapshot_policy, device, rcg, replication_pair,
+             service_template, managed_device, deployment]
     type: list
     elements: str
   filters:
@@ -63,16 +67,63 @@ options:
       filter_operator:
         description:
         - Operation to be performed on filter key.
+        - Choice I('contains') is supported for gather_subset keys I(service_template), I(managed_device), I(deployment).
         type: str
-        choices: [equal]
+        choices: [equal, contains]
         required: true
       filter_value:
         description:
         - Value of the filter key.
         type: str
         required: true
+  limit:
+    description:
+    - Page limit.
+    - Supported for gather_subset keys I(service_template), I(managed_device), I(deployment).
+    type: int
+    default: 50
+  offset:
+    description:
+    - Pagination offset.
+    - Supported for gather_subset keys I(service_template), I(managed_device), I(deployment).
+    type: int
+    default: 0
+  sort:
+    description:
+    - Sort the returned components based on specified field.
+    - Supported for gather_subset keys I(service_template), I(managed_device), I(deployment).
+    - The supported sort keys for the gather_subset can be referred from PowerFlex Manager API documentation in developer.dell.com.
+    type: str
+  include_devices:
+    description:
+    - Include devices in response.
+    - Applicable when gather_subset is I(deployment).
+    type: bool
+    default: true
+  include_template:
+    description:
+    - Include service templates in response.
+    - Applicable when gather_subset is I(deployment).
+    type: bool
+    default: true
+  full:
+    description:
+    - Specify if response is full or brief.
+    - Applicable when gather_subset is I(deployment), I(service_template).
+    - For I(deployment) specify to use full templates including resources in response.
+    type: bool
+    default: false
+  include_attachments:
+    description:
+    - Include attachments.
+    - Applicable when gather_subset is I(service_template).
+    type: bool
+    default: true
 notes:
   - The I(check_mode) is supported.
+  - The supported filter keys for the gather_subset can be referred from PowerFlex Manager API documentation in developer.dell.com.
+  - The I(filter) and I(sort) options will be ignored when more than one I(gather_subset) is specified with I(service_template),
+    I(managed_device), I(deployment).
 '''
 
 EXAMPLES = r'''
@@ -105,6 +156,33 @@ EXAMPLES = r'''
       - filter_key: "name"
         filter_operator: "equal"
         filter_value: "ansible_test"
+
+- name: Get deployment and resource provisioning info
+  dellemc.powerflex.info:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    gather_subset:
+      - managed_device
+      - deployment
+      - service_template
+
+- name: Get deployment with filter, sort, pagination
+  dellemc.powerflex.info:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    gather_subset:
+      - deployment
+    filters:
+      - filter_key: "name"
+        filter_operator: "contains"
+        filter_value: "partial"
+    sort: name
+    limit: 10
+    offset: 10
 '''
 
 RETURN = r'''
@@ -1148,11 +1226,479 @@ Replication_pairs:
         "replicationConsistencyGroupId": "e2ce036b00000002",
         "userRequestedPauseTransmitInitCopy": false
     }
+ManagedDevices:
+    description: Details of all devices from inventory.
+    returned: when I(gather_subset) is I(managed_device)
+    type: list
+    contains:
+        deviceType:
+            description: Device Type.
+            type: str
+        serviceTag:
+            description: Service Tag.
+            type: str
+        serverTemplateId:
+            description: The ID of the server template.
+            type: str
+        state:
+            description: The state of the device.
+            type: str
+        managedState:
+            description: The managed state of the device.
+            type: str
+        compliance:
+            description: The compliance state of the device.
+            type: str
+        systemId:
+            description: The system ID.
+            type: str
+    sample: {
+        "refId": "softwareOnlyServer-10.1.1.1",
+        "refType": null,
+        "ipAddress": "10.1.1.1",
+        "currentIpAddress": "10.1.1.1",
+        "serviceTag": "VMware-42 15 a5 f9 65 e6 63 0e-36 79 59 73 7b 3a 68 cd-SW",
+        "model": "VMware Virtual Platform",
+        "deviceType": "SoftwareOnlyServer",
+        "discoverDeviceType": "SOFTWAREONLYSERVER_CENTOS",
+        "displayName": "vpi1011-c1n1",
+        "managedState": "UNMANAGED",
+        "state": "READY",
+        "inUse": false,
+        "serviceReferences": [],
+        "statusMessage": null,
+        "firmwareName": "Default Catalog - PowerFlex 4.5.0.0",
+        "customFirmware": false,
+        "needsAttention": false,
+        "manufacturer": "VMware, Inc.",
+        "systemId": null,
+        "health": "RED",
+        "healthMessage": "Inventory run failed.",
+        "operatingSystem": "N/A",
+        "numberOfCPUs": 0,
+        "cpuType": null,
+        "nics": 0,
+        "memoryInGB": 0,
+        "infraTemplateDate": null,
+        "infraTemplateId": null,
+        "serverTemplateDate": null,
+        "serverTemplateId": null,
+        "inventoryDate": null,
+        "complianceCheckDate": "2024-02-05T18:31:31.213+00:00",
+        "discoveredDate": "2024-02-05T18:31:30.992+00:00",
+        "deviceGroupList": {
+            "paging": null,
+            "deviceGroup": [
+                {
+                    "link": null,
+                    "groupSeqId": -1,
+                    "groupName": "Global",
+                    "groupDescription": null,
+                    "createdDate": null,
+                    "createdBy": "admin",
+                    "updatedDate": null,
+                    "updatedBy": null,
+                    "managedDeviceList": null,
+                    "groupUserList": null
+                }
+            ]
+        },
+        "detailLink": {
+            "title": "softwareOnlyServer-10.1.1.1",
+            "href": "/AsmManager/ManagedDevice/softwareOnlyServer-10.1.1.1",
+            "rel": "describedby",
+            "type": null
+        },
+        "credId": "bc97cefb-5eb4-4c20-8e39-d1a2b809c9f5",
+        "compliance": "NONCOMPLIANT",
+        "failuresCount": 0,
+        "chassisId": null,
+        "parsedFacts": null,
+        "config": null,
+        "hostname": "vpi1011-c1n1",
+        "osIpAddress": null,
+        "osAdminCredential": null,
+        "osImageType": null,
+        "lastJobs": null,
+        "puppetCertName": "red_hat-10.1.1.1",
+        "svmAdminCredential": null,
+        "svmName": null,
+        "svmIpAddress": null,
+        "svmImageType": null,
+        "flexosMaintMode": 0,
+        "esxiMaintMode": 0,
+        "vmList": []
+    }
+Deployments:
+    description: Details of all deployments.
+    returned: when I(gather_subset) is I(deployment)
+    type: list
+    contains:
+        id:
+            description: Deployment ID.
+            type: str
+        name:
+            description: Deployment name.
+            type: str
+        state:
+            description: The state of deployment.
+            type: str
+        signature:
+            description: The signature details.
+            type: str
+        downloadStatus:
+            description: The download status.
+            type: str
+        rcmapproved:
+            description: If RCM approved.
+            type: bool
+    sample: {
+        "id": "8aaa80658cd602e0018cda8b257f78ce",
+        "deploymentName": "Test-Update - K",
+        "deploymentDescription": "Test-Update - K",
+        "deploymentValid": null,
+        "retry": false,
+        "teardown": false,
+        "teardownAfterCancel": false,
+        "removeService": false,
+        "createdDate": "2024-01-05T16:53:21.407+00:00",
+        "createdBy": "admin",
+        "updatedDate": "2024-02-11T17:00:05.657+00:00",
+        "updatedBy": "system",
+        "deploymentScheduledDate": null,
+        "deploymentStartedDate": "2024-01-05T16:53:22.886+00:00",
+        "deploymentFinishedDate": null,
+        "serviceTemplate": {
+            "id": "8aaa80658cd602e0018cda8b257f78ce",
+            "templateName": "block-only (8aaa80658cd602e0018cda8b257f78ce)",
+            "templateDescription": "Storage - Software Only deployment",
+            "templateType": "VxRack FLEX",
+            "templateVersion": "4.5.0.0",
+            "templateValid": {
+                "valid": true,
+                "messages": []
+            },
+            "originalTemplateId": "c44cb500-020f-4562-9456-42ec1eb5f9b2",
+            "templateLocked": false,
+            "draft": false,
+            "inConfiguration": false,
+            "createdDate": "2024-01-05T16:53:22.083+00:00",
+            "createdBy": null,
+            "updatedDate": "2024-02-09T06:00:09.602+00:00",
+            "lastDeployedDate": null,
+            "updatedBy": null,
+            "components": [
+                {
+                    "id": "6def7edd-bae2-4420-93bf-9ceb051bbb65",
+                    "componentID": "component-scaleio-gateway-1",
+                    "identifier": null,
+                    "componentValid": {
+                        "valid": true,
+                        "messages": []
+                    },
+                    "puppetCertName": "scaleio-block-legacy-gateway",
+                    "osPuppetCertName": null,
+                    "name": "block-legacy-gateway",
+                    "type": "SCALEIO",
+                    "subType": "STORAGEONLY",
+                    "teardown": false,
+                    "helpText": null,
+                    "managementIpAddress": null,
+                    "configFile": null,
+                    "serialNumber": null,
+                    "asmGUID": "scaleio-block-legacy-gateway",
+                    "relatedComponents": {
+                        "625b0e17-9b91-4bc0-864c-d0111d42d8d0": "Node (Software Only)",
+                        "961a59eb-80c3-4a3a-84b7-2101e9831527": "Node (Software Only)-2",
+                        "bca710a5-7cdf-481e-b729-0b53e02873ee": "Node (Software Only)-3"
+                    },
+                    "resources": [],
+                    "refId": null,
+                    "cloned": false,
+                    "clonedFromId": null,
+                    "manageFirmware": false,
+                    "brownfield": false,
+                    "instances": 1,
+                    "clonedFromAsmGuid": null,
+                    "ip": null
+                }
+            ],
+            "category": "block-only",
+            "allUsersAllowed": true,
+            "assignedUsers": [],
+            "manageFirmware": true,
+            "useDefaultCatalog": false,
+            "firmwareRepository": null,
+            "licenseRepository": null,
+            "configuration": null,
+            "serverCount": 3,
+            "storageCount": 1,
+            "clusterCount": 1,
+            "serviceCount": 0,
+            "switchCount": 0,
+            "vmCount": 0,
+            "sdnasCount": 0,
+            "brownfieldTemplateType": "NONE",
+            "networks": [
+                {
+                    "id": "8aaa80648cd5fb9b018cda46e4e50000",
+                    "name": "mgmt",
+                    "description": "",
+                    "type": "SCALEIO_MANAGEMENT",
+                    "vlanId": 850,
+                    "static": true,
+                    "staticNetworkConfiguration": {
+                        "gateway": "10.1.1.1",
+                        "subnet": "1.1.1.0",
+                        "primaryDns": "10.1.1.1",
+                        "secondaryDns": "10.1.1.1",
+                        "dnsSuffix": null,
+                        "ipRange": [
+                            {
+                                "id": "8aaa80648cd5fb9b018cda46e5080001",
+                                "startingIp": "10.1.1.1",
+                                "endingIp": "10.1.1.1",
+                                "role": null
+                            }
+                        ],
+                        "ipAddress": null,
+                        "staticRoute": null
+                    },
+                    "destinationIpAddress": "10.1.1.1"
+                }
+            ],
+            "blockServiceOperationsMap": {
+                "scaleio-block-legacy-gateway": {
+                    "blockServiceOperationsMap": {}
+                }
+            }
+        },
+        "scheduleDate": null,
+        "status": "complete",
+        "compliant": true,
+        "deploymentDevice": [
+            {
+                "refId": "scaleio-block-legacy-gateway",
+                "refType": null,
+                "logDump": null,
+                "status": null,
+                "statusEndTime": null,
+                "statusStartTime": null,
+                "deviceHealth": "GREEN",
+                "healthMessage": "OK",
+                "compliantState": "COMPLIANT",
+                "brownfieldStatus": "NOT_APPLICABLE",
+                "deviceType": "scaleio",
+                "deviceGroupName": null,
+                "ipAddress": "block-legacy-gateway",
+                "currentIpAddress": "10.43.1.204",
+                "serviceTag": "block-legacy-gateway",
+                "componentId": null,
+                "statusMessage": null,
+                "model": "PowerFlex Gateway",
+                "cloudLink": false,
+                "dasCache": false,
+                "deviceState": "READY",
+                "puppetCertName": "scaleio-block-legacy-gateway",
+                "brownfield": false
+            }
+        ],
+        "vms": null,
+        "updateServerFirmware": true,
+        "useDefaultCatalog": false,
+        "firmwareRepository": {
+            "id": "8aaa80658cd602e0018cd996a1c91bdc",
+            "name": "Intelligent Catalog 45.373.00",
+            "sourceLocation": null,
+            "sourceType": null,
+            "diskLocation": null,
+            "filename": null,
+            "md5Hash": null,
+            "username": null,
+            "password": null,
+            "downloadStatus": null,
+            "createdDate": null,
+            "createdBy": null,
+            "updatedDate": null,
+            "updatedBy": null,
+            "defaultCatalog": false,
+            "embedded": false,
+            "state": null,
+            "softwareComponents": [],
+            "softwareBundles": [],
+            "deployments": [],
+            "bundleCount": 0,
+            "componentCount": 0,
+            "userBundleCount": 0,
+            "minimal": false,
+            "downloadProgress": 0,
+            "extractProgress": 0,
+            "fileSizeInGigabytes": null,
+            "signedKeySourceLocation": null,
+            "signature": null,
+            "custom": false,
+            "needsAttention": false,
+            "jobId": null,
+            "rcmapproved": false
+        },
+        "firmwareRepositoryId": "8aaa80658cd602e0018cd996a1c91bdc",
+        "licenseRepository": null,
+        "licenseRepositoryId": null,
+        "individualTeardown": false,
+        "deploymentHealthStatusType": "green",
+        "assignedUsers": [],
+        "allUsersAllowed": true,
+        "owner": "admin",
+        "noOp": false,
+        "firmwareInit": false,
+        "disruptiveFirmware": false,
+        "preconfigureSVM": false,
+        "preconfigureSVMAndUpdate": false,
+        "servicesDeployed": "NONE",
+        "precalculatedDeviceHealth": null,
+        "lifecycleModeReasons": [],
+        "jobDetails": null,
+        "numberOfDeployments": 0,
+        "operationType": "NONE",
+        "operationStatus": null,
+        "operationData": null,
+        "deploymentValidationResponse": null,
+        "currentStepCount": null,
+        "totalNumOfSteps": null,
+        "currentStepMessage": null,
+        "customImage": "os_sles",
+        "originalDeploymentId": null,
+        "currentBatchCount": null,
+        "totalBatchCount": null,
+        "templateValid": true,
+        "lifecycleMode": false,
+        "vds": false,
+        "scaleUp": false,
+        "brownfield": false,
+        "configurationChange": false
+    }
+ServiceTemplates:
+    description: Details of all service templates.
+    returned: when I(gather_subset) is I(service_template)
+    type: list
+    contains:
+        templateName:
+            description: Template name.
+            type: str
+        templateDescription:
+            description: Template description.
+            type: str
+        templateType:
+            description: Template type.
+            type: str
+        templateVersion:
+            description: Template version.
+            type: str
+        category:
+            description: The template category.
+            type: str
+        serverCount:
+            description: Server count.
+            type: int
+    sample: {
+        "id": "2434144f-7795-4245-a04b-6fcb771697d7",
+        "templateName": "Storage- 100Gb",
+        "templateDescription": "Storage Only 4 Node deployment with 100Gb networking",
+        "templateType": "VxRack FLEX",
+        "templateVersion": "4.5-213",
+        "templateValid": {
+            "valid": true,
+            "messages": []
+        },
+        "originalTemplateId": "ff80808177f880fc0177f883bf1e0027",
+        "templateLocked": true,
+        "draft": false,
+        "inConfiguration": false,
+        "createdDate": "2024-01-04T19:47:23.534+00:00",
+        "createdBy": "system",
+        "updatedDate": null,
+        "lastDeployedDate": null,
+        "updatedBy": null,
+        "components": [
+            {
+                "id": "43dec024-85a9-4901-9e8e-fa0d3c417f7b",
+                "componentID": "component-scaleio-gateway-1",
+                "identifier": null,
+                "componentValid": {
+                    "valid": true,
+                    "messages": []
+                },
+                "puppetCertName": null,
+                "osPuppetCertName": null,
+                "name": "PowerFlex Cluster",
+                "type": "SCALEIO",
+                "subType": "STORAGEONLY",
+                "teardown": false,
+                "helpText": null,
+                "managementIpAddress": null,
+                "configFile": null,
+                "serialNumber": null,
+                "asmGUID": null,
+                "relatedComponents": {
+                    "c5c46733-012c-4dca-af9b-af46d73d045a": "Storage Only Node"
+                },
+                "resources": [],
+                "refId": null,
+                "cloned": false,
+                "clonedFromId": null,
+                "manageFirmware": false,
+                "brownfield": false,
+                "instances": 1,
+                "clonedFromAsmGuid": null,
+                "ip": null
+            }
+        ],
+        "category": "Sample Templates",
+        "allUsersAllowed": false,
+        "assignedUsers": [],
+        "manageFirmware": true,
+        "useDefaultCatalog": true,
+        "firmwareRepository": null,
+        "licenseRepository": null,
+        "configuration": null,
+        "serverCount": 4,
+        "storageCount": 0,
+        "clusterCount": 1,
+        "serviceCount": 0,
+        "switchCount": 0,
+        "vmCount": 0,
+        "sdnasCount": 0,
+        "brownfieldTemplateType": "NONE",
+        "networks": [
+            {
+                "id": "ff80808177f8823b0177f8bb82d80005",
+                "name": "flex-data2",
+                "description": "",
+                "type": "SCALEIO_DATA",
+                "vlanId": 105,
+                "static": true,
+                "staticNetworkConfiguration": {
+                    "gateway": null,
+                    "subnet": "1.1.1.0",
+                    "primaryDns": null,
+                    "secondaryDns": null,
+                    "dnsSuffix": null,
+                    "ipRange": null,
+                    "ipAddress": null,
+                    "staticRoute": null
+                },
+                "destinationIpAddress": "1.1.1.0"
+            }
+        ],
+        "blockServiceOperationsMap": {}
+    }
+        
 '''
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
+import re
 
 LOG = utils.get_logger('info')
 
@@ -1160,7 +1706,7 @@ LOG = utils.get_logger('info')
 class PowerFlexInfo(object):
     """Class with Info operations"""
 
-    filter_mapping = {'equal': 'eq.'}
+    filter_mapping = {'equal': 'eq', 'contains': 'co'}
 
     def __init__(self):
         """ Define all parameters required by this module"""
@@ -1437,6 +1983,69 @@ class PowerFlexInfo(object):
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
+    def get_managed_devices_list(self):
+        """ Get the list of managed devices on a given PowerFlex Manager system """
+        try:
+            LOG.info('Getting managed devices list ')
+            devices = self.powerflex_conn.managed_device.get(filters=self.populate_filter_list(),
+                                                             limit=self.get_param_value('limit'),
+                                                             offset=self.get_param_value('offset'),
+                                                             sort=self.get_param_value('sort'))
+            return devices
+        except Exception as e:
+            msg = f'Get managed devices from PowerFlex Manager failed with error {get_error_message(str(e))}'
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
+    def get_deployments_list(self):
+        """ Get the list of deployments on a given PowerFlex Manager system """
+        try:
+            LOG.info('Getting deployments list ')
+            deployments = self.powerflex_conn.deployment.get(filters=self.populate_filter_list(),
+                                                             sort=self.get_param_value('sort'),
+                                                             limit=self.get_param_value('limit'),
+                                                             offset=self.get_param_value('offset'),
+                                                             include_devices=self.get_param_value('include_devices'),
+                                                             include_template=self.get_param_value('include_template'),
+                                                             full=self.get_param_value('full'))
+            return deployments
+        except Exception as e:
+            msg = f'Get deployments from PowerFlex Manager failed with error {get_error_message(str(e))}'
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
+    def get_service_templates_list(self):
+        """ Get the list of service templates on a given PowerFlex Manager system """
+        try:
+            LOG.info('Getting service templates list ')
+            service_templates = self.powerflex_conn.service_template.get(filters=self.populate_filter_list(),
+                                                                         sort=self.get_param_value('sort'),
+                                                                         offset=self.get_param_value('offset'),
+                                                                         limit=self.get_param_value('limit'),
+                                                                         full=self.get_param_value('full'),
+                                                                         include_attachments=self.get_param_value('include_attachments'))
+            return service_templates
+        except Exception as e:
+            msg = f'Get service templates from PowerFlex Manager failed with error {get_error_message(str(e))}'
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
+    def get_param_value(self, param):
+        """
+        Get the value of the given parameter.
+        Args:
+            param (str): The parameter to get the value for.
+        Returns:
+            The value of the parameter if it is different from the default value,
+            otherwise None.
+        """
+        if param == 'sort' and len(self.module.params.get('gather_subset')) > 1:
+            return None
+
+        default_value = self.module_params.get(param).get('default')
+        param_value = self.module.params.get(param)
+        return param_value if default_value != param_value else None
+
     def validate_filter(self, filter_dict):
         """ Validate given filter_dict """
 
@@ -1453,6 +2062,16 @@ class PowerFlexInfo(object):
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
+    def populate_filter_list(self):
+        """Populate the filter list"""
+        if len(self.module.params.get('gather_subset')) > 1:
+            return []
+        filters = self.module.params.get('filters') or []
+        return [
+            f'{self.filter_mapping.get(filter_dict["filter_operator"])},{filter_dict["filter_key"]},{filter_dict["filter_value"]}'
+            for filter_dict in filters
+        ]
+
     def get_filters(self, filters):
         """Get the filters to be applied"""
 
@@ -1460,7 +2079,7 @@ class PowerFlexInfo(object):
         for item in filters:
             self.validate_filter(item)
             f_op = item['filter_operator']
-            if self.filter_mapping.get(f_op):
+            if self.filter_mapping.get(f_op) == 'eq':
                 f_key = item['filter_key']
                 f_val = item['filter_value']
                 if f_key in filter_dict:
@@ -1474,13 +2093,6 @@ class PowerFlexInfo(object):
                         filter_dict[f_key] = [filter_dict[f_key], f_val]
                 else:
                     filter_dict[f_key] = f_val
-            else:
-                msg = "Given filter operator '{0}' is not supported." \
-                    "supported operators are : '{1}'".format(
-                        f_op,
-                        list(self.filter_mapping.keys()))
-                LOG.error(msg)
-                self.module.fail_json(msg=msg)
         return filter_dict
 
     def perform_module_operation(self):
@@ -1504,6 +2116,9 @@ class PowerFlexInfo(object):
         device = []
         rcgs = []
         replication_pair = []
+        service_template = []
+        managed_device = []
+        deployment = []
 
         subset = self.module.params['gather_subset']
         if subset is not None:
@@ -1525,6 +2140,12 @@ class PowerFlexInfo(object):
                 rcgs = self.get_replication_consistency_group_list(filter_dict=filter_dict)
             if 'replication_pair' in subset:
                 replication_pair = self.get_replication_pair_list(filter_dict=filter_dict)
+            if 'managed_device' in subset:
+                managed_device = self.get_managed_devices_list()
+            if 'service_template' in subset:
+                service_template = self.get_service_templates_list()
+            if 'deployment' in subset:
+                deployment = self.get_deployments_list()
 
         self.module.exit_json(
             Array_Details=array_details,
@@ -1537,7 +2158,10 @@ class PowerFlexInfo(object):
             Protection_Domains=protection_domain,
             Devices=device,
             Replication_Consistency_Groups=rcgs,
-            Replication_Pairs=replication_pair
+            Replication_Pairs=replication_pair,
+            ManagedDevices=managed_device,
+            ServiceTemplates=service_template,
+            Deployments=deployment
         )
 
 
@@ -1563,14 +2187,29 @@ def get_powerflex_info_parameters():
         gather_subset=dict(type='list', required=False, elements='str',
                            choices=['vol', 'storage_pool',
                                     'protection_domain', 'sdc', 'sds',
-                                    'snapshot_policy', 'device', 'rcg', 'replication_pair']),
+                                    'snapshot_policy', 'device', 'rcg', 'replication_pair', 'service_template',
+                                    'managed_device', 'deployment']),
         filters=dict(type='list', required=False, elements='dict',
                      options=dict(filter_key=dict(type='str', required=True, no_log=False),
                                   filter_operator=dict(
                                       type='str', required=True,
-                                      choices=['equal']),
+                                      choices=['equal', 'contains']),
                                   filter_value=dict(type='str', required=True)
-                                  )))
+                                  )),
+        sort=dict(type='str'),
+        limit=dict(type='int', default=50),
+        offset=dict(type='int', default=0),
+        include_devices=dict(type='bool', default=True),
+        include_template=dict(type='bool', default=True),
+        full=dict(type='bool', default=False),
+        include_attachments=dict(type='bool', default=True)
+    )
+
+
+def get_error_message(detailed_message):
+    """ Get error message from detailed message """
+    match = re.search(r"displayMessage=([^']+)", detailed_message)
+    return match.group(1) if match else detailed_message
 
 
 def main():
