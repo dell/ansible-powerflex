@@ -1,6 +1,6 @@
-#!/usr/bin/python
+# !/usr/bin/python
 
-# Copyright: (c) 2021, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """Ansible module for Gathering information about Dell Technologies (Dell) PowerFlex"""
@@ -1150,7 +1150,7 @@ Replication_pairs:
         "userRequestedPauseTransmitInitCopy": false
     }
 
-Fault Sets:
+Fault_Sets:
     description: Details of fault sets.
     returned: always
     type: list
@@ -1167,7 +1167,9 @@ Fault Sets:
     sample:  [
         {
             "protectionDomainId": "da721a8300000000",
+            "protectionDomainName": "fault_set_1",
             "name": "at1zbs1t6cp2sds1d1fs1",
+            "SDS": [],
             "id": "eb44b70500000000",
             "links": [
                 { "rel": "self", "href": "/api/instances/FaultSet::eb44b70500000000" },
@@ -1187,7 +1189,9 @@ Fault Sets:
         },
         {
             "protectionDomainId": "da721a8300000000",
+            "protectionDomainName": "fault_set_2",
             "name": "at1zbs1t6cp2sds1d1fs3",
+            "SDS": [],
             "id": "eb44b70700000002",
             "links": [
                 { "rel": "self", "href": "/api/instances/FaultSet::eb44b70700000002" },
@@ -1211,6 +1215,8 @@ Fault Sets:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
+    import Configuration
 
 LOG = utils.get_logger('info')
 
@@ -1324,7 +1330,7 @@ class PowerFlexInfo(object):
             return result_list(sds)
 
         except Exception as e:
-            msg = 'Get sds list from powerflex array failed with' \
+            msg = 'Get SDS list from powerflex array failed with' \
                   ' error %s' % (str(e))
             LOG.error(msg)
             self.module.fail_json(msg=msg)
@@ -1501,15 +1507,30 @@ class PowerFlexInfo(object):
 
         try:
             LOG.info('Getting fault set list ')
+            filter_pd = []
             if filter_dict:
+                if 'protectionDomainName' in filter_dict.keys():
+                    filter_pd = filter_dict['protectionDomainName']
+                    del filter_dict['protectionDomainName']
                 fault_sets = self.powerflex_conn.fault_set.get(filter_fields=filter_dict)
             else:
                 fault_sets = self.powerflex_conn.fault_set.get()
-            for fs in fault_sets:
-                pd_filter = self.get_filters([{"filter_key":"id", "filter_operator":"equal", "filter_value": fs["protectionDomainId"]}])
-                pds = self.get_pd_list(filter_dict=pd_filter)
-                fs.update({"protectionDomainName": pds[0]["name"]})
-            return result_list(fault_sets)
+
+            fault_set_final = []
+            if fault_sets:
+                for fault_set in fault_sets:
+                    fault_set['protectionDomainName'] = Configuration(self.powerflex_conn, self.module).get_protection_domain(
+                        protection_domain_id=fault_set["protectionDomainId"])["name"]
+                    fault_set["SDS"] = Configuration(self.powerflex_conn, self.module).get_associated_sds(
+                        fault_set_id=fault_set['id'])
+                    fault_set_final.append(fault_set)
+            fault_sets = []
+            for fault_set in fault_set_final:
+                if fault_set['protectionDomainName'] in filter_pd:
+                    fault_sets.append(fault_set)
+            if len(filter_pd) != 0:
+                return result_list(fault_sets)
+            return result_list(fault_set_final)
 
         except Exception as e:
             msg = 'Get fault set list from powerflex array failed ' \
