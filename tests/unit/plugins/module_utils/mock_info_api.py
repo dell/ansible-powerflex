@@ -15,12 +15,14 @@ from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_
     import MockReplicationPairApi
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_snapshot_policy_api \
     import MockSnapshotPolicyApi
+from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_fault_set_api import MockFaultSetApi
 
 
 __metaclass__ = type
 
 
 class MockInfoApi:
+    MODULE_UTILS_PATH = "ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.utils"
     INFO_COMMON_ARGS = {
         "hostname": "**.***.**.***",
         "gather_subset": [],
@@ -236,15 +238,90 @@ class MockInfoApi:
     RCG_LIST = MockReplicationConsistencyGroupApi.get_rcg_details()
     PAIR_LIST = MockReplicationPairApi.get_pair_details()
 
+    INFO_GET_FAULT_SET_LIST = MockFaultSetApi.FAULT_SET_GET_LIST
+
+    INFO_SDC_GET_LIST = [
+        {
+            "id": "07335d3d00000006",
+            "name": "sdc_1"
+        },
+        {
+            "id": "07335d3c00000005",
+            "name": "sdc_2"
+        },
+        {
+            "id": "0733844a00000003",
+            "name": "sdc_3"
+        }
+    ]
+
+    INFO_SDC_FILTER_LIST = [
+        {
+            "id": "07335d3d00000006",
+            "name": "sdc_1"
+        }
+    ]
+
+    INFO_SDS_GET_LIST = [
+        {
+            "id": "8f3bb0cc00000002",
+            "name": "node0"
+        },
+        {
+            "id": "8f3bb0ce00000000",
+            "name": "node1"
+        },
+        {
+            "id": "8f3bb15300000001",
+            "name": "node22"
+        }
+    ]
+    INFO_GET_PD_LIST = [
+        {
+            "id": "9300e90900000001",
+            "name": "domain2"
+        },
+        {
+            "id": "9300c1f900000000",
+            "name": "domain1"
+        }
+    ]
+    INFO_GET_DEVICE_LIST = [
+        {
+            "id": "b6efa59900000000",
+            "name": "device230"
+        },
+        {
+            "id": "b6efa5fa00020000",
+            "name": "device_node0"
+        },
+        {
+            "id": "b7f3a60900010000",
+            "name": "device22"
+        }
+    ]
+
+    RESPONSE_EXEC_DICT = {
+        'volume_get_details': "Get volumes list from powerflex array failed with error",
+        'snapshot_policy_get_details': "Get snapshot policies list from powerflex array failed with error ",
+        'sp_get_details': "Get storage pool list from powerflex array failed with error ",
+        'rcg_get_details': "Get replication consistency group list from powerflex array failed with error ",
+        'replication_pair_get_details': "Get replication pair list from powerflex array failed with error ",
+        'fault_set_get_details': "Get fault set list from powerflex array failed with error",
+        'sdc_get_details': "Get SDC list from powerflex array failed with error",
+        'sds_get_details': "Get SDS list from powerflex array failed with error",
+        'pd_get_details': "Get protection domain list from powerflex array failed with error",
+        'device_get_details': "Get device list from powerflex array failed with error",
+        'get_sds_details_filter_invalid': "Filter should have all keys: 'filter_key, filter_operator, filter_value'",
+        'get_sds_details_filter_empty': "Filter keys: '['filter_key', 'filter_operator', 'filter_value']' cannot be None",
+        'invalid_filter_operator_exception': "Given filter operator 'does_not_contain' is not supported.",
+        'api_exception': "Get API details from Powerflex array failed with error",
+        'system_exception': "Get array details from Powerflex array failed with error",
+        'managed_device_get_error': "Get managed devices from PowerFlex Manager failed with error",
+        'service_template_get_error': "Get service templates from PowerFlex Manager failed with error",
+        'deployment_get_error': "Get deployments from PowerFlex Manager failed with error"
+    }
+
     @staticmethod
     def get_exception_response(response_type):
-        if response_type == 'volume_get_details':
-            return "Get volumes list from powerflex array failed with error "
-        elif response_type == 'snapshot_policy_get_details':
-            return "Get snapshot policies list from powerflex array failed with error "
-        elif response_type == 'sp_get_details':
-            return "Get storage pool list from powerflex array failed with error "
-        elif response_type == 'rcg_get_details':
-            return "Get replication consistency group list from powerflex array failed with error "
-        elif response_type == 'replication_pair_get_details':
-            return "Get replication pair list from powerflex array failed with error "
+        return MockInfoApi.RESPONSE_EXEC_DICT.get(response_type, "")

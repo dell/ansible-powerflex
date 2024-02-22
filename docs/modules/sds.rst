@@ -109,6 +109,18 @@ Parameters
     Default value by API is ``HighPerformance``.
 
 
+  fault_set_name (optional, str, None)
+    Name of the fault set.
+
+    Mutually exclusive with *fault_set_id*.
+
+
+  fault_set_id (optional, str, None)
+    Unique identifier of the fault set.
+
+    Mutually exclusive with *fault_set_name*.
+
+
   state (True, str, None)
     State of the SDS.
 
@@ -156,7 +168,7 @@ Notes
    - There can be 1 or more IPs with role 'sdcOnly'.
    - There must be only 1 IP with SDS role (either with role 'all' or 'sdsOnly').
    - SDS can be created with RF cache disabled, but, be aware that the RF cache is not always updated. In this case, the user should re-try the operation.
-   - The *check_mode* is not supported.
+   - The *check_mode* is supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -192,6 +204,7 @@ Examples
         port: "{{port}}"
         sds_name: "node1"
         protection_domain_name: "domain1"
+        fault_set_name: "faultset1"
         sds_ip_list:
           - ip: "198.10.xxx.xxx"
             role: "sdcOnly"
@@ -513,4 +526,5 @@ Authors
 ~~~~~~~
 
 - Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 

@@ -595,7 +595,7 @@ class PowerFlexReplicationPair(object):
 
     def validate_pause(self, params):
         if params['pause'] is not None and (not params['pair_id'] and not params['pair_name']):
-            self.module.fail_json(msg='Specify either pair_id or pair_name to perform pause or resume of inital copy')
+            self.module.fail_json(msg='Specify either pair_id or pair_name to perform pause or resume of initial copy')
 
     def validate_pause_or_resume(self, pause, replication_pair_details, pair_id):
         if not replication_pair_details:

@@ -1,4 +1,4 @@
-# Copyright: (c) 2022, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -28,6 +28,7 @@ class MockStoragePoolApi:
     STORAGE_POOL_GET_LIST = [
         {
             'protectionDomainId': '4eeb304600000000',
+            'protectionDomainName': 'test_pd',
             'rebuildEnabled': True,
             'dataLayout': 'MediumGranularity',
             'persistentChecksumState': 'Protected',
@@ -94,6 +95,149 @@ class MockStoragePoolApi:
             'id': 'test_pool_id_1'
         }
     ]
+
+    STORAGE_POOL_GET_MULTI_LIST = [
+        {
+            'protectionDomainId': '4eeb304600000000',
+            'protectionDomainName': 'test_pd',
+            'rebuildEnabled': True,
+            'dataLayout': 'MediumGranularity',
+            'persistentChecksumState': 'Protected',
+            'addressSpaceUsage': 'Normal',
+            'externalAccelerationType': 'None',
+            'rebalanceEnabled': True,
+            'sparePercentage': 10,
+            'rmcacheWriteHandlingMode': 'Cached',
+            'checksumEnabled': False,
+            'useRfcache': False,
+            'compressionMethod': 'Invalid',
+            'fragmentationEnabled': True,
+            'numOfParallelRebuildRebalanceJobsPerDevice': 2,
+            'capacityAlertHighThreshold': 80,
+            'capacityAlertCriticalThreshold': 90,
+            'capacityUsageState': 'Normal',
+            'capacityUsageType': 'NetCapacity',
+            'addressSpaceUsageType': 'DeviceCapacityLimit',
+            'bgScannerCompareErrorAction': 'ReportAndFix',
+            'bgScannerReadErrorAction': 'ReportAndFix',
+            'fglExtraCapacity': None,
+            'fglOverProvisioningFactor': None,
+            'fglWriteAtomicitySize': None,
+            'fglMaxCompressionRatio': None,
+            'fglPerfProfile': None,
+            'replicationCapacityMaxRatio': 0,
+            'persistentChecksumEnabled': True,
+            'persistentChecksumBuilderLimitKb': 3072,
+            'persistentChecksumValidateOnRead': False,
+            'useRmcache': False,
+            'fglAccpId': None,
+            'rebuildIoPriorityPolicy': 'limitNumOfConcurrentIos',
+            'rebalanceIoPriorityPolicy': 'favorAppIos',
+            'vtreeMigrationIoPriorityPolicy': 'favorAppIos',
+            'protectedMaintenanceModeIoPriorityPolicy': 'limitNumOfConcurrentIos',
+            'rebuildIoPriorityNumOfConcurrentIosPerDevice': 1,
+            'rebalanceIoPriorityNumOfConcurrentIosPerDevice': 1,
+            'vtreeMigrationIoPriorityNumOfConcurrentIosPerDevice': 1,
+            'protectedMaintenanceModeIoPriorityNumOfConcurrentIosPerDevice': 1,
+            'rebuildIoPriorityBwLimitPerDeviceInKbps': 10240,
+            'rebalanceIoPriorityBwLimitPerDeviceInKbps': 10240,
+            'vtreeMigrationIoPriorityBwLimitPerDeviceInKbps': 10240,
+            'protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps': 10240,
+            'rebuildIoPriorityAppIopsPerDeviceThreshold': None,
+            'rebalanceIoPriorityAppIopsPerDeviceThreshold': None,
+            'vtreeMigrationIoPriorityAppIopsPerDeviceThreshold': None,
+            'protectedMaintenanceModeIoPriorityAppIopsPerDeviceThreshold': None,
+            'rebuildIoPriorityAppBwPerDeviceThresholdInKbps': None,
+            'rebalanceIoPriorityAppBwPerDeviceThresholdInKbps': None,
+            'vtreeMigrationIoPriorityAppBwPerDeviceThresholdInKbps': None,
+            'protectedMaintenanceModeIoPriorityAppBwPerDeviceThresholdInKbps': None,
+            'rebuildIoPriorityQuietPeriodInMsec': None,
+            'rebalanceIoPriorityQuietPeriodInMsec': None,
+            'vtreeMigrationIoPriorityQuietPeriodInMsec': None,
+            'protectedMaintenanceModeIoPriorityQuietPeriodInMsec': None,
+            'zeroPaddingEnabled': True,
+            'backgroundScannerMode': 'DataComparison',
+            'backgroundScannerBWLimitKBps': 3072,
+            'fglMetadataSizeXx100': None,
+            'fglNvdimmWriteCacheSizeInMb': None,
+            'fglNvdimmMetadataAmortizationX100': None,
+            'mediaType': 'HDD',
+            'name': 'test_pool',
+            'id': 'test_pool_id_1'
+        },
+        {
+            'protectionDomainId': '4eeb304600000002',
+            'protectionDomainName': 'test_pd_1',
+            'rebuildEnabled': True,
+            'dataLayout': 'MediumGranularity',
+            'persistentChecksumState': 'Protected',
+            'addressSpaceUsage': 'Normal',
+            'externalAccelerationType': 'None',
+            'rebalanceEnabled': True,
+            'sparePercentage': 10,
+            'rmcacheWriteHandlingMode': 'Cached',
+            'checksumEnabled': False,
+            'useRfcache': False,
+            'compressionMethod': 'Invalid',
+            'fragmentationEnabled': True,
+            'numOfParallelRebuildRebalanceJobsPerDevice': 2,
+            'capacityAlertHighThreshold': 80,
+            'capacityAlertCriticalThreshold': 90,
+            'capacityUsageState': 'Normal',
+            'capacityUsageType': 'NetCapacity',
+            'addressSpaceUsageType': 'DeviceCapacityLimit',
+            'bgScannerCompareErrorAction': 'ReportAndFix',
+            'bgScannerReadErrorAction': 'ReportAndFix',
+            'fglExtraCapacity': None,
+            'fglOverProvisioningFactor': None,
+            'fglWriteAtomicitySize': None,
+            'fglMaxCompressionRatio': None,
+            'fglPerfProfile': None,
+            'replicationCapacityMaxRatio': 0,
+            'persistentChecksumEnabled': True,
+            'persistentChecksumBuilderLimitKb': 3072,
+            'persistentChecksumValidateOnRead': False,
+            'useRmcache': False,
+            'fglAccpId': None,
+            'rebuildIoPriorityPolicy': 'limitNumOfConcurrentIos',
+            'rebalanceIoPriorityPolicy': 'favorAppIos',
+            'vtreeMigrationIoPriorityPolicy': 'favorAppIos',
+            'protectedMaintenanceModeIoPriorityPolicy': 'limitNumOfConcurrentIos',
+            'rebuildIoPriorityNumOfConcurrentIosPerDevice': 1,
+            'rebalanceIoPriorityNumOfConcurrentIosPerDevice': 1,
+            'vtreeMigrationIoPriorityNumOfConcurrentIosPerDevice': 1,
+            'protectedMaintenanceModeIoPriorityNumOfConcurrentIosPerDevice': 1,
+            'rebuildIoPriorityBwLimitPerDeviceInKbps': 10240,
+            'rebalanceIoPriorityBwLimitPerDeviceInKbps': 10240,
+            'vtreeMigrationIoPriorityBwLimitPerDeviceInKbps': 10240,
+            'protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps': 10240,
+            'rebuildIoPriorityAppIopsPerDeviceThreshold': None,
+            'rebalanceIoPriorityAppIopsPerDeviceThreshold': None,
+            'vtreeMigrationIoPriorityAppIopsPerDeviceThreshold': None,
+            'protectedMaintenanceModeIoPriorityAppIopsPerDeviceThreshold': None,
+            'rebuildIoPriorityAppBwPerDeviceThresholdInKbps': None,
+            'rebalanceIoPriorityAppBwPerDeviceThresholdInKbps': None,
+            'vtreeMigrationIoPriorityAppBwPerDeviceThresholdInKbps': None,
+            'protectedMaintenanceModeIoPriorityAppBwPerDeviceThresholdInKbps': None,
+            'rebuildIoPriorityQuietPeriodInMsec': None,
+            'rebalanceIoPriorityQuietPeriodInMsec': None,
+            'vtreeMigrationIoPriorityQuietPeriodInMsec': None,
+            'protectedMaintenanceModeIoPriorityQuietPeriodInMsec': None,
+            'zeroPaddingEnabled': True,
+            'backgroundScannerMode': 'DataComparison',
+            'backgroundScannerBWLimitKBps': 3072,
+            'fglMetadataSizeXx100': None,
+            'fglNvdimmWriteCacheSizeInMb': None,
+            'fglNvdimmMetadataAmortizationX100': None,
+            'mediaType': 'HDD',
+            'name': 'test_pool',
+            'id': 'test_pool_id_2'
+        }
+    ]
+
+    PROTECTION_DETAILS = [{"pd_id": "4eeb304600000000", "pd_name": "test_pd"}]
+
+    PROTECTION_DETAILS_1 = [{"id": "4eeb304600000001", "name": "test_pd_name"}]
 
     STORAGE_POOL_STATISTICS = {
         'backgroundScanFixedReadErrorCount': 0,
@@ -461,7 +605,23 @@ class MockStoragePoolApi:
         'numOfIncomingVtreeMigrations': 1
     }
 
+    RESPONSE_EXEC_DICT = {
+        "get_details": "Failed to get the storage pool test_pool with error ",
+        "invalid_pd_id": "Entered protection domain id does not match with the storage pool's protection domain id.",
+        "get_pd_exception": "Failed to get the protection domain 4eeb304600000001 with error",
+        "create_storage_pool": "Failed to create the storage pool",
+        "rename_storage_pool": "Failed to update the storage pool",
+        "create_pool_id": "storage_pool_name is missing & name required to create a storage pool",
+        "get_pd_non_exist": "Unable to find the protection domain",
+        "get_multi_details": "More than one storage pool found",
+        "create_wo_pd": "Please provide protection domain details",
+        "create_transitional": "TRANSITIONAL media type is not supported during creation.",
+        "create_pool_name_empty": "Empty or white spaced string provided in storage_pool_name.",
+        "create_pool_new_name": "storage_pool_new_name is passed during creation.",
+        "rename_storage_pool_empty": "Empty/White spaced name is not allowed during renaming of a storage pool.",
+        "delete_storage_pool": "Deleting storage pool is not supported through ansible module."
+    }
+
     @staticmethod
     def get_exception_response(response_type):
-        if response_type == 'get_details':
-            return "Failed to get the storage pool test_pool with error "
+        return MockStoragePoolApi.RESPONSE_EXEC_DICT.get(response_type, "")

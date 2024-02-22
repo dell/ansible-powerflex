@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Dell Inc., or its subsidiaries. All Rights Reserved.
+Copyright (c) 2024 Dell Inc., or its subsidiaries. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ Should explain what happened, what was expected and how to reproduce it together
 
  - Ansible Version: [e.g. 2.14]
  - Python Version [e.g. 3.11]
- - Ansible modules for Dell PowerFlex Version: [e.g. 2.1.0]
+ - Ansible modules for Dell PowerFlex Version: [e.g. 2.2.0]
  - PowerFlex SDK version: [e.g. PyPowerFlex 1.8.0]
  - Any other additional information...
 
