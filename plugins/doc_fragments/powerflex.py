@@ -1,4 +1,4 @@
-# Copyright: (c) 2020, Dell Technologies.
+# Copyright: (c) 2024, Dell Technologies.
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -53,7 +53,7 @@ class ModuleDocFragment(object):
     requirements:
       - A Dell PowerFlex storage system version 3.5 or later.
       - Ansible-core 2.14 or later.
-      - PyPowerFlex 1.8.0.
+      - PyPowerFlex 1.9.0.
       - Python 3.9, 3.10 or 3.11.
     notes:
       - The modules present in the collection named as 'dellemc.powerflex'

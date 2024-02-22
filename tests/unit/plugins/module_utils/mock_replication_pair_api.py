@@ -48,3 +48,12 @@ class MockReplicationPairApi:
     def get_volume_details():
         return [{"id": "0001",
                  "name": "volume1"}]
+
+    @staticmethod
+    def get_error_message(response_type):
+        error_msg = {"get_rcg_exception": "Failed to get the replication consistency group 12 with error ",
+                     "get_rcg_id_name_error": "Specify either rcg_id or rcg_name to create replication pair",
+                     "get_pause_error": "Specify either pair_id or pair_name to perform pause or resume of initial copy",
+                     "get_pause_or_resume_error": "Specify a valid pair_name or pair_id to perform pause or resume",
+                     "get_volume_exception": "Failed to retrieve volume"}
+        return error_msg[response_type]

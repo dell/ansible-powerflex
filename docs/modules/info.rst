@@ -14,6 +14,8 @@ Synopsis
 
 Gathering information about Dell PowerFlex storage system includes getting the api details, list of volumes, SDSs, SDCs, storage pools, protection domains, snapshot policies, and devices.
 
+Gathering information about Dell PowerFlex Manager includes getting the list of managed devices, deployments and service templates.
+
 
 
 Requirements
@@ -51,6 +53,12 @@ Parameters
 
     Replication pairs - ``replication_pair``.
 
+    Service templates - ``service_template``.
+
+    Managed devices - ``managed_device``.
+
+    Deployments - ``deployment``.
+
 
   filters (optional, list, None)
     List of filters to support filtered output for storage entities.
@@ -67,10 +75,58 @@ Parameters
     filter_operator (True, str, None)
       Operation to be performed on filter key.
 
+      Choice *'contains'* is supported for gather_subset keys *service_template*, *managed_device*, *deployment*.
+
 
     filter_value (True, str, None)
       Value of the filter key.
 
+
+
+  limit (optional, int, 50)
+    Page limit.
+
+    Supported for gather_subset keys *service_template*, *managed_device*, *deployment*.
+
+
+  offset (optional, int, 0)
+    Pagination offset.
+
+    Supported for gather_subset keys *service_template*, *managed_device*, *deployment*.
+
+
+  sort (optional, str, None)
+    Sort the returned components based on specified field.
+
+    Supported for gather_subset keys *service_template*, *managed_device*, *deployment*.
+
+    The supported sort keys for the gather_subset can be referred from PowerFlex Manager API documentation in developer.dell.com.
+
+
+  include_devices (optional, bool, True)
+    Include devices in response.
+
+    Applicable when gather_subset is *deployment*.
+
+
+  include_template (optional, bool, True)
+    Include service templates in response.
+
+    Applicable when gather_subset is *deployment*.
+
+
+  full (optional, bool, False)
+    Specify if response is full or brief.
+
+    Applicable when gather_subset is *deployment*, *service_template*.
+
+    For *deployment* specify to use full templates including resources in response.
+
+
+  include_attachments (optional, bool, True)
+    Include attachments.
+
+    Applicable when gather_subset is *service_template*.
 
 
   hostname (True, str, None)
@@ -111,6 +167,8 @@ Notes
 
 .. note::
    - The *check_mode* is supported.
+   - The supported filter keys for the gather_subset can be referred from PowerFlex Manager API documentation in developer.dell.com.
+   - The *filter*, *sort*, *limit* and *offset* options will be ignored when more than one *gather_subset* is specified along with *service_template*, *managed_device* or *deployment*.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -151,6 +209,35 @@ Examples
           - filter_key: "name"
             filter_operator: "equal"
             filter_value: "ansible_test"
+
+    - name: Get deployment and resource provisioning info
+      dellemc.powerflex.info:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        gather_subset:
+          - managed_device
+          - deployment
+          - service_template
+
+    - name: Get deployment with filter, sort, pagination
+      dellemc.powerflex.info:
+        hostname: "{{hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{validate_certs}}"
+        gather_subset:
+          - deployment
+        filters:
+          - filter_key: "name"
+            filter_operator: "contains"
+            filter_value: "partial"
+        sort: name
+        limit: 10
+        offset: 10
+        include_devices: true
+        include_template: true
 
 
 
@@ -638,6 +725,102 @@ Replication_pairs (Always, list, {'copyType': 'OnlineCopy', 'id': '23aa0bc900000
 
 
 
+ManagedDevices (when I(gather_subset) is I(managed_device), list, [{'refId': 'softwareOnlyServer-10.1.1.1', 'refType': None, 'ipAddress': '10.1.1.1', 'currentIpAddress': '10.1.1.1', 'serviceTag': 'VMware-42 15 a5 f9 65 e6 63 0e-36 79 59 73 7b 3a 68 cd-SW', 'model': 'VMware Virtual Platform', 'deviceType': 'SoftwareOnlyServer', 'discoverDeviceType': 'SOFTWAREONLYSERVER_CENTOS', 'displayName': 'vpi1011-c1n1', 'managedState': 'UNMANAGED', 'state': 'READY', 'inUse': False, 'serviceReferences': [], 'statusMessage': None, 'firmwareName': 'Default Catalog - PowerFlex 4.5.0.0', 'customFirmware': False, 'needsAttention': False, 'manufacturer': 'VMware, Inc.', 'systemId': None, 'health': 'RED', 'healthMessage': 'Inventory run failed.', 'operatingSystem': 'N/A', 'numberOfCPUs': 0, 'cpuType': None, 'nics': 0, 'memoryInGB': 0, 'infraTemplateDate': None, 'infraTemplateId': None, 'serverTemplateDate': None, 'serverTemplateId': None, 'inventoryDate': None, 'complianceCheckDate': '2024-02-05T18:31:31.213+00:00', 'discoveredDate': '2024-02-05T18:31:30.992+00:00', 'deviceGroupList': {'paging': None, 'deviceGroup': [{'link': None, 'groupSeqId': -1, 'groupName': 'Global', 'groupDescription': None, 'createdDate': None, 'createdBy': 'admin', 'updatedDate': None, 'updatedBy': None, 'managedDeviceList': None, 'groupUserList': None}]}, 'detailLink': {'title': 'softwareOnlyServer-10.1.1.1', 'href': '/AsmManager/ManagedDevice/softwareOnlyServer-10.1.1.1', 'rel': 'describedby', 'type': None}, 'credId': 'bc97cefb-5eb4-4c20-8e39-d1a2b809c9f5', 'compliance': 'NONCOMPLIANT', 'failuresCount': 0, 'chassisId': None, 'parsedFacts': None, 'config': None, 'hostname': 'vpi1011-c1n1', 'osIpAddress': None, 'osAdminCredential': None, 'osImageType': None, 'lastJobs': None, 'puppetCertName': 'red_hat-10.1.1.1', 'svmAdminCredential': None, 'svmName': None, 'svmIpAddress': None, 'svmImageType': None, 'flexosMaintMode': 0, 'esxiMaintMode': 0, 'vmList': []}])
+  Details of all devices from inventory.
+
+
+  deviceType (, str, )
+    Device Type.
+
+
+  serviceTag (, str, )
+    Service Tag.
+
+
+  serverTemplateId (, str, )
+    The ID of the server template.
+
+
+  state (, str, )
+    The state of the device.
+
+
+  managedState (, str, )
+    The managed state of the device.
+
+
+  compliance (, str, )
+    The compliance state of the device.
+
+
+  systemId (, str, )
+    The system ID.
+
+
+
+Deployments (when I(gather_subset) is I(deployment), list, [{'id': '8aaa80658cd602e0018cda8b257f78ce', 'deploymentName': 'Test-Update - K', 'deploymentDescription': 'Test-Update - K', 'deploymentValid': None, 'retry': False, 'teardown': False, 'teardownAfterCancel': False, 'removeService': False, 'createdDate': '2024-01-05T16:53:21.407+00:00', 'createdBy': 'admin', 'updatedDate': '2024-02-11T17:00:05.657+00:00', 'updatedBy': 'system', 'deploymentScheduledDate': None, 'deploymentStartedDate': '2024-01-05T16:53:22.886+00:00', 'deploymentFinishedDate': None, 'serviceTemplate': {'id': '8aaa80658cd602e0018cda8b257f78ce', 'templateName': 'block-only (8aaa80658cd602e0018cda8b257f78ce)', 'templateDescription': 'Storage - Software Only deployment', 'templateType': 'VxRack FLEX', 'templateVersion': '4.5.0.0', 'templateValid': {'valid': True, 'messages': []}, 'originalTemplateId': 'c44cb500-020f-4562-9456-42ec1eb5f9b2', 'templateLocked': False, 'draft': False, 'inConfiguration': False, 'createdDate': '2024-01-05T16:53:22.083+00:00', 'createdBy': None, 'updatedDate': '2024-02-09T06:00:09.602+00:00', 'lastDeployedDate': None, 'updatedBy': None, 'components': [{'id': '6def7edd-bae2-4420-93bf-9ceb051bbb65', 'componentID': 'component-scaleio-gateway-1', 'identifier': None, 'componentValid': {'valid': True, 'messages': []}, 'puppetCertName': 'scaleio-block-legacy-gateway', 'osPuppetCertName': None, 'name': 'block-legacy-gateway', 'type': 'SCALEIO', 'subType': 'STORAGEONLY', 'teardown': False, 'helpText': None, 'managementIpAddress': None, 'configFile': None, 'serialNumber': None, 'asmGUID': 'scaleio-block-legacy-gateway', 'relatedComponents': {'625b0e17-9b91-4bc0-864c-d0111d42d8d0': 'Node (Software Only)', '961a59eb-80c3-4a3a-84b7-2101e9831527': 'Node (Software Only)-2', 'bca710a5-7cdf-481e-b729-0b53e02873ee': 'Node (Software Only)-3'}, 'resources': [], 'refId': None, 'cloned': False, 'clonedFromId': None, 'manageFirmware': False, 'brownfield': False, 'instances': 1, 'clonedFromAsmGuid': None, 'ip': None}], 'category': 'block-only', 'allUsersAllowed': True, 'assignedUsers': [], 'manageFirmware': True, 'useDefaultCatalog': False, 'firmwareRepository': None, 'licenseRepository': None, 'configuration': None, 'serverCount': 3, 'storageCount': 1, 'clusterCount': 1, 'serviceCount': 0, 'switchCount': 0, 'vmCount': 0, 'sdnasCount': 0, 'brownfieldTemplateType': 'NONE', 'networks': [{'id': '8aaa80648cd5fb9b018cda46e4e50000', 'name': 'mgmt', 'description': '', 'type': 'SCALEIO_MANAGEMENT', 'vlanId': 850, 'static': True, 'staticNetworkConfiguration': {'gateway': '10.1.1.1', 'subnet': '1.1.1.0', 'primaryDns': '10.1.1.1', 'secondaryDns': '10.1.1.1', 'dnsSuffix': None, 'ipRange': [{'id': '8aaa80648cd5fb9b018cda46e5080001', 'startingIp': '10.1.1.1', 'endingIp': '10.1.1.1', 'role': None}], 'ipAddress': None, 'staticRoute': None}, 'destinationIpAddress': '10.1.1.1'}], 'blockServiceOperationsMap': {'scaleio-block-legacy-gateway': {'blockServiceOperationsMap': {}}}}, 'scheduleDate': None, 'status': 'complete', 'compliant': True, 'deploymentDevice': [{'refId': 'scaleio-block-legacy-gateway', 'refType': None, 'logDump': None, 'status': None, 'statusEndTime': None, 'statusStartTime': None, 'deviceHealth': 'GREEN', 'healthMessage': 'OK', 'compliantState': 'COMPLIANT', 'brownfieldStatus': 'NOT_APPLICABLE', 'deviceType': 'scaleio', 'deviceGroupName': None, 'ipAddress': 'block-legacy-gateway', 'currentIpAddress': '10.1.1.1', 'serviceTag': 'block-legacy-gateway', 'componentId': None, 'statusMessage': None, 'model': 'PowerFlex Gateway', 'cloudLink': False, 'dasCache': False, 'deviceState': 'READY', 'puppetCertName': 'scaleio-block-legacy-gateway', 'brownfield': False}], 'vms': None, 'updateServerFirmware': True, 'useDefaultCatalog': False, 'firmwareRepository': {'id': '8aaa80658cd602e0018cd996a1c91bdc', 'name': 'Intelligent Catalog 45.373.00', 'sourceLocation': None, 'sourceType': None, 'diskLocation': None, 'filename': None, 'md5Hash': None, 'username': None, 'password': None, 'downloadStatus': None, 'createdDate': None, 'createdBy': None, 'updatedDate': None, 'updatedBy': None, 'defaultCatalog': False, 'embedded': False, 'state': None, 'softwareComponents': [], 'softwareBundles': [], 'deployments': [], 'bundleCount': 0, 'componentCount': 0, 'userBundleCount': 0, 'minimal': False, 'downloadProgress': 0, 'extractProgress': 0, 'fileSizeInGigabytes': None, 'signedKeySourceLocation': None, 'signature': None, 'custom': False, 'needsAttention': False, 'jobId': None, 'rcmapproved': False}, 'firmwareRepositoryId': '8aaa80658cd602e0018cd996a1c91bdc', 'licenseRepository': None, 'licenseRepositoryId': None, 'individualTeardown': False, 'deploymentHealthStatusType': 'green', 'assignedUsers': [], 'allUsersAllowed': True, 'owner': 'admin', 'noOp': False, 'firmwareInit': False, 'disruptiveFirmware': False, 'preconfigureSVM': False, 'preconfigureSVMAndUpdate': False, 'servicesDeployed': 'NONE', 'precalculatedDeviceHealth': None, 'lifecycleModeReasons': [], 'jobDetails': None, 'numberOfDeployments': 0, 'operationType': 'NONE', 'operationStatus': None, 'operationData': None, 'deploymentValidationResponse': None, 'currentStepCount': None, 'totalNumOfSteps': None, 'currentStepMessage': None, 'customImage': 'os_sles', 'originalDeploymentId': None, 'currentBatchCount': None, 'totalBatchCount': None, 'templateValid': True, 'lifecycleMode': False, 'vds': False, 'scaleUp': False, 'brownfield': False, 'configurationChange': False}])
+  Details of all deployments.
+
+
+  id (, str, )
+    Deployment ID.
+
+
+  deploymentName (, str, )
+    Deployment name.
+
+
+  status (, str, )
+    The status of deployment.
+
+
+  firmwareRepository (, dict, )
+    The firmware repository.
+
+
+    signature (, str, )
+      The signature details.
+
+
+    downloadStatus (, str, )
+      The download status.
+
+
+    rcmapproved (, bool, )
+      If RCM approved.
+
+
+
+
+ServiceTemplates (when I(gather_subset) is I(service_template), list, [{'id': '2434144f-7795-4245-a04b-6fcb771697d7', 'templateName': 'Storage- 100Gb', 'templateDescription': 'Storage Only 4 Node deployment with 100Gb networking', 'templateType': 'VxRack FLEX', 'templateVersion': '4.5-213', 'templateValid': {'valid': True, 'messages': []}, 'originalTemplateId': 'ff80808177f880fc0177f883bf1e0027', 'templateLocked': True, 'draft': False, 'inConfiguration': False, 'createdDate': '2024-01-04T19:47:23.534+00:00', 'createdBy': 'system', 'updatedDate': None, 'lastDeployedDate': None, 'updatedBy': None, 'components': [{'id': '43dec024-85a9-4901-9e8e-fa0d3c417f7b', 'componentID': 'component-scaleio-gateway-1', 'identifier': None, 'componentValid': {'valid': True, 'messages': []}, 'puppetCertName': None, 'osPuppetCertName': None, 'name': 'PowerFlex Cluster', 'type': 'SCALEIO', 'subType': 'STORAGEONLY', 'teardown': False, 'helpText': None, 'managementIpAddress': None, 'configFile': None, 'serialNumber': None, 'asmGUID': None, 'relatedComponents': {'c5c46733-012c-4dca-af9b-af46d73d045a': 'Storage Only Node'}, 'resources': [], 'refId': None, 'cloned': False, 'clonedFromId': None, 'manageFirmware': False, 'brownfield': False, 'instances': 1, 'clonedFromAsmGuid': None, 'ip': None}], 'category': 'Sample Templates', 'allUsersAllowed': False, 'assignedUsers': [], 'manageFirmware': True, 'useDefaultCatalog': True, 'firmwareRepository': None, 'licenseRepository': None, 'configuration': None, 'serverCount': 4, 'storageCount': 0, 'clusterCount': 1, 'serviceCount': 0, 'switchCount': 0, 'vmCount': 0, 'sdnasCount': 0, 'brownfieldTemplateType': 'NONE', 'networks': [{'id': 'ff80808177f8823b0177f8bb82d80005', 'name': 'flex-data2', 'description': '', 'type': 'SCALEIO_DATA', 'vlanId': 105, 'static': True, 'staticNetworkConfiguration': {'gateway': None, 'subnet': '1.1.1.0', 'primaryDns': None, 'secondaryDns': None, 'dnsSuffix': None, 'ipRange': None, 'ipAddress': None, 'staticRoute': None}, 'destinationIpAddress': '1.1.1.0'}], 'blockServiceOperationsMap': {}}])
+  Details of all service templates.
+
+
+  templateName (, str, )
+    Template name.
+
+
+  templateDescription (, str, )
+    Template description.
+
+
+  templateType (, str, )
+    Template type.
+
+
+  templateVersion (, str, )
+    Template version.
+
+
+  category (, str, )
+    The template category.
+
+
+  serverCount (, int, )
+    Server count.
+
+
+
 
 
 
@@ -653,4 +836,5 @@ Authors
 
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
 - Trisha Datta (@trisha-dell) <ansible.team@dell.com>
+- Jennifer John (@Jennifer-John) <ansible.team@dell.com>
 

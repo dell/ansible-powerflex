@@ -5,6 +5,20 @@ Dellemc.PowerFlex Change Logs
 .. contents:: Topics
 
 
+v2.2.0
+======
+
+Minor Changes
+-------------
+
+- The Info module is enhanced to retrieve lists related to fault sets, service templates, deployments, and managed devices.
+- The SDS module has been enhanced to facilitate SDS creation within a fault set.
+
+New Modules
+-----------
+
+- dellemc.powerflex.fault_set - Manage Fault Sets on Dell PowerFlex
+
 v2.1.0
 ======
 

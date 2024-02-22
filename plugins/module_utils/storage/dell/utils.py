@@ -1,4 +1,4 @@
-# Copyright: (c) 2021, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -80,10 +80,10 @@ def ensure_required_libs(module):
                          exception=PKG_RSRC_IMP_ERR)
 
     if not HAS_POWERFLEX_SDK:
-        module.fail_json(msg=missing_required_lib("PyPowerFlex V 1.8.0 or above"),
+        module.fail_json(msg=missing_required_lib("PyPowerFlex V 1.9.0 or above"),
                          exception=POWERFLEX_SDK_IMP_ERR)
 
-    min_ver = '1.8.0'
+    min_ver = '1.9.0'
     try:
         curr_version = pkg_resources.require("PyPowerFlex")[0].version
         supported_version = (parse_version(curr_version) >= parse_version(min_ver))

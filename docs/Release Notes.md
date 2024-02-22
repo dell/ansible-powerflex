@@ -1,8 +1,8 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 2.1.0
+### Release notes 2.2.0
 
->   © 2023 Dell Inc. or its subsidiaries. All rights reserved. Dell
+>   © 2024 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
 >   subsidiaries. Other trademarks may be trademarks of their respective
 >   owners.
@@ -28,7 +28,7 @@ Table 1. Revision history
 
 | Revision | Date            | Description                                                 |
 |----------|-----------------|-------------------------------------------------------------|
-| 01       | November 2023    | Current release of Ansible Modules for Dell PowerFlex 2.1.0 |
+| 01       | February 2023   | Current release of Ansible Modules for Dell PowerFlex 2.2.0 |
 
 Product description
 -------------------
@@ -44,7 +44,8 @@ each of the entities.
 New features and enhancements
 -----------------------------
 Along with the previous release deliverables, this release supports following features - 
-- Added support for PowerFlex Denver version(4.5.x) to TB and Config role.
+- The SDS module has been enhanced to facilitate SDS creation within a fault set.
+- The Info module is enhanced to retrieve lists related to fault sets, service templates, deployments, and managed devices.
 
 Known issues
 ------------
@@ -58,11 +59,11 @@ Limitations
 Distribution
 ------------
 The software package is available for download from the [Ansible Modules
-for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.1.0) page.
+for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.2.0) page.
 
 Documentation
 -------------
-The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.1.0/docs)
+The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.2.0/docs)
 page. It includes the following:
 
    - README
