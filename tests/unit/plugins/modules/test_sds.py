@@ -28,6 +28,8 @@ from ansible_collections.dellemc.powerflex.plugins.modules.sds import PowerFlexS
 class TestPowerflexSDS(PowerFlexUnitBase):
 
     get_module_args = MockSDSApi.SDS_COMMON_ARGS
+    ip1 = "10.47.xxx.xxx"
+    ip2 = "10.46.xxx.xxx"
 
     @pytest.fixture
     def module_object(self):
@@ -95,7 +97,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 'sds_ip_list':
                 [
                     {
-                        'ip': '10.47.xxx.xxx',
+                        'ip': self.ip1,
                         'role': "all"
                     }
                 ],
@@ -127,7 +129,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 'sds_ip_list':
                 [
                     {
-                        'ip': '10.47.xxx.xxx',
+                        'ip': self.ip1,
                         'role': "all"
                     }
                 ],
@@ -214,7 +216,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 'sds_ip_list':
                 [
                     {
-                        'ip': '10.47.xxx.xxx',
+                        'ip': self.ip1,
                         'role': "all"
                     }
                 ],
@@ -244,7 +246,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 'sds_ip_list':
                 [
                     {
-                        'ip': '10.47.xxx.xxx',
+                        'ip': self.ip1,
                         'role': "all"
                     }
                 ],
@@ -272,7 +274,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 'sds_ip_list':
                 [
                     {
-                        'ip': '10.47.xxx.xxx',
+                        'ip': self.ip1,
                         'role': "all"
                     }
                 ],
@@ -323,7 +325,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 'sds_ip_list':
                 [
                     {
-                        'ip': '10.47.xxx.xxx',
+                        'ip': self.ip1,
                         'role': "all"
                     }
                 ],
@@ -353,7 +355,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 'sds_ip_list':
                 [
                     {
-                        'ip': '10.47.xxx.xxx',
+                        'ip': self.ip1,
                         'role': "all"
                     }
                 ],
@@ -383,7 +385,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 'sds_ip_list':
                 [
                     {
-                        'ip': '10.47.xxx.xxx',
+                        'ip': self.ip1,
                         'role': "all"
                     }
                 ],
@@ -454,7 +456,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 "sds_ip_list":
                 [
                     {
-                        "ip": "10.46.xxx.xxx",
+                        "ip": self.ip2,
                         "role": "all"
                     }
                 ],
@@ -475,7 +477,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 "sds_ip_list":
                 [
                     {
-                        "ip": "10.46.xxx.xxx",
+                        "ip": self.ip2,
                         "role": "all"
                     }
                 ],
@@ -542,7 +544,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 "sds_ip_list":
                 [
                     {
-                        "ip": "10.46.xxx.xxx",
+                        "ip": self.ip2,
                         "role": "sdcOnly"
                     }
                 ],
@@ -584,7 +586,7 @@ class TestPowerflexSDS(PowerFlexUnitBase):
                 "sds_ip_list":
                 [
                     {
-                        "ip": "10.46.xxx.xxx",
+                        "ip": self.ip2,
                         "role": "sdcOnly"
                     }
                 ],
