@@ -137,7 +137,8 @@ releases:
   2.2.0:
     changes:
       minor_changes:
-        - The SDS module has been enhanced to facilitate SDS creation within a fault set.
+        - The SDS module has been enhanced to facilitate SDS creation within
+          a fault set.
         - The Info module is enhanced to retrieve lists related to fault sets,
           service templates, deployments, and managed devices.
     modules:

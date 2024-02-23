@@ -109,7 +109,6 @@ class Configuration:
             :rtype: dict
         """
         try:
-            sds_list = []
             if fault_set_id:
                 sds_details = self.powerflex_conn.fault_set.get_sdss(
                     fault_set_id=fault_set_id)
