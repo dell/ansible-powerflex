@@ -51,7 +51,7 @@ class ModuleDocFragment(object):
             required: false
             default: 120
     requirements:
-      - A Dell PowerFlex storage system version 3.5 or later.
+      - A Dell PowerFlex storage system version 3.6 or later.
       - Ansible-core 2.14 or later.
       - PyPowerFlex 1.9.0.
       - Python 3.9, 3.10 or 3.11.
