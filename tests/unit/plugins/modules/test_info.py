@@ -28,6 +28,7 @@ utils.PowerFlexClient = MagicMock()
 from ansible.module_utils import basic
 basic.AnsibleModule = MagicMock()
 from ansible_collections.dellemc.powerflex.plugins.modules.info import PowerFlexInfo
+INVALID_SORT_MSG = 'messageCode=PARSE002 displayMessage=An invalid column name: invalid is entered in the sort list'
 
 
 class TestPowerflexInfo():
@@ -279,7 +280,6 @@ class TestPowerflexInfo():
             "gather_subset": ['sdc']
         })
         info_module_mock.module.params = self.get_module_args
-        sdc_resp = MockInfoApi.INFO_SDC_GET_LIST
         info_module_mock.powerflex_conn.sdc.get = MagicMock(
             side_effect=MockApiException
         )
@@ -511,3 +511,96 @@ class TestPowerflexInfo():
         )
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'system_exception'), info_module_mock)
+
+    def test_get_managed_device_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['managed_device']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.managed_device.get = MagicMock()
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.managed_device.get.assert_called()
+
+    def test_get_managed_device_details_throws_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['managed_device']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.managed_device.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'managed_device_get_error'), info_module_mock)
+
+    def test_get_service_template_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['service_template']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.service_template.get = MagicMock()
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.service_template.get.assert_called()
+
+    def test_get_service_template_details_throws_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['service_template']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.service_template.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'service_template_get_error'), info_module_mock)
+
+    def test_get_deployment_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['deployment'],
+            "limit": 20
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.deployment.get = MagicMock()
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.deployment.get.assert_called()
+
+    def test_get_deployment_details_throws_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['deployment']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.deployment.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'deployment_get_error'), info_module_mock)
+
+    def test_get_deployment_details_throws_exception_invalid_sort(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['deployment'],
+            "sort": 'invalid'
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.deployment.get = MagicMock(
+            side_effect=MockApiException(INVALID_SORT_MSG)
+        )
+        info_module_mock.perform_module_operation()
+        assert info_module_mock.get_deployments_list() == []
+
+    def test_get_with_multiple_gather_subset(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['deployment', 'service_template'],
+            "sort": 'name', "filters": [{"filter_key": "name", "filter_operator": "equal", "filter_value": "rack"}],
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.perform_module_operation()
+        assert info_module_mock.populate_filter_list() == []
+        assert info_module_mock.get_param_value('sort') is None
+
+    def test_get_with_invalid_offset_and_limit_for_subset(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['deployment'],
+            "limit": -1, "offset": -1
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.perform_module_operation()
+        assert info_module_mock.get_param_value('limit') is None
+        assert info_module_mock.get_param_value('offset') is None

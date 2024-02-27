@@ -316,7 +316,10 @@ class MockInfoApi:
         'get_sds_details_filter_empty': "Filter keys: '['filter_key', 'filter_operator', 'filter_value']' cannot be None",
         'invalid_filter_operator_exception': "Given filter operator 'does_not_contain' is not supported.",
         'api_exception': "Get API details from Powerflex array failed with error",
-        'system_exception': "Get array details from Powerflex array failed with error"
+        'system_exception': "Get array details from Powerflex array failed with error",
+        'managed_device_get_error': "Get managed devices from PowerFlex Manager failed with error",
+        'service_template_get_error': "Get service templates from PowerFlex Manager failed with error",
+        'deployment_get_error': "Get deployments from PowerFlex Manager failed with error"
     }
 
     @staticmethod
