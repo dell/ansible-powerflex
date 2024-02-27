@@ -19,6 +19,7 @@ description:
   modifying attributes of SDS, and deleting SDS.
 author:
 - Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 extends_documentation_fragment:
   - dellemc.powerflex.powerflex
 options:
@@ -96,6 +97,16 @@ options:
     - Default value by API is C(HighPerformance).
     choices: ['Compact', 'HighPerformance']
     type: str
+  fault_set_name:
+    description:
+    - Name of the fault set.
+    - Mutually exclusive with I(fault_set_id).
+    type: str
+  fault_set_id:
+    description:
+    - Unique identifier of the fault set.
+    - Mutually exclusive with I(fault_set_name).
+    type: str
   state:
     description:
     - State of the SDS.
@@ -114,7 +125,7 @@ notes:
     'sdsOnly').
   - SDS can be created with RF cache disabled, but, be aware that the RF cache
     is not always updated. In this case, the user should re-try the operation.
-  - The I(check_mode) is not supported.
+  - The I(check_mode) is supported.
 '''
 
 EXAMPLES = r'''
@@ -142,6 +153,7 @@ EXAMPLES = r'''
     port: "{{port}}"
     sds_name: "node1"
     protection_domain_name: "domain1"
+    fault_set_name: "faultset1"
     sds_ip_list:
       - ip: "198.10.xxx.xxx"
         role: "sdcOnly"
@@ -479,12 +491,16 @@ sds_details:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import utils
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
+    import Configuration
 import copy
 
 LOG = utils.get_logger('sds')
 
 
-class PowerFlexSDS(object):
+class PowerFlexSDS(PowerFlexBase):
     """Class with SDS operations"""
 
     def __init__(self):
@@ -493,29 +509,27 @@ class PowerFlexSDS(object):
         self.module_params.update(get_powerflex_sds_parameters())
 
         mut_ex_args = [['sds_name', 'sds_id'],
-                       ['protection_domain_name', 'protection_domain_id']]
+                       ['protection_domain_name', 'protection_domain_id'],
+                       ['fault_set_name', 'fault_set_id']]
 
         required_together_args = [['sds_ip_list', 'sds_ip_state']]
 
         required_one_of_args = [['sds_name', 'sds_id']]
 
         # initialize the Ansible module
-        self.module = AnsibleModule(
-            argument_spec=self.module_params,
-            supports_check_mode=False,
-            mutually_exclusive=mut_ex_args,
-            required_together=required_together_args,
-            required_one_of=required_one_of_args)
+        ansible_module_params = {
+            'argument_spec': get_powerflex_sds_parameters(),
+            'supports_check_mode': True,
+            'mutually_exclusive': mut_ex_args,
+            'required_one_of': required_one_of_args,
+            'required_together': required_together_args
+        }
+        super().__init__(AnsibleModule, ansible_module_params)
 
-        utils.ensure_required_libs(self.module)
-
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info("Got the PowerFlex system connection object instance")
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
+        self.result = dict(
+            changed=False,
+            sds_details={}
+        )
 
     def validate_rmcache_size_parameter(self, rmcache_enabled, rmcache_size):
         """Validate the input parameters"""
@@ -571,40 +585,24 @@ class PowerFlexSDS(object):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-    def get_protection_domain(self, protection_domain_name=None,
-                              protection_domain_id=None):
-        """Get protection domain details
-            :param protection_domain_name: Name of the protection domain
+    def get_protection_domain(
+        self, protection_domain_name=None, protection_domain_id=None
+    ):
+        """Get the details of a protection domain in a given PowerFlex storage
+        system"""
+        return Configuration(self.powerflex_conn, self.module).get_protection_domain(
+            protection_domain_name=protection_domain_name, protection_domain_id=protection_domain_id)
+
+    def get_fault_set(self, fault_set_name=None, fault_set_id=None, protection_domain_id=None):
+        """Get fault set details
+            :param fault_set_name: Name of the fault set
+            :param fault_set_id: Id of the fault set
             :param protection_domain_id: ID of the protection domain
-            :return: Protection domain details
+            :return: Fault set details
             :rtype: dict
         """
-        name_or_id = protection_domain_id if protection_domain_id \
-            else protection_domain_name
-        try:
-            pd_details = None
-            if protection_domain_id:
-                pd_details = self.powerflex_conn.protection_domain.get(
-                    filter_fields={'id': protection_domain_id})
-
-            if protection_domain_name:
-                pd_details = self.powerflex_conn.protection_domain.get(
-                    filter_fields={'name': protection_domain_name})
-
-            if not pd_details:
-                error_msg = "Unable to find the protection domain with " \
-                            "'%s'. Please enter a valid protection domain " \
-                            "name/id." % name_or_id
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
-
-            return pd_details[0]
-
-        except Exception as e:
-            error_msg = "Failed to get the protection domain '%s' with " \
-                        "error '%s'" % (name_or_id, str(e))
-            LOG.error(error_msg)
-            self.module.fail_json(msg=error_msg)
+        return Configuration(self.powerflex_conn, self.module).get_fault_set(
+            fault_set_name=fault_set_name, fault_set_id=fault_set_id, protection_domain_id=protection_domain_id)
 
     def restructure_ip_role_dict(self, sds_ip_list):
         """Restructure IP role dict
@@ -619,8 +617,41 @@ class PowerFlexSDS(object):
             new_sds_ip_list.append({"SdsIp": item})
         return new_sds_ip_list
 
-    def create_sds(self, protection_domain_id, sds_ip_list, sds_ip_state,
-                   sds_name, rmcache_enabled=None, rmcache_size=None):
+    def validate_create(self, protection_domain_id, sds_ip_list, sds_ip_state, sds_name,
+                        sds_id, sds_new_name, rmcache_enabled=None, rmcache_size=None,
+                        fault_set_id=None):
+
+        if sds_name is None or len(sds_name.strip()) == 0:
+            error_msg = "Please provide valid sds_name value for " \
+                        "creation of SDS."
+            LOG.error(error_msg)
+            self.module.fail_json(msg=error_msg)
+
+        if protection_domain_id is None:
+            error_msg = "Protection Domain is a mandatory parameter " \
+                        "for creating an SDS. Please enter a valid value."
+            LOG.error(error_msg)
+            self.module.fail_json(msg=error_msg)
+
+        if sds_ip_list is None or len(sds_ip_list) == 0:
+            error_msg = "Please provide valid sds_ip_list values for " \
+                        "creation of SDS."
+            LOG.error(error_msg)
+            self.module.fail_json(msg=error_msg)
+
+        if sds_ip_state is not None and sds_ip_state != "present-in-sds":
+            error_msg = "Incorrect IP state given for creation of SDS."
+            LOG.error(error_msg)
+            self.module.fail_json(msg=error_msg)
+
+        if sds_id:
+            error_msg = "Creation of SDS is allowed using sds_name " \
+                        "only, sds_id given."
+            LOG.info(error_msg)
+            self.module.fail_json(msg=error_msg)
+
+    def create_sds(self, protection_domain_id, sds_ip_list, sds_ip_state, sds_name,
+                   sds_id, sds_new_name, rmcache_enabled=None, rmcache_size=None, fault_set_id=None):
         """Create SDS
             :param protection_domain_id: ID of the Protection Domain
             :type protection_domain_id: str
@@ -636,62 +667,53 @@ class PowerFlexSDS(object):
             :type rmcache_enabled: bool
             :param rmcache_size: Read RAM cache size (in MB)
             :type rmcache_size: int
+            :param fault_set_id: ID of the Fault Set
+            :type fault_set_id: str
             :return: Boolean indicating if create operation is successful
         """
         try:
-            if sds_name is None or len(sds_name.strip()) == 0:
-                error_msg = "Please provide valid sds_name value for " \
-                            "creation of SDS."
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
-
-            if protection_domain_id is None:
-                error_msg = "Protection Domain is a mandatory parameter " \
-                            "for creating a SDS. Please enter a valid value."
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
-
-            if sds_ip_list is None or len(sds_ip_list) == 0:
-                error_msg = "Please provide valid sds_ip_list values for " \
-                            "creation of SDS."
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
-
-            if sds_ip_state is not None and sds_ip_state != "present-in-sds":
-                error_msg = "Incorrect IP state given for creation of SDS."
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
 
             # Restructure IP-role parameter format
-            if sds_ip_list and sds_ip_state == "present-in-sds":
-                sds_ip_list = self.restructure_ip_role_dict(sds_ip_list)
+            self.validate_create(protection_domain_id=protection_domain_id,
+                                 sds_ip_list=sds_ip_list, sds_ip_state=sds_ip_state,
+                                 sds_name=sds_name, sds_id=sds_id, sds_new_name=sds_new_name,
+                                 rmcache_enabled=rmcache_enabled, rmcache_size=rmcache_size,
+                                 fault_set_id=fault_set_id)
 
-            if rmcache_size is not None:
-                self.validate_rmcache_size_parameter(rmcache_enabled,
-                                                     rmcache_size)
-                # set rmcache size in KB
-                rmcache_size = rmcache_size * 1024
+            self.validate_ip_parameter(sds_ip_list)
 
-            create_params = ("protection_domain_id: %s,"
-                             " sds_ip_list: %s,"
-                             " sds_name: %s,"
-                             " rmcache_enabled: %s, "
-                             " rmcache_size_KB: %s"
-                             % (protection_domain_id, sds_ip_list,
-                                sds_name, rmcache_enabled, rmcache_size))
-            LOG.info("Creating SDS with params: %s", create_params)
+            if not self.module.check_mode:
+                if sds_ip_list and sds_ip_state == "present-in-sds":
+                    sds_ip_list = self.restructure_ip_role_dict(sds_ip_list)
 
-            self.powerflex_conn.sds.create(
-                protection_domain_id=protection_domain_id,
-                sds_ips=sds_ip_list,
-                name=sds_name,
-                rmcache_enabled=rmcache_enabled,
-                rmcache_size_in_kb=rmcache_size)
-            return True
+                if rmcache_size is not None:
+                    self.validate_rmcache_size_parameter(rmcache_enabled=rmcache_enabled,
+                                                         rmcache_size=rmcache_size)
+                    # set rmcache size in KB
+                    rmcache_size = rmcache_size * 1024
+
+                create_params = ("protection_domain_id: %s,"
+                                 " sds_ip_list: %s,"
+                                 " sds_name: %s,"
+                                 " rmcache_enabled: %s, "
+                                 " rmcache_size_KB: %s, "
+                                 " fault_set_id: %s"
+                                 % (protection_domain_id, sds_ip_list,
+                                    sds_name, rmcache_enabled, rmcache_size,
+                                    fault_set_id))
+                LOG.info("Creating SDS with params: %s", create_params)
+
+                self.powerflex_conn.sds.create(
+                    protection_domain_id=protection_domain_id,
+                    sds_ips=sds_ip_list,
+                    name=sds_name,
+                    rmcache_enabled=rmcache_enabled,
+                    rmcache_size_in_kb=rmcache_size,
+                    fault_set_id=fault_set_id)
+            return self.get_sds_details(sds_name=sds_name)
 
         except Exception as e:
-            error_msg = "Create SDS '%s' operation failed with error '%s'" \
-                        % (sds_name, str(e))
+            error_msg = f"Create SDS {sds_name} operation failed with error {str(e)}"
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
@@ -716,21 +738,20 @@ class PowerFlexSDS(object):
         """
         modify_dict = {}
 
-        if sds_new_name is not None:
-            if len(sds_new_name.strip()) == 0:
-                error_msg = "Please provide valid SDS name."
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
-            if sds_new_name != sds_details['name']:
-                modify_dict['name'] = sds_new_name
+        if sds_new_name is not None and \
+                sds_new_name != sds_details['name']:
+            modify_dict['name'] = sds_new_name
 
-        if rfcache_enabled is not None and \
-                sds_details['rfcacheEnabled'] != rfcache_enabled:
-            modify_dict['rfcacheEnabled'] = rfcache_enabled
+        param_input = dict()
+        param_input['rfcacheEnabled'] = rfcache_enabled
+        param_input['rmcacheEnabled'] = rmcache_enabled
+        param_input['perfProfile'] = performance_profile
 
-        if rmcache_enabled is not None and \
-                sds_details['rmcacheEnabled'] != rmcache_enabled:
-            modify_dict['rmcacheEnabled'] = rmcache_enabled
+        param_list = ['rfcacheEnabled', 'rmcacheEnabled', 'perfProfile']
+        for param in param_list:
+            if param_input[param] is not None and \
+                    sds_details[param] != param_input[param]:
+                modify_dict[param] = param_input[param]
 
         if rmcache_size is not None:
             self.validate_rmcache_size_parameter(rmcache_enabled,
@@ -747,10 +768,6 @@ class PowerFlexSDS(object):
                                 % sds_details['name']
                     LOG.error(error_msg)
                     self.module.fail_json(msg=error_msg)
-
-        if performance_profile is not None and \
-                sds_details['perfProfile'] != performance_profile:
-            modify_dict['perfProfile'] = performance_profile
 
         return modify_dict
 
@@ -772,41 +789,42 @@ class PowerFlexSDS(object):
                   " updated is '%s'." % (str(modify_dict))
             LOG.info(msg)
 
-            if 'name' in modify_dict:
-                self.powerflex_conn.sds.rename(sds_id, modify_dict['name'])
-                msg = "The name of the SDS is updated to '%s' successfully." \
-                      % modify_dict['name']
-                LOG.info(msg)
+            if not self.module.check_mode:
+                if 'name' in modify_dict:
+                    self.powerflex_conn.sds.rename(sds_id, modify_dict['name'])
+                    msg = "The name of the SDS is updated to '%s' successfully." \
+                          % modify_dict['name']
+                    LOG.info(msg)
 
-            if 'rfcacheEnabled' in modify_dict:
-                self.powerflex_conn.sds.set_rfcache_enabled(
-                    sds_id, modify_dict['rfcacheEnabled'])
-                msg = "The use RFcache is updated to '%s' successfully." \
-                      % modify_dict['rfcacheEnabled']
-                LOG.info(msg)
+                if 'rfcacheEnabled' in modify_dict:
+                    self.powerflex_conn.sds.set_rfcache_enabled(
+                        sds_id, modify_dict['rfcacheEnabled'])
+                    msg = "The use RFcache is updated to '%s' successfully." \
+                          % modify_dict['rfcacheEnabled']
+                    LOG.info(msg)
 
-            if 'rmcacheEnabled' in modify_dict:
-                self.powerflex_conn.sds.set_rmcache_enabled(
-                    sds_id, modify_dict['rmcacheEnabled'])
-                msg = "The use RMcache is updated to '%s' successfully." \
-                      % modify_dict['rmcacheEnabled']
-                LOG.info(msg)
+                if 'rmcacheEnabled' in modify_dict:
+                    self.powerflex_conn.sds.set_rmcache_enabled(
+                        sds_id, modify_dict['rmcacheEnabled'])
+                    msg = "The use RMcache is updated to '%s' successfully." \
+                          % modify_dict['rmcacheEnabled']
+                    LOG.info(msg)
 
-            if 'rmcacheSizeInMB' in modify_dict:
-                self.powerflex_conn.sds.set_rmcache_size(
-                    sds_id, modify_dict['rmcacheSizeInMB'])
-                msg = "The size of RMcache is updated to '%s' successfully." \
-                      % modify_dict['rmcacheSizeInMB']
-                LOG.info(msg)
+                if 'rmcacheSizeInMB' in modify_dict:
+                    self.powerflex_conn.sds.set_rmcache_size(
+                        sds_id, modify_dict['rmcacheSizeInMB'])
+                    msg = "The size of RMcache is updated to '%s' successfully." \
+                          % modify_dict['rmcacheSizeInMB']
+                    LOG.info(msg)
 
-            if 'perfProfile' in modify_dict:
-                self.powerflex_conn.sds.set_performance_parameters(
-                    sds_id, modify_dict['perfProfile'])
-                msg = "The performance profile is updated to '%s'" \
-                      % modify_dict['perfProfile']
-                LOG.info(msg)
+                if 'perfProfile' in modify_dict:
+                    self.powerflex_conn.sds.set_performance_parameters(
+                        sds_id, modify_dict['perfProfile'])
+                    msg = "The performance profile is updated to '%s'" \
+                          % modify_dict['perfProfile']
+                    LOG.info(msg)
 
-            return True
+            return self.get_sds_details(sds_id=sds_id)
         except Exception as e:
             if create_flag:
                 error_msg = "Create SDS is successful, but failed to update" \
@@ -818,50 +836,39 @@ class PowerFlexSDS(object):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-    def identify_ip_role(self, sds_ip_list, sds_details, sds_ip_state):
-        """Identify IPs before addition/removal
-            :param sds_ip_list: List of one or more IP addresses and
-                                their roles
-            :type sds_ip_list: list[dict]
-            :param sds_details: SDS details
-            :type sds_details: dict
-            :param sds_ip_state: State of IP in SDS
-            :type sds_ip_state: str
-            :return: List containing the key-value pairs of IP-role for an
-                     SDS
-            :rtype: list[dict]
-        """
-        existing_ip_role_list = sds_details['ipList']
-
+    def identify_ip_role_add(self, sds_ip_list, sds_details, sds_ip_state):
         # identify IPs to add or roles to update
-        if sds_ip_state == "present-in-sds":
-            update_role = []
-            ips_to_add = []
 
-            # identify IPs to add
-            existing_ip_list = []
-            if existing_ip_role_list:
-                for ip in existing_ip_role_list:
-                    existing_ip_list.append(ip['ip'])
-            for given_ip in sds_ip_list:
-                ip = given_ip['ip']
-                if ip not in existing_ip_list:
-                    ips_to_add.append(given_ip)
-            LOG.info("IP(s) to be added: %s", ips_to_add)
+        existing_ip_role_list = sds_details['ipList']
+        update_role = []
+        ips_to_add = []
 
-            if len(ips_to_add) != 0:
-                for ip in ips_to_add:
-                    sds_ip_list.remove(ip)
+        # identify IPs to add
+        existing_ip_list = []
+        if existing_ip_role_list:
+            for ip in existing_ip_role_list:
+                existing_ip_list.append(ip['ip'])
+        for given_ip in sds_ip_list:
+            ip = given_ip['ip']
+            if ip not in existing_ip_list:
+                ips_to_add.append(given_ip)
+        LOG.info("IP(s) to be added: %s", ips_to_add)
 
-            # identify IPs whose role needs to be updated
-            update_role = [ip for ip in sds_ip_list
-                           if ip not in existing_ip_role_list]
-            LOG.info("Role update needed for: %s", update_role)
+        if len(ips_to_add) != 0:
+            for ip in ips_to_add:
+                sds_ip_list.remove(ip)
 
-            return ips_to_add, update_role
+        # identify IPs whose role needs to be updated
+        update_role = [ip for ip in sds_ip_list
+                       if ip not in existing_ip_role_list]
+        LOG.info("Role update needed for: %s", update_role)
+        return ips_to_add, update_role
 
-        elif sds_ip_state == "absent-in-sds":
-            # identify IPs to remove
+    def identify_ip_role_remove(self, sds_ip_list, sds_details, sds_ip_state):
+        # identify IPs to remove
+
+        existing_ip_role_list = sds_details['ipList']
+        if sds_ip_state == "absent-in-sds":
             ips_to_remove = [ip for ip in existing_ip_role_list
                              if ip in sds_ip_list]
             if len(ips_to_remove) != 0:
@@ -869,7 +876,7 @@ class PowerFlexSDS(object):
                 return ips_to_remove
             else:
                 LOG.info("IP(s) do not exists.")
-                return False, None
+                return []
 
     def add_ip(self, sds_id, sds_ip_list):
         """Add IP to SDS
@@ -881,10 +888,11 @@ class PowerFlexSDS(object):
             :return: Boolean indicating if add IP operation is successful
         """
         try:
-            for ip in sds_ip_list:
-                LOG.info("IP to add: %s", ip)
-                self.powerflex_conn.sds.add_ip(sds_id=sds_id, sds_ip=ip)
-                LOG.info("IP added successfully.")
+            if not self.module.check_mode:
+                for ip in sds_ip_list:
+                    LOG.info("IP to add: %s", ip)
+                    self.powerflex_conn.sds.add_ip(sds_id=sds_id, sds_ip=ip)
+                    LOG.info("IP added successfully.")
             return True
         except Exception as e:
             error_msg = "Add IP to SDS '%s' operation failed with " \
@@ -902,15 +910,16 @@ class PowerFlexSDS(object):
             :return: Boolean indicating if add IP operation is successful
         """
         try:
-            LOG.info("Role updates for: %s", sds_ip_list)
-            if len(sds_ip_list) != 0:
-                for ip in sds_ip_list:
-                    LOG.info("ip-role: %s", ip)
-                    self.powerflex_conn.sds.set_ip_role(sds_id, ip['ip'],
-                                                        ip['role'])
-                    msg = "The role '%s' for IP '%s' is updated " \
-                          "successfully." % (ip['role'], ip['ip'])
-                    LOG.info(msg)
+            if not self.module.check_mode:
+                LOG.info("Role updates for: %s", sds_ip_list)
+                if len(sds_ip_list) != 0:
+                    for ip in sds_ip_list:
+                        LOG.info("ip-role: %s", ip)
+                        self.powerflex_conn.sds.set_ip_role(sds_id, ip['ip'],
+                                                            ip['role'])
+                        msg = "The role '%s' for IP '%s' is updated " \
+                              "successfully." % (ip['role'], ip['ip'])
+                        LOG.info(msg)
             return True
         except Exception as e:
             error_msg = "Update role of IP for SDS '%s' operation failed " \
@@ -928,10 +937,11 @@ class PowerFlexSDS(object):
             :return: Boolean indicating if remove IP operation is successful
         """
         try:
-            for ip in sds_ip_list:
-                LOG.info("IP to remove: %s", ip)
-                self.powerflex_conn.sds.remove_ip(sds_id=sds_id, ip=ip['ip'])
-                LOG.info("IP removed successfully.")
+            if not self.module.check_mode:
+                for ip in sds_ip_list:
+                    LOG.info("IP to remove: %s", ip)
+                    self.powerflex_conn.sds.remove_ip(sds_id=sds_id, ip=ip['ip'])
+                    LOG.info("IP removed successfully.")
             return True
         except Exception as e:
             error_msg = "Remove IP from SDS '%s' operation failed with " \
@@ -946,144 +956,15 @@ class PowerFlexSDS(object):
             :return: Boolean indicating if delete operation is successful
         """
         try:
-            self.powerflex_conn.sds.delete(sds_id)
-            return True
+            if not self.module.check_mode:
+                self.powerflex_conn.sds.delete(sds_id)
+                return None
+            return self.get_sds_details(sds_id=sds_id)
         except Exception as e:
             error_msg = "Delete SDS '%s' operation failed with error '%s'" \
                         % (sds_id, str(e))
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
-
-    def perform_module_operation(self):
-        """
-        Perform different actions on SDS based on parameters passed in
-        the playbook
-        """
-        sds_name = self.module.params['sds_name']
-        sds_id = self.module.params['sds_id']
-        sds_new_name = self.module.params['sds_new_name']
-        protection_domain_name = self.module.params['protection_domain_name']
-        protection_domain_id = self.module.params['protection_domain_id']
-        rfcache_enabled = self.module.params['rfcache_enabled']
-        rmcache_enabled = self.module.params['rmcache_enabled']
-        rmcache_size = self.module.params['rmcache_size']
-        sds_ip_list = copy.deepcopy(self.module.params['sds_ip_list'])
-        sds_ip_state = self.module.params['sds_ip_state']
-        performance_profile = self.module.params['performance_profile']
-        state = self.module.params['state']
-
-        # result is a dictionary to contain end state and SDS details
-        changed = False
-        result = dict(
-            changed=False,
-            sds_details={}
-        )
-
-        # get SDS details
-        sds_details = self.get_sds_details(sds_name, sds_id)
-        if sds_details:
-            sds_id = sds_details['id']
-        msg = "Fetched the SDS details %s" % (str(sds_details))
-        LOG.info(msg)
-
-        # get Protection Domain ID from name
-        if protection_domain_name:
-            pd_details = self.get_protection_domain(protection_domain_name)
-            if pd_details:
-                protection_domain_id = pd_details['id']
-            msg = "Fetched the protection domain details with id '%s', " \
-                  "name '%s'" % (protection_domain_id, protection_domain_name)
-            LOG.info(msg)
-
-        # create operation
-        create_changed = False
-        if state == 'present' and not sds_details:
-            if sds_id:
-                error_msg = "Creation of SDS is allowed using sds_name " \
-                            "only, sds_id given."
-                LOG.info(error_msg)
-                self.module.fail_json(msg=error_msg)
-
-            if sds_new_name:
-                error_msg = "sds_new_name parameter is not supported " \
-                            "during creation of a SDS. Try renaming the " \
-                            "SDS after the creation."
-                LOG.info(error_msg)
-                self.module.fail_json(msg=error_msg)
-
-            self.validate_ip_parameter(sds_ip_list)
-
-            create_changed = self.create_sds(protection_domain_id,
-                                             sds_ip_list, sds_ip_state,
-                                             sds_name, rmcache_enabled,
-                                             rmcache_size)
-            if create_changed:
-                sds_details = self.get_sds_details(sds_name)
-                sds_id = sds_details['id']
-                msg = "SDS created successfully, fetched SDS details %s"\
-                      % (str(sds_details))
-                LOG.info(msg)
-
-        # checking if basic SDS parameters are modified or not
-        modify_dict = {}
-        if sds_details and state == 'present':
-            modify_dict = self.to_modify(sds_details, sds_new_name,
-                                         rfcache_enabled, rmcache_enabled,
-                                         rmcache_size, performance_profile)
-            msg = "Parameters to be modified are as follows: %s"\
-                  % (str(modify_dict))
-            LOG.info(msg)
-
-        # modify operation
-        modify_changed = False
-        if modify_dict and state == 'present':
-            LOG.info("Modify SDS params.")
-            modify_changed = self.modify_sds_attributes(sds_id, modify_dict,
-                                                        create_changed)
-
-        # get updated SDS details
-        sds_details = self.get_sds_details(sds_id=sds_id)
-
-        # add IPs to SDS
-        # update IP's role for an SDS
-        add_ip_changed = False
-        update_role_changed = False
-        if sds_details and state == 'present' \
-                and sds_ip_state == "present-in-sds":
-            self.validate_ip_parameter(sds_ip_list)
-            ips_to_add, roles_to_update = self.identify_ip_role(
-                sds_ip_list, sds_details, sds_ip_state)
-            if ips_to_add:
-                add_ip_changed = self.add_ip(sds_id, ips_to_add)
-            if roles_to_update:
-                update_role_changed = self.update_role(sds_id,
-                                                       roles_to_update)
-
-        # remove IPs from SDS
-        remove_ip_changed = False
-        if sds_details and state == 'present' \
-                and sds_ip_state == "absent-in-sds":
-            self.validate_ip_parameter(sds_ip_list)
-            ips_to_remove = self.identify_ip_role(sds_ip_list, sds_details,
-                                                  sds_ip_state)
-            if ips_to_remove:
-                remove_ip_changed = self.remove_ip(sds_id, ips_to_remove)
-
-        # delete operation
-        delete_changed = False
-        if sds_details and state == 'absent':
-            delete_changed = self.delete_sds(sds_id)
-
-        if create_changed or modify_changed or add_ip_changed \
-                or update_role_changed or remove_ip_changed or delete_changed:
-            changed = True
-
-        # Returning the updated SDS details
-        if state == 'present':
-            sds_details = self.show_output(sds_id)
-            result['sds_details'] = sds_details
-        result['changed'] = changed
-        self.module.exit_json(**result)
 
     def show_output(self, sds_id):
         """Show SDS details
@@ -1115,6 +996,14 @@ class PowerFlexSDS(object):
                 rmcache_size_mb = sds_details[0]['rmcacheSizeInKb'] / 1024
                 sds_details[0]['rmcacheSizeInMb'] = int(rmcache_size_mb)
 
+            # Append fault set name
+            if 'faultSetId' in sds_details[0] \
+                    and sds_details[0]['faultSetId']:
+                fs_details = self.get_fault_set(
+                    fault_set_id=sds_details[0]['faultSetId'],
+                    protection_domain_id=sds_details[0]['protectionDomainId'])
+                sds_details[0]['faultSetName'] = fs_details['name']
+
             return sds_details[0]
 
         except Exception as e:
@@ -1122,6 +1011,15 @@ class PowerFlexSDS(object):
                         % (sds_id, str(e))
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
+
+    def validate_parameters(self, sds_params):
+        params = [sds_params['sds_name'], sds_params['sds_new_name']]
+        for param in params:
+            if param is not None and len(param.strip()) == 0:
+                error_msg = "Provide valid value for name for the " \
+                            "creation/modification of the SDS."
+                LOG.error(error_msg)
+                self.module.fail_json(msg=error_msg)
 
 
 def get_powerflex_sds_parameters():
@@ -1145,15 +1043,137 @@ def get_powerflex_sds_parameters():
         rmcache_enabled=dict(type='bool'),
         rmcache_size=dict(type='int'),
         performance_profile=dict(choices=['Compact', 'HighPerformance']),
+        fault_set_name=dict(),
+        fault_set_id=dict(),
         state=dict(required=True, type='str', choices=['present', 'absent'])
     )
 
 
+class SDSExitHandler():
+    def handle(self, sds_obj, sds_details):
+        if sds_details:
+            sds_obj.result["sds_details"] = sds_obj.show_output(sds_id=sds_details['id'])
+        else:
+            sds_obj.result["sds_details"] = None
+        sds_obj.module.exit_json(**sds_obj.result)
+
+
+class SDSDeleteHandler():
+    def handle(self, sds_obj, sds_params, sds_details):
+        if sds_params['state'] == 'absent' and sds_details:
+            sds_details = sds_obj.delete_sds(sds_details['id'])
+            sds_obj.result['changed'] = True
+
+        SDSExitHandler().handle(sds_obj, sds_details)
+
+
+class SDSRemoveIPHandler():
+    def handle(self, sds_obj, sds_params, sds_details, sds_ip_list):
+        if sds_params['state'] == 'present' and sds_details:
+            # remove IPs from SDS
+            remove_ip_changed = False
+            if sds_params['sds_ip_state'] == "absent-in-sds":
+                sds_obj.validate_ip_parameter(sds_ip_list)
+                ips_to_remove = sds_obj.identify_ip_role_remove(sds_ip_list, sds_details,
+                                                                sds_params['sds_ip_state'])
+                if ips_to_remove:
+                    remove_ip_changed = sds_obj.remove_ip(sds_details['id'], ips_to_remove)
+
+                if remove_ip_changed:
+                    sds_obj.result['changed'] = True
+
+        SDSDeleteHandler().handle(sds_obj, sds_params, sds_details)
+
+
+class SDSAddIPHandler():
+    def handle(self, sds_obj, sds_params, sds_details, sds_ip_list):
+        if sds_params['state'] == 'present' and sds_details:
+            # add IPs to SDS
+            # update IP's role for an SDS
+            add_ip_changed = False
+            update_role_changed = False
+            if sds_params['sds_ip_state'] == "present-in-sds":
+                sds_obj.validate_ip_parameter(sds_ip_list)
+                ips_to_add, roles_to_update = sds_obj.identify_ip_role_add(
+                    sds_ip_list, sds_details, sds_params['sds_ip_state'])
+                if ips_to_add:
+                    add_ip_changed = sds_obj.add_ip(sds_details['id'], ips_to_add)
+                if roles_to_update:
+                    update_role_changed = sds_obj.update_role(sds_details['id'],
+                                                              roles_to_update)
+
+            if add_ip_changed or update_role_changed:
+                sds_obj.result['changed'] = True
+
+        SDSRemoveIPHandler().handle(sds_obj, sds_params, sds_details, sds_ip_list)
+
+
+class SDSModifyHandler():
+    def handle(self, sds_obj, sds_params, sds_details, create_flag, sds_ip_list):
+        if sds_params['state'] == 'present' and sds_details:
+            modify_dict = sds_obj.to_modify(sds_details=sds_details,
+                                            sds_new_name=sds_params['sds_new_name'],
+                                            rfcache_enabled=sds_params['rfcache_enabled'],
+                                            rmcache_enabled=sds_params['rmcache_enabled'],
+                                            rmcache_size=sds_params['rmcache_size'],
+                                            performance_profile=sds_params['performance_profile'])
+            if modify_dict:
+                sds_details = sds_obj.modify_sds_attributes(sds_id=sds_details['id'],
+                                                            modify_dict=modify_dict,
+                                                            create_flag=create_flag)
+                sds_obj.result['changed'] = True
+
+        SDSAddIPHandler().handle(sds_obj, sds_params, sds_details, sds_ip_list)
+
+
+class SDSCreateHandler():
+    def handle(self, sds_obj, sds_params, sds_details, protection_domain_id, fault_set_id):
+        create_flag = False
+        sds_ip_list = copy.deepcopy(sds_params['sds_ip_list'])
+        if sds_params['state'] == 'present' and not sds_details:
+            sds_details = sds_obj.create_sds(sds_name=sds_params['sds_name'],
+                                             sds_id=sds_params['sds_id'],
+                                             sds_new_name=sds_params['sds_new_name'],
+                                             protection_domain_id=protection_domain_id,
+                                             sds_ip_list=sds_ip_list,
+                                             sds_ip_state=sds_params['sds_ip_state'],
+                                             rmcache_enabled=sds_params['rmcache_enabled'],
+                                             rmcache_size=sds_params['rmcache_size'],
+                                             fault_set_id=fault_set_id)
+            sds_obj.result['changed'] = True
+            create_flag = True
+
+        SDSModifyHandler().handle(sds_obj, sds_params, sds_details, create_flag, sds_ip_list)
+
+
+class SDSHandler():
+    def handle(self, sds_obj, sds_params):
+        sds_details = sds_obj.get_sds_details(sds_params['sds_name'], sds_params['sds_id'])
+        sds_obj.validate_parameters(sds_params=sds_params)
+        protection_domain_id = None
+        if sds_params['protection_domain_id'] or sds_params['protection_domain_name']:
+            protection_domain_id = sds_obj.get_protection_domain(
+                protection_domain_id=sds_params['protection_domain_id'],
+                protection_domain_name=sds_params['protection_domain_name'])['id']
+        fault_set_id = None
+        if sds_params['fault_set_name'] or sds_params['fault_set_id']:
+            fault_set_details = sds_obj.get_fault_set(fault_set_name=sds_params['fault_set_name'],
+                                                      fault_set_id=sds_params['fault_set_id'],
+                                                      protection_domain_id=protection_domain_id)
+            if fault_set_details is None:
+                error_msg = "The specified Fault set is not in the specified Protection Domain."
+                LOG.error(error_msg)
+                sds_obj.module.fail_json(msg=error_msg)
+            else:
+                fault_set_id = fault_set_details['id']
+        SDSCreateHandler().handle(sds_obj, sds_params, sds_details, protection_domain_id, fault_set_id)
+
+
 def main():
-    """ Create PowerFlex SDS object and perform actions on it
-        based on user input from playbook"""
+    """ Create PowerFlex SDS object and perform action on it
+        based on user input from playbook."""
     obj = PowerFlexSDS()
-    obj.perform_module_operation()
+    SDSHandler().handle(obj, obj.module.params)
 
 
 if __name__ == '__main__':
