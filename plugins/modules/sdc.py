@@ -299,16 +299,13 @@ class PowerFlexSdc(object):
     def validate_parameters(self, sdc_name=None, sdc_id=None, sdc_ip=None):
         """Validate the input parameters"""
 
-        if all(param is None for param in [sdc_name, sdc_id, sdc_ip]):
-            self.module.fail_json(msg="Please provide sdc_name/sdc_id/sdc_ip "
-                                  "with valid input.")
-
         sdc_identifiers = ['sdc_name', 'sdc_id', 'sdc_ip']
         for param in sdc_identifiers:
             if self.module.params[param] is not None and \
                     len(self.module.params[param].strip()) == 0:
-                error_msg = "Please provide valid %s" % param
-                self.module.fail_json(msg=error_msg)
+                msg = f"Please provide valid {param}"
+                LOG.error(msg)
+                self.module.fail_json(msg=msg)
 
     def remove(self, sdc_id):
         """Remove the SDC"""

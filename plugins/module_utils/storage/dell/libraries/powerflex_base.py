@@ -18,7 +18,8 @@ class PowerFlexBase:
 
     def __init__(self, ansible_module, ansible_module_params):
         """
-        Initialize the powerstore base class
+        Initialize the powerflex base class
+
         :param ansible_module: Ansible module class
         :type ansible_module: AnsibleModule
         :param ansible_module_params: Parameters for ansible module class

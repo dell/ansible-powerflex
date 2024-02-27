@@ -20,9 +20,9 @@ Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- A Dell PowerFlex storage system version 3.5 or later.
+- A Dell PowerFlex storage system version 3.6 or later.
 - Ansible-core 2.14 or later.
-- PyPowerFlex 1.8.0.
+- PyPowerFlex 1.9.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -110,15 +110,16 @@ Parameters
 
 
   fault_set_name (optional, str, None)
-    The name of the fault set
+    Name of the fault set.
 
     Mutually exclusive with *fault_set_id*.
 
 
   fault_set_id (optional, str, None)
-    The ID of the fault set.
+    Unique identifier of the fault set.
 
     Mutually exclusive with *fault_set_name*.
+
 
   state (True, str, None)
     State of the SDS.
@@ -167,7 +168,7 @@ Notes
    - There can be 1 or more IPs with role 'sdcOnly'.
    - There must be only 1 IP with SDS role (either with role 'all' or 'sdsOnly').
    - SDS can be created with RF cache disabled, but, be aware that the RF cache is not always updated. In this case, the user should re-try the operation.
-   - The *check_mode* is not supported.
+   - The *check_mode* is supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -203,6 +204,7 @@ Examples
         port: "{{port}}"
         sds_name: "node1"
         protection_domain_name: "domain1"
+        fault_set_name: "faultset1"
         sds_ip_list:
           - ip: "198.10.xxx.xxx"
             role: "sdcOnly"
@@ -343,6 +345,9 @@ sds_details (When SDS exists, dict, {'authenticationError': 'None', 'certificate
   faultSetId (, str, )
     Fault set ID.
 
+
+  faultSetName (, str, )
+    Name of the Fault set.
 
   fglMetadataCacheSize (, int, )
     FGL metadata cache size.
@@ -525,4 +530,5 @@ Authors
 ~~~~~~~
 
 - Rajshree Khare (@khareRajshree) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 

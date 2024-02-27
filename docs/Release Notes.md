@@ -1,8 +1,8 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 2.1.0
+### Release notes 2.2.0
 
->   © 2023 Dell Inc. or its subsidiaries. All rights reserved. Dell
+>   © 2024 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
 >   subsidiaries. Other trademarks may be trademarks of their respective
 >   owners.
@@ -28,7 +28,7 @@ Table 1. Revision history
 
 | Revision | Date            | Description                                                 |
 |----------|-----------------|-------------------------------------------------------------|
-| 01       | November 2023    | Current release of Ansible Modules for Dell PowerFlex 2.1.0 |
+| 01       | February 2024   | Current release of Ansible Modules for Dell PowerFlex 2.2.0 |
 
 Product description
 -------------------
@@ -36,7 +36,7 @@ Product description
 The Ansible modules for Dell PowerFlex are used to automate and orchestrate
 the deployment, configuration, and management of Dell PowerFlex storage
 systems. The capabilities of Ansible modules are managing volumes,
-storage pools, SDCs, snapshots, snapshot policy, SDSs, replication consistency groups, replication pairs, devices, protection domain and MDM 
+storage pools, SDCs, snapshots, snapshot policy, SDSs, replication consistency groups, replication pairs, devices, protection domain, MDM and fault sets. 
 cluster, and obtaining high-level information about a PowerFlex system information.
 The modules use playbooks to list, show, create, delete, and modify
 each of the entities.
@@ -44,25 +44,29 @@ each of the entities.
 New features and enhancements
 -----------------------------
 Along with the previous release deliverables, this release supports following features - 
-- Added support for PowerFlex Denver version(4.5.x) to TB and Config role.
+- Fault set module is introduced to create, get details, rename and delete fault sets.
+- The SDS module has been enhanced to facilitate SDS creation within a fault set.
+- The Info module is enhanced to retrieve lists related to fault sets, service templates, deployments, and managed devices.
 
 Known issues
 ------------
-- Setting the RF cache and performance profile of the SDS during its creation fails intermittently on PowerFlex version 3.5 
-- The creation of replication pair fails when copy_type is specified as OfflineCopy on PowerFlex version 4.0
+- Setting the RF cache and performance profile of the SDS during its creation fails intermittently on PowerFlex version 3.5.
+- The creation of replication pair fails when copy_type is specified as OfflineCopy on PowerFlex version 4.0.
+- Pagination in info module with offset and limit fetches more than expected records when listing service templates or deployments.
+- Templates are fetched using the info module in spite of setting include_templates to false when listing deployments.
 
 Limitations
 -----------
-- The API is accepting a negative integer value for overall_limit in the network_limits for a specific protection domain. 
+
 
 Distribution
 ------------
 The software package is available for download from the [Ansible Modules
-for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.1.0) page.
+for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.2.0) page.
 
 Documentation
 -------------
-The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.1.0/docs)
+The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.2.0/docs)
 page. It includes the following:
 
    - README

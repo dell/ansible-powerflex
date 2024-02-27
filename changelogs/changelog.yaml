@@ -134,3 +134,15 @@ releases:
       minor_changes:
         - Added support for PowerFlex Denver version(4.5.x) to TB and Config role.
     release_date: '2023-11-30'
+  2.2.0:
+    changes:
+      minor_changes:
+        - The SDS module has been enhanced to facilitate SDS creation within
+          a fault set.
+        - The Info module is enhanced to retrieve lists related to fault sets,
+          service templates, deployments, and managed devices.
+    modules:
+      - description: Manage Fault Sets on Dell PowerFlex
+        name: fault_set
+        namespace: ''
+    release_date: '2024-02-29'

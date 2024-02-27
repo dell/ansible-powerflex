@@ -1,4 +1,4 @@
-# Copyright: (c) 2022, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -61,7 +61,9 @@ class MockVolumeApi:
             'originalExpiryTime': 0,
             'retentionLevels': [
             ],
-            'snplIdOfSourceVolume': None,
+            'snplIdOfSourceVolume': "snplIdOfSourceVolume",
+            'snapshotPolicyId': 'snapshotPolicyId',
+            'snapshotPolicyName': 'snapshotPolicyName',
             'volumeReplicationState': 'UnmarkedForReplication',
             'replicationJournalVolume': False,
             'replicationTimeStamp': 0,
@@ -542,7 +544,61 @@ class MockVolumeApi:
         'numOfIncomingVtreeMigrations': 0
     }
 
+    SDC_RESPONSE = [
+        {
+            'id': 'abdfe71b00030001',
+        }
+    ]
+
+    SDC_RESPONSE_EMPTY = []
+
+    GET_STORAGE_POOL = {
+        'dataLayout': 'MediumGranularity'
+    }
+
+    GET_STORAGE_POOL_FINE = {
+        'dataLayout': 'FineGranularity',
+    }
+
+    PROTECTION_DETAILS = [{"pd_id": "pd_id", "pd_name": "pd_name"}]
+
+    GET_ID = {"id": "e0d8f6c900000000"}
+    PROTECTION_DETAILS_MULTI = [
+        {"pd_id": "pd_id", "pd_name": "pd_name"},
+        {"pd_id": "pd_id", "pd_name": "pd_name"},
+    ]
+
+    RESPONSE_EXEC_DICT = {
+        'get_details': "Failed to get the volume test_id_1 with error ",
+        'get_sds': "Failed to get the SDC sdc_name with error ",
+        'create_vol_name': "Please provide valid volume name.",
+        'create_vol_size': "Size is a mandatory parameter",
+        'create_vol_ctype': "compression_type for volume can only be",
+        'create_vol_exc': "Create volume vol_name operation failed with error",
+        'modify_access': "Modify access mode of SDC operation failed",
+        'modify_limits': "Modify bandwidth/iops limits of SDC",
+        'delete_volume': "Delete volume vol_id operation failed with",
+        'val_params_err1': "sdc_id, sdc_ip and sdc_name are mutually exclusive",
+        'val_params_err2': "cap_unit can be specified along with size only",
+        'val_params_err3': "To remove/detach snapshot policy, please provide",
+        'val_params_err4': "delete_snapshots can be specified only when the state",
+        'modify_volume_exp': "Failed to update the volume",
+        'to_modify_err1': "To remove/detach a snapshot policy, provide the ",
+        'snap_pol_id_err': "Entered snapshot policy id does not ",
+        'snap_pol_name_err': "Entered snapshot policy name does not ",
+        'pd_id_err': "Entered protection domain id does not ",
+        'pool_id_err': "Entered storage pool id does ",
+        'pd_name_err': "Entered protection domain name does ",
+        'pool_name_err': "Entered storage pool name does ",
+        'get_pd_exception': "Failed to get the protection domain ",
+        'get_sp_exception': "Failed to get the snapshot policy ",
+        'get_spool_error1': "More than one storage pool found with",
+        'get_spool_error2': "Failed to get the storage pool",
+        'map_vol_exception': "Mapping volume name to SDC sdc_id1 failed with error",
+        'unmap': "Unmap SDC sdc_id from volume vol_id failed with error",
+        'perform_error1': "vol_new_name parameter is not supported during creation of a volume"
+    }
+
     @staticmethod
     def get_exception_response(response_type):
-        if response_type == 'get_details':
-            return "Failed to get the volume test_id_1 with error "
+        return MockVolumeApi.RESPONSE_EXEC_DICT.get(response_type, "")
