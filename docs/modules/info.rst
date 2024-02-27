@@ -22,9 +22,9 @@ Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- A Dell PowerFlex storage system version 3.6 or later.
+- A Dell PowerFlex storage system version 3.5 or later.
 - Ansible-core 2.14 or later.
-- PyPowerFlex 1.9.0.
+- PyPowerFlex 1.8.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -52,6 +52,8 @@ Parameters
     Replication consistency groups - ``rcg``.
 
     Replication pairs - ``replication_pair``.
+
+    Fault Sets - ``fault_set``.
 
     Service templates - ``service_template``.
 
@@ -196,6 +198,7 @@ Examples
           - device
           - rcg
           - replication_pair
+          - fault_set
 
     - name: Get a subset list of PowerFlex volumes
       dellemc.powerflex.info:
@@ -722,6 +725,23 @@ Replication_pairs (Always, list, {'copyType': 'OnlineCopy', 'id': '23aa0bc900000
 
   remoteActivityState (, str, )
     The state of activity of the remote replication pair.
+
+
+
+Fault_Sets (always, list, [{'protectionDomainId': 'da721a8300000000', 'protectionDomainName': 'fault_set_1', 'name': 'at1zbs1t6cp2sds1d1fs1', 'SDS': [], 'id': 'eb44b70500000000', 'links': [{'rel': 'self', 'href': '/api/instances/FaultSet::eb44b70500000000'}, {'rel': '/api/FaultSet/relationship/Statistics', 'href': '/api/instances/FaultSet::eb44b70500000000/relationships/Statistics'}, {'rel': '/api/FaultSet/relationship/Sds', 'href': '/api/instances/FaultSet::eb44b70500000000/relationships/Sds'}, {'rel': '/api/parent/relationship/protectionDomainId', 'href': '/api/instances/ProtectionDomain::da721a8300000000'}]}, {'protectionDomainId': 'da721a8300000000', 'protectionDomainName': 'fault_set_2', 'name': 'at1zbs1t6cp2sds1d1fs3', 'SDS': [], 'id': 'eb44b70700000002', 'links': [{'rel': 'self', 'href': '/api/instances/FaultSet::eb44b70700000002'}, {'rel': '/api/FaultSet/relationship/Statistics', 'href': '/api/instances/FaultSet::eb44b70700000002/relationships/Statistics'}, {'rel': '/api/FaultSet/relationship/Sds', 'href': '/api/instances/FaultSet::eb44b70700000002/relationships/Sds'}, {'rel': '/api/parent/relationship/protectionDomainId', 'href': '/api/instances/ProtectionDomain::da721a8300000000'}]}])
+  Details of fault sets.
+
+
+  protectionDomainId (, str, )
+    The ID of the protection domain.
+
+
+  name (, str, )
+    device name.
+
+
+  id (, str, )
+    device id.
 
 
 

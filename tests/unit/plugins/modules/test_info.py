@@ -1,4 +1,4 @@
-# Copyright: (c) 2022, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -358,6 +358,7 @@ class TestPowerflexInfo():
             "gather_subset": ['sds']
         })
         info_module_mock.module.params = self.get_module_args
+        sds_resp = MockInfoApi.INFO_SDS_GET_LIST
         info_module_mock.powerflex_conn.sds.get = MagicMock(
             side_effect=MockApiException
         )
@@ -398,6 +399,7 @@ class TestPowerflexInfo():
             "gather_subset": ['protection_domain']
         })
         info_module_mock.module.params = self.get_module_args
+        pd_resp = MockInfoApi.INFO_GET_PD_LIST
         info_module_mock.powerflex_conn.protection_domain.get = MagicMock(
             side_effect=MockApiException
         )
@@ -438,6 +440,7 @@ class TestPowerflexInfo():
             "gather_subset": ['device']
         })
         info_module_mock.module.params = self.get_module_args
+        device_resp = MockInfoApi.INFO_GET_DEVICE_LIST
         info_module_mock.powerflex_conn.device.get = MagicMock(
             side_effect=MockApiException
         )
@@ -464,6 +467,7 @@ class TestPowerflexInfo():
             "gather_subset": ['fault_set']
         })
         info_module_mock.module.params = self.get_module_args
+        fault_set_resp = MockInfoApi.INFO_GET_FAULT_SET_LIST
         info_module_mock.powerflex_conn.fault_set.get = MagicMock(
             side_effect=MockApiException
         )
@@ -480,6 +484,7 @@ class TestPowerflexInfo():
             }]
         })
         info_module_mock.module.params = self.get_module_args
+        fault_set_resp = MockInfoApi.INFO_GET_FAULT_SET_LIST
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'invalid_filter_operator_exception'), info_module_mock)
 
@@ -488,6 +493,7 @@ class TestPowerflexInfo():
             "gather_subset": ['fault_set']
         })
         info_module_mock.module.params = self.get_module_args
+        fault_set_resp = MockInfoApi.INFO_GET_FAULT_SET_LIST
         info_module_mock.powerflex_conn.system.api_version = MagicMock(
             side_effect=MockApiException
         )
@@ -499,6 +505,7 @@ class TestPowerflexInfo():
             "gather_subset": ['fault_set']
         })
         info_module_mock.module.params = self.get_module_args
+        fault_set_resp = MockInfoApi.INFO_GET_FAULT_SET_LIST
         info_module_mock.powerflex_conn.system.get = MagicMock(
             side_effect=MockApiException
         )

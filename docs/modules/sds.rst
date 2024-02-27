@@ -211,6 +211,7 @@ Examples
         sds_ip_state: "present-in-sds"
         rmcache_enabled: true
         rmcache_size: 128
+        fault_set_name: "{{fault_set_name}}"
         performance_profile: "HighPerformance"
         state: "present"
 
@@ -344,6 +345,9 @@ sds_details (When SDS exists, dict, {'authenticationError': 'None', 'certificate
   faultSetId (, str, )
     Fault set ID.
 
+
+  faultSetName (, str, )
+    Name of the Fault set.
 
   fglMetadataCacheSize (, int, )
     FGL metadata cache size.
