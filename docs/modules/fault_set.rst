@@ -213,4 +213,3 @@ Authors
 
 - Carlos Tronco (@ctronco) <ansible.team@dell.com>
 - Trisha Datta (@trisha-dell) <ansible.team@dell.com>
-
