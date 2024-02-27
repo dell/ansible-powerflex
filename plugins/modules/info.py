@@ -1,6 +1,6 @@
-#!/usr/bin/python
+# !/usr/bin/python
 
-# Copyright: (c) 2021, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """Ansible module for Gathering information about Dell Technologies (Dell) PowerFlex"""
@@ -43,8 +43,9 @@ options:
     - Devices - C(device).
     - Replication consistency groups - C(rcg).
     - Replication pairs - C(replication_pair).
+    - Fault Sets - C(fault_set).
     choices: [vol, storage_pool, protection_domain, sdc, sds,
-             snapshot_policy, device, rcg, replication_pair]
+             snapshot_policy, device, rcg, replication_pair, fault_set]
     type: list
     elements: str
   filters:
@@ -1148,11 +1149,74 @@ Replication_pairs:
         "replicationConsistencyGroupId": "e2ce036b00000002",
         "userRequestedPauseTransmitInitCopy": false
     }
+
+Fault_Sets:
+    description: Details of fault sets.
+    returned: always
+    type: list
+    contains:
+        protectionDomainId:
+            description: The ID of the protection domain.
+            type: str
+        name:
+            description: device name.
+            type: str
+        id:
+            description: device id.
+            type: str
+    sample:  [
+        {
+            "protectionDomainId": "da721a8300000000",
+            "protectionDomainName": "fault_set_1",
+            "name": "at1zbs1t6cp2sds1d1fs1",
+            "SDS": [],
+            "id": "eb44b70500000000",
+            "links": [
+                { "rel": "self", "href": "/api/instances/FaultSet::eb44b70500000000" },
+                {
+                    "rel": "/api/FaultSet/relationship/Statistics",
+                    "href": "/api/instances/FaultSet::eb44b70500000000/relationships/Statistics"
+                },
+                {
+                    "rel": "/api/FaultSet/relationship/Sds",
+                    "href": "/api/instances/FaultSet::eb44b70500000000/relationships/Sds"
+                },
+                {
+                    "rel": "/api/parent/relationship/protectionDomainId",
+                    "href": "/api/instances/ProtectionDomain::da721a8300000000"
+                }
+            ]
+        },
+        {
+            "protectionDomainId": "da721a8300000000",
+            "protectionDomainName": "fault_set_2",
+            "name": "at1zbs1t6cp2sds1d1fs3",
+            "SDS": [],
+            "id": "eb44b70700000002",
+            "links": [
+                { "rel": "self", "href": "/api/instances/FaultSet::eb44b70700000002" },
+                {
+                    "rel": "/api/FaultSet/relationship/Statistics",
+                    "href": "/api/instances/FaultSet::eb44b70700000002/relationships/Statistics"
+                },
+                {
+                    "rel": "/api/FaultSet/relationship/Sds",
+                    "href": "/api/instances/FaultSet::eb44b70700000002/relationships/Sds"
+                },
+                {
+                    "rel": "/api/parent/relationship/protectionDomainId",
+                    "href": "/api/instances/ProtectionDomain::da721a8300000000"
+                }
+            ]
+        }
+    ]
 '''
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
+    import Configuration
 
 LOG = utils.get_logger('info')
 
@@ -1266,7 +1330,7 @@ class PowerFlexInfo(object):
             return result_list(sds)
 
         except Exception as e:
-            msg = 'Get sds list from powerflex array failed with' \
+            msg = 'Get SDS list from powerflex array failed with' \
                   ' error %s' % (str(e))
             LOG.error(msg)
             self.module.fail_json(msg=msg)
@@ -1437,6 +1501,43 @@ class PowerFlexInfo(object):
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
+    def get_fault_sets_list(self, filter_dict=None):
+        """ Get the list of fault sets on a given PowerFlex storage
+            system """
+
+        try:
+            LOG.info('Getting fault set list ')
+            filter_pd = []
+            if filter_dict:
+                if 'protectionDomainName' in filter_dict.keys():
+                    filter_pd = filter_dict['protectionDomainName']
+                    del filter_dict['protectionDomainName']
+                fault_sets = self.powerflex_conn.fault_set.get(filter_fields=filter_dict)
+            else:
+                fault_sets = self.powerflex_conn.fault_set.get()
+
+            fault_set_final = []
+            if fault_sets:
+                for fault_set in fault_sets:
+                    fault_set['protectionDomainName'] = Configuration(self.powerflex_conn, self.module).get_protection_domain(
+                        protection_domain_id=fault_set["protectionDomainId"])["name"]
+                    fault_set["SDS"] = Configuration(self.powerflex_conn, self.module).get_associated_sds(
+                        fault_set_id=fault_set['id'])
+                    fault_set_final.append(fault_set)
+            fault_sets = []
+            for fault_set in fault_set_final:
+                if fault_set['protectionDomainName'] in filter_pd:
+                    fault_sets.append(fault_set)
+            if len(filter_pd) != 0:
+                return result_list(fault_sets)
+            return result_list(fault_set_final)
+
+        except Exception as e:
+            msg = 'Get fault set list from powerflex array failed ' \
+                  'with error %s' % (str(e))
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
     def validate_filter(self, filter_dict):
         """ Validate given filter_dict """
 
@@ -1504,6 +1605,7 @@ class PowerFlexInfo(object):
         device = []
         rcgs = []
         replication_pair = []
+        fault_sets = []
 
         subset = self.module.params['gather_subset']
         if subset is not None:
@@ -1525,6 +1627,8 @@ class PowerFlexInfo(object):
                 rcgs = self.get_replication_consistency_group_list(filter_dict=filter_dict)
             if 'replication_pair' in subset:
                 replication_pair = self.get_replication_pair_list(filter_dict=filter_dict)
+            if 'fault_set' in subset:
+                fault_sets = self.get_fault_sets_list(filter_dict=filter_dict)
 
         self.module.exit_json(
             Array_Details=array_details,
@@ -1537,7 +1641,8 @@ class PowerFlexInfo(object):
             Protection_Domains=protection_domain,
             Devices=device,
             Replication_Consistency_Groups=rcgs,
-            Replication_Pairs=replication_pair
+            Replication_Pairs=replication_pair,
+            Fault_Sets=fault_sets
         )
 
 
@@ -1562,8 +1667,8 @@ def get_powerflex_info_parameters():
     return dict(
         gather_subset=dict(type='list', required=False, elements='str',
                            choices=['vol', 'storage_pool',
-                                    'protection_domain', 'sdc', 'sds',
-                                    'snapshot_policy', 'device', 'rcg', 'replication_pair']),
+                                    'protection_domain', 'sdc', 'sds', 'snapshot_policy',
+                                    'device', 'rcg', 'replication_pair', 'fault_set']),
         filters=dict(type='list', required=False, elements='dict',
                      options=dict(filter_key=dict(type='str', required=True, no_log=False),
                                   filter_operator=dict(

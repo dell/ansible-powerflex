@@ -24,6 +24,7 @@
           - device
           - rcg
           - replication_pair
+          - fault_set
 
     - name: Get specific volume details
       dellemc.powerflex.info:

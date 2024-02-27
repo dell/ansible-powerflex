@@ -109,6 +109,17 @@ Parameters
     Default value by API is ``HighPerformance``.
 
 
+  fault_set_name (optional, str, None)
+    The name of the fault set
+
+    Mutually exclusive with *fault_set_id*.
+
+
+  fault_set_id (optional, str, None)
+    The ID of the fault set.
+
+    Mutually exclusive with *fault_set_name*.
+
   state (True, str, None)
     State of the SDS.
 
@@ -198,6 +209,7 @@ Examples
         sds_ip_state: "present-in-sds"
         rmcache_enabled: true
         rmcache_size: 128
+        fault_set_name: "{{fault_set_name}}"
         performance_profile: "HighPerformance"
         state: "present"
 
