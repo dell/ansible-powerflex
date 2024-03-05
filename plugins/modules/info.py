@@ -224,7 +224,7 @@ EXAMPLES = r'''
       - firmware_repository
 
 - name: Get the list of firmware repository with filter, includes related, bundles and components
-    dellemc.powerflex.info:
+  dellemc.powerflex.info:
     hostname: "{{ hostname }}"
     username: "{{ username }}"
     password: "{{ password }}"
@@ -2248,8 +2248,7 @@ class PowerFlexInfo(object):
                 offset=self.get_param_value('offset'),
                 related=self.get_param_value('include_related'),
                 bundles=self.get_param_value('include_bundles'),
-                components=self.get_param_value('include_components')
-                )
+                components=self.get_param_value('include_components'))
             return firmware_repository
         except Exception as e:
             msg = f'Get firmware repository from PowerFlex Manager failed with error {str(e)}'

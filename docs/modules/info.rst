@@ -272,7 +272,7 @@ Examples
           - firmware_repository
 
     - name: Get the list of firmware repository with filter, includes related, bundles and components
-        dellemc.powerflex.info:
+      dellemc.powerflex.info:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
