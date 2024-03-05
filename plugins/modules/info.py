@@ -1815,7 +1815,7 @@ ServiceTemplates:
     }]
 FirmwareRepository:
     description: Details of all firmware repository.
-    returned: when I(gather_subset) is I(firmware_repository)
+    returned: when I(gather_subset) is C(firmware_repository)
     type: list
     contains:
         id:
