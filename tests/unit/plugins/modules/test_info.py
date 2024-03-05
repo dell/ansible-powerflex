@@ -604,3 +604,24 @@ class TestPowerflexInfo():
         info_module_mock.perform_module_operation()
         assert info_module_mock.get_param_value('limit') is None
         assert info_module_mock.get_param_value('offset') is None
+
+    def test_get_firmware_repository_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['firmware_repository'],
+            "limit": 20
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.firmware_repository.get = MagicMock()
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.firmware_repository.get.assert_called()
+
+    def test_get_deployment_details_throws_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['firmware_repository']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.firmware_repository.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'firmware_repository_get_error'), info_module_mock)
