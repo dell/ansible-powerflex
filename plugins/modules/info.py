@@ -73,7 +73,8 @@ options:
       filter_operator:
         description:
         - Operation to be performed on filter key.
-        - Choice C(contains) is supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment).
+        - Choice C(contains) is supported for I(gather_subset) keys C(service_template), C(managed_device),
+          C(deployment), C(firmware_repository).
         type: str
         choices: [equal, contains]
         required: true
@@ -85,19 +86,19 @@ options:
   limit:
     description:
     - Page limit.
-    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment).
+    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment), C(firmware_repository).
     type: int
     default: 50
   offset:
     description:
     - Pagination offset.
-    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment).
+    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment), C(firmware_repository).
     type: int
     default: 0
   sort:
     description:
     - Sort the returned components based on specified field.
-    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment).
+    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment), C(firmware_repository).
     - The supported sort keys for the I(gather_subset) can be referred from PowerFlex Manager API documentation in U(https://developer.dell.com).
     type: str
   include_devices:
@@ -150,7 +151,7 @@ notes:
   - The I(check_mode) is supported.
   - The supported filter keys for the I(gather_subset) can be referred from PowerFlex Manager API documentation in U(https://developer.dell.com).
   - The I(filter), I(sort), I(limit) and I(offset) options will be ignored when more than one I(gather_subset) is specified along with
-    C(service_template), C(managed_device) or C(deployment).
+    C(service_template), C(managed_device), C(deployment) or C(firmware_repository).
 '''
 
 EXAMPLES = r'''
@@ -222,6 +223,18 @@ EXAMPLES = r'''
     validate_certs: "{{ validate_certs }}"
     gather_subset:
       - firmware_repository
+
+- name: Get the list of firmware repository with includes related, bundles, and components
+  dellemc.powerflex.info:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    gather_subset:
+      - firmware_repository
+    include_related: true
+    include_bundles: true
+    include_components: true
 
 - name: Get the list of firmware repository with filter, includes related, bundles and components
   dellemc.powerflex.info:

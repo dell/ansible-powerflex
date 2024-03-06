@@ -79,7 +79,7 @@ Parameters
     filter_operator (True, str, None)
       Operation to be performed on filter key.
 
-      Choice ``contains`` is supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``.
+      Choice ``contains`` is supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``, ``firmware_repository``.
 
 
     filter_value (True, str, None)
@@ -90,19 +90,19 @@ Parameters
   limit (optional, int, 50)
     Page limit.
 
-    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``.
+    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``, ``firmware_repository``.
 
 
   offset (optional, int, 0)
     Pagination offset.
 
-    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``.
+    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``, ``firmware_repository``.
 
 
   sort (optional, str, None)
     Sort the returned components based on specified field.
 
-    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``.
+    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``, ``firmware_repository``.
 
     The supported sort keys for the *gather_subset* can be referred from PowerFlex Manager API documentation in https://developer.dell.com.
 
@@ -190,7 +190,7 @@ Notes
 .. note::
    - The *check_mode* is supported.
    - The supported filter keys for the *gather_subset* can be referred from PowerFlex Manager API documentation in https://developer.dell.com.
-   - The *filter*, *sort*, *limit* and *offset* options will be ignored when more than one *gather_subset* is specified along with ``service_template``, ``managed_device`` or ``deployment``.
+   - The *filter*, *sort*, *limit* and *offset* options will be ignored when more than one *gather_subset* is specified along with ``service_template``, ``managed_device``, ``deployment`` or ``firmware_repository``.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -270,6 +270,18 @@ Examples
         validate_certs: "{{ validate_certs }}"
         gather_subset:
           - firmware_repository
+
+    - name: Get the list of firmware repository with includes related, bundles, and components
+      dellemc.powerflex.info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - firmware_repository
+        include_related: true
+        include_bundles: true
+        include_components: true
 
     - name: Get the list of firmware repository with filter, includes related, bundles and components
       dellemc.powerflex.info:

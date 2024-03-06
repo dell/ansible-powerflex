@@ -78,3 +78,42 @@
             filter_value: "partial"
         sort: name
         limit: 10
+
+    - name: Get the list of firmware repository
+      dellemc.powerflex.info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - firmware_repository
+
+    - name: Get the list of firmware repository with includes related, bundles, and components
+      dellemc.powerflex.info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - firmware_repository
+        include_related: true
+        include_bundles: true
+        include_components: true
+
+    - name: Get the list of firmware repository with filter, includes related, bundles and components
+      dellemc.powerflex.info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - firmware_repository
+        filters:
+          - filter_key: "createdBy"
+            filter_operator: "equal"
+            filter_value: "admin"
+        sort: createdDate
+        limit: 10
+        include_related: true
+        include_bundles: true
+        include_components: true
