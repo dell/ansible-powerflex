@@ -2250,15 +2250,17 @@ class PowerFlexInfo(object):
             msg = f'Get deployments from PowerFlex Manager failed with error {str(e)}'
             return self.handle_error_exit(msg)
 
+    def get_pagination_params(self):
+        """ Get the pagination parameters """
+        return {'limit': self.get_param_value('limit'), 'offset': self.get_param_value('offset'),
+                'sort': self.get_param_value('sort'), 'filters': self.populate_filter_list()}
+
     def get_firmware_repository_list(self):
         """ Get the list of firmware repository on a given PowerFlex Manager system """
         try:
             LOG.info('Getting firmware repository list ')
             firmware_repository = self.powerflex_conn.firmware_repository.get(
-                filters=self.populate_filter_list(),
-                sort=self.get_param_value('sort'),
-                limit=self.get_param_value('limit'),
-                offset=self.get_param_value('offset'),
+                **self.get_pagination_params(),
                 related=self.get_param_value('include_related'),
                 bundles=self.get_param_value('include_bundles'),
                 components=self.get_param_value('include_components'))
