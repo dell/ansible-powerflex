@@ -300,6 +300,21 @@ Examples
         include_related: true
         include_bundles: true
         include_components: true
+      register: result_repository_out
+
+    - name: Get the list of available firmware repository
+      ansible.builtin.debug:
+        msg: "{{ result_repository_out.FirmwareRepository | selectattr('state', 'equalto', 'available') }}"
+
+    - name: Get the list of software components for the specific firmware repository
+      ansible.builtin.debug:
+        msg: "{{ result_repository_out.FirmwareRepository |
+            selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareComponents') | flatten }}"
+
+    - name: Get the list of software bundles for the specific firmware repository
+      ansible.builtin.debug:
+        msg: "{{ result_repository_out.FirmwareRepository |
+            selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareBundles') | flatten }}"
 
 
 
