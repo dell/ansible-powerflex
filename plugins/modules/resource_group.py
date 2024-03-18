@@ -361,7 +361,8 @@ class PowerFlexResourceGroup:
         """
         if deployment_name:
             filter_query = utils.get_filter(deployment_name)
-            return self.powerflex_conn.deployment.get(filters=[filter_query])
+            deployment = self.powerflex_conn.deployment.get(filters=[filter_query])
+            return deployment[0] if deployment else None
         else:
             try:
                 return self.powerflex_conn.deployment.get_by_id(deployment_id)
