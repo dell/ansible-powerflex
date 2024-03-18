@@ -463,9 +463,9 @@ class DeleteDeploy:
             changed = False
             if self.deployment_details:
                 if not self.module.check_mode:
-                    self.powerflex_conn.deployment.delete(self.deployment_details.id)
+                    self.powerflex_conn.deployment.delete(self.deployment_details['id'])
                     self.deployment_details = \
-                        self.get_deployment_details(deployment_name=self.deployment_details.deploymentName)
+                        self.get_deployment_details(deployment_name=self.deployment_details['deploymentName'])
                 changed = True
             return changed, self.deployment_details
         except Exception as e:
