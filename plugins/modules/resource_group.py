@@ -224,6 +224,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 import json
+import copy
 
 LOG = utils.get_logger('resource_group')
 
@@ -387,7 +388,6 @@ class PowerFlexResourceGroup:
             errmsg = f'Modifying a resource group deployment failed with error {utils.get_display_message(str(e))}'
             self.module.fail_json(msg=errmsg)
 
-
     def get_deployment_data(self):
         """
         Retrieves deployment data based on the provided parameters.
@@ -441,7 +441,7 @@ class PowerFlexResourceGroup:
                 deployment_id = resp[0]["id"]
                 return self.powerflex_conn.deployment.get_by_id(deployment_id)
             else:
-            	return None
+                return None
         except Exception as e:
             if hasattr(e, 'status') and str(e.status) == '404':
                 return None
