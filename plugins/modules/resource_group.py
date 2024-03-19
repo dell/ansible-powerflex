@@ -17,6 +17,7 @@ description:
   editing, adding nodes and deleting a resource group deployment.
 author:
 - Jennifer John (@johnj9) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 extends_documentation_fragment:
   - dellemc.powerflex.powerflex
 options:
@@ -314,6 +315,79 @@ class PowerFlexResourceGroup:
             self.module.fail_json(msg="Specify resource_group_name for resource group deployment.")
         return resource_group_name
 
+    def is_modify_needed(self, deployment_data):
+
+        modify_dict = False
+        if self.module.params.get("new_resource_group_name") is not None and \
+                deployment_data["deploymentName"] != self.module.params.get("new_resource_group_name"):
+            modify_dict = True
+        if self.module.params.get("description") is not None and \
+                deployment_data["deploymentDescription"] != self.module.params.get("description"):
+            modify_dict = True
+        if self.module.params.get("scaleup"):
+            modify_dict = True
+
+        return modify_dict
+
+    def prepare_add_node_payload(self, deployment_data):
+
+        new_component = None
+        for component in range(len(deployment_data["serviceTemplate"]["components"])):
+            if deployment_data["serviceTemplate"]["components"][component]["name"] == self.module.params.get(
+                    "clone_node"):
+                new_component = deployment_data["serviceTemplate"]["components"][component]
+
+        if new_component is not None:
+            new_component["identifier"] = None
+            new_component["asmGUID"] = None
+            new_component["puppetCertName"] = None
+            new_component["osPuppetCertName"] = None
+            new_component["managementIpAddress"] = None
+            new_component["brownfield"] = False
+            new_component["id"] = "uuid"
+            new_component["name"] = "uuid"
+
+        resouce_params = ["razor_image", "scaleio_enabled", "scaleio_role",
+                          "compression_enabled", "replication_enabled"]
+
+        for resource in range(len(new_component["resources"])):
+            if new_component["resources"][resource]["id"] == "asm::server":
+                for param in range(len(new_component["resources"][resource]["parameters"])):
+                    if new_component["resources"][resource]["parameters"][param]["id"] \
+                            not in resouce_params:
+                        new_component["resources"][resource]["parameters"][param]["guid"] = None
+                        new_component["resources"][resource]["parameters"][param]["value"] = None
+        return new_component
+
+    def modify_resource_group_details(self, deployment_data):
+        new_deployment_data = copy.deepcopy(deployment_data)
+
+        # edit resource group
+
+        if self.module.params.get("new_resource_group_name"):
+            new_deployment_data["deploymentName"] = self.module.params.get("new_resource_group_name")
+        if self.module.params.get("description"):
+            new_deployment_data["deploymentDescription"] = self.module.params.get("description")
+
+        # Add nodes
+
+        if self.module.params.get("scaleup") is True:
+            new_deployment_data["scaleup"] = True
+            new_deployment_data["retry"] = True
+            for node in range(self.module.params.get("node_count")):
+                new_component = self.prepare_add_node_payload(deployment_data=deployment_data)
+                if new_component:
+                    new_deployment_data["serviceTemplate"]["components"].append(new_component)
+        try:
+            if not self.module.check_mode:
+                self.powerflex_conn.deployment.edit(deployment_id=deployment_data["id"],
+                                                    rg_data=new_deployment_data)
+
+        except Exception as e:
+            errmsg = f'Modifying a resource group deployment failed with error {utils.get_display_message(str(e))}'
+            self.module.fail_json(msg=errmsg)
+
+
     def get_deployment_data(self):
         """
         Retrieves deployment data based on the provided parameters.
@@ -359,18 +433,20 @@ class PowerFlexResourceGroup:
             list: A list of deployment details if the deployment name is provided and a matching deployment is found.
             None: if the deployment ID is provided and no deployment is found with that ID.
         """
-        if deployment_name:
-            filter_query = utils.get_filter(deployment_name)
-            deployment = self.powerflex_conn.deployment.get(filters=[filter_query])
-            return deployment[0] if deployment else None
-        else:
-            try:
+        try:
+            if deployment_name:
+                filter_query = utils.get_filter(deployment_name)
+                resp = self.powerflex_conn.deployment.get(filters=[filter_query])
+            if len(resp) > 0:
+                deployment_id = resp[0]["id"]
                 return self.powerflex_conn.deployment.get_by_id(deployment_id)
-            except Exception as e:
-                if hasattr(e, 'status') and str(e.status) == '404':
-                    return None
-                else:
-                    self.module.fail_json(msg=utils.get_display_message(str(e)))
+            else:
+            	return None
+        except Exception as e:
+            if hasattr(e, 'status') and str(e.status) == '404':
+                return None
+            else:
+                self.module.fail_json(msg=utils.get_display_message(str(e)))
 
     def get_operation_mapping(self):
         """
@@ -391,10 +467,10 @@ class PowerFlexResourceGroup:
                 ('absent', True, False): DeleteDeploy,
                 ('absent', False, True): DeleteDeploy,
                 ('absent', False, False): DeleteDeploy,
-                ('present', True, True): EditDeploy,
-                ('present', True, False): EditDeploy,
-                ('present', False, True): EditDeploy,
-                ('present', False, False): EditDeploy
+                ('present', True, True): ModifyResourceGroup,
+                ('present', True, False): ModifyResourceGroup,
+                ('present', False, True): ModifyResourceGroup,
+                ('present', False, False): ModifyResourceGroup
             }
 
         state = self.module.params.get('state')
@@ -447,11 +523,19 @@ class ValidateDeploy:
             self.module.fail_json(msg=errmsg)
 
 
-class EditDeploy:
+class ModifyResourceGroup:
     def execute(self):
         try:
-            # TODO: Add support for editing resource group
-            return False, self.deployment_details
+            resource_group_id = self.module.params.get('resource_group_id')
+            resource_group_name = self.module.params.get('resource_group_name')
+            changed = False
+            rg_data = self.get_deployment_details(deployment_name=resource_group_name, deployment_id=resource_group_id)
+            if self.is_modify_needed(deployment_data=rg_data):
+                self.modify_resource_group_details(deployment_data=rg_data)
+                changed = True
+
+            response = self.get_deployment_details(deployment_id=rg_data['id'])
+            return changed, response
         except Exception as e:
             errmsg = f'Editing a resource group failed with error {utils.get_display_message(str(e))}'
             self.module.fail_json(msg=errmsg)
