@@ -51,7 +51,8 @@ class TestResourceGroup(PowerFlexUnitBase):
         self.set_module_params(powerflex_module_mock, self.get_module_args,
                                {"resource_group_id": "8aaa03a88de961fa018de96a88d80008",
                                 "state": "absent", "validate": True, "resource_group_name": None})
-        powerflex_module_mock.powerflex_conn.deployment.get_by_id = MagicMock(return_value=[MagicMock()])
+        powerflex_module_mock.powerflex_conn.deployment.get_by_id = MagicMock(
+            return_value=MockResourceResourceGroupAPI.RG_RESPONSE[0])
         powerflex_module_mock.powerflex_conn.deployment.delete = MagicMock(return_value=None)
         powerflex_module_mock.perform_module_operation()
         assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
