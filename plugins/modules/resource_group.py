@@ -437,11 +437,12 @@ class PowerFlexResourceGroup:
             if deployment_name:
                 filter_query = utils.get_filter(deployment_name)
                 resp = self.powerflex_conn.deployment.get(filters=[filter_query])
-            if len(resp) > 0:
-                deployment_id = resp[0]["id"]
-                return self.powerflex_conn.deployment.get_by_id(deployment_id)
-            else:
-                return None
+                if len(resp) > 0:
+                    deployment_id = resp[0]["id"]
+                else:
+                    return None
+            return self.powerflex_conn.deployment.get_by_id(deployment_id)
+
         except Exception as e:
             if hasattr(e, 'status') and str(e.status) == '404':
                 return None
@@ -491,7 +492,8 @@ class PowerFlexResourceGroup:
         )
 
         self.deployment_details = \
-            self.get_deployment_details(self.module.params.get('resource_group_name'), self.module.params.get('resource_group_id'))
+            self.get_deployment_details(deployment_name = self.module.params.get('resource_group_name'),
+                                        deployment_id = self.module.params.get('resource_group_id'))
         resource_group_operation = self.get_operation_mapping()
         if resource_group_operation:
             changed, resource_group_details = resource_group_operation.execute(self)
