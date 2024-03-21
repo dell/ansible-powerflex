@@ -28,7 +28,45 @@ class MockResourceResourceGroupAPI:
         "teardown": False,
         "serviceTemplate": {
             "id": "8aaa03a88de961fa018de96a88d80008",
-            "templateName": "update-template (8aaa03a88de961fa018de96a88d80008)"
+            "templateName": "update-template (8aaa03a88de961fa018de96a88d80008)",
+            "components": [
+                {
+                    "id": "a7dafed9-96f2-4a55-9518-57af4f45686e",
+                    "componentID": "component-scaleio-gateway-1",
+                    "identifier": None,
+                    "componentValid": {
+                        "valid": True,
+                        "messages": []
+                    },
+                    "puppetCertName": "scaleio-block-legacy-gateway",
+                    "osPuppetCertName": None,
+                    "name": "block-legacy-gateway",
+                    "type": "SCALEIO",
+                    "subType": "COMPUTEONLY",
+                    "teardown": False,
+                    "helpText": None,
+                    "managementIpAddress": None,
+                    "configFile": None,
+                    "serialNumber": None,
+                    "asmGUID": "scaleio-block-legacy-gateway",
+                    "relatedComponents": {
+                        "fc0f8f08-18c7-4fa8-bae8-67f3e6f9ccd6": "Node (Software Only)"
+                    },
+                    "resources": [{
+                        "id": "asm::server",
+                        "parameters": [{
+                            "id": "a7dafed9",
+                            "guid": None,
+                            "value": None}]}],
+                    "refId": None,
+                    "cloned": False,
+                    "clonedFromId": None,
+                    "manageFirmware": False,
+                    "brownfield": False,
+                    "instances": 1,
+                    "clonedFromAsmGuid": None,
+                    "ip": None
+                }]
         },
         "scheduleDate": None,
         "status": "error",
@@ -105,17 +143,13 @@ class MockResourceResourceGroupAPI:
 
     @staticmethod
     def resource_group_error(response_type):
-        if response_type == "get_delete_deploy_exception":
-            return "Deleting a resource group deployment failed with error "
-        elif response_type == "get_validate_deploy_exception":
-            return "Validating a resource group deployment failed with error"
-        elif response_type == "get_create_deploy_exception":
-            return "Deploying a resource group failed with error"
-        elif response_type == "get_template_validate_error":
-            return "Deploying a resource group failed with error Either template_id"
-        elif response_type == "get_template_error":
-            return "Service template new-template is not found"
-        elif response_type == "invalid_date_format":
-            return "Deploying a resource group failed with error Invalid schedule_date format"
-        elif response_type == "resource_group_name_error":
-            return "Specify resource_group_name for resource group deployment"
+        return {
+            "get_delete_deploy_exception": "Deleting a resource group deployment failed with error ",
+            "get_validate_deploy_exception": "Validating a resource group deployment failed with error",
+            "get_create_deploy_exception": "Deploying a resource group failed with error",
+            "get_template_validate_error": "Deploying a resource group failed with error Either template_id",
+            "get_template_error": "Service template new-template is not found",
+            "invalid_date_format": "Deploying a resource group failed with error Invalid schedule_date format",
+            "resource_group_name_error": "Specify resource_group_name for resource group deployment",
+            "resource_group_edit_error": "Editing a resource group failed with error",
+        }[response_type]
