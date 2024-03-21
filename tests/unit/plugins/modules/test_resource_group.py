@@ -67,8 +67,12 @@ class TestResourceGroup(PowerFlexUnitBase):
 
     def test_delete_deploy_exception(self, powerflex_module_mock):
         self.set_module_params(powerflex_module_mock, self.get_module_args,
-                               {"resource_group_name": "ans_rg", "state": "absent", "validate": True})
-        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(return_value=[MagicMock()])
+                               {"resource_group_name": "ans_rg", "state": "absent", "validate": True,
+                                "resource_group_id": None})
+        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(
+            return_value=MockResourceResourceGroupAPI.RG_RESPONSE)
+        powerflex_module_mock.powerflex_conn.deployment.get_by_id = MagicMock(
+            return_value=MockResourceResourceGroupAPI.RG_RESPONSE[0])
         powerflex_module_mock.powerflex_conn.deployment.delete = MagicMock(side_effect=MockApiException)
         self.capture_fail_json_call(
             MockResourceResourceGroupAPI.resource_group_error('get_delete_deploy_exception'),
@@ -80,7 +84,8 @@ class TestResourceGroup(PowerFlexUnitBase):
                      "firmware_repository_id": "8aaa80788b5755d1018b576126d51ba3",
                      "validate": True, "resource_group_id": None, "state": "present"}
         self.set_module_params(powerflex_module_mock, self.get_module_args, arguments)
-        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(return_value=None)
+        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(return_value=[])
+        powerflex_module_mock.powerflex_conn.deployment.get_by_id = MagicMock(return_value=[])
         powerflex_module_mock.powerflex_conn.service_template.get_by_id = MagicMock(
             return_value=MockResourceResourceGroupAPI.RG_TEMPLATE_RESPONSE)
         powerflex_module_mock.powerflex_conn.firmware_repository.get = MagicMock(
@@ -107,7 +112,8 @@ class TestResourceGroup(PowerFlexUnitBase):
                      "firmware_repository_id": None, "firmware_repository_name": "firmware-name",
                      "validate": False, "state": "present", "schedule_date": "2020-01-01"}
         self.set_module_params(powerflex_module_mock, self.get_module_args, arguments)
-        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(return_value=None)
+        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(return_value=[])
+        powerflex_module_mock.powerflex_conn.deployment.get_by_id = MagicMock(return_value=[])
         powerflex_module_mock.powerflex_conn.service_template.get = MagicMock(
             return_value=MockResourceResourceGroupAPI.RG_TEMPLATE_RESPONSE)
         powerflex_module_mock.powerflex_conn.service_template.get_by_id = MagicMock(
@@ -148,7 +154,8 @@ class TestResourceGroup(PowerFlexUnitBase):
                      "firmware_repository_id": None, "firmware_repository_name": "firmware-name",
                      "validate": False, "state": "present", "schedule_date": "01/01/2024"}
         self.set_module_params(powerflex_module_mock, self.get_module_args, arguments)
-        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(return_value=None)
+        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(return_value=[])
+        powerflex_module_mock.powerflex_conn.deployment.get_by_id = MagicMock(return_value=[])
         powerflex_module_mock.powerflex_conn.service_template.get = MagicMock(
             return_value=MockResourceResourceGroupAPI.RG_TEMPLATE_RESPONSE)
         powerflex_module_mock.powerflex_conn.service_template.get_by_id = MagicMock(
@@ -170,3 +177,25 @@ class TestResourceGroup(PowerFlexUnitBase):
         self.capture_fail_json_call(
             MockResourceResourceGroupAPI.resource_group_error('resource_group_name_error'),
             powerflex_module_mock, invoke_perform_module=True)
+
+    def test_resource_group_edit(self, powerflex_module_mock):
+        arguments = {"resource_group_name": "ans_rg", "description": "ans_rg",
+                     "template_id": None, "template_name": "update-template",
+                     "firmware_repository_id": None, "firmware_repository_name": "firmware-name",
+                     "validate": False, "state": "present", "schedule_date": "2020-01-01",
+                     "scaleup": True, "node_count": 1, "clone_node": "block-legacy-gateway"}
+        self.set_module_params(powerflex_module_mock, self.get_module_args, arguments)
+        powerflex_module_mock.powerflex_conn.deployment.get = MagicMock(
+            return_value=MockResourceResourceGroupAPI.RG_RESPONSE)
+        powerflex_module_mock.powerflex_conn.deployment.get_by_id = MagicMock(
+            return_value=MockResourceResourceGroupAPI.RG_RESPONSE[0])
+        powerflex_module_mock.powerflex_conn.service_template.get = MagicMock(
+            return_value=MockResourceResourceGroupAPI.RG_TEMPLATE_RESPONSE)
+        powerflex_module_mock.powerflex_conn.service_template.get_by_id = MagicMock(
+            return_value=MockResourceResourceGroupAPI.RG_TEMPLATE_RESPONSE)
+        powerflex_module_mock.powerflex_conn.firmware_repository.get = MagicMock(
+            return_value=MockResourceResourceGroupAPI.RG_FIRMWARE_REPO)
+        powerflex_module_mock.powerflex_conn.deployment.edit = MagicMock(
+            return_value=None)
+        powerflex_module_mock.perform_module_operation()
+        assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
