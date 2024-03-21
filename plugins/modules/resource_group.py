@@ -106,7 +106,7 @@ EXAMPLES = r'''
     password: "{{ password }}"
     validate_certs: "{{ validate_certs }}"
     port: "{{ port }}"
-    resource_group_name: ans_rg
+    resource_group_name: "{{ resource_group_name_1 }}"
     description: ans_rg
     template_id: c65d0172-8666-48ab-935e-9a0bf69ed66d
     firmware_repository_id: 8aaa80788b5755d1018b576126d51ba3
@@ -119,10 +119,31 @@ EXAMPLES = r'''
     password: "{{ password }}"
     validate_certs: "{{ validate_certs }}"
     port: "{{ port }}"
-    resource_group_name: ans_rg
+    resource_group_name: "{{ resource_group_name_1 }}"
     description: ans_rg
     template_id: c65d0172-8666-48ab-935e-9a0bf69ed66d
     firmware_repository_id: 8aaa80788b5755d1018b576126d51ba3
+
+- name: Add a node to a resource group
+  dellemc.powerflex.resource_group:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    resource_group_name: "{{ resource_group_name_1 }}"
+    scaleup: True
+    clone_node: " {{ node_1 }}"
+    node_count: {{ node_count }}
+
+- name: Modify a resource group
+  dellemc.powerflex.resource_group:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    resource_group_name: "{{ resource_group_name_1 }}"
+    new_resource_group_name: "{{ new_resource_group_name }}"
+    description: "description new"
 
 - name: Delete a resource group
   dellemc.powerflex.resource_group:
@@ -225,6 +246,8 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 import json
 import copy
+import string
+import random
 
 LOG = utils.get_logger('resource_group')
 
@@ -311,7 +334,7 @@ class PowerFlexResourceGroup:
 
     def get_resource_group_name(self):
         """ Retrieves the name of the resource group. """
-        resource_group_name = self.module.params.get('resource_group_name')
+        resource_group_name = self.module.params['resource_group_name']
         if not resource_group_name:
             self.module.fail_json(msg="Specify resource_group_name for resource group deployment.")
         return resource_group_name
@@ -319,34 +342,44 @@ class PowerFlexResourceGroup:
     def is_modify_needed(self, deployment_data):
 
         modify_dict = False
-        if self.module.params.get("new_resource_group_name") is not None and \
-                deployment_data["deploymentName"] != self.module.params.get("new_resource_group_name"):
+        if self.module.params["new_resource_group_name"] is not None and \
+                deployment_data["deploymentName"] != self.module.params["new_resource_group_name"]:
             modify_dict = True
-        if self.module.params.get("description") is not None and \
-                deployment_data["deploymentDescription"] != self.module.params.get("description"):
+        if self.module.params["description"] is not None and \
+                deployment_data["deploymentDescription"] != self.module.params["description"]:
             modify_dict = True
-        if self.module.params.get("scaleup"):
+        if self.module.params["scaleup"]:
             modify_dict = True
 
         return modify_dict
+
+    def random_uuid_generation(self):
+        generate_uuid = ''.join([random.choice(
+                               string.ascii_lowercase + string.digits)
+                               for n in range(32)])
+
+        return generate_uuid
 
     def prepare_add_node_payload(self, deployment_data):
 
         new_component = None
         for component in range(len(deployment_data["serviceTemplate"]["components"])):
-            if deployment_data["serviceTemplate"]["components"][component]["name"] == self.module.params.get(
-                    "clone_node"):
+            if deployment_data["serviceTemplate"]["components"][component]["name"] == self.module.params["clone_node"]:
                 new_component = deployment_data["serviceTemplate"]["components"][component]
 
         if new_component is not None:
-            new_component["identifier"] = None
-            new_component["asmGUID"] = None
-            new_component["puppetCertName"] = None
-            new_component["osPuppetCertName"] = None
-            new_component["managementIpAddress"] = None
-            new_component["brownfield"] = False
-            new_component["id"] = "uuid"
-            new_component["name"] = "uuid"
+            uuid = self.random_uuid_generation()
+            new_component.update(
+                {
+                     "identifier": None,
+                     "asmGUID": None,
+                     "puppetCertName": None,
+                     "osPuppetCertName": None,
+                     "managementIpAddress": None,
+                     "brownfield": False,
+                     "id": uuid,
+                     "name": uuid
+                })
 
         resouce_params = ["razor_image", "scaleio_enabled", "scaleio_role",
                           "compression_enabled", "replication_enabled"]
@@ -365,17 +398,17 @@ class PowerFlexResourceGroup:
 
         # edit resource group
 
-        if self.module.params.get("new_resource_group_name"):
-            new_deployment_data["deploymentName"] = self.module.params.get("new_resource_group_name")
-        if self.module.params.get("description"):
-            new_deployment_data["deploymentDescription"] = self.module.params.get("description")
+        if self.module.params["new_resource_group_name"]:
+            new_deployment_data["deploymentName"] = self.module.params["new_resource_group_name"]
+        if self.module.params["description"]:
+            new_deployment_data["deploymentDescription"] = self.module.params["description"]
 
         # Add nodes
 
-        if self.module.params.get("scaleup") is True:
+        if self.module.params["scaleup"] is True:
             new_deployment_data["scaleup"] = True
             new_deployment_data["retry"] = True
-            for node in range(self.module.params.get("node_count")):
+            for node in range(self.module.params["node_count"]):
                 new_component = self.prepare_add_node_payload(deployment_data=deployment_data)
                 if new_component:
                     new_deployment_data["serviceTemplate"]["components"].append(new_component)
@@ -394,13 +427,13 @@ class PowerFlexResourceGroup:
 
         :return: A JSON string representing the deployment data.
         """
-        template_id = self.module.params.get('template_id')
-        template_name = self.module.params.get('template_name')
+        template_id = self.module.params['template_id']
+        template_name = self.module.params['template_name']
         resource_group_name = self.get_resource_group_name()
-        description = self.module.params.get('description')
-        firmware_repo_id = self.module.params.get('firmware_repository_id')
-        firmware_repo_name = self.module.params.get('firmware_repository_name')
-        schedule_date = self.module.params.get('schedule_date')
+        description = self.module.params['description']
+        firmware_repo_id = self.module.params['firmware_repository_id']
+        firmware_repo_name = self.module.params['firmware_repository_name']
+        schedule_date = self.module.params['schedule_date']
         service_template = self.get_service_template(template_id, template_name, for_deployment=True)
         deployment_data = {
             "deploymentName": resource_group_name,
@@ -474,8 +507,8 @@ class PowerFlexResourceGroup:
                 ('present', False, False): ModifyResourceGroup
             }
 
-        state = self.module.params.get('state')
-        validate = self.module.params.get('validate')
+        state = self.module.params['state']
+        validate = self.module.params['validate']
         check_mode = self.module.check_mode
 
         return operation_mapping.get((state, validate, check_mode))
@@ -492,8 +525,8 @@ class PowerFlexResourceGroup:
         )
 
         self.deployment_details = \
-            self.get_deployment_details(deployment_name = self.module.params.get('resource_group_name'),
-                                        deployment_id = self.module.params.get('resource_group_id'))
+            self.get_deployment_details(deployment_name = self.module.params['resource_group_name'],
+                                        deployment_id = self.module.params['resource_group_id'])
         resource_group_operation = self.get_operation_mapping()
         if resource_group_operation:
             changed, resource_group_details = resource_group_operation.execute(self)
@@ -528,10 +561,10 @@ class ValidateDeploy:
 class ModifyResourceGroup:
     def execute(self):
         try:
-            resource_group_id = self.module.params.get('resource_group_id')
-            resource_group_name = self.module.params.get('resource_group_name')
+            resource_group_id = self.module.params['resource_group_id']
+            resource_group_name = self.module.params['resource_group_name']
             changed = False
-            rg_data = self.get_deployment_details(deployment_name=resource_group_name, deployment_id=resource_group_id)
+            rg_data = self.deployment_details
             if self.is_modify_needed(deployment_data=rg_data):
                 self.modify_resource_group_details(deployment_data=rg_data)
                 changed = True
