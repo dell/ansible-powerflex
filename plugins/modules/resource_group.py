@@ -412,11 +412,13 @@ class PowerFlexResourceGroup:
         if self.module.params["scaleup"]:
             new_deployment_data["scaleup"] = True
             new_deployment_data["retry"] = True
-            for _ in range(self.module.params["node_count"]):
+            node = 0
+            while node < self.module.params["node_count"]:
                 new_deployment_data1 = copy.deepcopy(deployment_data)
                 new_component = self.prepare_add_node_payload(deploy_data=new_deployment_data1)
                 if new_component:
                     new_deployment_data["serviceTemplate"]["components"].append(new_component)
+            node = node + 1
 
         try:
             if not self.module.check_mode:
