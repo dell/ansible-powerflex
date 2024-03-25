@@ -132,8 +132,8 @@ EXAMPLES = r'''
     validate_certs: "{{ validate_certs }}"
     resource_group_name: "{{ resource_group_name_1 }}"
     scaleup: True
-    clone_node: " {{ node_1 }}"
-    node_count: {{ node_count }}
+    clone_node: "{{ node_1 }}"
+    node_count: "{{ node_count }}"
 
 - name: Modify a resource group
   dellemc.powerflex.resource_group:
@@ -354,9 +354,8 @@ class PowerFlexResourceGroup:
         return modify_dict
 
     def random_uuid_generation(self):
-        generate_uuid = ''.join([random.choice(
-                               string.ascii_lowercase + string.digits)
-                               for n in range(32)])
+        generate_uuid = ''.join(
+            [random.choice(string.ascii_lowercase + string.digits) for n in range(32)])
 
         return generate_uuid
 
@@ -369,17 +368,15 @@ class PowerFlexResourceGroup:
 
         if new_component is not None:
             uuid = self.random_uuid_generation()
-            new_component.update(
-                {
-                     "identifier": None,
-                     "asmGUID": None,
-                     "puppetCertName": None,
-                     "osPuppetCertName": None,
-                     "managementIpAddress": None,
-                     "brownfield": False,
-                     "id": uuid,
-                     "name": uuid
-                })
+            new_component.update({
+                "identifier": None,
+                "asmGUID": None,
+                "puppetCertName": None,
+                "osPuppetCertName": None,
+                "managementIpAddress": None,
+                "brownfield": False,
+                "id": uuid,
+                "name": uuid})
 
         resouce_params = ["razor_image", "scaleio_enabled", "scaleio_role",
                           "compression_enabled", "replication_enabled"]
@@ -524,9 +521,9 @@ class PowerFlexResourceGroup:
             resource_group_details=[]
         )
 
-        self.deployment_details = \
-            self.get_deployment_details(deployment_name = self.module.params['resource_group_name'],
-                                        deployment_id = self.module.params['resource_group_id'])
+        self.deployment_details = self.get_deployment_details(
+            deployment_name=self.module.params['resource_group_name'],
+            deployment_id=self.module.params['resource_group_id'])
         resource_group_operation = self.get_operation_mapping()
         if resource_group_operation:
             changed, resource_group_details = resource_group_operation.execute(self)

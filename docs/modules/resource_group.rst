@@ -166,7 +166,7 @@ Examples
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ port }}"
-        resource_group_name: ans_rg
+        resource_group_name: "{{ resource_group_name_1 }}"
         description: ans_rg
         template_id: c65d0172-8666-48ab-935e-9a0bf69ed66d
         firmware_repository_id: 8aaa80788b5755d1018b576126d51ba3
@@ -179,10 +179,31 @@ Examples
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ port }}"
-        resource_group_name: ans_rg
+        resource_group_name: "{{ resource_group_name_1 }}"
         description: ans_rg
         template_id: c65d0172-8666-48ab-935e-9a0bf69ed66d
         firmware_repository_id: 8aaa80788b5755d1018b576126d51ba3
+
+    - name: Add a node to a resource group
+      dellemc.powerflex.resource_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        resource_group_name: "{{ resource_group_name_1 }}"
+        scaleup: True
+        clone_node: "{{ node_1 }}"
+        node_count: "{{ node_count }}"
+
+    - name: Modify a resource group
+      dellemc.powerflex.resource_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        resource_group_name: "{{ resource_group_name_1 }}"
+        new_resource_group_name: "{{ new_resource_group_name }}"
+        description: "description new"
 
     - name: Delete a resource group
       dellemc.powerflex.resource_group:
@@ -255,4 +276,5 @@ Authors
 ~~~~~~~
 
 - Jennifer John (@johnj9) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 
