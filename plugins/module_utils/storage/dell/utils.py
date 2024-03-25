@@ -222,7 +222,7 @@ def get_filter(name, id=None):
     return filter_query
 
 
-def random_uuid_generation(self):
+def random_uuid_generation():
     generate_uuid = ''.join(
         [random.choice(string.ascii_lowercase + string.digits) for n in range(32)])
 
