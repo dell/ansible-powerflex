@@ -17,7 +17,14 @@ class MockResourceResourceGroupAPI:
         "password": "password",
         "validate_certs": False,
         "port": "443",
-        "validate": False
+        "validate": False,
+        "template_name": None,
+        "template_id": None,
+        "firmware_repository_name": None,
+        "firmware_repository_id": None,
+        "resource_group_name": None,
+        "resource_group_id": None,
+        "schedule_date": None
     }
 
     RG_RESPONSE = [{
