@@ -406,7 +406,7 @@ class PowerFlexResourceGroup:
 
         # Add nodes
 
-        if self.module.params["scaleup"] is True:
+        if self.module.params["scaleup"]:
             new_deployment_data["scaleup"] = True
             new_deployment_data["retry"] = True
             for node in range(self.module.params["node_count"]):

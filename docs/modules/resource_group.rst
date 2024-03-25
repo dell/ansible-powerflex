@@ -22,7 +22,7 @@ The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
 - Ansible-core 2.14 or later.
-- PyPowerFlex 1.9.0.
+- PyPowerFlex 1.10.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -191,7 +191,7 @@ Examples
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         resource_group_name: "{{ resource_group_name_1 }}"
-        scaleup: True
+        scaleup: true
         clone_node: "{{ node_1 }}"
         node_count: "{{ node_count }}"
 
