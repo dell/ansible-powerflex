@@ -246,8 +246,6 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 import json
 import copy
-import string
-import random
 
 LOG = utils.get_logger('resource_group')
 

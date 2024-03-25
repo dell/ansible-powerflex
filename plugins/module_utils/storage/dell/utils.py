@@ -14,6 +14,8 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.log
     import CustomRotatingFileHandler
 import traceback
 from ansible.module_utils.basic import missing_required_lib
+import random
+import string
 
 """import PyPowerFlex lib"""
 try:
