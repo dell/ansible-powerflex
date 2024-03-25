@@ -351,8 +351,7 @@ class PowerFlexResourceGroup:
 
         return modify_dict
 
-    def prepare_add_node_payload(self, deployment_data):
-
+    def clone_component(self, deployment_data):
         new_component = None
         count_server = 0
         server_name = []
@@ -370,6 +369,11 @@ class PowerFlexResourceGroup:
                 if deployment_data["serviceTemplate"]["components"][component]["name"] == self.module.params["clone_node"]:
                     new_component = deployment_data["serviceTemplate"]["components"][component]
 
+        return new_component
+
+    def prepare_add_node_payload(self, deployment_data):
+
+        new_component= self.clone_component(deployment_data=deployment_data)
         if new_component is not None:
             uuid = utils.random_uuid_generation()
             new_component.update({
@@ -381,15 +385,14 @@ class PowerFlexResourceGroup:
                 "brownfield": False,
                 "id": uuid,
                 "name": uuid})
-
-        resouce_params = ["razor_image", "scaleio_enabled", "scaleio_role",
+        resource_params = ["razor_image", "scaleio_enabled", "scaleio_role",
                           "compression_enabled", "replication_enabled"]
 
         for resource in range(len(new_component["resources"])):
             if new_component["resources"][resource]["id"] == "asm::server":
                 for param in range(len(new_component["resources"][resource]["parameters"])):
                     if new_component["resources"][resource]["parameters"][param]["id"] \
-                            not in resouce_params:
+                            not in resource_params:
                         new_component["resources"][resource]["parameters"][param]["guid"] = None
                         new_component["resources"][resource]["parameters"][param]["value"] = None
         return new_component
@@ -409,10 +412,12 @@ class PowerFlexResourceGroup:
         if self.module.params["scaleup"]:
             new_deployment_data["scaleup"] = True
             new_deployment_data["retry"] = True
-            for node in range(self.module.params["node_count"]):
+            node = 0
+            while node < self.module.params["node_count"]:
                 new_component = self.prepare_add_node_payload(deployment_data=deployment_data)
                 if new_component:
                     new_deployment_data["serviceTemplate"]["components"].append(new_component)
+                node = node + 1
         try:
             if not self.module.check_mode:
                 self.powerflex_conn.deployment.edit(deployment_id=deployment_data["id"],
