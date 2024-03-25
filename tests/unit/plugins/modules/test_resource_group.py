@@ -200,6 +200,10 @@ class TestResourceGroup(PowerFlexUnitBase):
             return_value=None)
         powerflex_module_mock.perform_module_operation()
         assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
+        arguments.update({"clone_node": None})
+        self.set_module_params(powerflex_module_mock, self.get_module_args, arguments)
+        powerflex_module_mock.perform_module_operation()
+        assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
 
     def test_modify_resource_group_exception(self, powerflex_module_mock):
         arguments = {"resource_group_name": "ans_rg", "description": "ans_rg",
