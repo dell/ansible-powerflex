@@ -373,7 +373,7 @@ class PowerFlexResourceGroup:
 
     def prepare_add_node_payload(self, deploy_data):
 
-        new_component= self.clone_component(deploy_data=deploy_data)
+        new_component = self.clone_component(deploy_data=deploy_data)
         if new_component is not None:
             uuid = utils.random_uuid_generation()
             new_component.update({
@@ -386,7 +386,7 @@ class PowerFlexResourceGroup:
                 "id": uuid,
                 "name": uuid})
             resource_params = ["razor_image", "scaleio_enabled", "scaleio_role",
-                          "compression_enabled", "replication_enabled"]
+                               "compression_enabled", "replication_enabled"]
 
             for resource in range(len(new_component["resources"])):
                 if new_component["resources"][resource]["id"] == "asm::server":
