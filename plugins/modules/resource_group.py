@@ -365,7 +365,7 @@ class PowerFlexResourceGroup:
                 if count_server == 1:
                     new_component = deployment_data["serviceTemplate"]["components"][component][server_name[0]]
                 else:
-                    self.module.fail_json(msg=f"More than 1 server components exist. Provide the clone_node.")
+                    self.module.fail_json(msg="More than 1 server components exist. Provide the clone_node.")
             else:
                 if deployment_data["serviceTemplate"]["components"][component]["name"] == self.module.params["clone_node"]:
                     new_component = deployment_data["serviceTemplate"]["components"][component]
