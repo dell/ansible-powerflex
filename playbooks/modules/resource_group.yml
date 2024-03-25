@@ -46,7 +46,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         resource_group_name: "{{ resource_group_name_1 }}"
-        scaleup: True
+        scaleup: true
         clone_node: "{{ node_1 }}"
         node_count: 2
 
