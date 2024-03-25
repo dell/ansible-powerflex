@@ -131,7 +131,7 @@ EXAMPLES = r'''
     password: "{{ password }}"
     validate_certs: "{{ validate_certs }}"
     resource_group_name: "{{ resource_group_name_1 }}"
-    scaleup: True
+    scaleup: true
     clone_node: "{{ node_1 }}"
     node_count: "{{ node_count }}"
 
@@ -353,12 +353,6 @@ class PowerFlexResourceGroup:
 
         return modify_dict
 
-    def random_uuid_generation(self):
-        generate_uuid = ''.join(
-            [random.choice(string.ascii_lowercase + string.digits) for n in range(32)])
-
-        return generate_uuid
-
     def prepare_add_node_payload(self, deployment_data):
 
         new_component = None
@@ -379,7 +373,7 @@ class PowerFlexResourceGroup:
                     new_component = deployment_data["serviceTemplate"]["components"][component]
 
         if new_component is not None:
-            uuid = self.random_uuid_generation()
+            uuid = utils.random_uuid_generation()
             new_component.update({
                 "identifier": None,
                 "asmGUID": None,
@@ -570,8 +564,6 @@ class ValidateDeploy:
 class ModifyResourceGroup:
     def execute(self):
         try:
-            resource_group_id = self.module.params['resource_group_id']
-            resource_group_name = self.module.params['resource_group_name']
             changed = False
             rg_data = self.deployment_details
             if self.is_modify_needed(deployment_data=rg_data):
