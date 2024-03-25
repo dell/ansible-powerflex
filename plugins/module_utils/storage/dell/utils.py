@@ -218,3 +218,9 @@ def get_filter(name, id=None):
     filter_value = id or name
     filter_query = f"eq,{filter_type},{filter_value}"
     return filter_query
+
+def random_uuid_generation(self):
+    generate_uuid = ''.join(
+        [random.choice(string.ascii_lowercase + string.digits) for n in range(32)])
+
+    return generate_uuid
