@@ -359,7 +359,7 @@ class PowerFlexResourceGroup:
         count_server = 0
         server_name = []
         for component in range(len(deployment_data["serviceTemplate"]["components"])):
-            if deployment_data["serviceTemplate"]["components"][component]["type"] == "SERVER"
+            if deployment_data["serviceTemplate"]["components"][component]["type"] == "SERVER":
                 count_server = count_server + 1
                 server_name.append(deployment_data["serviceTemplate"]["components"][component]["name"])
         for component in range(len(deployment_data["serviceTemplate"]["components"])):
