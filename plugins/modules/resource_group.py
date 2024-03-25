@@ -418,7 +418,7 @@ class PowerFlexResourceGroup:
                 new_component = self.prepare_add_node_payload(deploy_data=new_deployment_data1)
                 if new_component:
                     new_deployment_data["serviceTemplate"]["components"].append(new_component)
-            node = node + 1
+                node = node + 1
 
         try:
             if not self.module.check_mode:
