@@ -362,9 +362,21 @@ class PowerFlexResourceGroup:
     def prepare_add_node_payload(self, deployment_data):
 
         new_component = None
+        count_server = 0
+        server_name = []
         for component in range(len(deployment_data["serviceTemplate"]["components"])):
-            if deployment_data["serviceTemplate"]["components"][component]["name"] == self.module.params["clone_node"]:
-                new_component = deployment_data["serviceTemplate"]["components"][component]
+            if deployment_data["serviceTemplate"]["components"][component]["type"] == "SERVER"
+                count_server = count_server + 1
+                server_name.append(deployment_data["serviceTemplate"]["components"][component]["name"])
+        for component in range(len(deployment_data["serviceTemplate"]["components"])):
+            if self.module.params["clone_node"] is None:
+                if count_server == 1:
+                    new_component = deployment_data["serviceTemplate"]["components"][component][server_name[0]]
+                else:
+                    self.module.fail_json(msg=f"More than 1 server components exist. Provide the clone_node.")
+            else:
+                if deployment_data["serviceTemplate"]["components"][component]["name"] == self.module.params["clone_node"]:
+                    new_component = deployment_data["serviceTemplate"]["components"][component]
 
         if new_component is not None:
             uuid = self.random_uuid_generation()
