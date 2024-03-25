@@ -48,7 +48,7 @@ class MockResourceResourceGroupAPI:
                     "puppetCertName": "scaleio-block-legacy-gateway",
                     "osPuppetCertName": None,
                     "name": "block-legacy-gateway",
-                    "type": "SCALEIO",
+                    "type": "SERVER",
                     "subType": "COMPUTEONLY",
                     "teardown": False,
                     "helpText": None,
