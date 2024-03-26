@@ -224,7 +224,7 @@ EXAMPLES = r'''
     gather_subset:
       - firmware_repository
 
-- name: Get the list of firmware repository with includes
+- name: Get the list of firmware repository
   dellemc.powerflex.info:
     hostname: "{{ hostname }}"
     username: "{{ username }}"
@@ -236,7 +236,7 @@ EXAMPLES = r'''
     include_bundles: true
     include_components: true
 
-- name: Get the list of firmware repository with includes
+- name: Get the list of firmware repository with filter
   dellemc.powerflex.info:
     hostname: "{{ hostname }}"
     username: "{{ username }}"
