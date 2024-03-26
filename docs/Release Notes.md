@@ -44,9 +44,9 @@ each of the entities.
 New features and enhancements
 -----------------------------
 Along with the previous release deliverables, this release supports following features - 
-- Add support for resource group provisioning to validate, deploy, edit, add nodes and delete a resource group.
+- Added support for resource group provisioning to validate, deploy, edit, add nodes and delete a resource group.
 - The Info module is enhanced to list out all the firmware repository.
-- Add support for PowerFlex ansible modules and roles on Azure.
+- Added support for PowerFlex ansible modules and roles on Azure.
 
 Known issues
 ------------

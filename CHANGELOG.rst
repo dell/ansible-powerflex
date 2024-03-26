@@ -11,8 +11,8 @@ v2.3.0
 Minor Changes
 -------------
 
-- Add support for PowerFlex ansible modules and roles on Azure.
-- Add support for resource group provisioning to validate, deploy, edit, add nodes and delete a resource group.
+- Added support for PowerFlex ansible modules and roles on Azure.
+- Added support for resource group provisioning to validate, deploy, edit, add nodes and delete a resource group.
 - The Info module is enhanced to list out all the firmware repository.
 
 New Modules
