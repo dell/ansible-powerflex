@@ -52,7 +52,7 @@ Known issues
 ------------
 - Setting the RF cache and performance profile of the SDS during its creation fails intermittently on PowerFlex version 3.5.
 - The creation of replication pair fails when copy_type is specified as OfflineCopy on PowerFlex version 4.0.
-- Pagination in info module with offset and limit fetches more than expected records when listing service templates or deployments.
+- Pagination in info module with offset and limit fetches more than expected records when listing service templates, deployments or firmware repository.
 - Templates are fetched using the info module in spite of setting include_templates to false when listing deployments.
 
 Limitations
