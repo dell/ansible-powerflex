@@ -283,7 +283,7 @@ Examples
         include_bundles: true
         include_components: true
 
-    - name: Get the list of firmware repository with includes
+    - name: Get the list of firmware repository with filter
       dellemc.powerflex.info:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
