@@ -4,6 +4,7 @@
     hostname: "{{ hostname }}"
     username: "{{ username }}"
     password: "{{ password }}"
+    port:     "{{ port }}"
     validate_certs: "{{ validate_certs }}"
     state: "present"
   register: powerflex_config_mdm_ip_result
@@ -61,6 +62,7 @@
     hostname: "{{ hostname }}"
     username: "{{ username }}"
     password: "{{ password }}"
+    port:     "{{ port }}"
     validate_certs: "{{ validate_certs }}"
     storage_pool_name: "{{ powerflex_storage_pool_name }}"
     protection_domain_name: "{{ powerflex_protection_domain_name }}"
