@@ -224,7 +224,7 @@ EXAMPLES = r'''
     gather_subset:
       - firmware_repository
 
-- name: Get the list of firmware repository with includes related, bundles, and components
+- name: Get the list of firmware repository
   dellemc.powerflex.info:
     hostname: "{{ hostname }}"
     username: "{{ username }}"
@@ -236,7 +236,7 @@ EXAMPLES = r'''
     include_bundles: true
     include_components: true
 
-- name: Get the list of firmware repository with filter, includes related, bundles and components
+- name: Get the list of firmware repository with filter
   dellemc.powerflex.info:
     hostname: "{{ hostname }}"
     username: "{{ username }}"
@@ -259,12 +259,12 @@ EXAMPLES = r'''
   ansible.builtin.debug:
     msg: "{{ result_repository_out.FirmwareRepository | selectattr('state', 'equalto', 'available') }}"
 
-- name: Get the list of software components for the specific firmware repository
+- name: Get the list of software components in the firmware repository
   ansible.builtin.debug:
     msg: "{{ result_repository_out.FirmwareRepository |
         selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareComponents') | flatten }}"
 
-- name: Get the list of software bundles for the specific firmware repository
+- name: Get the list of software bundles in the firmware repository
   ansible.builtin.debug:
     msg: "{{ result_repository_out.FirmwareRepository |
         selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareBundles') | flatten }}"
