@@ -40,3 +40,6 @@ plugins/modules/replication_consistency_group.py import-2.7
 plugins/modules/replication_consistency_group.py import-3.5
 plugins/modules/replication_consistency_group.py compile-2.7
 plugins/modules/replication_consistency_group.py compile-3.5
+plugins/modules/resource_group.py validate-modules:missing-gplv3-license
+plugins/modules/resource_group.py compile-2.7
+plugins/modules/resource_group.py import-2.7
