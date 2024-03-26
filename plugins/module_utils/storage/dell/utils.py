@@ -8,11 +8,14 @@ __metaclass__ = type
 import logging
 import math
 import re
+from datetime import datetime
 from decimal import Decimal
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.logging_handler \
     import CustomRotatingFileHandler
 import traceback
 from ansible.module_utils.basic import missing_required_lib
+import random
+import string
 
 """import PyPowerFlex lib"""
 try:
@@ -193,3 +196,34 @@ def get_time_minutes(time, time_unit):
             return time
     else:
         return 0
+
+
+def get_display_message(error_text):
+    match = re.search(r"displayMessage=([^']+)", error_text)
+    error_message = match.group(1) if match else error_text
+    return error_message
+
+
+def validate_date(date):
+    try:
+        return datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%f')
+    except ValueError:
+        try:
+            date_obj = datetime.strptime(date, '%Y-%m-%d')
+            return date_obj.replace(hour=0, minute=0, second=0, microsecond=0)
+        except ValueError:
+            return None
+
+
+def get_filter(name, id=None):
+    filter_type = "id" if id else "name"
+    filter_value = id or name
+    filter_query = f"eq,{filter_type},{filter_value}"
+    return filter_query
+
+
+def random_uuid_generation():
+    generate_uuid = ''.join(
+        [random.choice(string.ascii_lowercase + string.digits) for n in range(32)])
+
+    return generate_uuid
