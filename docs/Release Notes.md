@@ -1,6 +1,6 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 2.2.0
+### Release notes 2.3.0
 
 >   © 2024 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
@@ -28,7 +28,7 @@ Table 1. Revision history
 
 | Revision | Date            | Description                                                 |
 |----------|-----------------|-------------------------------------------------------------|
-| 01       | February 2024   | Current release of Ansible Modules for Dell PowerFlex 2.2.0 |
+| 01       | March 2024      | Current release of Ansible Modules for Dell PowerFlex 2.3.0 |
 
 Product description
 -------------------
@@ -36,7 +36,7 @@ Product description
 The Ansible modules for Dell PowerFlex are used to automate and orchestrate
 the deployment, configuration, and management of Dell PowerFlex storage
 systems. The capabilities of Ansible modules are managing volumes,
-storage pools, SDCs, snapshots, snapshot policy, SDSs, replication consistency groups, replication pairs, devices, protection domain, MDM and fault sets. 
+storage pools, SDCs, snapshots, snapshot policy, SDSs, replication consistency groups, replication pairs, resource group, devices, protection domain, MDM and fault sets. 
 cluster, and obtaining high-level information about a PowerFlex system information.
 The modules use playbooks to list, show, create, delete, and modify
 each of the entities.
@@ -44,9 +44,9 @@ each of the entities.
 New features and enhancements
 -----------------------------
 Along with the previous release deliverables, this release supports following features - 
-- Fault set module is introduced to create, get details, rename and delete fault sets.
-- The SDS module has been enhanced to facilitate SDS creation within a fault set.
-- The Info module is enhanced to retrieve lists related to fault sets, service templates, deployments, and managed devices.
+- Add support for resource group provisioning to validate, deploy, edit, add nodes and delete a resource group.
+- The Info module is enhanced to list out all the firmware repository.
+- Add support for PowerFlex ansible modules and roles on Azure.
 
 Known issues
 ------------
@@ -62,11 +62,11 @@ Limitations
 Distribution
 ------------
 The software package is available for download from the [Ansible Modules
-for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.2.0) page.
+for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.3.0) page.
 
 Documentation
 -------------
-The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.2.0/docs)
+The documentation is available on [Ansible Modules for PowerFlex GitHub](https://github.com/dell/ansible-powerflex/tree/2.3.0/docs)
 page. It includes the following:
 
    - README

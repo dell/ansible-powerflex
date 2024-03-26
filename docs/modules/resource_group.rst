@@ -22,7 +22,7 @@ The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
 - Ansible-core 2.14 or later.
-- PyPowerFlex 1.10.0.
+- PyPowerFlex 2.0.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -148,6 +148,7 @@ Notes
 
 .. note::
    - The *check_mode* is supported.
+   - Resource group scale up can be done only when deployment is complete.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

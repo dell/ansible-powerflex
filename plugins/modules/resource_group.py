@@ -96,6 +96,7 @@ options:
     default: 'present'
 notes:
 - The I(check_mode) is supported.
+- Resource group scale up can be done only when deployment is complete.
 '''
 
 EXAMPLES = r'''
