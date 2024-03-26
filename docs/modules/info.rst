@@ -271,7 +271,7 @@ Examples
         gather_subset:
           - firmware_repository
 
-    - name: Get the list of firmware repository with includes
+    - name: Get the list of firmware repository
       dellemc.powerflex.info:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
