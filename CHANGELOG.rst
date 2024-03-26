@@ -5,6 +5,21 @@ Dellemc.PowerFlex Change Logs
 .. contents:: Topics
 
 
+v2.3.0
+======
+
+Minor Changes
+-------------
+
+- Added support for PowerFlex ansible modules and roles on Azure.
+- Added support for resource group provisioning to validate, deploy, edit, add nodes and delete a resource group.
+- The Info module is enhanced to list the firmware repositories.
+
+New Modules
+-----------
+
+- dellemc.powerflex.resource_group - Manage resource group deployments on Dell PowerFlex
+
 v2.2.0
 ======
 

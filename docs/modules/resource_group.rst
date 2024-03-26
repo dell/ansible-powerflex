@@ -148,6 +148,7 @@ Notes
 
 .. note::
    - The *check_mode* is supported.
+   - Resource group scale up can be done only when deployment is complete.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
