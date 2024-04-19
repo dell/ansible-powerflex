@@ -43,7 +43,7 @@
   rescue:
     - name: Generate login certificate using primary_mdm_ip
       ansible.builtin.command: >
-        scli --generate_login_certificate --management_system_ip {{ powerflex_tb_primary_ip }} --username {{ username }} 
+        scli --generate_login_certificate --management_system_ip {{ powerflex_tb_primary_ip }} --username {{ username }}
         --password {{ password }} --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }} --insecure
       run_once: true
       register: powerflex_tb_generate_login_certificate_mdm_ip
