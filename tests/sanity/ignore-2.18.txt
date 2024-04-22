@@ -1,0 +1,14 @@
+plugins/modules/device.py validate-modules:missing-gplv3-license
+plugins/modules/sdc.py validate-modules:missing-gplv3-license
+plugins/modules/sds.py validate-modules:missing-gplv3-license
+plugins/modules/snapshot.py validate-modules:missing-gplv3-license
+plugins/modules/storagepool.py validate-modules:missing-gplv3-license
+plugins/modules/volume.py validate-modules:missing-gplv3-license
+plugins/modules/info.py validate-modules:missing-gplv3-license
+plugins/modules/protection_domain.py validate-modules:missing-gplv3-license
+plugins/modules/mdm_cluster.py validate-modules:missing-gplv3-license
+plugins/modules/replication_consistency_group.py validate-modules:missing-gplv3-license
+plugins/modules/replication_pair.py validate-modules:missing-gplv3-license
+plugins/modules/snapshot_policy.py validate-modules:missing-gplv3-license
+plugins/modules/fault_set.py validate-modules:missing-gplv3-license
+plugins/modules/resource_group.py validate-modules:missing-gplv3-license
