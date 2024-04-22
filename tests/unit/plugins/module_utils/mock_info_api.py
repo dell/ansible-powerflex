@@ -319,7 +319,8 @@ class MockInfoApi:
         'system_exception': "Get array details from Powerflex array failed with error",
         'managed_device_get_error': "Get managed devices from PowerFlex Manager failed with error",
         'service_template_get_error': "Get service templates from PowerFlex Manager failed with error",
-        'deployment_get_error': "Get deployments from PowerFlex Manager failed with error"
+        'deployment_get_error': "Get deployments from PowerFlex Manager failed with error",
+        'firmware_repository_get_error': "Get firmware repository from PowerFlex Manager failed with error"
     }
 
     @staticmethod

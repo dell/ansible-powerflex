@@ -72,5 +72,4 @@
     group: "root"
   notify: restart scini
   when:
-    - ansible_distribution != "VMkernel"
-    - " 'WindowsOS' not in ansible_distribution"
+    - ansible_distribution not in ['WindowsOS', 'SLES', 'VMkernel']
