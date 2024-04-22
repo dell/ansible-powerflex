@@ -4,3 +4,4 @@ file_glob_name: mgmt-server
 powerflex_role_environment:
   MDM_IP: "{{ powerflex_webui_mdm_ips }}"
 powerflex_webui_state: "present"
+port: '443'

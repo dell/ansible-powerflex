@@ -7,3 +7,4 @@ powerflex_sdr_repl_journal_capacity_max_ratio: 10
 powerflex_role_environment:
   MDM_IP: "{{ powerflex_sdr_mdm_primary_ip }}"
 powerflex_sdr_state: present
+port: '443'
