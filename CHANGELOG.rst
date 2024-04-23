@@ -4,6 +4,13 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
+v2.4.0
+======
+
+Minor Changes
+-------------
+
+- Added support for executing Ansible PowerFlex modules and roles on AWS environment.
 
 v2.3.0
 ======
