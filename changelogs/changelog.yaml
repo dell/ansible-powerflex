@@ -146,3 +146,20 @@ releases:
         name: fault_set
         namespace: ''
     release_date: '2024-02-29'
+  2.3.0:
+    changes:
+      minor_changes:
+        - Added support for resource group provisioning to validate, deploy,
+          edit, add nodes and delete a resource group.
+        - The Info module is enhanced to list the firmware repositories.
+        - Added support for PowerFlex ansible modules and roles on Azure.
+    modules:
+      - description: Manage resource group deployments on Dell PowerFlex
+        name: resource_group
+        namespace: ''
+    release_date: '2024-03-29'
+  2.4.0:
+    changes:
+      minor_changes:
+        - Added support for executing Ansible PowerFlex modules and roles on AWS environment.
+    release_date: '2024-04-30'

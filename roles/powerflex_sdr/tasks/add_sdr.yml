@@ -4,6 +4,7 @@
     hostname: "{{ hostname }}"
     username: "{{ username }}"
     password: "{{ password }}"
+    port: "{{ port }}"
     validate_certs: "{{ validate_certs }}"
     state: "present"
   register: powerflex_sdr_mdm_ip_result
@@ -39,17 +40,34 @@
   no_log: true
   when: powerflex_sdr_array_version == "3"
 
-- name: Login to mdm for PowerFlex version 4.x
-  ansible.builtin.command: >
-    scli --login --management_system_ip {{ hostname }}
-    --username admin
-    --password "{{ password }}"
-    --approve_certificate
+- name: Generate login certificate for PowerFlex version 4.x
+  block:
+    - name: Generate login certificate using management_system_ip
+      ansible.builtin.command: >
+        scli --generate_login_certificate --management_system_ip {{ hostname }} --username {{ username }} --password {{ password }}
+        --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }} --insecure
+      run_once: true
+      register: powerflex_sdr_generate_login_certificate
+      changed_when: powerflex_sdr_generate_login_certificate.rc == 0
+      delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
+      when: powerflex_sdr_array_version != "3"
+  rescue:
+    - name: Generate login certificate using primary_mdm_ip
+      ansible.builtin.command: >
+        scli --generate_login_certificate --management_system_ip {{ powerflex_sdr_primary_mdm_ip }} --username {{ username }}
+        --password {{ password }} --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }} --insecure
+      run_once: true
+      register: powerflex_sdr_generate_login_certificate_mdm_ip
+      changed_when: powerflex_sdr_generate_login_certificate_mdm_ip.rc == 0
+      delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
+      when: powerflex_sdr_array_version != "3"
+
+- name: Login to MDM for PowerFlex version 4.x
+  ansible.builtin.command: scli --login --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }}
   run_once: true
-  register: powerflex_initial_login
+  register: powerflex_sdr_login_output
+  changed_when: powerflex_sdr_login_output.rc == 0
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_initial_login.rc == 0
-  no_log: true
   when: powerflex_sdr_array_version != "3"
 
 - name: Output msg of previous task login to mdm

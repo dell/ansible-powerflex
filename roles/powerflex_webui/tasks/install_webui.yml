@@ -10,6 +10,7 @@
     hostname: "{{ hostname }}"
     username: "{{ username }}"
     password: "{{ password }}"
+    port: "{{ port }}"
     validate_certs: "{{ validate_certs }}"
     state: present
   register: powerflex_webui_result
