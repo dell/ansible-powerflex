@@ -16,6 +16,11 @@ plugins:
       name: device
       namespace: ''
       version_added: 1.1.0
+    fault_set:
+      description: Manage Fault Sets on Dell PowerFlex
+      name: fault_set
+      namespace: ''
+      version_added: 2.2.0
     info:
       description: Gathering information about Dell PowerFlex
       name: info
@@ -41,6 +46,11 @@ plugins:
       name: replication_pair
       namespace: ''
       version_added: 1.6.0
+    resource_group:
+      description: Manage resource group deployments on Dell PowerFlex.
+      name: resource_group
+      namespace: ''
+      version_added: 2.3.0
     sdc:
       description: Manage SDCs on Dell PowerFlex
       name: sdc
@@ -76,4 +86,4 @@ plugins:
   strategy: {}
   test: {}
   vars: {}
-version: 2.1.0
+version: 2.3.0

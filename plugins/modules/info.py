@@ -22,7 +22,7 @@ description:
   getting the api details, list of volumes, SDSs, SDCs, storage pools,
   protection domains, snapshot policies, and devices.
 - Gathering information about Dell PowerFlex Manager includes getting the
-  list of managed devices, deployments and service templates.
+  list of managed devices, deployments, service templates and firmware repository.
 
 extends_documentation_fragment:
   - dellemc.powerflex.powerflex
@@ -31,11 +31,12 @@ author:
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
 - Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 - Jennifer John (@Jennifer-John) <ansible.team@dell.com>
+- Felix Stephen (@felixs88) <ansible.team@dell.com>
 
 options:
   gather_subset:
     description:
-    - List of string variables to specify the Powerflex storage system
+    - List of string variables to specify the PowerFlex storage system
       entities for which information is required.
     - Volumes - C(vol).
     - Storage pools - C(storage_pool).
@@ -50,9 +51,10 @@ options:
     - Service templates - C(service_template).
     - Managed devices - C(managed_device).
     - Deployments - C(deployment).
+    - FirmwareRepository - C(firmware_repository).
     choices: [vol, storage_pool, protection_domain, sdc, sds,
              snapshot_policy, device, rcg, replication_pair,
-             fault_set, service_template, managed_device, deployment]
+             fault_set, service_template, managed_device, deployment, firmware_repository]
     type: list
     elements: str
   filters:
@@ -71,7 +73,8 @@ options:
       filter_operator:
         description:
         - Operation to be performed on filter key.
-        - Choice I('contains') is supported for gather_subset keys I(service_template), I(managed_device), I(deployment).
+        - Choice C(contains) is supported for I(gather_subset) keys C(service_template), C(managed_device),
+          C(deployment), C(firmware_repository).
         type: str
         choices: [equal, contains]
         required: true
@@ -83,60 +86,81 @@ options:
   limit:
     description:
     - Page limit.
-    - Supported for gather_subset keys I(service_template), I(managed_device), I(deployment).
+    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment), C(firmware_repository).
     type: int
     default: 50
   offset:
     description:
     - Pagination offset.
-    - Supported for gather_subset keys I(service_template), I(managed_device), I(deployment).
+    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment), C(firmware_repository).
     type: int
     default: 0
   sort:
     description:
     - Sort the returned components based on specified field.
-    - Supported for gather_subset keys I(service_template), I(managed_device), I(deployment).
-    - The supported sort keys for the gather_subset can be referred from PowerFlex Manager API documentation in developer.dell.com.
+    - Supported for I(gather_subset) keys C(service_template), C(managed_device), C(deployment), C(firmware_repository).
+    - The supported sort keys for the I(gather_subset) can be referred from PowerFlex Manager API documentation in U(https://developer.dell.com).
     type: str
   include_devices:
     description:
     - Include devices in response.
-    - Applicable when gather_subset is I(deployment).
+    - Applicable when I(gather_subset) is C(deployment).
     type: bool
     default: true
   include_template:
     description:
     - Include service templates in response.
-    - Applicable when gather_subset is I(deployment).
+    - Applicable when I(gather_subset) is C(deployment).
     type: bool
     default: true
   full:
     description:
     - Specify if response is full or brief.
-    - Applicable when gather_subset is I(deployment), I(service_template).
-    - For I(deployment) specify to use full templates including resources in response.
+    - Applicable when I(gather_subset) is C(deployment), C(service_template).
+    - For C(deployment) specify to use full templates including resources in response.
     type: bool
     default: false
   include_attachments:
     description:
     - Include attachments.
-    - Applicable when gather_subset is I(service_template).
+    - Applicable when I(gather_subset) is C(service_template).
     type: bool
     default: true
+  include_related:
+    description:
+    - Include related entities.
+    - Applicable when I(gather_subset) is C(firmware_repository).
+    type: bool
+    default: false
+    version_added: 2.3.0
+  include_bundles:
+    description:
+    - Include software bundle entities.
+    - Applicable when I(gather_subset) is C(firmware_repository).
+    type: bool
+    default: false
+    version_added: 2.3.0
+  include_components:
+    description:
+    - Include software component entities.
+    - Applicable when I(gather_subset) is C(firmware_repository).
+    type: bool
+    default: false
+    version_added: 2.3.0
 notes:
   - The I(check_mode) is supported.
-  - The supported filter keys for the gather_subset can be referred from PowerFlex Manager API documentation in developer.dell.com.
+  - The supported filter keys for the I(gather_subset) can be referred from PowerFlex Manager API documentation in U(https://developer.dell.com).
   - The I(filter), I(sort), I(limit) and I(offset) options will be ignored when more than one I(gather_subset) is specified along with
-    I(service_template), I(managed_device) or I(deployment).
+    C(service_template), C(managed_device), C(deployment) or C(firmware_repository).
 '''
 
 EXAMPLES = r'''
 - name: Get detailed list of PowerFlex entities
   dellemc.powerflex.info:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
     gather_subset:
       - vol
       - storage_pool
@@ -151,10 +175,10 @@ EXAMPLES = r'''
 
 - name: Get a subset list of PowerFlex volumes
   dellemc.powerflex.info:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
     gather_subset:
       - vol
     filters:
@@ -164,10 +188,10 @@ EXAMPLES = r'''
 
 - name: Get deployment and resource provisioning info
   dellemc.powerflex.info:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
     gather_subset:
       - managed_device
       - deployment
@@ -175,10 +199,10 @@ EXAMPLES = r'''
 
 - name: Get deployment with filter, sort, pagination
   dellemc.powerflex.info:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
     gather_subset:
       - deployment
     filters:
@@ -190,6 +214,60 @@ EXAMPLES = r'''
     offset: 10
     include_devices: true
     include_template: true
+
+- name: Get the list of firmware repository.
+  dellemc.powerflex.info:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    gather_subset:
+      - firmware_repository
+
+- name: Get the list of firmware repository
+  dellemc.powerflex.info:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    gather_subset:
+      - firmware_repository
+    include_related: true
+    include_bundles: true
+    include_components: true
+
+- name: Get the list of firmware repository with filter
+  dellemc.powerflex.info:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    gather_subset:
+      - firmware_repository
+    filters:
+      - filter_key: "createdBy"
+        filter_operator: "equal"
+        filter_value: "admin"
+    sort: createdDate
+    limit: 10
+    include_related: true
+    include_bundles: true
+    include_components: true
+  register: result_repository_out
+
+- name: Get the list of available firmware repository
+  ansible.builtin.debug:
+    msg: "{{ result_repository_out.FirmwareRepository | selectattr('state', 'equalto', 'available') }}"
+
+- name: Get the list of software components in the firmware repository
+  ansible.builtin.debug:
+    msg: "{{ result_repository_out.FirmwareRepository |
+        selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareComponents') | flatten }}"
+
+- name: Get the list of software bundles in the firmware repository
+  ansible.builtin.debug:
+    msg: "{{ result_repository_out.FirmwareRepository |
+        selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareBundles') | flatten }}"
 '''
 
 RETURN = r'''
@@ -1763,6 +1841,67 @@ ServiceTemplates:
         ],
         "blockServiceOperationsMap": {}
     }]
+FirmwareRepository:
+    description: Details of all firmware repository.
+    returned: when I(gather_subset) is C(firmware_repository)
+    type: list
+    contains:
+        id:
+            description: ID of the firmware repository.
+            type: str
+        name:
+            description: Name of the firmware repository.
+            type: str
+        sourceLocation:
+            description: Source location of the firmware repository.
+            type: str
+        state:
+            description: State of the firmware repository.
+            type: str
+        softwareComponents:
+            description: Software components of the firmware repository.
+            type: list
+        softwareBundles:
+            description: Software bundles of the firmware repository.
+            type: list
+        deployments:
+            description: Deployments of the firmware repository.
+            type: list
+    sample: [{
+        "id": "8aaa03a78de4b2a5018de662818d000b",
+        "name": "https://192.168.0.1/artifactory/path/pfxmlogs-bvt-pfmp-swo-upgrade-402-to-451-56.tar.gz",
+        "sourceLocation": "https://192.168.0.2/artifactory/path/pfxmlogs-bvt-pfmp-swo-upgrade-402-to-451-56.tar.gz",
+        "sourceType": null,
+        "diskLocation": "",
+        "filename": "",
+        "md5Hash": null,
+        "username": "",
+        "password": "",
+        "downloadStatus": "error",
+        "createdDate": "2024-02-26T17:07:11.884+00:00",
+        "createdBy": "admin",
+        "updatedDate": "2024-03-01T06:21:10.917+00:00",
+        "updatedBy": "system",
+        "defaultCatalog": false,
+        "embedded": false,
+        "state": "errors",
+        "softwareComponents": [],
+        "softwareBundles": [],
+        "deployments": [],
+        "bundleCount": 0,
+        "componentCount": 0,
+        "userBundleCount": 0,
+        "minimal": true,
+        "downloadProgress": 100,
+        "extractProgress": 0,
+        "fileSizeInGigabytes": 0.0,
+        "signedKeySourceLocation": null,
+        "signature": "Unknown",
+        "custom": false,
+        "needsAttention": false,
+        "jobId": "Job-10d75a23-d801-4fdb-a2d0-7f6389ab75cf",
+        "rcmapproved": false
+    }]
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -2126,6 +2265,25 @@ class PowerFlexInfo(object):
             msg = f'Get deployments from PowerFlex Manager failed with error {str(e)}'
             return self.handle_error_exit(msg)
 
+    def get_pagination_params(self):
+        """ Get the pagination parameters """
+        return {'limit': self.get_param_value('limit'), 'offset': self.get_param_value('offset'),
+                'sort': self.get_param_value('sort'), 'filters': self.populate_filter_list()}
+
+    def get_firmware_repository_list(self):
+        """ Get the list of firmware repository on a given PowerFlex Manager system """
+        try:
+            LOG.info('Getting firmware repository list ')
+            firmware_repository = self.powerflex_conn.firmware_repository.get(
+                **self.get_pagination_params(),
+                related=self.get_param_value('include_related'),
+                bundles=self.get_param_value('include_bundles'),
+                components=self.get_param_value('include_components'))
+            return firmware_repository
+        except Exception as e:
+            msg = f'Get firmware repository from PowerFlex Manager failed with error {str(e)}'
+            return self.handle_error_exit(msg)
+
     def get_service_templates_list(self):
         """ Get the list of service templates on a given PowerFlex Manager system """
         try:
@@ -2246,6 +2404,7 @@ class PowerFlexInfo(object):
         service_template = []
         managed_device = []
         deployment = []
+        firmware_repository = []
 
         subset = self.module.params['gather_subset']
         self.validate_subset(api_version, subset)
@@ -2276,6 +2435,8 @@ class PowerFlexInfo(object):
                 service_template = self.get_service_templates_list()
             if 'deployment' in subset:
                 deployment = self.get_deployments_list()
+            if 'firmware_repository' in subset:
+                firmware_repository = self.get_firmware_repository_list()
 
         self.module.exit_json(
             Array_Details=array_details,
@@ -2292,7 +2453,8 @@ class PowerFlexInfo(object):
             Fault_Sets=fault_sets,
             ManagedDevices=managed_device,
             ServiceTemplates=service_template,
-            Deployments=deployment
+            Deployments=deployment,
+            FirmwareRepository=firmware_repository
         )
 
 
@@ -2319,7 +2481,7 @@ def get_powerflex_info_parameters():
                            choices=['vol', 'storage_pool',
                                     'protection_domain', 'sdc', 'sds', 'snapshot_policy',
                                     'device', 'rcg', 'replication_pair', 'fault_set',
-                                    'service_template', 'managed_device', 'deployment']),
+                                    'service_template', 'managed_device', 'deployment', 'firmware_repository']),
         filters=dict(type='list', required=False, elements='dict',
                      options=dict(filter_key=dict(type='str', required=True, no_log=False),
                                   filter_operator=dict(
@@ -2333,7 +2495,10 @@ def get_powerflex_info_parameters():
         include_devices=dict(type='bool', default=True),
         include_template=dict(type='bool', default=True),
         full=dict(type='bool', default=False),
-        include_attachments=dict(type='bool', default=True)
+        include_attachments=dict(type='bool', default=True),
+        include_related=dict(type='bool', default=False),
+        include_bundles=dict(type='bool', default=False),
+        include_components=dict(type='bool', default=False),
     )
 
 

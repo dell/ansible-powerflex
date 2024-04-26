@@ -14,7 +14,7 @@ Synopsis
 
 Gathering information about Dell PowerFlex storage system includes getting the api details, list of volumes, SDSs, SDCs, storage pools, protection domains, snapshot policies, and devices.
 
-Gathering information about Dell PowerFlex Manager includes getting the list of managed devices, deployments and service templates.
+Gathering information about Dell PowerFlex Manager includes getting the list of managed devices, deployments, service templates and firmware repository.
 
 
 
@@ -22,9 +22,9 @@ Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- A Dell PowerFlex storage system version 3.5 or later.
+- A Dell PowerFlex storage system version 3.6 or later.
 - Ansible-core 2.14 or later.
-- PyPowerFlex 1.8.0.
+- PyPowerFlex 1.11.0.
 - Python 3.9, 3.10 or 3.11.
 
 
@@ -33,7 +33,7 @@ Parameters
 ----------
 
   gather_subset (optional, list, None)
-    List of string variables to specify the Powerflex storage system entities for which information is required.
+    List of string variables to specify the PowerFlex storage system entities for which information is required.
 
     Volumes - ``vol``.
 
@@ -61,6 +61,8 @@ Parameters
 
     Deployments - ``deployment``.
 
+    FirmwareRepository - ``firmware_repository``.
+
 
   filters (optional, list, None)
     List of filters to support filtered output for storage entities.
@@ -77,7 +79,7 @@ Parameters
     filter_operator (True, str, None)
       Operation to be performed on filter key.
 
-      Choice *'contains'* is supported for gather_subset keys *service_template*, *managed_device*, *deployment*.
+      Choice ``contains`` is supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``, ``firmware_repository``.
 
 
     filter_value (True, str, None)
@@ -88,47 +90,65 @@ Parameters
   limit (optional, int, 50)
     Page limit.
 
-    Supported for gather_subset keys *service_template*, *managed_device*, *deployment*.
+    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``, ``firmware_repository``.
 
 
   offset (optional, int, 0)
     Pagination offset.
 
-    Supported for gather_subset keys *service_template*, *managed_device*, *deployment*.
+    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``, ``firmware_repository``.
 
 
   sort (optional, str, None)
     Sort the returned components based on specified field.
 
-    Supported for gather_subset keys *service_template*, *managed_device*, *deployment*.
+    Supported for *gather_subset* keys ``service_template``, ``managed_device``, ``deployment``, ``firmware_repository``.
 
-    The supported sort keys for the gather_subset can be referred from PowerFlex Manager API documentation in developer.dell.com.
+    The supported sort keys for the *gather_subset* can be referred from PowerFlex Manager API documentation in https://developer.dell.com.
 
 
   include_devices (optional, bool, True)
     Include devices in response.
 
-    Applicable when gather_subset is *deployment*.
+    Applicable when *gather_subset* is ``deployment``.
 
 
   include_template (optional, bool, True)
     Include service templates in response.
 
-    Applicable when gather_subset is *deployment*.
+    Applicable when *gather_subset* is ``deployment``.
 
 
   full (optional, bool, False)
     Specify if response is full or brief.
 
-    Applicable when gather_subset is *deployment*, *service_template*.
+    Applicable when *gather_subset* is ``deployment``, ``service_template``.
 
-    For *deployment* specify to use full templates including resources in response.
+    For ``deployment`` specify to use full templates including resources in response.
 
 
   include_attachments (optional, bool, True)
     Include attachments.
 
-    Applicable when gather_subset is *service_template*.
+    Applicable when *gather_subset* is ``service_template``.
+
+
+  include_related (optional, bool, False)
+    Include related entities.
+
+    Applicable when *gather_subset* is ``firmware_repository``.
+
+
+  include_bundles (optional, bool, False)
+    Include software bundle entities.
+
+    Applicable when *gather_subset* is ``firmware_repository``.
+
+
+  include_components (optional, bool, False)
+    Include software component entities.
+
+    Applicable when *gather_subset* is ``firmware_repository``.
 
 
   hostname (True, str, None)
@@ -169,8 +189,8 @@ Notes
 
 .. note::
    - The *check_mode* is supported.
-   - The supported filter keys for the gather_subset can be referred from PowerFlex Manager API documentation in developer.dell.com.
-   - The *filter*, *sort*, *limit* and *offset* options will be ignored when more than one *gather_subset* is specified along with *service_template*, *managed_device* or *deployment*.
+   - The supported filter keys for the *gather_subset* can be referred from PowerFlex Manager API documentation in https://developer.dell.com.
+   - The *filter*, *sort*, *limit* and *offset* options will be ignored when more than one *gather_subset* is specified along with ``service_template``, ``managed_device``, ``deployment`` or ``firmware_repository``.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -184,10 +204,10 @@ Examples
     
     - name: Get detailed list of PowerFlex entities
       dellemc.powerflex.info:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: "{{validate_certs}}"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
         gather_subset:
           - vol
           - storage_pool
@@ -202,10 +222,10 @@ Examples
 
     - name: Get a subset list of PowerFlex volumes
       dellemc.powerflex.info:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: "{{validate_certs}}"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
         gather_subset:
           - vol
         filters:
@@ -215,10 +235,10 @@ Examples
 
     - name: Get deployment and resource provisioning info
       dellemc.powerflex.info:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: "{{validate_certs}}"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
         gather_subset:
           - managed_device
           - deployment
@@ -226,10 +246,10 @@ Examples
 
     - name: Get deployment with filter, sort, pagination
       dellemc.powerflex.info:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: "{{validate_certs}}"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
         gather_subset:
           - deployment
         filters:
@@ -241,6 +261,60 @@ Examples
         offset: 10
         include_devices: true
         include_template: true
+
+    - name: Get the list of firmware repository.
+      dellemc.powerflex.info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - firmware_repository
+
+    - name: Get the list of firmware repository
+      dellemc.powerflex.info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - firmware_repository
+        include_related: true
+        include_bundles: true
+        include_components: true
+
+    - name: Get the list of firmware repository with filter
+      dellemc.powerflex.info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - firmware_repository
+        filters:
+          - filter_key: "createdBy"
+            filter_operator: "equal"
+            filter_value: "admin"
+        sort: createdDate
+        limit: 10
+        include_related: true
+        include_bundles: true
+        include_components: true
+      register: result_repository_out
+
+    - name: Get the list of available firmware repository
+      ansible.builtin.debug:
+        msg: "{{ result_repository_out.FirmwareRepository | selectattr('state', 'equalto', 'available') }}"
+
+    - name: Get the list of software components in the firmware repository
+      ansible.builtin.debug:
+        msg: "{{ result_repository_out.FirmwareRepository |
+            selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareComponents') | flatten }}"
+
+    - name: Get the list of software bundles in the firmware repository
+      ansible.builtin.debug:
+        msg: "{{ result_repository_out.FirmwareRepository |
+            selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareBundles') | flatten }}"
 
 
 
@@ -841,6 +915,39 @@ ServiceTemplates (when I(gather_subset) is I(service_template), list, [{'id': '2
 
 
 
+FirmwareRepository (when I(gather_subset) is C(firmware_repository), list, [{'id': '8aaa03a78de4b2a5018de662818d000b', 'name': 'https://192.168.0.1/artifactory/path/pfxmlogs-bvt-pfmp-swo-upgrade-402-to-451-56.tar.gz', 'sourceLocation': 'https://192.168.0.2/artifactory/path/pfxmlogs-bvt-pfmp-swo-upgrade-402-to-451-56.tar.gz', 'sourceType': None, 'diskLocation': '', 'filename': '', 'md5Hash': None, 'username': '', 'password': '', 'downloadStatus': 'error', 'createdDate': '2024-02-26T17:07:11.884+00:00', 'createdBy': 'admin', 'updatedDate': '2024-03-01T06:21:10.917+00:00', 'updatedBy': 'system', 'defaultCatalog': False, 'embedded': False, 'state': 'errors', 'softwareComponents': [], 'softwareBundles': [], 'deployments': [], 'bundleCount': 0, 'componentCount': 0, 'userBundleCount': 0, 'minimal': True, 'downloadProgress': 100, 'extractProgress': 0, 'fileSizeInGigabytes': 0.0, 'signedKeySourceLocation': None, 'signature': 'Unknown', 'custom': False, 'needsAttention': False, 'jobId': 'Job-10d75a23-d801-4fdb-a2d0-7f6389ab75cf', 'rcmapproved': False}])
+  Details of all firmware repository.
+
+
+  id (, str, )
+    ID of the firmware repository.
+
+
+  name (, str, )
+    Name of the firmware repository.
+
+
+  sourceLocation (, str, )
+    Source location of the firmware repository.
+
+
+  state (, str, )
+    State of the firmware repository.
+
+
+  softwareComponents (, list, )
+    Software components of the firmware repository.
+
+
+  softwareBundles (, list, )
+    Software bundles of the firmware repository.
+
+
+  deployments (, list, )
+    Deployments of the firmware repository.
+
+
+
 
 
 
@@ -857,4 +964,5 @@ Authors
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
 - Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 - Jennifer John (@Jennifer-John) <ansible.team@dell.com>
+- Felix Stephen (@felixs88) <ansible.team@dell.com>
 

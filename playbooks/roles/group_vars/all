@@ -1,6 +1,7 @@
 powerflex_common_file_install_location: "/var/tmp"
 powerflex_common_esxi_files_location: "/tmp/"
 powerflex_common_win_package_location: "C:\\Windows\\Temp"
+powerflex_gateway_disable_gpg_check: true
 # powerflex sdc params
 powerflex_sdc_driver_sync_repo_address: 'ftp://ftp.emc.com/'
 powerflex_sdc_driver_sync_repo_user: 'QNzgdxXix'
