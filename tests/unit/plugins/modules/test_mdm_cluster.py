@@ -1,4 +1,4 @@
-# Copyright: (c) 2022, Dell Technologies
+# Copyright: (c) 2024, Dell Technologies
 
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -634,3 +634,145 @@ class TestPowerflexMDMCluster():
         )
         mdm_cluster_module_mock.perform_module_operation()
         assert MockMdmClusterApi.new_name_add_mdm_failed_response() in mdm_cluster_module_mock.module.fail_json.call_args[1]['msg']
+
+    def test_change_cluster_mode(self, mdm_cluster_module_mock):
+        self.get_module_args.update({
+            "cluster_mode": "FiveNodes",
+            "mdm": [
+                {
+                    "mdm_name": MockMdmClusterApi.MDM_NAME_STB_MGR,
+                    "mdm_id": None,
+                    "mdm_type": "Secondary"
+                },
+                {
+                    "mdm_id": MockMdmClusterApi.STB_TB_MDM_ID,
+                    "mdm_name": None,
+                    "mdm_type": "TieBreaker"
+                }
+            ],
+            "mdm_state": "absent-in-cluster",
+            "state": "present"
+        })
+        mdm_cluster_module_mock.module.params = self.get_module_args
+        mdm_cluster_resp = MockSDKResponse(MockMdmClusterApi.THREE_MDM_CLUSTER_DETAILS)
+        mdm_cluster_module_mock.powerflex_conn.system.get_mdm_cluster_details = MagicMock(
+            return_value=mdm_cluster_resp.__dict__['data']
+        )
+        mdm_cluster_module_mock.validate_parameters = MagicMock(return_value=None)
+        mdm_cluster_module_mock.powerflex_conn.system.switch_cluster_mode = MagicMock()
+        mdm_cluster_module_mock.perform_module_operation()
+        assert mdm_cluster_module_mock.module.exit_json.call_args[1]['changed'] is True
+
+    def test_change_cluster_mode_with_name(self, mdm_cluster_module_mock):
+        self.get_module_args.update({
+            "cluster_mode": "FiveNodes",
+            "mdm": [
+                {
+                    "mdm_name": MockMdmClusterApi.MDM_NAME_STB_MGR,
+                    "mdm_id": MockMdmClusterApi.MDM_ID,
+                    "mdm_type": "Secondary"
+                },
+                {
+                    "mdm_id": MockMdmClusterApi.STB_TB_MDM_ID,
+                    "mdm_name": MockMdmClusterApi.MDM_NAME,
+                    "mdm_type": "TieBreaker"
+                }
+            ],
+            "mdm_state": "absent-in-cluster",
+            "state": "present"
+        })
+        mdm_cluster_module_mock.module.params = self.get_module_args
+        mdm_cluster_resp = MockSDKResponse(MockMdmClusterApi.THREE_MDM_CLUSTER_DETAILS)
+        mdm_cluster_module_mock.powerflex_conn.system.get_mdm_cluster_details = MagicMock(
+            return_value=mdm_cluster_resp.__dict__['data']
+        )
+        mdm_cluster_module_mock.validate_parameters = MagicMock(return_value=None)
+        mdm_cluster_module_mock.powerflex_conn.system.switch_cluster_mode = MagicMock()
+        mdm_cluster_module_mock.perform_module_operation()
+        assert mdm_cluster_module_mock.module.exit_json.call_args[1]['changed'] is True
+
+    def test_cluster_reduce_mode_absent(self, mdm_cluster_module_mock):
+        self.get_module_args.update({
+            "cluster_mode": "FiveNodes",
+            "mdm": [
+                {
+                    "mdm_name": MockMdmClusterApi.MDM_NAME_STB_MGR,
+                    "mdm_id": None,
+                    "mdm_type": "Secondary"
+                },
+                {
+                    "mdm_id": None,
+                    "mdm_name": MockMdmClusterApi.MDM_NAME,
+                    "mdm_type": "TieBreaker"
+                }
+            ],
+            "mdm_state": "absent-in-cluster",
+            "state": "present"
+        })
+        mdm_cluster_module_mock.module.params = self.get_module_args
+        mdm_cluster_resp = MockSDKResponse(MockMdmClusterApi.THREE_MDM_CLUSTER_DETAILS)
+        mdm_cluster_module_mock.powerflex_conn.system.get_mdm_cluster_details = MagicMock(
+            return_value=mdm_cluster_resp.__dict__['data']
+        )
+        mdm_cluster_module_mock.is_mdm_name_id_exists = MagicMock(return_value=None)
+        mdm_cluster_module_mock.validate_parameters = MagicMock(return_value=None)
+        mdm_cluster_module_mock.powerflex_conn.system.switch_cluster_mode = MagicMock()
+        mdm_cluster_module_mock.perform_module_operation()
+        assert mdm_cluster_module_mock.module.exit_json.call_args[1]['changed'] is True
+
+    def test_cluster_expand_list_tb(self, mdm_cluster_module_mock):
+        self.get_module_args.update({
+            "cluster_mode": "FiveNodes",
+            "mdm": [
+                {
+                    "mdm_name": MockMdmClusterApi.MDM_NAME_STB_MGR,
+                    "mdm_id": None,
+                    "mdm_type": "Secondary"
+                },
+                {
+                    "mdm_id": None,
+                    "mdm_name": MockMdmClusterApi.MDM_NAME,
+                    "mdm_type": "TieBreaker"
+                }
+            ],
+            "mdm_state": "present-in-cluster",
+            "state": "present"
+        })
+        mdm_cluster_module_mock.module.params = self.get_module_args
+        mdm_cluster_resp = MockSDKResponse(MockMdmClusterApi.THREE_MDM_CLUSTER_DETAILS)
+        mdm_cluster_module_mock.powerflex_conn.system.get_mdm_cluster_details = MagicMock(
+            return_value=mdm_cluster_resp.__dict__['data']
+        )
+        mdm_cluster_module_mock.validate_parameters = MagicMock(return_value=None)
+        mdm_cluster_module_mock.powerflex_conn.system.switch_cluster_mode = MagicMock()
+        mdm_cluster_module_mock.perform_module_operation()
+        assert mdm_cluster_module_mock.module.exit_json.call_args[1]['changed'] is True
+
+    def test_cluster_expand_list_tb_mdm_none(self, mdm_cluster_module_mock):
+        self.get_module_args.update({
+            "cluster_mode": "FiveNodes",
+            "mdm": [
+                {
+                    "mdm_name": MockMdmClusterApi.MDM_NAME_STB_MGR,
+                    "mdm_id": None,
+                    "mdm_type": "Secondary"
+                },
+                {
+                    "mdm_id": None,
+                    "mdm_name": MockMdmClusterApi.MDM_NAME,
+                    "mdm_type": "TieBreaker"
+                }
+            ],
+            "mdm_state": "present-in-cluster",
+            "state": "present"
+        })
+        mdm_cluster_module_mock.module.params = self.get_module_args
+        mdm_cluster_resp = MockSDKResponse(MockMdmClusterApi.THREE_MDM_CLUSTER_DETAILS)
+        mdm_cluster_module_mock.powerflex_conn.system.get_mdm_cluster_details = MagicMock(
+            return_value=mdm_cluster_resp.__dict__['data']
+        )
+        mdm_cluster_module_mock.is_mdm_name_id_exists = MagicMock(return_value=None)
+        mdm_cluster_module_mock.validate_parameters = MagicMock(return_value=None)
+        mdm_cluster_module_mock.powerflex_conn.system.switch_cluster_mode = MagicMock()
+        mdm_cluster_module_mock.perform_module_operation()
+        assert mdm_cluster_module_mock.module.exit_json.call_args[1]['changed'] is True
