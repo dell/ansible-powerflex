@@ -62,7 +62,7 @@ jobs:
 
     steps:
       - name: Perform unit testing with ansible-test
-        uses: ansible-community/ansible-test-gh-action@release/v1.15
+        uses: ansible-community/ansible-test-gh-action@release/v1
         with:
           testing-type: units
           coverage: always
