@@ -230,11 +230,11 @@ class TestPowerflexStoragePool(PowerFlexUnitBase):
                 "policy": "unlimited",
                 "concurrent_ios_per_device": 1,
                 "bw_limit_per_device": 1024},
-            "rebalance_io_priority_policy":{
+            "rebalance_io_priority_policy": {
                 "policy": "limitNumOfConcurrentIos",
                 "concurrent_ios_per_device": 10,
                 "bw_limit_per_device": 1024},
-            "vtree_migration_io_priority_policy":{
+            "vtree_migration_io_priority_policy": {
                 "policy": "limitNumOfConcurrentIos",
                 "concurrent_ios_per_device": 10,
                 "bw_limit_per_device": 1024},
