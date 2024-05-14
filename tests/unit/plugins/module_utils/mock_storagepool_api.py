@@ -22,13 +22,44 @@ class MockStoragePoolApi:
         "use_rmcache": None,
         "use_rfcache": None,
         "media_type": None,
+        "enable_zero_padding": None,
+        "rep_cap_max_ratio": None,
+        "rmcache_write_handling_mode": None,
+        "spare_percentage": None,
+        "enable_rebalance": None,
+        "enable_fragmentation": None,
+        "enable_rebuild": None,
+        "enable_checksum": None,
+        "storage_pool_new_name": None,
+        "parallel_rebuild_rebalance_limit": None,
+        "compression_method": None,
+        "cap_alert_thresholds": {
+                "high_threshold": 30,
+                "critical_threshold": 50
+            },
+        "protected_maintenance_mode_io_priority_policy": {
+                "policy": None,
+                "concurrent_ios_per_device": None,
+                "bw_limit_per_device": None},
+        "rebalance_io_priority_policy": {
+                "policy": None,
+                "concurrent_ios_per_device": None,
+                "bw_limit_per_device": None},
+        "vtree_migration_io_priority_policy": {
+                "policy": None,
+                "concurrent_ios_per_device": None,
+                "bw_limit_per_device": None},
+        "persistent_checksum": {
+                "enable": None,
+                "validate_on_read": None,
+                "builder_limit": None},
         'state': None
     }
 
     STORAGE_POOL_GET_LIST = [
         {
-            'protectionDomainId': '4eeb304600000000',
-            'protectionDomainName': 'test_pd',
+            'protectionDomainId': "7bd6457000000000",
+            'protectionDomainName': "test_pd_1",
             'rebuildEnabled': True,
             'dataLayout': 'MediumGranularity',
             'persistentChecksumState': 'Protected',
@@ -98,8 +129,8 @@ class MockStoragePoolApi:
 
     STORAGE_POOL_GET_MULTI_LIST = [
         {
-            'protectionDomainId': '4eeb304600000000',
-            'protectionDomainName': 'test_pd',
+            'protectionDomainId': "7bd6457000000000",
+            'protectionDomainName': "test_pd_1",
             'rebuildEnabled': True,
             'dataLayout': 'MediumGranularity',
             'persistentChecksumState': 'Protected',
@@ -166,7 +197,7 @@ class MockStoragePoolApi:
             'id': 'test_pool_id_1'
         },
         {
-            'protectionDomainId': '4eeb304600000002',
+            'protectionDomainId': "7bd6457000000000",
             'protectionDomainName': 'test_pd_1',
             'rebuildEnabled': True,
             'dataLayout': 'MediumGranularity',
@@ -238,6 +269,31 @@ class MockStoragePoolApi:
     PROTECTION_DETAILS = [{"pd_id": "4eeb304600000000", "pd_name": "test_pd"}]
 
     PROTECTION_DETAILS_1 = [{"id": "4eeb304600000001", "name": "test_pd_name"}]
+
+    PROTECTION_DOMAIN = {
+        "protectiondomain": [
+            {
+                "id": "7bd6457000000000",
+                "name": "test_pd_1",
+                "protectionDomainState": "Active",
+                "overallIoNetworkThrottlingInKbps": 20480,
+                "rebalanceNetworkThrottlingInKbps": 10240,
+                "rebuildNetworkThrottlingInKbps": 10240,
+                "vtreeMigrationNetworkThrottlingInKbps": 10240,
+                "rfcacheEnabled": "false",
+                "rfcacheMaxIoSizeKb": 128,
+                "rfcacheOpertionalMode": "None",
+                "rfcachePageSizeKb": 64,
+                "storagePools": [
+                    {
+                        "id": "8d1cba1700000000",
+                        "name": "pool1"
+                    }
+                ]
+            }
+        ]
+    }
+
 
     STORAGE_POOL_STATISTICS = {
         'backgroundScanFixedReadErrorCount': 0,
