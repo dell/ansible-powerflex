@@ -29,30 +29,30 @@ class MockStoragePoolApi:
         "enable_rebalance": None,
         "enable_fragmentation": None,
         "enable_rebuild": None,
-        "enable_checksum": None,
-        "storage_pool_new_name": None,
         "parallel_rebuild_rebalance_limit": None,
-        "compression_method": None,
         "cap_alert_thresholds": {
-                "high_threshold": 30,
-                "critical_threshold": 50
-            },
+            "high_threshold": 30,
+            "critical_threshold": 50
+        },
         "protected_maintenance_mode_io_priority_policy": {
-                "policy": None,
-                "concurrent_ios_per_device": None,
-                "bw_limit_per_device": None},
+            "policy": None,
+            "concurrent_ios_per_device": None,
+            "bw_limit_per_device": None
+        },
         "rebalance_io_priority_policy": {
-                "policy": None,
-                "concurrent_ios_per_device": None,
-                "bw_limit_per_device": None},
+            "policy": None,
+            "concurrent_ios_per_device": None,
+            "bw_limit_per_device": None
+        },
         "vtree_migration_io_priority_policy": {
-                "policy": None,
-                "concurrent_ios_per_device": None,
-                "bw_limit_per_device": None},
+            "policy": None,
+            "concurrent_ios_per_device": None,
+            "bw_limit_per_device": None},
         "persistent_checksum": {
-                "enable": None,
-                "validate_on_read": None,
-                "builder_limit": None},
+            "enable": None,
+            "validate_on_read": None,
+            "builder_limit": None
+        },
         'state': None
     }
 
@@ -293,7 +293,6 @@ class MockStoragePoolApi:
             }
         ]
     }
-
 
     STORAGE_POOL_STATISTICS = {
         'backgroundScanFixedReadErrorCount': 0,

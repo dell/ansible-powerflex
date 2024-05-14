@@ -29,3 +29,6 @@ plugins/modules/info.py import-2.7
 plugins/modules/resource_group.py validate-modules:missing-gplv3-license
 plugins/modules/resource_group.py compile-2.7
 plugins/modules/resource_group.py import-2.7
+plugins/modules/storagepool.py compile-2.7
+plugins/modules/storagepool.py import-2.7
+
