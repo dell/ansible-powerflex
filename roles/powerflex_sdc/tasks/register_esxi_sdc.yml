@@ -1,7 +1,7 @@
 ---
 - name: Generating random GUID
-  shell: uuidgen
-  register: powerflex_sdc_esxi_guid.stdout
+  command: uuidgen
+  register: powerflex_sdc_esxi_guid
 
 - name: Register SDC and Set MDM IP addresses
   register: powerflex_sdc_register_set_sdc_mdm
