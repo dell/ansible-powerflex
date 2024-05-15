@@ -1,7 +1,8 @@
 ---
 - name: Generating random GUID
-  ansible.builtin.shell: uuidgen
   register: powerflex_sdc_esxi_guid
+  ansible.builtin.shell: >
+    uuidgen
   changed_when: powerflex_sdc_esxi_guid.rc != 0
 
 - name: Register SDC and Set MDM IP addresses
