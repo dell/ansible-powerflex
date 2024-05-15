@@ -37,8 +37,7 @@
           credential:
             type: "ManagementSystemCredential"
             label: "DELL_POWERFLEX_LIA"
-            username: "{{ username }}"
-            password: "{{ password }}"
+            password: "{{ powerflex_lia_token }}"
             liaPassword: "{{ powerflex_lia_token }}"
 
     - name: Create LIA credentials
