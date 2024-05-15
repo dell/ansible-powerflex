@@ -6,7 +6,7 @@
 - name: Register SDC and Set MDM IP addresses
   register: powerflex_sdc_register_set_sdc_mdm
   ansible.builtin.shell: >
-    esxcli system module parameters set -m scini -p "IoctlIniGuidStr={{ powerflex_sdc_esxi_guid.stdout23}}
+    esxcli system module parameters set -m scini -p "IoctlIniGuidStr={{ powerflex_sdc_esxi_guid.stdout }}
     IoctlMdmIPStr={{ powerflex_sdc_mdm_ips }} bBlkDevIsPdlActive=1 blkDevPdlTimeoutMillis=60000"
   changed_when: powerflex_sdc_register_set_sdc_mdm.rc == 0
 
