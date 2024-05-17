@@ -929,11 +929,11 @@ class PowerFlexStoragePool(PowerFlexBase):
                 pool_params['rebalance_io_priority_policy']['bw_limit_per_device'] != pool_details['rebalanceIoPriorityBwLimitPerDeviceInKbps']:
             policy_dict['bw_limit'] = str(pool_params['rebalance_io_priority_policy']['bw_limit_per_device'])
 
-        if policy_dict['policy'] is None and ( policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+        if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
             policy_dict['policy'] = pool_details['rebalanceIoPriorityPolicy']
             modify = True
 
-        if modify == True:
+        if modify is True:
             return policy_dict
         else:
             return None
@@ -960,11 +960,11 @@ class PowerFlexStoragePool(PowerFlexBase):
                 pool_details['vtreeMigrationIoPriorityBwLimitPerDeviceInKbps']:
             policy_dict['bw_limit'] = str(pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'])
 
-        if policy_dict['policy'] is None and ( policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+        if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
             policy_dict['policy'] = pool_details['vtreeMigrationIoPriorityPolicy']
             modify = True
 
-        if modify == True:
+        if modify is True:
             return policy_dict
         else:
             return None
@@ -992,11 +992,11 @@ class PowerFlexStoragePool(PowerFlexBase):
                 pool_details['protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps']:
             policy_dict['bw_limit'] = str(pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'])
 
-        if policy_dict['policy'] is None and ( policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+        if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
             policy_dict['policy'] = pool_details['protectedMaintenanceModeIoPriorityPolicy']
             modify = True
 
-        if modify == True:
+        if modify is True:
             return policy_dict
         else:
             return None
@@ -1083,6 +1083,7 @@ class StoragePoolDeleteHandler():
             self.module.fail_json(msg=msg)
 
         StoragePoolExitHandler().handle(pool_obj, pool_details)
+
 
 class StoragePoolModifyPersistentChecksumHandler():
     def handle(self, pool_obj, pool_params, pool_details):
