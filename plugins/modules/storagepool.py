@@ -28,6 +28,7 @@ extends_documentation_fragment:
 author:
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
 - P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 
 options:
   storage_pool_name:
@@ -830,7 +831,7 @@ class PowerFlexStoragePool(PowerFlexBase):
                 pool_id = self.powerflex_conn.storage_pool.create(
                     media_type=media_type,
                     protection_domain_id=pd_id, name=pool_name,
-                    use_rfcache=use_rfcache, use_rmcache=use_rmcache)
+                    use_rfcache=use_rfcache, use_rmcache=use_rmcache)['id']
 
             return self.get_storage_pool(storage_pool_id=pool_id,
                                          pd_id=pd_id)
@@ -909,57 +910,96 @@ class PowerFlexStoragePool(PowerFlexBase):
 
     def to_modify_rebalance_io_priority_policy(self, pool_details, pool_params):
 
-        policy_dict = dict()
+        policy_dict = {
+            'policy': None,
+            'concurrent_ios': None,
+            'bw_limit': None
+        }
+        modify = False
         if pool_params['rebalance_io_priority_policy']['policy'] is not None and \
                 pool_params['rebalance_io_priority_policy']['policy'] != pool_details['rebalanceIoPriorityPolicy']:
             policy_dict['policy'] = pool_params['rebalance_io_priority_policy']['policy']
+            modify = True
 
         if pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'] is not None and \
                 pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'] != pool_details['rebalanceIoPriorityNumOfConcurrentIosPerDevice']:
-            policy_dict['concurrent_ios'] = pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device']
+            policy_dict['concurrent_ios'] = str(pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'])
 
         if pool_params['rebalance_io_priority_policy']['bw_limit_per_device'] is not None and \
                 pool_params['rebalance_io_priority_policy']['bw_limit_per_device'] != pool_details['rebalanceIoPriorityBwLimitPerDeviceInKbps']:
-            policy_dict['bw_limit'] = pool_params['rebalance_io_priority_policy']['bw_limit_per_device']
+            policy_dict['bw_limit'] = str(pool_params['rebalance_io_priority_policy']['bw_limit_per_device'])
 
-        return policy_dict
+        if policy_dict['policy'] is None and ( policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+            policy_dict['policy'] = pool_details['rebalanceIoPriorityPolicy']
+            modify = True
+
+        if modify == True:
+            return policy_dict
+        else:
+            return None
 
     def to_modify_vtree_migration_io_priority_policy(self, pool_details, pool_params):
-        policy_dict = dict()
+        policy_dict = {
+            'policy': None,
+            'concurrent_ios': None,
+            'bw_limit': None
+        }
+        modify = False
         if pool_params['vtree_migration_io_priority_policy']['policy'] is not None and \
                 pool_params['vtree_migration_io_priority_policy']['policy'] != pool_details['vtreeMigrationIoPriorityPolicy']:
             policy_dict['policy'] = pool_params['vtree_migration_io_priority_policy']['policy']
+            modify = True
 
         if pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'] is not None and \
                 pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'] != \
                 pool_details['vtreeMigrationIoPriorityNumOfConcurrentIosPerDevice']:
-            policy_dict['concurrent_ios'] = pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device']
+            policy_dict['concurrent_ios'] = str(pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'])
 
         if pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'] is not None and \
                 pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'] != \
                 pool_details['vtreeMigrationIoPriorityBwLimitPerDeviceInKbps']:
-            policy_dict['bw_limit'] = pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device']
+            policy_dict['bw_limit'] = str(pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'])
 
-        return policy_dict
+        if policy_dict['policy'] is None and ( policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+            policy_dict['policy'] = pool_details['vtreeMigrationIoPriorityPolicy']
+            modify = True
+
+        if modify == True:
+            return policy_dict
+        else:
+            return None
 
     def to_modify_protected_maintenance_mode_io_priority_policy(self, pool_details, pool_params):
 
-        policy_dict = dict()
+        policy_dict = {
+            'policy': None,
+            'concurrent_ios': None,
+            'bw_limit': None
+        }
+        modify = False
         if pool_params['protected_maintenance_mode_io_priority_policy']['policy'] is not None and \
                 pool_params['protected_maintenance_mode_io_priority_policy']['policy'] != pool_details['protectedMaintenanceModeIoPriorityPolicy']:
             policy_dict['policy'] = pool_params['protected_maintenance_mode_io_priority_policy']['policy']
+            modify = True
 
         if pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'] is not None and \
                 pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'] != \
                 pool_details['protectedMaintenanceModeIoPriorityNumOfConcurrentIosPerDevice']:
-            policy_dict['concurrent_ios'] = pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device']
+            policy_dict['concurrent_ios'] = str(pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'])
 
         if pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'] is not None and \
                 pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'] != \
                 pool_details['protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps']:
-            policy_dict['bw_limit'] = pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device']
+            policy_dict['bw_limit'] = str(pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'])
 
-        return policy_dict
+        if policy_dict['policy'] is None and ( policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+            policy_dict['policy'] = pool_details['protectedMaintenanceModeIoPriorityPolicy']
+            modify = True
+
+        if modify == True:
+            return policy_dict
+        else:
+            return None
 
     def to_modify_capacity_alert_thresholds(self, pool_details, pool_params, thresholds):
         modify = False
@@ -1034,6 +1074,16 @@ class StoragePoolExitHandler():
         pool_obj.module.exit_json(**pool_obj.result)
 
 
+class StoragePoolDeleteHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        if pool_params['state'] == 'absent' and pool_details:
+            msg = "Deleting storage pool is not supported through" \
+                  " ansible module."
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
+        StoragePoolExitHandler().handle(pool_obj, pool_details)
+
 class StoragePoolModifyPersistentChecksumHandler():
     def handle(self, pool_obj, pool_params, pool_details):
         try:
@@ -1048,7 +1098,7 @@ class StoragePoolModifyPersistentChecksumHandler():
                                 pool_params=pool_params)
                     pool_obj.result['changed'] = True
 
-            StoragePoolExitHandler().handle(pool_obj, pool_details)
+            StoragePoolDeleteHandler().handle(pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Modify Persistent Checksum failed "
@@ -1062,23 +1112,18 @@ class StoragePoolModifyRebalanceIOPriorityPolicyHandler():
         try:
             if pool_params['state'] == 'present' and pool_details:
                 if pool_params['rebalance_io_priority_policy'] is not None:
-                    if not pool_obj.module.check_mode:
-                        policy_dict = pool_obj.to_modify_rebalance_io_priority_policy(
-                            pool_details=pool_details,
-                            pool_params=pool_params
-                        )
-                        if policy_dict != {}:
-                            if 'concurrent_ios' not in policy_dict:
-                                policy_dict['concurrent_ios'] = None
-                            if 'bw_limit' not in policy_dict:
-                                policy_dict['bw_limit'] = None
-                            if not pool_obj.module.check_mode:
-                                pool_details = pool_obj.powerflex_conn.storage_pool.rebalance_io_priority_policy(
-                                    storage_pool_id=pool_details['id'],
-                                    policy=policy_dict['policy'],
-                                    concurrent_ios_per_device=str(policy_dict['concurrent_ios']),
-                                    bw_limit_per_device=str(policy_dict['bw_limit']))
-                    pool_obj.result['changed'] = True
+                    policy_dict = pool_obj.to_modify_rebalance_io_priority_policy(
+                        pool_details=pool_details,
+                        pool_params=pool_params
+                    )
+                    if policy_dict is not None:
+                        if not pool_obj.module.check_mode:
+                            pool_details = pool_obj.powerflex_conn.storage_pool.rebalance_io_priority_policy(
+                                storage_pool_id=pool_details['id'],
+                                policy=policy_dict['policy'],
+                                concurrent_ios_per_device=policy_dict['concurrent_ios'],
+                                bw_limit_per_device=policy_dict['bw_limit'])
+                        pool_obj.result['changed'] = True
 
             StoragePoolModifyPersistentChecksumHandler().handle(pool_obj, pool_params, pool_details)
 
@@ -1093,24 +1138,19 @@ class StoragePoolSetVtreeMigrationIOPriorityPolicyHandler():
     def handle(self, pool_obj, pool_params, pool_details):
         try:
             if pool_params['state'] == 'present' and pool_details:
-                if not pool_obj.module.check_mode:
-                    if pool_params['vtree_migration_io_priority_policy'] is not None:
-                        policy_dict = pool_obj.to_modify_vtree_migration_io_priority_policy(
-                            pool_details=pool_details,
-                            pool_params=pool_params
-                        )
-                        if policy_dict != {}:
-                            if 'concurrent_ios' not in policy_dict:
-                                policy_dict['concurrent_ios'] = None
-                            if 'bw_limit' not in policy_dict:
-                                policy_dict['bw_limit'] = None
-                            if not pool_obj.module.check_mode:
-                                pool_details = pool_obj.powerflex_conn.storage_pool.set_vtree_migration_io_priority_policy(
-                                    storage_pool_id=pool_details['id'],
-                                    policy=policy_dict['policy'],
-                                    concurrent_ios_per_device=str(policy_dict['concurrent_ios']),
-                                    bw_limit_per_device=str(policy_dict['bw_limit']))
-                            pool_obj.result['changed'] = True
+                if pool_params['vtree_migration_io_priority_policy'] is not None:
+                    policy_dict = pool_obj.to_modify_vtree_migration_io_priority_policy(
+                        pool_details=pool_details,
+                        pool_params=pool_params
+                    )
+                    if policy_dict is not None:
+                        if not pool_obj.module.check_mode:
+                            pool_details = pool_obj.powerflex_conn.storage_pool.set_vtree_migration_io_priority_policy(
+                                storage_pool_id=pool_details['id'],
+                                policy=policy_dict['policy'],
+                                concurrent_ios_per_device=policy_dict['concurrent_ios'],
+                                bw_limit_per_device=policy_dict['bw_limit'])
+                        pool_obj.result['changed'] = True
 
             StoragePoolModifyRebalanceIOPriorityPolicyHandler().handle(pool_obj, pool_params, pool_details)
 
@@ -1130,19 +1170,13 @@ class StoragePoolSetProtectedMaintenanceModeIOPriorityPolicyHandler():
                         pool_details=pool_details,
                         pool_params=pool_params
                     )
-                    if policy_dict != {}:
-                        if 'policy' not in policy_dict:
-                            policy_dict['policy'] = pool_details['protectedMaintenanceModeIoPriorityPolicy']
-                        if 'concurrent_ios' not in policy_dict:
-                            policy_dict['concurrent_ios'] = pool_details['protectedMaintenanceModeIoPriorityNumOfConcurrentIosPerDevice']
-                        if 'bw_limit' not in policy_dict:
-                            policy_dict['bw_limit'] = pool_details['protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps']
+                    if policy_dict is not None:
                         if not pool_obj.module.check_mode:
                             pool_details = pool_obj.powerflex_conn.storage_pool.set_protected_maintenance_mode_io_priority_policy(
                                 storage_pool_id=pool_details['id'],
                                 policy=policy_dict['policy'],
-                                concurrent_ios_per_device=str(policy_dict['concurrent_ios']),
-                                bw_limit_per_device=str(policy_dict['bw_limit']))
+                                concurrent_ios_per_device=policy_dict['concurrent_ios'],
+                                bw_limit_per_device=policy_dict['bw_limit'])
                         pool_obj.result['changed'] = True
 
             StoragePoolSetVtreeMigrationIOPriorityPolicyHandler().handle(pool_obj, pool_params, pool_details)
@@ -1413,19 +1447,20 @@ class StoragePoolModifyMediaTypeHandler():
 class StoragePoolCreateHandler():
     def handle(self, pool_obj, pool_params, pool_details, pd_id, media_type):
         if pool_params['state'] == 'present' and pool_details is None:
-            LOG.info("Creating new storage pool")
-            if pool_params['storage_pool_id']:
-                self.module.fail_json(
-                    msg="storage_pool_name is missing & name required to "
-                        "create a storage pool. Please enter a valid "
-                        "storage_pool_name.")
+            if not pool_obj.module.check_mode:
+                LOG.info("Creating new storage pool")
+                if pool_params['storage_pool_id']:
+                    self.module.fail_json(
+                        msg="storage_pool_name is missing & name required to "
+                            "create a storage pool. Please enter a valid "
+                            "storage_pool_name.")
 
-            pool_details = pool_obj.create_storage_pool(
-                pool_name=pool_params['storage_pool_name'],
-                pd_id=pd_id,
-                media_type=media_type,
-                use_rfcache=pool_params['use_rfcache'],
-                use_rmcache=pool_params['use_rmcache'])
+                pool_details = pool_obj.create_storage_pool(
+                    pool_name=pool_params['storage_pool_name'],
+                    pd_id=pd_id,
+                    media_type=media_type,
+                    use_rfcache=pool_params['use_rfcache'],
+                    use_rmcache=pool_params['use_rmcache'])
 
             pool_obj.result['changed'] = True
 
