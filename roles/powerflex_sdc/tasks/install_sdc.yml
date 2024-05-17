@@ -70,6 +70,7 @@
     mode: "0600"
     owner: "root"
     group: "root"
-  notify: restart scini
+  notify:
+    - restart scini
   when:
     - ansible_distribution not in ['WindowsOS', 'SLES', 'VMkernel']
