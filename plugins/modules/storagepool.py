@@ -842,7 +842,7 @@ class PowerFlexStoragePool(PowerFlexBase):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def verify_params(self, pool_details):
+    def verify_protection_domain(self, pool_details):
         """
         :param pool_details: Details of the storage pool
         :param pd_name: Name of the protection domain
@@ -862,10 +862,15 @@ class PowerFlexStoragePool(PowerFlexBase):
                                           " not match with the storage pool's "
                                           "protection domain name. Please enter"
                                           " a correct protection domain name.")
-        if self.module.params['storage_pool_name'] is not None and (len(self.module.params['storage_pool_name'].strip()) == 0):
+
+    def verify_storage_pool_name(self):
+        if (self.module.params['storage_pool_name'] is not None and
+                (len(self.module.params['storage_pool_name'].strip()) == 0)) or \
+                (self.module.params['storage_pool_new_name'] is not None and
+                    (len(self.module.params['storage_pool_new_name'].strip()) == 0)):
             self.module.fail_json(
-                msg="Empty or white spaced string provided in "
-                    "storage_pool_name. Please provide valid storage"
+                msg="Empty or white spaced string provided for "
+                    "storage pool name. Provide valid storage"
                     " pool name.")
 
     def set_persistent_checksum(self, pool_details, pool_params):
@@ -899,11 +904,13 @@ class PowerFlexStoragePool(PowerFlexBase):
             checksum_dict['enable'] = pool_params['persistent_checksum']['enable']
 
         if pool_params['persistent_checksum']['validate_on_read'] is not None and \
-                pool_params['persistent_checksum']['validate_on_read'] != pool_details['persistentChecksumValidateOnRead']:
+                pool_params['persistent_checksum']['validate_on_read'] != pool_details['persistentChecksumValidateOnRead'] and \
+                pool_params['persistent_checksum']['enable'] is True:
             checksum_dict['validate_on_read'] = pool_params['persistent_checksum']['validate_on_read']
 
         if pool_params['persistent_checksum']['builder_limit'] is not None and \
-                pool_params['persistent_checksum']['builder_limit'] != pool_details['persistentChecksumBuilderLimitKb']:
+                pool_params['persistent_checksum']['builder_limit'] != pool_details['persistentChecksumBuilderLimitKb'] and \
+                pool_params['persistent_checksum']['enable'] is True:
             checksum_dict['builder_limit'] = pool_params['persistent_checksum']['builder_limit']
 
         return checksum_dict
@@ -1005,13 +1012,13 @@ class PowerFlexStoragePool(PowerFlexBase):
         modify = False
         threshold = dict()
         if pool_params['cap_alert_thresholds']['high_threshold'] is not None and pool_params['cap_alert_thresholds'][
-                'high_threshold'] != str(pool_details['capacityAlertHighThreshold']):
-            threshold['high'] = pool_params['cap_alert_thresholds']['high_threshold']
+                'high_threshold'] != pool_details['capacityAlertHighThreshold']:
+            threshold['high'] = str(pool_params['cap_alert_thresholds']['high_threshold'])
             modify = True
         if pool_params['cap_alert_thresholds']['critical_threshold'] is not None and \
-                pool_params['cap_alert_thresholds']['critical_threshold'] != str(pool_details[
-                'capacityAlertCriticalThreshold']):
-            threshold['critical'] = pool_params['cap_alert_thresholds']['critical_threshold']
+                pool_params['cap_alert_thresholds']['critical_threshold'] != pool_details[
+                'capacityAlertCriticalThreshold']:
+            threshold['critical'] = str(pool_params['cap_alert_thresholds']['critical_threshold'])
             modify = True
         if modify is True:
             if 'high' not in threshold:
@@ -1080,7 +1087,7 @@ class StoragePoolDeleteHandler():
             msg = "Deleting storage pool is not supported through" \
                   " ansible module."
             LOG.error(msg)
-            self.module.fail_json(msg=msg)
+            pool_obj.module.fail_json(msg=msg)
 
         StoragePoolExitHandler().handle(pool_obj, pool_details)
 
@@ -1090,14 +1097,15 @@ class StoragePoolModifyPersistentChecksumHandler():
         try:
             if pool_params['state'] == 'present' and pool_details:
                 if pool_params['persistent_checksum'] is not None:
-                    if not pool_obj.module.check_mode:
-                        checksum_dict = pool_obj.to_modify_persistent_checksum(pool_details=pool_details,
-                                                                               pool_params=pool_params)
-                        if checksum_dict != {}:
+                    checksum_dict = pool_obj.to_modify_persistent_checksum(
+                        pool_details=pool_details,
+                        pool_params=pool_params)
+                    if checksum_dict != {}:
+                        if not pool_obj.module.check_mode:
                             pool_details = pool_obj.set_persistent_checksum(
                                 pool_details=pool_details,
                                 pool_params=pool_params)
-                    pool_obj.result['changed'] = True
+                        pool_obj.result['changed'] = True
 
             StoragePoolDeleteHandler().handle(pool_obj, pool_params, pool_details)
 
@@ -1470,6 +1478,7 @@ class StoragePoolCreateHandler():
 
 class StoragePoolHandler():
     def handle(self, pool_obj, pool_params):
+        pool_obj.verify_storage_pool_name()
         media_type = pool_params['media_type']
         if media_type == "TRANSITIONAL":
             media_type = 'Transitional'
@@ -1481,7 +1490,7 @@ class StoragePoolHandler():
         pool_details = pool_obj.get_storage_pool(storage_pool_id=pool_params['storage_pool_id'],
                                                  storage_pool_name=pool_params['storage_pool_name'],
                                                  pd_id=pd_id)
-        pool_obj.verify_params(pool_details=pool_details)
+        pool_obj.verify_protection_domain(pool_details=pool_details)
         StoragePoolCreateHandler().handle(pool_obj, pool_params, pool_details, pd_id, media_type)
 
 

@@ -671,9 +671,9 @@ class MockStoragePoolApi:
         "get_multi_details": "More than one storage pool found",
         "create_wo_pd": "Please provide protection domain details",
         "create_transitional": "TRANSITIONAL media type is not supported during creation.",
-        "create_pool_name_empty": "Empty or white spaced string provided in storage_pool_name.",
+        "create_pool_name_empty": "Empty or white spaced string provided for storage pool name. Provide valid storage pool name",
         "create_pool_new_name": "storage_pool_new_name is passed during creation.",
-        "rename_storage_pool_empty": "Empty/White spaced name is not allowed during renaming of a storage pool.",
+        "rename_storage_pool_empty": "Empty or white spaced string provided for storage pool name. Provide valid storage pool name",
         "delete_storage_pool": "Deleting storage pool is not supported through ansible module."
     }
 
