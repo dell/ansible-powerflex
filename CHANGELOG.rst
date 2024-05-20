@@ -1,8 +1,17 @@
 ===============================
-Dellemc.PowerFlex Change Logs
+Dellemc.PowerFlex Release Notes
 ===============================
 
 .. contents:: Topics
+
+v2.5.0
+======
+
+Minor Changes
+-------------
+
+- Fixed the roles to support attaching the mdm cluster to the gateway.
+- The storage pool module has been enhanced to support more features.
 
 v2.4.0
 ======

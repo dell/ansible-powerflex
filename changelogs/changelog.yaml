@@ -163,3 +163,9 @@ releases:
       minor_changes:
         - Added support for executing Ansible PowerFlex modules and roles on AWS environment.
     release_date: '2024-04-30'
+  2.5.0:
+    changes:
+      minor_changes:
+        - The storage pool module has been enhanced to support more features.
+        - Fixed the roles to support attaching the mdm cluster to the gateway.
+    release_date: '2024-05-31'
