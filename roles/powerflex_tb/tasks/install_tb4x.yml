@@ -20,6 +20,10 @@
   changed_when: powerflex_tb_login_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
 
+- name: Extract System ID
+  ansible.builtin.set_fact:
+    powerflex_tb_system_id: "{{ powerflex_tb_login_output.stdout | regex_search('System ID is (\\w+)', '\\1') | first }}"
+
 - name: Add primary TB
   ansible.builtin.command: >
     scli --add_standby_mdm
@@ -67,3 +71,6 @@
   changed_when: powerflex_tb_cluster_to_five_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
   when: powerflex_tb_mdm_cluster_mode[0] != "5_node" and powerflex_tb_cluster_mode == "FiveNodes"
+
+- name: Connect MDM cluster
+  ansible.builtin.include_tasks: connect_mdm_cluster.yml
