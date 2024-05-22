@@ -1,7 +1,7 @@
 # Ansible Modules for Dell Technologies PowerFlex
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://github.com/dell/ansible-powerflex/blob/main/docs/CODE_OF_CONDUCT.md)
-[![License](https://img.shields.io/github/license/dell/dellemc-openmanage-ansible-modules)](https://github.com/dell/ansible-powerflex/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/dell/ansible-powerflex)](https://github.com/dell/ansible-powerflex/blob/main/LICENSE)
 [![Python version](https://img.shields.io/badge/python-3.9.6+-blue.svg)](https://www.python.org/downloads/)
 [![Ansible version](https://img.shields.io/badge/ansible-2.15.6+-blue.svg)](https://pypi.org/project/ansible/)
 [![PyPowerFlex](https://img.shields.io/github/v/release/dell/python-powerflex?include_prereleases&label=PyPowerFlex&style=flat-square)](https://github.com/dell/python-powerflex/releases)
