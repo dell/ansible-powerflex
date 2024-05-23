@@ -274,3 +274,455 @@ class TestPowerflexStoragePool(PowerFlexUnitBase):
         powerflex_module_mock.powerflex_conn.storage_pool.set_rebuild_enabled.assert_called()
         powerflex_module_mock.powerflex_conn.storage_pool.set_rebalance_enabled.assert_called()
         powerflex_module_mock.powerflex_conn.storage_pool.set_rep_cap_max_ratio.assert_called()
+
+    def test_delete_storagepool_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "state": "absent"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('delete_storage_pool'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_name_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "storage_pool_new_name": "test_pool_new",
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.rename = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('rename_pool'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_rmcache_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "use_rmcahe": True,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_use_rmcache = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_rmcache'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_rfcache_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "use_rfcahe": True,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_use_rfcache = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_rfcache'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_enable_zero_padding_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "enable_zero_padding": False,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_zero_padding_policy = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_enable_zero_padding'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_rep_cap_max_ratio_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "rep_cap_max_ratio": 10,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_rep_cap_max_ratio = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_rep_cap_max_ratio'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_enable_rebalance_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "enable_rebalance": False,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_rebalance_enabled = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_enable_rebalance'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_enable_rebuild_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "enable_rebuild": False,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_rebuild_enabled = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_enable_rebuild'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_enable_fragmentation_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "enable_fragmentaion": False,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_fragmentation_enabled = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_enable_fragmentation'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_spare_percentage_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "spare_percentage": 20,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_spare_percentage = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_spare_percentage'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_rmcache_write_handling_mode_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "rmcache_write_handling_mode": "Cached",
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_rmcache_write_handling_mode = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_rmcache_write_handling_mode'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_rebuild_rebalance_parallelism_limit_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "parallel_rebuild_rebalance_limit": 4,
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_rebuild_rebalance_parallelism_limit = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_rebuild_rebalance_parallelism_limit'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_capacity_alert_thresholds_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "capacity_alert_thresholds": {
+                "high_threshold": 60,
+                "critical_threshold": 70
+            },
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_capacity_alert_thresholds = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_capacity_alert_thresholds'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_protected_maintenance_mode_io_priority_policy_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "protected_maintenance_mode_io_priority_policy": {
+                "policy": "unlimited",
+                "concurrent_ios_per_device": 1,
+                "bw_limit_per_device": 1024},
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_protected_maintenance_mode_io_priority_policy = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_protected_maintenance_mode_io_priority_policy'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_vtree_migration_io_priority_policy_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "vtree_migration_io_priority_policy": {
+                "policy": "favorAppIos",
+                "concurrent_ios_per_device": 1,
+                "bw_limit_per_device": 1024},
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_vtree_migration_io_priority_policy = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_vtree_migration_io_priority_policy'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_rebalance_io_priority_policy_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "rebalance_io_priority_policy": {
+                "policy": "favorAppIos",
+                "concurrent_ios_per_device": 1,
+                "bw_limit_per_device": 1024},
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.rebalance_io_priority_policy = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_rebalance_io_priority_policy'),
+            powerflex_module_mock, StoragePoolHandler)
+
+    def test_modify_persistent_checksum_exception(self, powerflex_module_mock):
+        self.get_module_args.update({
+            "storage_pool_name": "test_pool",
+            "protection_domain_name": "test_pd_1",
+            "persistent_checksum": {
+                "enable": True,
+                "validate_on_read": True,
+                "builder_limit": 1024},
+            "state": "present"
+        })
+        powerflex_module_mock.module.params = self.get_module_args
+        storagepool_resp = MockStoragePoolApi.STORAGE_POOL_GET_LIST
+        powerflex_module_mock.powerflex_conn.storage_pool.get = MagicMock(
+            return_value=storagepool_resp
+        )
+        pd_resp = MockStoragePoolApi.PROTECTION_DOMAIN
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=pd_resp['protectiondomain'])
+        storagepool_statistics_resp = MockStoragePoolApi.STORAGE_POOL_STATISTICS
+        powerflex_module_mock.powerflex_conn.storage_pool.get_statistics = MagicMock(
+            return_value=storagepool_statistics_resp
+        )
+        powerflex_module_mock.powerflex_conn.storage_pool.set_persistent_checksum = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(
+            MockStoragePoolApi.get_exception_response('modify_pool_persistent_checksum'),
+            powerflex_module_mock, StoragePoolHandler)
