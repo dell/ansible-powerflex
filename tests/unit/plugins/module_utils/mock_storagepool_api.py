@@ -674,7 +674,23 @@ class MockStoragePoolApi:
         "create_pool_name_empty": "Empty or white spaced string provided for storage pool name. Provide valid storage pool name",
         "create_pool_new_name": "storage_pool_new_name is passed during creation.",
         "rename_storage_pool_empty": "Empty or white spaced string provided for storage pool name. Provide valid storage pool name",
-        "delete_storage_pool": "Deleting storage pool is not supported through ansible module."
+        "delete_storage_pool": "Deleting storage pool is not supported through ansible module.",
+        "rename_pool": "Modify storage pool name failed",
+        "modify_pool_rmcache": "Modify RM cache operation failed",
+        "modify_pool_rfcache": "Modify RF cache operation failed",
+        "modify_pool_zero_padding_enabled": "Enable/Disable zero padding operation failed",
+        "modify_pool_rep_cap_max_ratio": "Modify Replication Capacity max ratio operation failed",
+        "modify_pool_enable_rebalance": "Enable/Disable Rebalance failed",
+        "modify_pool_enable_rebuild": "Enable/Disable Rebuild operation failed",
+        "modify_pool_enable_fragmentation": "Enable/Disable Fragmentation operation failed",
+        "modify_pool_spare_percentage": "Modify Spare Percentage operation failed",
+        "modify_pool_rmcache_write_handling_mode": "Modify RMCache Write Handling Mode failed",
+        "modify_pool_rebuild_rebalance_parallelism_limit": "Modify Rebuild/Rebalance Parallelism Limit operation failed",
+        "modify_pool_capacity_alert_thresholds": "Modify Capacity Alert Thresholds operation failed",
+        "modify_pool_protected_maintenance_mode_io_priority_policy": "Set Protected Maintenance Mode IO Priority Policy operation failed",
+        "modify_pool_vtree_migration_io_priority_policy": "Set Vtree Migration I/O Priority Policy operation failed",
+        "modify_pool_rebalance_io_priority_policy": "Modify rebalance IO Priority Policy failed",
+        "modify_pool_persistent_checksum": "Modify Persistent Checksum failed"
     }
 
     @staticmethod
