@@ -26,4 +26,4 @@
     owner: root
     group: root
   notify:
-    - restart keepalived
+    - Restart keepalived
