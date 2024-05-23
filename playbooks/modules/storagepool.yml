@@ -21,8 +21,8 @@
         storage_pool_name: "{{ pool_name }}"
         protection_domain_name: "{{ protection_domain_name }}"
         cap_alert_thresholds:
-            high_threshold: 30
-            critical_threshold: 50
+          high_threshold: 30
+          critical_threshold: 50
         media_type: "TRANSITIONAL"
         enable_zero_padding: true
         rep_cap_max_ratio: 40
@@ -35,14 +35,14 @@
         use_rfcache: true
         parallel_rebuild_rebalance_limit: 3
         protected_maintenance_mode_io_priority_policy:
-            policy: "unlimited"
+          policy: "unlimited"
         rebalance_io_priority_policy:
-            policy: "unlimited"
+          policy: "unlimited"
         vtree_migration_io_priority_policy:
-            policy: "limitNumOfConcurrentIos"
-            concurrent_ios_per_device: 10
+          policy: "limitNumOfConcurrentIos"
+          concurrent_ios_per_device: 10
         persistent_checksum:
-            enable: false
+          enable: false
         state: "present"
 
     - name: Set pool id
@@ -79,8 +79,8 @@
         protection_domain_name: "{{ protection_domain_name }}"
         storage_pool_new_name: "pool_name_new"
         cap_alert_thresholds:
-            high_threshold: 50
-            critical_threshold: 70
+          high_threshold: 50
+          critical_threshold: 70
         enable_zero_padding: false
         rep_cap_max_ratio: 60
         rmcache_write_handling_mode: "Passthrough"
@@ -92,18 +92,17 @@
         use_rfcache: true
         parallel_rebuild_rebalance_limit: 6
         protected_maintenance_mode_io_priority_policy:
-            policy: "limitNumOfConcurrentIos"
-            concurrent_ios_per_device: 4
+          policy: "limitNumOfConcurrentIos"
+          concurrent_ios_per_device: 4
         rebalance_io_priority_policy:
-            policy: "favorAppIos"
-            concurrent_ios_per_device: 10
-            bw_limit_per_device: 4096
+          policy: "favorAppIos"
+          concurrent_ios_per_device: 10
+          bw_limit_per_device: 4096
         vtree_migration_io_priority_policy:
-            policy: "limitNumOfConcurrentIos"
-            concurrent_ios_per_device: 10
+          policy: "limitNumOfConcurrentIos"
+          concurrent_ios_per_device: 10
         persistent_checksum:
-            enable: True
-            validate_on_read: True
-            builder_limit: 1024
+          enable: true
+          validate_on_read: true
+          builder_limit: 1024
         state: "present"
-
