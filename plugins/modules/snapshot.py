@@ -437,12 +437,11 @@ class PowerFlexSnapshot(object):
         id_or_name = snapshot_id if snapshot_id else snapshot_name
 
         try:
+            filters = {'id': snapshot_id}
             if snapshot_name:
-                snapshot_details = self.powerflex_conn.volume.get(
-                    filter_fields={'name': snapshot_name})
-            else:
-                snapshot_details = self.powerflex_conn.volume.get(
-                    filter_fields={'id': snapshot_id})
+                filters = {'name': snapshot_name}
+            snapshot_details = self.powerflex_conn.volume.get(
+                filter_fields=filters)
 
             if len(snapshot_details) == 0:
                 msg = "Snapshot with identifier %s is not found" % id_or_name
@@ -455,39 +454,16 @@ class PowerFlexSnapshot(object):
                 self.module.fail_json(msg=errormsg)
 
             # Add ancestor volume name
-            if 'ancestorVolumeId' in snapshot_details[0] and \
-                    snapshot_details[0]['ancestorVolumeId']:
-                vol = self.get_volume(
-                    vol_id=snapshot_details[0]['ancestorVolumeId'])
-                snapshot_details[0]['ancestorVolumeName'] = vol['name']
+            self.add_ancestor(snapshot_details)
 
             # Add size in GB
-            if 'sizeInKb' in snapshot_details[0] and \
-                    snapshot_details[0]['sizeInKb']:
-                snapshot_details[0]['sizeInGb'] = utils.get_size_in_gb(
-                    snapshot_details[0]['sizeInKb'], 'KB')
+            self.add_size_in_kb(snapshot_details)
 
             # Add storage pool name
-            if 'storagePoolId' in snapshot_details[0] and \
-                    snapshot_details[0]['storagePoolId']:
-                sp = self.get_storage_pool(snapshot_details[0]['storagePoolId'])
-                if len(sp) > 0:
-                    snapshot_details[0]['storagePoolName'] = sp[0]['name']
+            self.add_storage_pool_name(snapshot_details)
 
             # Add retention in hours
-            if 'secureSnapshotExpTime' in snapshot_details[0] and\
-                    'creationTime' in snapshot_details[0]:
-                if snapshot_details[0]['secureSnapshotExpTime'] != 0:
-                    expiry_obj = datetime.fromtimestamp(
-                        snapshot_details[0]['secureSnapshotExpTime'])
-                    creation_obj = datetime.fromtimestamp(
-                        snapshot_details[0]['creationTime'])
-
-                    td = utils.dateutil.relativedelta.relativedelta(
-                        expiry_obj, creation_obj)
-                    snapshot_details[0]['retentionInHours'] = td.hours
-                else:
-                    snapshot_details[0]['retentionInHours'] = 0
+            self.add_retention_in_hours(snapshot_details)
 
             # Match volume details with snapshot details
             if any([self.module.params['vol_name'],
@@ -499,6 +475,41 @@ class PowerFlexSnapshot(object):
                 id_or_name, str(e))
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
+
+    def add_retention_in_hours(self, snapshot_details):
+        if 'secureSnapshotExpTime' in snapshot_details[0] and\
+                'creationTime' in snapshot_details[0]:
+            if snapshot_details[0]['secureSnapshotExpTime'] != 0:
+                expiry_obj = datetime.fromtimestamp(
+                    snapshot_details[0]['secureSnapshotExpTime'])
+                creation_obj = datetime.fromtimestamp(
+                    snapshot_details[0]['creationTime'])
+
+                td = utils.dateutil.relativedelta.relativedelta(
+                    expiry_obj, creation_obj)
+                snapshot_details[0]['retentionInHours'] = td.hours
+            else:
+                snapshot_details[0]['retentionInHours'] = 0
+
+    def add_storage_pool_name(self, snapshot_details):
+        if 'storagePoolId' in snapshot_details[0] and \
+                snapshot_details[0]['storagePoolId']:
+            sp = self.get_storage_pool(snapshot_details[0]['storagePoolId'])
+            if len(sp) > 0:
+                snapshot_details[0]['storagePoolName'] = sp[0]['name']
+
+    def add_size_in_kb(self, snapshot_details):
+        if 'sizeInKb' in snapshot_details[0] and \
+                snapshot_details[0]['sizeInKb']:
+            snapshot_details[0]['sizeInGb'] = utils.get_size_in_gb(
+                snapshot_details[0]['sizeInKb'], 'KB')
+
+    def add_ancestor(self, snapshot_details):
+        if 'ancestorVolumeId' in snapshot_details[0] and \
+                snapshot_details[0]['ancestorVolumeId']:
+            vol = self.get_volume(
+                vol_id=snapshot_details[0]['ancestorVolumeId'])
+            snapshot_details[0]['ancestorVolumeName'] = vol['name']
 
     def match_vol_details(self, snapshot):
         """Match the given volume details with the response
@@ -764,13 +775,14 @@ class PowerFlexSnapshot(object):
             :param retention_unit: Retention unit for snapshot
         """
 
-        if retention_unit == 'hours' and (desired_retention < 1 or
-                                          desired_retention > 744):
-            self.module.fail_json(msg="Please provide a valid integer as the"
+        if desired_retention is not None:
+            if retention_unit == 'hours' and (desired_retention < 1 or
+                                              desired_retention > 744):
+                self.module.fail_json(msg="Please provide a valid integer as the"
                                       " desired retention between 1 and 744.")
-        elif retention_unit == 'days' and (desired_retention < 1 or
-                                           desired_retention > 31):
-            self.module.fail_json(msg="Please provide a valid integer as the"
+            elif retention_unit == 'days' and (desired_retention < 1 or
+                                               desired_retention > 31):
+                self.module.fail_json(msg="Please provide a valid integer as the"
                                       " desired retention between 1 and 31.")
 
     def unmap_snapshot_from_sdc(self, snapshot, sdc):
@@ -822,40 +834,24 @@ class PowerFlexSnapshot(object):
         """
 
         current_sdcs = snapshot['mappedSdcInfo']
-        current_sdc_ids = []
         sdc_id_list = []
         sdc_map_list = []
         sdc_modify_list1 = []
         sdc_modify_list2 = []
 
-        if current_sdcs:
-            for temp in current_sdcs:
-                current_sdc_ids.append(temp['sdcId'])
+        current_sdc_ids = self.populate_current_sdcs_ids(current_sdcs)
 
         for temp in sdc:
-            if 'sdc_name' in temp and temp['sdc_name']:
-                sdc_id = self.get_sdc_id(sdc_name=temp['sdc_name'])
-            elif 'sdc_ip' in temp and temp['sdc_ip']:
-                sdc_id = self.get_sdc_id(sdc_ip=temp['sdc_ip'])
-            else:
-                sdc_id = self.get_sdc_id(sdc_id=temp['sdc_id'])
+            sdc_id = self.get_sdc_id_from(temp)
             if sdc_id not in current_sdc_ids:
                 sdc_id_list.append(sdc_id)
-                temp['sdc_id'] = sdc_id
-                if 'access_mode' in temp:
-                    temp['access_mode'] = get_access_mode(temp['access_mode'])
-                if 'bandwidth_limit' not in temp:
-                    temp['bandwidth_limit'] = None
-                if 'iops_limit' not in temp:
-                    temp['iops_limit'] = None
+                self.update_sdc_details(temp, sdc_id)
                 sdc_map_list.append(temp)
             else:
                 access_mode_dict, limits_dict = check_for_sdc_modification(
                     snapshot, sdc_id, temp)
-                if access_mode_dict:
-                    sdc_modify_list1.append(access_mode_dict)
-                if limits_dict:
-                    sdc_modify_list2.append(limits_dict)
+                self.update_sdc_modify_lists(
+                    sdc_modify_list1, sdc_modify_list2, access_mode_dict, limits_dict)
 
         LOG.info("SDC to add: %s", sdc_map_list)
 
@@ -891,6 +887,39 @@ class PowerFlexSnapshot(object):
                                                  sdc['sdc_id'], str(e))
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
+
+    def update_sdc_modify_lists(self, sdc_modify_list1, sdc_modify_list2,
+                                access_mode_dict, limits_dict):
+        if access_mode_dict:
+            sdc_modify_list1.append(access_mode_dict)
+        if limits_dict:
+            sdc_modify_list2.append(limits_dict)
+
+    def update_sdc_details(self, temp, sdc_id):
+        temp['sdc_id'] = sdc_id
+        if 'access_mode' in temp:
+            temp['access_mode'] = get_access_mode(temp['access_mode'])
+        if 'bandwidth_limit' not in temp:
+            temp['bandwidth_limit'] = None
+        if 'iops_limit' not in temp:
+            temp['iops_limit'] = None
+
+    def get_sdc_id_from(self, temp):
+        sdc_id = None
+        if 'sdc_name' in temp and temp['sdc_name']:
+            sdc_id = self.get_sdc_id(sdc_name=temp['sdc_name'])
+        elif 'sdc_ip' in temp and temp['sdc_ip']:
+            sdc_id = self.get_sdc_id(sdc_ip=temp['sdc_ip'])
+        else:
+            sdc_id = self.get_sdc_id(sdc_id=temp['sdc_id'])
+        return sdc_id
+
+    def populate_current_sdcs_ids(self, current_sdcs):
+        current_sdc_ids = []
+        if current_sdcs:
+            for temp in current_sdcs:
+                current_sdc_ids.append(temp['sdcId'])
+        return current_sdc_ids
 
     def validate_parameters(self):
         """Validate the input parameters"""
@@ -954,123 +983,39 @@ class PowerFlexSnapshot(object):
 
         self.validate_parameters()
 
-        if size and not cap_unit:
-            cap_unit = 'GB'
+        cap_unit = self.get_cap_unit(size, cap_unit)
 
-        if desired_retention and not retention_unit:
-            retention_unit = 'hours'
+        retention_unit = self.get_retention_unit(
+            desired_retention, retention_unit)
 
-        if desired_retention is not None:
-            self.validate_desired_retention(desired_retention, retention_unit)
+        self.validate_desired_retention(desired_retention, retention_unit)
 
         snapshot_details = self.get_snapshot(snapshot_name, snapshot_id)
 
         if snapshot_details:
             snap_access_mode = None
             if read_only is not None:
-                if read_only:
-                    snap_access_mode = 'ReadOnly'
-                else:
-                    snap_access_mode = 'ReadWrite'
+                snap_access_mode = self.get_mode(read_only)
             is_modified, flag1, flag2, flag3 = check_snapshot_modified(
                 snapshot_details, desired_retention, retention_unit, size,
                 cap_unit, snap_access_mode)
 
         if state == 'present' and not snapshot_details:
-            if snapshot_id:
-                self.module.fail_json(msg="Creation of snapshot is allowed "
-                                          "using snapshot_name only, "
-                                          "snapshot_id given.")
-
-            if snapshot_name is None or len(snapshot_name.strip()) == 0:
-                self.module.fail_json(msg="Please provide valid snapshot "
-                                          "name.")
-
-            if vol_name is None and vol_id is None:
-                self.module.fail_json(msg="Please provide volume details to "
-                                          "create new snapshot")
-
-            if snapshot_new_name is not None:
-                self.module.fail_json(msg="snapshot_new_name is not required"
-                                          " while creating snapshot")
-
-            if remove_mode:
-                self.module.fail_json(msg="remove_mode is not required while "
-                                          "creating snapshot")
-
-            if vol_name:
-                vol = self.get_volume(vol_name=vol_name)
-                vol_id = vol['id']
-
-            retention = 0
-            if desired_retention:
-                retention = calculate_retention(desired_retention,
-                                                retention_unit)
-
-            system_id = self.get_system_id()
-            if read_only:
-                access_mode = 'ReadOnly'
-            else:
-                access_mode = 'ReadWrite'
-
-            changed = self.create_snapshot(snapshot_name, vol_id, system_id,
-                                           access_mode, retention)
-            if changed:
-                snapshot_details = self.get_snapshot(snapshot_name)
-
-            if size:
-                if cap_unit == 'GB':
-                    new_size = size * 1024 * 1024
-                else:
-                    new_size = size * 1024 * 1024 * 1024
-
-                if new_size != snapshot_details['sizeInKb']:
-                    if cap_unit == 'TB':
-                        size = size * 1024
-                    changed = self.modify_size(snapshot_details['id'], size)
+            self.validate_create(snapshot_name, snapshot_id, vol_name,
+                                 vol_id, snapshot_new_name, remove_mode)
+            changed = self.create_snapshot_with_detail(snapshot_name, vol_name,
+                                                       read_only, size,
+                                                       cap_unit,
+                                                       desired_retention,
+                                                       retention_unit)
 
         if is_modified:
-            if flag1:
-                retention = calculate_retention(desired_retention,
-                                                retention_unit)
-                changed = self.modify_retention(snapshot_details['id'],
-                                                retention)
+            changed = self.modify_val(size, cap_unit, desired_retention,
+                                      retention_unit, snapshot_details,
+                                      snap_access_mode, flag1, flag2, flag3)
 
-            if flag2:
-                new_size = size
-                if cap_unit == 'TB':
-                    new_size = size * 1024
-                changed = self.modify_size(snapshot_details['id'], new_size)
-
-            if flag3:
-                changed = self.modify_snap_access_mode(
-                    snapshot_details['id'], snap_access_mode)
-
-        if state == 'present' and snapshot_details and sdc and \
-                sdc_state == 'mapped':
-
-            changed_mode = False
-            changed_limits = False
-
-            changed, access_mode_list, limits_list = \
-                self.map_snapshot_to_sdc(snapshot_details, sdc)
-
-            if len(access_mode_list) > 0:
-                changed_mode = self.modify_access_mode(
-                    snapshot_details['id'], access_mode_list)
-
-            if len(limits_list) > 0:
-                for temp in limits_list:
-                    payload = {
-                        "volume_id": snapshot_details['id'],
-                        "sdc_id": temp['sdc_id'],
-                        "bandwidth_limit": temp['bandwidth_limit'],
-                        "iops_limit": temp['iops_limit']
-                    }
-                    changed_limits = self.modify_limits(payload)
-
-            if changed_mode or changed_limits:
-                changed = True
+        if state == 'present' and snapshot_details and sdc and sdc_state == 'mapped':
+            changed = self.sdc_state_mapped(sdc, snapshot_details)
 
         if state == 'present' and snapshot_details and sdc and \
                 sdc_state == 'unmapped':
@@ -1078,24 +1023,150 @@ class PowerFlexSnapshot(object):
 
         if state == 'present' and snapshot_details and \
                 snapshot_new_name is not None:
-            if len(snapshot_new_name.strip()) == 0:
-                self.module.fail_json(msg="Please provide valid snapshot "
-                                          "name.")
+            self.validate_snap_shot_new_name(snapshot_new_name)
             changed = self.rename_snapshot(snapshot_details['id'],
                                            snapshot_new_name)
-            if changed:
-                snapshot_name = snapshot_new_name
+            snapshot_name = self.assign_snapshot_name(
+                snapshot_new_name, changed)
 
         if state == 'absent' and snapshot_details:
-            if remove_mode is None:
-                remove_mode = "ONLY_ME"
+            remove_mode = self.get_remove_mode(remove_mode)
             changed = self.delete_snapshot(snapshot_details['id'], remove_mode)
 
         if state == 'present':
             snapshot_details = self.get_snapshot(snapshot_name, snapshot_id)
             result['snapshot_details'] = snapshot_details
+
         result['changed'] = changed
         self.module.exit_json(**result)
+
+    def assign_snapshot_name(self, snapshot_new_name, changed):
+        if changed:
+            snapshot_name = snapshot_new_name
+        return snapshot_name
+
+    def get_remove_mode(self, remove_mode):
+        if remove_mode is None:
+            remove_mode = "ONLY_ME"
+        return remove_mode
+
+    def get_retention_unit(self, desired_retention, retention_unit):
+        if desired_retention and not retention_unit:
+            retention_unit = 'hours'
+        return retention_unit
+
+    def get_cap_unit(self, size, cap_unit):
+        if size and not cap_unit:
+            cap_unit = 'GB'
+        return cap_unit
+
+    def validate_snap_shot_new_name(self, snapshot_new_name):
+        if len(snapshot_new_name.strip()) == 0:
+            self.module.fail_json(msg="Please provide valid snapshot "
+                                  "name.")
+
+    def sdc_state_mapped(self, sdc, snapshot_details):
+        changed_mode = False
+        changed_limits = False
+
+        _changed, access_mode_list, limits_list = \
+            self.map_snapshot_to_sdc(snapshot_details, sdc)
+
+        if len(access_mode_list) > 0:
+            changed_mode = self.modify_access_mode(
+                snapshot_details['id'], access_mode_list)
+
+        if len(limits_list) > 0:
+            for temp in limits_list:
+                payload = {
+                    "volume_id": snapshot_details['id'],
+                    "sdc_id": temp['sdc_id'],
+                    "bandwidth_limit": temp['bandwidth_limit'],
+                    "iops_limit": temp['iops_limit']
+                }
+                changed_limits = self.modify_limits(payload)
+        return changed_mode or changed_limits
+
+    def modify_val(self, size, cap_unit, desired_retention, retention_unit,
+                   snapshot_details, snap_access_mode, flag1, flag2, flag3):
+        if flag1:
+            retention = calculate_retention(desired_retention,
+                                            retention_unit)
+            changed = self.modify_retention(snapshot_details['id'],
+                                            retention)
+        if flag2:
+            new_size = size
+            if cap_unit == 'TB':
+                new_size = size * 1024
+            changed = self.modify_size(snapshot_details['id'], new_size)
+
+        if flag3:
+            changed = self.modify_snap_access_mode(
+                snapshot_details['id'], snap_access_mode)
+        return changed
+
+    def create_snapshot_with_detail(self, snapshot_name, vol_name, read_only,
+                                    size, cap_unit, desired_retention,
+                                    retention_unit):
+        if vol_name:
+            vol = self.get_volume(vol_name=vol_name)
+            vol_id = vol['id']
+
+        retention = 0
+        if desired_retention:
+            retention = calculate_retention(desired_retention,
+                                            retention_unit)
+
+        system_id = self.get_system_id()
+        access_mode = self.get_mode(read_only)
+
+        changed = self.create_snapshot(snapshot_name, vol_id, system_id,
+                                       access_mode, retention)
+        if changed:
+            snapshot_details = self.get_snapshot(snapshot_name)
+
+        if size:
+            if cap_unit == 'GB':
+                new_size = size * 1024 * 1024
+            else:
+                new_size = size * 1024 * 1024 * 1024
+
+            if new_size != snapshot_details['sizeInKb']:
+                if cap_unit == 'TB':
+                    size = size * 1024
+                changed = self.modify_size(snapshot_details['id'], size)
+        return changed
+
+    def get_mode(self, read_only):
+        ret_mode = None
+        if read_only:
+            ret_mode = 'ReadOnly'
+        else:
+            ret_mode = 'ReadWrite'
+        return ret_mode
+
+    def validate_create(self, snapshot_name, snapshot_id, vol_name, vol_id,
+                        snapshot_new_name, remove_mode):
+        if snapshot_id:
+            self.module.fail_json(msg="Creation of snapshot is allowed "
+                                  "using snapshot_name only, "
+                                  "snapshot_id given.")
+
+        if snapshot_name is None or len(snapshot_name.strip()) == 0:
+            self.module.fail_json(msg="Please provide valid snapshot "
+                                  "name.")
+
+        if vol_name is None and vol_id is None:
+            self.module.fail_json(msg="Please provide volume details to "
+                                  "create new snapshot")
+
+        if snapshot_new_name is not None:
+            self.module.fail_json(msg="snapshot_new_name is not required"
+                                  " while creating snapshot")
+
+        if remove_mode:
+            self.module.fail_json(msg="remove_mode is not required while "
+                                  "creating snapshot")
 
 
 def check_snapshot_modified(snapshot=None, desired_retention=None,
@@ -1111,27 +1182,18 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
         :return: Boolean indicating if modification is needed
     """
 
-    snap_creation_timestamp = None
     expiration_timestamp = None
     is_timestamp_modified = False
     is_size_modified = False
     is_access_modified = False
     is_modified = False
 
-    if 'creationTime' in snapshot:
-        snap_creation_timestamp = snapshot['creationTime']
+    snap_creation_timestamp = get_snap_creation_time(snapshot)
 
     if desired_retention:
-        if retention_unit == 'hours':
-            expiration_timestamp = \
-                datetime.fromtimestamp(snap_creation_timestamp) + \
-                timedelta(hours=desired_retention)
-            expiration_timestamp = time.mktime(expiration_timestamp.timetuple())
-        else:
-            expiration_timestamp = \
-                datetime.fromtimestamp(snap_creation_timestamp) + \
-                timedelta(days=desired_retention)
-            expiration_timestamp = time.mktime(expiration_timestamp.timetuple())
+        expiration_timestamp = get_expiration_timestamp(desired_retention,
+                                                        retention_unit,
+                                                        snap_creation_timestamp)
 
     if 'secureSnapshotExpTime' in snapshot and expiration_timestamp and \
             snapshot['secureSnapshotExpTime'] != expiration_timestamp:
@@ -1146,12 +1208,7 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
         existing_time_obj = datetime.fromtimestamp(existing_timestamp)
         new_time_obj = datetime.fromtimestamp(new_timestamp)
 
-        if existing_time_obj > new_time_obj:
-            td = utils.dateutil.relativedelta.relativedelta(
-                existing_time_obj, new_time_obj)
-        else:
-            td = utils.dateutil.relativedelta.relativedelta(
-                new_time_obj, existing_time_obj)
+        td = get_td(existing_time_obj, new_time_obj)
 
         LOG.info("Time difference: %s", td.minutes)
 
@@ -1160,11 +1217,7 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
             is_timestamp_modified = True
 
     if size:
-        if cap_unit == 'GB':
-            new_size = size * 1024 * 1024
-        else:
-            new_size = size * 1024 * 1024 * 1024
-
+        new_size = get_new_size(size, cap_unit)
         if new_size != snapshot['sizeInKb']:
             is_size_modified = True
 
@@ -1174,6 +1227,47 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
     if is_timestamp_modified or is_size_modified or is_access_modified:
         is_modified = True
     return is_modified, is_timestamp_modified, is_size_modified, is_access_modified
+
+
+def get_td(existing_time_obj, new_time_obj):
+    if existing_time_obj > new_time_obj:
+        td = utils.dateutil.relativedelta.relativedelta(
+            existing_time_obj, new_time_obj)
+    else:
+        td = utils.dateutil.relativedelta.relativedelta(
+            new_time_obj, existing_time_obj)
+
+    return td
+
+
+def get_new_size(size, cap_unit):
+    if cap_unit == 'GB':
+        new_size = size * 1024 * 1024
+    else:
+        new_size = size * 1024 * 1024 * 1024
+    return new_size
+
+
+def get_expiration_timestamp(desired_retention, retention_unit,
+                             snap_creation_timestamp):
+    if retention_unit == 'hours':
+        expiration_timestamp = \
+            datetime.fromtimestamp(snap_creation_timestamp) + \
+            timedelta(hours=desired_retention)
+        expiration_timestamp = time.mktime(expiration_timestamp.timetuple())
+    else:
+        expiration_timestamp = \
+            datetime.fromtimestamp(snap_creation_timestamp) + \
+            timedelta(days=desired_retention)
+        expiration_timestamp = time.mktime(expiration_timestamp.timetuple())
+    return expiration_timestamp
+
+
+def get_snap_creation_time(snapshot):
+    snap_creation_timestamp = None
+    if 'creationTime' in snapshot:
+        snap_creation_timestamp = snapshot['creationTime']
+    return snap_creation_timestamp
 
 
 def calculate_retention(desired_retention=None, retention_unit=None):
@@ -1203,10 +1297,7 @@ def check_for_sdc_modification(snapshot, sdc_id, sdc_details):
 
     for sdc in snapshot['mappedSdcInfo']:
         if sdc['sdcId'] == sdc_id:
-            if sdc['accessMode'] != get_access_mode(sdc_details['access_mode']):
-                access_mode_dict['sdc_id'] = sdc_id
-                access_mode_dict['accessMode'] = get_access_mode(
-                    sdc_details['access_mode'])
+            update_access_mode(sdc_id, sdc_details, access_mode_dict, sdc)
             if sdc['limitIops'] != sdc_details['iops_limit'] or \
                     sdc['limitBwInMbps'] != sdc_details['bandwidth_limit']:
                 limits_dict['sdc_id'] = sdc_id
@@ -1219,6 +1310,13 @@ def check_for_sdc_modification(snapshot, sdc_id, sdc_details):
                         sdc_details['bandwidth_limit']
             break
     return access_mode_dict, limits_dict
+
+
+def update_access_mode(sdc_id, sdc_details, access_mode_dict, sdc):
+    if sdc['accessMode'] != get_access_mode(sdc_details['access_mode']):
+        access_mode_dict['sdc_id'] = sdc_id
+        access_mode_dict['accessMode'] = get_access_mode(
+            sdc_details['access_mode'])
 
 
 def get_limits_in_mb(limits):

@@ -780,45 +780,28 @@ class PowerFlexDevice(object):
         # (device_name , sds_id)
         # device_id.
 
-        if current_pathname:
-            if (sds_name is None or len(sds_name.strip()) == 0) \
-                    and (sds_id is None or len(sds_id.strip()) == 0):
-                error_msg = "sds_name or sds_id is mandatory along with " \
-                            "current_pathname. Please enter a valid value."
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
-        elif current_pathname is not None \
-                and len(current_pathname.strip()) == 0:
-            error_msg = "Please enter a valid value for current_pathname."
+        self.validate_current_pathname(current_pathname, sds_name, sds_id)
+
+        self.validate_device_name(device_name, sds_name, sds_id)
+
+        self.validate_sds_name(device_name, current_pathname, sds_name)
+
+        self.validate_sds_id(device_name, current_pathname, sds_id)
+
+        if device_id is not None and len(device_id.strip()) == 0:
+            error_msg = "Please provide valid device_id value to identify " \
+                        "a device."
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-        if device_name:
-            if (sds_name is None or len(sds_name.strip()) == 0) \
-                    and (sds_id is None or len(sds_id.strip()) == 0):
-                error_msg = "sds_name or sds_id is mandatory along with " \
-                            "device_name. Please enter a valid value."
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
-        elif device_name is not None and len(device_name.strip()) == 0:
-            error_msg = "Please enter a valid value for device_name."
+        if current_pathname is None and device_name is None \
+                and device_id is None:
+            error_msg = "Please specify a valid parameter combination to " \
+                        "identify a device."
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-        if sds_name:
-            if (current_pathname is None
-                or len(current_pathname.strip()) == 0) \
-                    and (device_name is None
-                         or len(device_name.strip()) == 0):
-                error_msg = "current_pathname or device_name is mandatory " \
-                            "along with sds_name. Please enter a valid value."
-                LOG.error(error_msg)
-                self.module.fail_json(msg=error_msg)
-        elif sds_name is not None and len(sds_name.strip()) == 0:
-            error_msg = "Please enter a valid value for sds_name."
-            LOG.error(error_msg)
-            self.module.fail_json(msg=error_msg)
-
+    def validate_sds_id(self, device_name, current_pathname, sds_id):
         if sds_id:
             if (current_pathname is None
                 or len(current_pathname.strip()) == 0) \
@@ -833,16 +816,45 @@ class PowerFlexDevice(object):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-        if device_id is not None and len(device_id.strip()) == 0:
-            error_msg = "Please provide valid device_id value to identify " \
-                        "a device."
+    def validate_sds_name(self, device_name, current_pathname, sds_name):
+        if sds_name:
+            if (current_pathname is None
+                or len(current_pathname.strip()) == 0) \
+                    and (device_name is None
+                         or len(device_name.strip()) == 0):
+                error_msg = "current_pathname or device_name is mandatory " \
+                            "along with sds_name. Please enter a valid value."
+                LOG.error(error_msg)
+                self.module.fail_json(msg=error_msg)
+        elif sds_name is not None and len(sds_name.strip()) == 0:
+            error_msg = "Please enter a valid value for sds_name."
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-        if current_pathname is None and device_name is None \
-                and device_id is None:
-            error_msg = "Please specify a valid parameter combination to " \
-                        "identify a device."
+    def validate_device_name(self, device_name, sds_name, sds_id):
+        if device_name:
+            if (sds_name is None or len(sds_name.strip()) == 0) \
+                    and (sds_id is None or len(sds_id.strip()) == 0):
+                error_msg = "sds_name or sds_id is mandatory along with " \
+                            "device_name. Please enter a valid value."
+                LOG.error(error_msg)
+                self.module.fail_json(msg=error_msg)
+        elif device_name is not None and len(device_name.strip()) == 0:
+            error_msg = "Please enter a valid value for device_name."
+            LOG.error(error_msg)
+            self.module.fail_json(msg=error_msg)
+
+    def validate_current_pathname(self, current_pathname, sds_name, sds_id):
+        if current_pathname:
+            if (sds_name is None or len(sds_name.strip()) == 0) \
+                    and (sds_id is None or len(sds_id.strip()) == 0):
+                error_msg = "sds_name or sds_id is mandatory along with " \
+                            "current_pathname. Please enter a valid value."
+                LOG.error(error_msg)
+                self.module.fail_json(msg=error_msg)
+        elif current_pathname is not None \
+                and len(current_pathname.strip()) == 0:
+            error_msg = "Please enter a valid value for current_pathname."
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
@@ -891,7 +903,6 @@ class PowerFlexDevice(object):
         state = self.module.params['state']
 
         # result is a dictionary to contain end state and device details
-        changed = False
         result = dict(
             changed=False,
             device_details={}
@@ -903,18 +914,13 @@ class PowerFlexDevice(object):
 
         # get SDS ID from name
         if sds_name:
-            sds_details = self.get_sds(sds_name)
-            if sds_details:
-                sds_id = sds_details['id']
-            msg = "Fetched the SDS details with id '%s', name '%s'" \
-                  % (sds_id, sds_name)
-            LOG.info(msg)
+            sds_id = self.get_sds_id(sds_name)
 
         # get device details
         device_details = self.get_device_details(current_pathname,
                                                  sds_id, device_name,
                                                  device_id)
-
+        # Get device id
         if device_details:
             device_id = device_details['id']
         msg = "Fetched the device details %s" % (str(device_details))
@@ -922,101 +928,138 @@ class PowerFlexDevice(object):
 
         # add operation
         add_changed = False
-        if state == 'present' and not device_details:
-            # get Protection Domain ID from name
-            # it is needed to uniquely identify a storage pool or acceleration
-            # pool using name
-            if protection_domain_name \
-                    and (storage_pool_name or acceleration_pool_name):
-                pd_details = self.get_protection_domain(
-                    protection_domain_name)
-                if pd_details:
-                    protection_domain_id = pd_details['id']
-                msg = "Fetched the protection domain details with id " \
-                      "'%s', name '%s'" % (protection_domain_id,
-                                           protection_domain_name)
-                LOG.info(msg)
+        if state == 'present':
+            if device_details:
+                # modify operation
+                modify_dict = to_modify(device_details, media_type,
+                                        external_acceleration_type)
+                self.can_modify(modify_dict)
+            else:
+                # get Protection Domain ID from name
+                # it is needed to uniquely identify a storage pool or acceleration
+                # pool using name
+                device_id, add_changed = self.create_device(
+                    current_pathname, device_name, device_id, sds_id,
+                    storage_pool_id, storage_pool_name, acceleration_pool_id,
+                    acceleration_pool_name, protection_domain_id,
+                    protection_domain_name, external_acceleration_type,
+                    media_type)
 
-            # get storage pool ID from name
-            if storage_pool_name:
-                if protection_domain_id:
-                    storage_pool_details = self.get_storage_pool(
-                        storage_pool_name=storage_pool_name,
-                        protection_domain_id=protection_domain_id)
-                    if storage_pool_details:
-                        storage_pool_id = storage_pool_details['id']
-                    msg = "Fetched the storage pool details with id '%s', " \
-                          "name '%s'" % (storage_pool_id, storage_pool_name)
-                    LOG.info(msg)
-                else:
-                    error_msg = "Protection domain name/id is required to " \
-                                "uniquely identify a storage pool, only " \
-                                "storage_pool_name is given."
-                    LOG.info(error_msg)
-                    self.module.fail_json(msg=error_msg)
-
-            # get acceleration pool ID from name
-            if acceleration_pool_name:
-                if protection_domain_id:
-                    acceleration_pool_details = self.get_acceleration_pool(
-                        acceleration_pool_name=acceleration_pool_name,
-                        protection_domain_id=protection_domain_id)
-                    if acceleration_pool_details:
-                        acceleration_pool_id = acceleration_pool_details['id']
-                    msg = "Fetched the acceleration pool details with id " \
-                          "'%s', name '%s'" % (acceleration_pool_id,
-                                               acceleration_pool_name)
-                    LOG.info(msg)
-                else:
-                    error_msg = "Protection domain name/id is required to " \
-                                "uniquely identify a acceleration pool, " \
-                                "only acceleration_pool_name is given."
-                    LOG.info(error_msg)
-                    self.module.fail_json(msg=error_msg)
-
-            # validate input parameters
-            self.validate_add_parameters(device_id,
-                                         external_acceleration_type,
-                                         storage_pool_id,
-                                         storage_pool_name,
-                                         acceleration_pool_id,
-                                         acceleration_pool_name)
-            add_changed = self.add_device(device_name, current_pathname,
-                                          sds_id, storage_pool_id, media_type,
-                                          acceleration_pool_id,
-                                          external_acceleration_type)
-            if add_changed:
-                device_details = self.get_device_details(
-                    device_name=device_name, sds_id=sds_id)
-                device_id = device_details['id']
-                msg = "Device created successfully, fetched device details " \
-                      "%s" % (str(device_details))
-                LOG.info(msg)
+            device_details = self.show_output(device_id)
+            result['device_details'] = device_details
 
         # remove operation
         remove_changed = False
         if state == 'absent' and device_details:
             remove_changed = self.remove_device(device_id)
 
-        if add_changed or remove_changed:
-            changed = True
-
-        # modify operation
-        if device_details and state == 'present':
-            modify_dict = to_modify(device_details, media_type,
-                                    external_acceleration_type)
-            if modify_dict:
-                error_msg = "Modification of device attributes is " \
-                            "currently not supported by Ansible modules."
-                LOG.info(error_msg)
-                self.module.fail_json(msg=error_msg)
-
         # Returning the updated device details
-        if state == 'present':
-            device_details = self.show_output(device_id)
-            result['device_details'] = device_details
-        result['changed'] = changed
+        result['changed'] = add_changed or remove_changed
         self.module.exit_json(**result)
+
+    def create_device(self, current_pathname, device_name, device_id, sds_id,
+                      storage_pool_id, storage_pool_name, acceleration_pool_id,
+                      acceleration_pool_name, protection_domain_id,
+                      protection_domain_name, external_acceleration_type,
+                      media_type):
+        if protection_domain_name \
+                and (storage_pool_name or acceleration_pool_name):
+            protection_domain_id = self.get_protection_domain_id(
+                protection_domain_name)
+
+            # get storage pool ID from name
+        if storage_pool_name:
+            storage_pool_id = self.get_storage_pool_id(
+                storage_pool_name, protection_domain_id)
+
+            # get acceleration pool ID from name
+        if acceleration_pool_name:
+            acceleration_pool_id = self.get_acceleration_pool_id(
+                acceleration_pool_name, protection_domain_id)
+
+            # validate input parameters
+        self.validate_add_parameters(device_id,
+                                     external_acceleration_type,
+                                     storage_pool_id,
+                                     storage_pool_name,
+                                     acceleration_pool_id,
+                                     acceleration_pool_name)
+        add_changed = self.add_device(device_name, current_pathname,
+                                      sds_id, storage_pool_id, media_type,
+                                      acceleration_pool_id,
+                                      external_acceleration_type)
+        if add_changed:
+            device_details = self.get_device_details(
+                device_name=device_name, sds_id=sds_id)
+            device_id = device_details['id']
+            msg = "Device created successfully, fetched device details " \
+                "%s" % (str(device_details))
+            LOG.info(msg)
+        return device_id, add_changed
+
+    def can_modify(self, modify_dict):
+        if modify_dict:
+            error_msg = "Modification of device attributes is " \
+                "currently not supported by Ansible modules."
+            LOG.info(error_msg)
+            self.module.fail_json(msg=error_msg)
+
+    def get_acceleration_pool_id(self, acceleration_pool_name, protection_domain_id):
+        if protection_domain_id:
+            acceleration_pool_details = self.get_acceleration_pool(
+                acceleration_pool_name=acceleration_pool_name,
+                protection_domain_id=protection_domain_id)
+            if acceleration_pool_details:
+                acceleration_pool_id = acceleration_pool_details['id']
+            msg = "Fetched the acceleration pool details with id " \
+                "'%s', name '%s'" % (acceleration_pool_id,
+                                     acceleration_pool_name)
+            LOG.info(msg)
+        else:
+            error_msg = "Protection domain name/id is required to " \
+                "uniquely identify a acceleration pool, " \
+                "only acceleration_pool_name is given."
+            LOG.info(error_msg)
+            self.module.fail_json(msg=error_msg)
+        return acceleration_pool_id
+
+    def get_storage_pool_id(self, storage_pool_name, protection_domain_id):
+        if protection_domain_id:
+            storage_pool_details = self.get_storage_pool(
+                storage_pool_name=storage_pool_name,
+                protection_domain_id=protection_domain_id)
+            if storage_pool_details:
+                storage_pool_id = storage_pool_details['id']
+            msg = "Fetched the storage pool details with id '%s', " \
+                "name '%s'" % (storage_pool_id, storage_pool_name)
+            LOG.info(msg)
+        else:
+            error_msg = "Protection domain name/id is required to " \
+                "uniquely identify a storage pool, only " \
+                "storage_pool_name is given."
+            LOG.info(error_msg)
+            self.module.fail_json(msg=error_msg)
+        return storage_pool_id
+
+    def get_protection_domain_id(self, protection_domain_name):
+        pd_details = self.get_protection_domain(
+            protection_domain_name)
+        if pd_details:
+            protection_domain_id = pd_details['id']
+        msg = "Fetched the protection domain details with id " \
+            "'%s', name '%s'" % (protection_domain_id,
+                                 protection_domain_name)
+        LOG.info(msg)
+        return protection_domain_id
+
+    def get_sds_id(self, sds_name):
+        sds_details = self.get_sds(sds_name)
+        if sds_details:
+            sds_id = sds_details['id']
+        msg = "Fetched the SDS details with id '%s', name '%s'" \
+            % (sds_id, sds_name)
+        LOG.info(msg)
+        return sds_id
 
     def show_output(self, device_id):
         """Show device details
