@@ -262,37 +262,75 @@ EXAMPLES = r'''
     storage_pool_id: "abcd1234ab12r"
     state: "present"
 
-- name: Create a new storage pool by name
+- name: Create a new Storage pool
   dellemc.powerflex.storagepool:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
-    storage_pool_name: "ansible_test_pool"
-    protection_domain_id: "1c957da800000000"
-    media_type: "HDD"
-    state: "present"
-
-- name: Modify a storage pool by name
-  dellemc.powerflex.storagepool:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
-    storage_pool_name: "ansible_test_pool"
-    protection_domain_id: "1c957da800000000"
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    storage_pool_name: "{{ pool_name }}"
+    protection_domain_name: "{{ protection_domain_name }}"
+    cap_alert_thresholds:
+      high_threshold: 30
+      critical_threshold: 50
+    media_type: "TRANSITIONAL"
+    enable_zero_padding: true
+    rep_cap_max_ratio: 40
+    rmcache_write_handling_mode: "Passthrough"
+    spare_percentage: 80
+    enable_rebalance: false
+    enable_fragmentation: false
+    enable_rebuild: false
     use_rmcache: true
     use_rfcache: true
+    parallel_rebuild_rebalance_limit: 3
+    protected_maintenance_mode_io_priority_policy:
+      policy: "unlimited"
+    rebalance_io_priority_policy:
+      policy: "unlimited"
+    vtree_migration_io_priority_policy:
+      policy: "limitNumOfConcurrentIos"
+      concurrent_ios_per_device: 10
+    persistent_checksum:
+      enable: false
     state: "present"
 
-- name: Rename storage pool by id
+- name: Modify a Storage pool by name
   dellemc.powerflex.storagepool:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
-    storage_pool_id: "abcd1234ab12r"
-    storage_pool_new_name: "new_ansible_pool"
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    storage_pool_name: "{{ pool_name }}"
+    protection_domain_name: "{{ protection_domain_name }}"
+    storage_pool_new_name: "pool_name_new"
+    cap_alert_thresholds:
+      high_threshold: 50
+      critical_threshold: 70
+    enable_zero_padding: false
+    rep_cap_max_ratio: 60
+    rmcache_write_handling_mode: "Passthrough"
+    spare_percentage: 90
+    enable_rebalance: true
+    enable_fragmentation: true
+    enable_rebuild: true
+    use_rmcache: true
+    use_rfcache: true
+    parallel_rebuild_rebalance_limit: 6
+    protected_maintenance_mode_io_priority_policy:
+      policy: "limitNumOfConcurrentIos"
+      concurrent_ios_per_device: 4
+    rebalance_io_priority_policy:
+      policy: "favorAppIos"
+      concurrent_ios_per_device: 10
+      bw_limit_per_device: 4096
+    vtree_migration_io_priority_policy:
+      policy: "limitNumOfConcurrentIos"
+      concurrent_ios_per_device: 10
+    persistent_checksum:
+      enable: True
+      validate_on_read: True
+      builder_limit: 1024
     state: "present"
 '''
 
