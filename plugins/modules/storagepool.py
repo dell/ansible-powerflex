@@ -328,8 +328,8 @@ EXAMPLES = r'''
       policy: "limitNumOfConcurrentIos"
       concurrent_ios_per_device: 10
     persistent_checksum:
-      enable: True
-      validate_on_read: True
+      enable: true
+      validate_on_read: true
       builder_limit: 1024
     state: "present"
 '''
