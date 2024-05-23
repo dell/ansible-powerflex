@@ -950,41 +950,24 @@ class PowerFlexVolume(object):
         """
 
         current_sdcs = volume['mappedSdcInfo']
-        current_sdc_ids = []
         sdc_id_list = []
         sdc_map_list = []
         sdc_modify_list1 = []
         sdc_modify_list2 = []
 
-        if current_sdcs:
-            for temp in current_sdcs:
-                current_sdc_ids.append(temp['sdcId'])
+        current_sdc_ids = self.get_current_sdcs(current_sdcs)
 
         for temp in sdc:
-            if 'sdc_name' in temp and temp['sdc_name']:
-                sdc_id = self.get_sdc_id(sdc_name=temp['sdc_name'])
-            elif 'sdc_ip' in temp and temp['sdc_ip']:
-                sdc_id = self.get_sdc_id(sdc_ip=temp['sdc_ip'])
-            else:
-                sdc_id = self.get_sdc_id(sdc_id=temp['sdc_id'])
+            sdc_id = self.get_sdc_id_from_input(temp)
             if sdc_id not in current_sdc_ids:
                 sdc_id_list.append(sdc_id)
-                temp['sdc_id'] = sdc_id
-                if 'access_mode' in temp:
-                    temp['access_mode'] = \
-                        get_access_mode(temp['access_mode'])
-                if 'bandwidth_limit' not in temp:
-                    temp['bandwidth_limit'] = None
-                if 'iops_limit' not in temp:
-                    temp['iops_limit'] = None
+                self.update_temp_data(temp, sdc_id)
                 sdc_map_list.append(temp)
             else:
                 access_mode_dict, limits_dict = check_for_sdc_modification(
                     volume, sdc_id, temp)
-                if access_mode_dict:
-                    sdc_modify_list1.append(access_mode_dict)
-                if limits_dict:
-                    sdc_modify_list2.append(limits_dict)
+                self.update_sdc_lists(sdc_modify_list1, sdc_modify_list2,
+                                      access_mode_dict, limits_dict)
 
         LOG.info("SDC to add: %s", sdc_map_list)
 
@@ -1020,6 +1003,39 @@ class PowerFlexVolume(object):
                                                       sdc['sdc_id'], str(e))
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
+
+    def update_sdc_lists(self, sdc_modify_list1, sdc_modify_list2,
+                         access_mode_dict, limits_dict):
+        if access_mode_dict:
+            sdc_modify_list1.append(access_mode_dict)
+        if limits_dict:
+            sdc_modify_list2.append(limits_dict)
+
+    def get_sdc_id_from_input(self, temp):
+        if 'sdc_name' in temp and temp['sdc_name']:
+            sdc_id = self.get_sdc_id(sdc_name=temp['sdc_name'])
+        elif 'sdc_ip' in temp and temp['sdc_ip']:
+            sdc_id = self.get_sdc_id(sdc_ip=temp['sdc_ip'])
+        else:
+            sdc_id = self.get_sdc_id(sdc_id=temp['sdc_id'])
+        return sdc_id
+
+    def update_temp_data(self, temp, sdc_id):
+        temp['sdc_id'] = sdc_id
+        if 'access_mode' in temp:
+            temp['access_mode'] = \
+                get_access_mode(temp['access_mode'])
+        if 'bandwidth_limit' not in temp:
+            temp['bandwidth_limit'] = None
+        if 'iops_limit' not in temp:
+            temp['iops_limit'] = None
+
+    def get_current_sdcs(self, current_sdcs):
+        current_sdc_ids = []
+        if current_sdcs:
+            for temp in current_sdcs:
+                current_sdc_ids.append(temp['sdcId'])
+        return current_sdc_ids
 
     def validate_parameters(self, auto_snap_remove_type, snap_pol_id,
                             snap_pol_name, delete_snaps, state):
@@ -1145,32 +1161,17 @@ class PowerFlexVolume(object):
             pool_id = vol_details['storagePoolId']
             pool_details = self.get_storage_pool(storage_pool_id=pool_id)
             pool_data_layout = pool_details['dataLayout']
-            if pool_data_layout != "FineGranularity":
-                err_msg = "compression_type for volume can only be " \
-                          "mentioned when storage pools have Fine " \
-                          "Granularity layout. Storage Pool found" \
-                          " with {0}".format(pool_data_layout)
-                self.module.fail_json(msg=err_msg)
-
+            self.pool_data_layout_fine(pool_data_layout)
             if comp_type != vol_details['compressionMethod']:
                 modify_dict['comp_type'] = comp_type
 
-        if use_rmcache is not None and \
-                vol_details['useRmcache'] != use_rmcache:
-            modify_dict['use_rmcache'] = use_rmcache
+        self.update_use_rmcache(vol_details, use_rmcache, modify_dict)
 
         vol_size_in_gb = utils.get_size_in_gb(vol_details['sizeInKb'], 'KB')
 
-        if new_size is not None and \
-                not ((vol_size_in_gb - 8) < new_size <= vol_size_in_gb):
-            modify_dict['new_size'] = new_size
+        self.update_new_size(new_size, modify_dict, vol_size_in_gb)
 
-        if new_name is not None:
-            if new_name is None or len(new_name.strip()) == 0:
-                self.module.fail_json(msg="Please provide valid volume "
-                                          "name.")
-            if new_name != vol_details['name']:
-                modify_dict['new_name'] = new_name
+        self.update_new_name(vol_details, new_name, modify_dict)
 
         if snap_pol_id is not None and snap_pol_id == "" and \
                 auto_snap_remove_type and vol_details['snplIdOfSourceVolume']:
@@ -1188,6 +1189,32 @@ class PowerFlexVolume(object):
                 modify_dict['snap_pol_id'] = snap_pol_id
 
         return modify_dict
+
+    def update_new_name(self, vol_details, new_name, modify_dict):
+        if new_name is not None:
+            if new_name is None or len(new_name.strip()) == 0:
+                self.module.fail_json(msg="Please provide valid volume "
+                                          "name.")
+            if new_name != vol_details['name']:
+                modify_dict['new_name'] = new_name
+
+    def update_new_size(self, new_size, modify_dict, vol_size_in_gb):
+        if new_size is not None and \
+                not ((vol_size_in_gb - 8) < new_size <= vol_size_in_gb):
+            modify_dict['new_size'] = new_size
+
+    def update_use_rmcache(self, vol_details, use_rmcache, modify_dict):
+        if use_rmcache is not None and \
+                vol_details['useRmcache'] != use_rmcache:
+            modify_dict['use_rmcache'] = use_rmcache
+
+    def pool_data_layout_fine(self, pool_data_layout):
+        if pool_data_layout != "FineGranularity":
+            err_msg = "compression_type for volume can only be " \
+                "mentioned when storage pools have Fine " \
+                "Granularity layout. Storage Pool found" \
+                " with {0}".format(pool_data_layout)
+            self.module.fail_json(msg=err_msg)
 
     def verify_params(self, vol_details, snap_pol_name, snap_pol_id, pd_name,
                       pd_id, pool_name, pool_id):
@@ -1265,12 +1292,10 @@ class PowerFlexVolume(object):
         delete_snapshots = self.module.params['delete_snapshots']
         state = self.module.params['state']
 
-        if compression_type:
-            compression_type = compression_type.capitalize()
-        if vol_type:
-            vol_type = get_vol_type(vol_type)
-        if auto_snap_remove_type:
-            auto_snap_remove_type = auto_snap_remove_type.capitalize()
+        compression_type = self.check_null_capitalize(compression_type)
+        vol_type = get_vol_type(vol_type)
+        auto_snap_remove_type = self.check_null_capitalize(
+            auto_snap_remove_type)
 
         # result is a dictionary to contain end state and volume details
         changed = False
@@ -1281,53 +1306,20 @@ class PowerFlexVolume(object):
         self.validate_parameters(auto_snap_remove_type, snap_pol_id,
                                  snap_pol_name, delete_snapshots, state)
 
-        if not auto_snap_remove_type and\
-                (snap_pol_name == "" or snap_pol_id == ""):
-            auto_snap_remove_type = "Detach"
-        if size:
-            if not cap_unit:
-                cap_unit = 'GB'
+        auto_snap_remove_type = self.get_auto_snap_rt(snap_pol_name,
+                                                      snap_pol_id,
+                                                      auto_snap_remove_type)
 
-            if cap_unit == 'TB':
-                size = size * 1024
+        size = self.get_size_data(size, cap_unit)
 
-        if pd_name:
-            pd_details = self.get_protection_domain(pd_name)
-            if pd_details:
-                pd_id = pd_details['id']
-            msg = "Fetched the protection domain details with id {0}," \
-                  " name {1}".format(pd_id, pd_name)
-            LOG.info(msg)
+        pd_id = self.get_pd_details(pd_name, pd_id)
 
-        if sp_name:
-            sp_details = self.get_storage_pool(storage_pool_name=sp_name,
-                                               protection_domain_id=pd_id)
-            if sp_details:
-                sp_id = sp_details['id']
-            msg = "Fetched the storage pool details id {0}," \
-                  " name {1}".format(sp_id, sp_name)
-            LOG.info(msg)
+        sp_id = self.get_sp_details(sp_name, pd_id, sp_id)
 
-        if snap_pol_name is not None:
-            snap_pol_details = None
-            if snap_pol_name:
-                snap_pol_details = \
-                    self.get_snapshot_policy(snap_pol_name=snap_pol_name)
-            if snap_pol_details:
-                snap_pol_id = snap_pol_details['id']
-
-            if snap_pol_name == "":
-                snap_pol_id = ""
-            msg = "Fetched the snapshot policy details with id {0}," \
-                  " name {1}".format(snap_pol_id, snap_pol_name)
-            LOG.info(msg)
+        snap_pol_id = self.get_snap_pol_details(snap_pol_name, snap_pol_id)
 
         # get volume details
-        volume_details = self.get_volume(vol_name, vol_id)
-        if volume_details:
-            vol_id = volume_details['id']
-        msg = "Fetched the volume details {0}".format(str(volume_details))
-        LOG.info(msg)
+        volume_details, vol_id = self.get_vol(vol_name, vol_id)
 
         if vol_name and volume_details:
             self.verify_params(
@@ -1337,25 +1329,9 @@ class PowerFlexVolume(object):
         # create operation
         create_changed = False
         if state == 'present' and not volume_details:
-            if vol_id:
-                self.module.fail_json(msg="Creation of volume is allowed "
-                                          "using vol_name only, "
-                                          "vol_id given.")
-
-            if vol_new_name:
-                self.module.fail_json(
-                    msg="vol_new_name parameter is not supported during "
-                        "creation of a volume. Try renaming the volume after"
-                        " the creation.")
-            create_changed = self.create_volume(vol_name, sp_id, size,
-                                                vol_type, use_rmcache,
-                                                compression_type)
-            if create_changed:
-                volume_details = self.get_volume(vol_name)
-                vol_id = volume_details['id']
-                msg = "Volume created successfully, fetched " \
-                      "volume details {0}".format(str(volume_details))
-                LOG.info(msg)
+            vol_id, volume_details, create_changed = self.create_new_volume(
+                vol_name, vol_id, vol_type, compression_type, sp_id,
+                use_rmcache, size, vol_new_name, volume_details)
 
         # checking if basic volume parameters are modified or not.
         modify_dict = {}
@@ -1368,25 +1344,10 @@ class PowerFlexVolume(object):
             LOG.info(msg)
 
         # Mapping the SDCs to a volume
-        mode_changed = False
-        limits_changed = False
-        map_changed = False
         if state == 'present' and volume_details and sdc and \
                 sdc_state == 'mapped':
-            map_changed, access_mode_list, limits_list = \
-                self.map_volume_to_sdc(volume_details, sdc)
-            if len(access_mode_list) > 0:
-                mode_changed = self.modify_access_mode(vol_id,
-                                                       access_mode_list)
-            if len(limits_list) > 0:
-                for temp in limits_list:
-                    payload = {
-                        "volume_id": volume_details['id'],
-                        "sdc_id": temp['sdc_id'],
-                        "bandwidth_limit": temp['bandwidth_limit'],
-                        "iops_limit": temp['iops_limit']
-                    }
-                    limits_changed = self.modify_limits(payload)
+            mode_changed, limits_changed, map_changed = self.sdc_state_mapped(
+                vol_id, sdc, volume_details)
 
         # Unmap the SDCs to a volume
         unmap_changed = False
@@ -1402,23 +1363,140 @@ class PowerFlexVolume(object):
         # delete operation
         del_changed = False
         if state == 'absent' and volume_details:
-            if delete_snapshots is True:
-                delete_snapshots = 'INCLUDING_DESCENDANTS'
-            if delete_snapshots is None or delete_snapshots is False:
-                delete_snapshots = 'ONLY_ME'
-            del_changed = \
-                self.delete_volume(vol_id, delete_snapshots)
+            del_changed = self.delete_operation(vol_id, delete_snapshots)
 
-        if modify_changed or unmap_changed or map_changed or create_changed\
-                or del_changed or mode_changed or limits_changed:
-            changed = True
+        changed = (modify_changed or unmap_changed or map_changed
+                   or create_changed or del_changed or mode_changed
+                   or limits_changed)
 
         # Returning the updated volume details
+        self.prepare_output(vol_id, state, result)
+
+        result['changed'] = changed
+        self.module.exit_json(**result)
+
+    def prepare_output(self, vol_id, state, result):
         if state == 'present':
             vol_details = self.show_output(vol_id)
             result['volume_details'] = vol_details
-        result['changed'] = changed
-        self.module.exit_json(**result)
+
+    def get_vol(self, vol_name, vol_id):
+        volume_details = self.get_volume(vol_name, vol_id)
+        if volume_details:
+            vol_id = volume_details['id']
+        msg = "Fetched the volume details {0}".format(str(volume_details))
+        LOG.info(msg)
+        return volume_details, vol_id
+
+    def get_auto_snap_rt(self, snap_pol_name, snap_pol_id, auto_snap_remove_type):
+        if not auto_snap_remove_type and\
+                (snap_pol_name == "" or snap_pol_id == ""):
+            auto_snap_remove_type = "Detach"
+        return auto_snap_remove_type
+
+    def get_size_data(self, size, cap_unit):
+        if size:
+            if not cap_unit:
+                cap_unit = 'GB'
+
+            if cap_unit == 'TB':
+                size = size * 1024
+        return size
+
+    def get_pd_details(self, pd_name, pd_id):
+        if pd_name:
+            pd_details = self.get_protection_domain(pd_name)
+            if pd_details:
+                pd_id = pd_details['id']
+            msg = "Fetched the protection domain details with id {0}," \
+                  " name {1}".format(pd_id, pd_name)
+            LOG.info(msg)
+        return pd_id
+
+    def get_sp_details(self, sp_name, pd_id, sp_id):
+        if sp_name:
+            sp_details = self.get_storage_pool(storage_pool_name=sp_name,
+                                               protection_domain_id=pd_id)
+            if sp_details:
+                sp_id = sp_details['id']
+            msg = "Fetched the storage pool details id {0}," \
+                  " name {1}".format(sp_id, sp_name)
+            LOG.info(msg)
+        return sp_id
+
+    def get_snap_pol_details(self, snap_pol_name, snap_pol_id):
+        if snap_pol_name is not None:
+            snap_pol_details = None
+            if snap_pol_name:
+                snap_pol_details = \
+                    self.get_snapshot_policy(snap_pol_name=snap_pol_name)
+            if snap_pol_details:
+                snap_pol_id = snap_pol_details['id']
+
+            if snap_pol_name == "":
+                snap_pol_id = ""
+            msg = "Fetched the snapshot policy details with id {0}," \
+                  " name {1}".format(snap_pol_id, snap_pol_name)
+            LOG.info(msg)
+        return snap_pol_id
+
+    def create_new_volume(self, vol_name, vol_id, vol_type, compression_type,
+                          sp_id, use_rmcache, size, vol_new_name,
+                          volume_details):
+        if vol_id:
+            self.module.fail_json(msg="Creation of volume is allowed "
+                                  "using vol_name only, "
+                                  "vol_id given.")
+
+        if vol_new_name:
+            self.module.fail_json(
+                msg="vol_new_name parameter is not supported during "
+                "creation of a volume. Try renaming the volume after"
+                " the creation.")
+        create_changed = self.create_volume(vol_name, sp_id, size,
+                                            vol_type, use_rmcache,
+                                            compression_type)
+        if create_changed:
+            volume_details = self.get_volume(vol_name)
+            vol_id = volume_details['id']
+            msg = "Volume created successfully, fetched " \
+                "volume details {0}".format(str(volume_details))
+            LOG.info(msg)
+        return vol_id, volume_details, create_changed
+
+    def sdc_state_mapped(self, vol_id, sdc, volume_details):
+        mode_changed = False
+        limits_changed = False
+        map_changed = False
+        map_changed, access_mode_list, limits_list = \
+            self.map_volume_to_sdc(volume_details, sdc)
+        if len(access_mode_list) > 0:
+            mode_changed = self.modify_access_mode(vol_id,
+                                                   access_mode_list)
+        if len(limits_list) > 0:
+            for temp in limits_list:
+                payload = {
+                    "volume_id": volume_details['id'],
+                    "sdc_id": temp['sdc_id'],
+                    "bandwidth_limit": temp['bandwidth_limit'],
+                    "iops_limit": temp['iops_limit']
+                }
+                limits_changed = self.modify_limits(payload)
+        return mode_changed, limits_changed, map_changed
+
+    def delete_operation(self, vol_id, delete_snapshots):
+        if delete_snapshots is True:
+            delete_snapshots = 'INCLUDING_DESCENDANTS'
+        if delete_snapshots is None or delete_snapshots is False:
+            delete_snapshots = 'ONLY_ME'
+        del_changed = \
+            self.delete_volume(vol_id, delete_snapshots)
+        return del_changed
+
+    def check_null_capitalize(self, input_str):
+        if input_str:
+            input_str = input_str.capitalize()
+        return input_str
 
     def show_output(self, vol_id):
         """Show volume details
@@ -1476,7 +1554,8 @@ class PowerFlexVolume(object):
             volume_details[0]['snapshotsList'] = list_of_snaps
 
             # Append statistics
-            statistics = self.powerflex_conn.volume.get_statistics(volume_details[0]['id'])
+            statistics = self.powerflex_conn.volume.get_statistics(
+                volume_details[0]['id'])
             volume_details[0]['statistics'] = statistics if statistics else {}
 
             return volume_details[0]
@@ -1500,11 +1579,7 @@ def check_for_sdc_modification(volume, sdc_id, sdc_details):
 
     for sdc in volume['mappedSdcInfo']:
         if sdc['sdcId'] == sdc_id:
-            if sdc['accessMode'] != \
-                    get_access_mode(sdc_details['access_mode']):
-                access_mode_dict['sdc_id'] = sdc_id
-                access_mode_dict['accessMode'] = get_access_mode(
-                    sdc_details['access_mode'])
+            update_access_mode(sdc_id, sdc_details, access_mode_dict, sdc)
             if sdc['limitIops'] != sdc_details['iops_limit'] or \
                     sdc['limitBwInMbps'] != sdc_details['bandwidth_limit']:
                 limits_dict['sdc_id'] = sdc_id
@@ -1518,6 +1593,14 @@ def check_for_sdc_modification(volume, sdc_id, sdc_details):
                         sdc_details['bandwidth_limit']
             break
     return access_mode_dict, limits_dict
+
+
+def update_access_mode(sdc_id, sdc_details, access_mode_dict, sdc):
+    if sdc['accessMode'] != \
+            get_access_mode(sdc_details['access_mode']):
+        access_mode_dict['sdc_id'] = sdc_id
+        access_mode_dict['accessMode'] = get_access_mode(
+            sdc_details['access_mode'])
 
 
 def get_limits_in_mb(limits):
@@ -1553,7 +1636,9 @@ def get_vol_type(vol_type):
         "THICK_PROVISIONED": "ThickProvisioned",
         "THIN_PROVISIONED": "ThinProvisioned",
     }
-    return vol_type_dict.get(vol_type)
+    if vol_type:
+        vol_type = vol_type_dict.get(vol_type)
+    return vol_type
 
 
 def get_powerflex_volume_parameters():

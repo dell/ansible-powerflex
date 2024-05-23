@@ -2391,70 +2391,55 @@ class PowerFlexInfo(object):
 
         api_version = self.get_api_details()
         array_details = self.get_array_details()
-        sdc = []
-        sds = []
-        storage_pool = []
-        vol = []
-        snapshot_policy = []
-        protection_domain = []
-        device = []
-        rcgs = []
-        replication_pair = []
-        fault_sets = []
-        service_template = []
-        managed_device = []
-        deployment = []
-        firmware_repository = []
-
         subset = self.module.params['gather_subset']
+
         self.validate_subset(api_version, subset)
-        if subset is not None:
-            if 'sdc' in subset:
-                sdc = self.get_sdc_list(filter_dict=filter_dict)
-            if 'sds' in subset:
-                sds = self.get_sds_list(filter_dict=filter_dict)
-            if 'protection_domain' in subset:
-                protection_domain = self.get_pd_list(filter_dict=filter_dict)
-            if 'storage_pool' in subset:
-                storage_pool = self.get_storage_pool_list(filter_dict=filter_dict)
-            if 'vol' in subset:
-                vol = self.get_volumes_list(filter_dict=filter_dict)
-            if 'snapshot_policy' in subset:
-                snapshot_policy = self.get_snapshot_policy_list(filter_dict=filter_dict)
-            if 'device' in subset:
-                device = self.get_devices_list(filter_dict=filter_dict)
-            if 'rcg' in subset:
-                rcgs = self.get_replication_consistency_group_list(filter_dict=filter_dict)
-            if 'replication_pair' in subset:
-                replication_pair = self.get_replication_pair_list(filter_dict=filter_dict)
-            if 'fault_set' in subset:
-                fault_sets = self.get_fault_sets_list(filter_dict=filter_dict)
-            if 'managed_device' in subset:
-                managed_device = self.get_managed_devices_list()
-            if 'service_template' in subset:
-                service_template = self.get_service_templates_list()
-            if 'deployment' in subset:
-                deployment = self.get_deployments_list()
-            if 'firmware_repository' in subset:
-                firmware_repository = self.get_firmware_repository_list()
+
+        subset_dict_with_filter = {
+            "sdc": self.get_sdc_list,
+            "sds": self.get_sds_list,
+            "protection_domain": self.get_pd_list,
+            "storage_pool": self.get_storage_pool_list,
+            "vol": self.get_volumes_list,
+            "snapshot_policy": self.get_snapshot_policy_list,
+            "device": self.get_devices_list,
+            "rcg": self.get_replication_consistency_group_list,
+            "replication_pair": self.get_replication_pair_list,
+            "fault_set": self.get_fault_sets_list,
+        }
+
+        subset_wo_param = {
+            "managed_device": self.get_managed_devices_list,
+            "service_template": self.get_service_templates_list,
+            "deployment": self.get_deployments_list,
+            "firmware_repository": self.get_firmware_repository_list
+        }
+
+        subset_result_filter = {key: subset_dict_with_filter[key](
+            filter_dict=filter_dict) for key in subset if key in subset_dict_with_filter}
+        subset_result_wo_param = {key: subset_wo_param[key](
+        ) for key in subset if key in subset_wo_param}
 
         self.module.exit_json(
             Array_Details=array_details,
             API_Version=api_version,
-            SDCs=sdc,
-            SDSs=sds,
-            Storage_Pools=storage_pool,
-            Volumes=vol,
-            Snapshot_Policies=snapshot_policy,
-            Protection_Domains=protection_domain,
-            Devices=device,
-            Replication_Consistency_Groups=rcgs,
-            Replication_Pairs=replication_pair,
-            Fault_Sets=fault_sets,
-            ManagedDevices=managed_device,
-            ServiceTemplates=service_template,
-            Deployments=deployment,
-            FirmwareRepository=firmware_repository
+            SDCs=subset_result_filter.get("sdc", []),
+            SDSs=subset_result_filter.get("sds", []),
+            Storage_Pools=subset_result_filter.get("storage_pool", []),
+            Volumes=subset_result_filter.get("vol", []),
+            Snapshot_Policies=subset_result_filter.get("snapshot_policy", []),
+            Protection_Domains=subset_result_filter.get(
+                "protection_domain", []),
+            Devices=subset_result_filter.get("device", []),
+            Replication_Consistency_Groups=subset_result_filter.get("rcg", []),
+            Replication_Pairs=subset_result_filter.get("replication_pair", []),
+            Fault_Sets=subset_result_filter.get("fault_set", []),
+            ManagedDevices=subset_result_wo_param.get("managed_device", []),
+            ServiceTemplates=subset_result_wo_param.get(
+                "service_template", []),
+            Deployments=subset_result_wo_param.get("deployment", []),
+            FirmwareRepository=subset_result_wo_param.get(
+                "firmware_repository", [])
         )
 
 
