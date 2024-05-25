@@ -46,6 +46,14 @@
       delegate_to: "{{ powerflex_config_mdm_primary_hostname }}"
       when: powerflex_config_array_version == '4'
 
+- name: Add certificate file for PowerFlex version 4.x
+  ansible.builtin.command: scli --add_certificate --certificate_file /opt/emc/scaleio/mdm/cfg/mgmt_ca.pem
+  run_once: true
+  register: powerflex_config_add_certificate
+  changed_when: powerflex_config_add_certificate.rc == 0
+  delegate_to: "{{ powerflex_config_mdm_primary_hostname }}"
+  when: powerflex_config_array_version == '4'
+
 - name: Login to MDM for PowerFlex version 4.x
   ansible.builtin.command: scli --login --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }}
   run_once: true

@@ -51,6 +51,13 @@
   run_once: true
   delegate_to: "{{ powerflex_mdm_primary_hostname }}"
 
+- name: Add certificate file for PowerFlex version 4.x
+  ansible.builtin.command: scli --add_certificate --certificate_file /opt/emc/scaleio/mdm/cfg/mgmt_ca.pem
+  run_once: true
+  register: powerflex_mdm_add_certificate
+  changed_when: powerflex_mdm_add_certificate.rc == 0
+  delegate_to: "{{ powerflex_mdm_primary_hostname }}"
+
 - name: Login to primary MDM node
   register: powerflex_mdm_secondary_login
   ansible.builtin.command: >

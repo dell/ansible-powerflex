@@ -28,7 +28,7 @@ The Ansible collection for PowerFlex is released and licensed under the GPL-3.0 
 
 | **Ansible Modules** | **PowerFlex/VxFlex OS Version** | **SDK version** | **Python version** | **Ansible**              |
 |---------------------|-----------------------|-------|--------------------|--------------------------|
-| v2.4.0 |3.6 <br> 4.0 <br> 4.5 | 1.11.0 | 3.9.x <br> 3.10.x <br> 3.11.x | 2.14 <br> 2.15 <br> 2.16 |
+| v2.4.0 |3.6 <br> 4.0 <br> 4.5 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 1.11.0 | 3.9.x <br> 3.10.x <br> 3.11.x | 2.14 <br> 2.15 <br> 2.16 |
 
   * Please follow PyPowerFlex installation instructions on [PyPowerFlex Documentation](https://github.com/dell/python-powerflex)
   
