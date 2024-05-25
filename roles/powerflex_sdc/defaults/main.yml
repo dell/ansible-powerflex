@@ -17,5 +17,4 @@ powerflex_sdc_name: sdc_test
 powerflex_sdc_performance_profile: Compact
 file_glob_name: sdc
 i_am_sure: 1
-powerflex_sdc_esxi_guid: "d422ecab-af6f-4e0c-a059-333ac89cfb42"
 powerflex_role_environment:

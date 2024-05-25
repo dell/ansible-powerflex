@@ -25,4 +25,4 @@
     mode: '0600'
     owner: root
     group: root
-  notify: restart keepalived
+  notify: Restart keepalived
