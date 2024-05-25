@@ -168,4 +168,5 @@ releases:
       minor_changes:
         - The storage pool module has been enhanced to support more features.
         - Fixed the roles to support attaching the MDM cluster to the gateway.
+        - Added support for PowerFlex Onyx version(4.6.x).
     release_date: '2024-05-31'
