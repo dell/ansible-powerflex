@@ -54,13 +54,21 @@
   rescue:
     - name: Generate login certificate using primary_mdm_ip
       ansible.builtin.command: >
-        scli --generate_login_certificate --management_system_ip {{ powerflex_sdr_primary_mdm_ip }} --username {{ username }}
+        scli --generate_login_certificate --management_system_ip {{ powerflex_sdr_mdm_primary_ip }} --username {{ username }}
         --password {{ password }} --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }} --insecure
       run_once: true
       register: powerflex_sdr_generate_login_certificate_mdm_ip
       changed_when: powerflex_sdr_generate_login_certificate_mdm_ip.rc == 0
       delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
       when: powerflex_sdr_array_version != "3"
+
+- name: Add certificate file for PowerFlex version 4.x
+  ansible.builtin.command: scli --add_certificate --certificate_file /opt/emc/scaleio/mdm/cfg/mgmt_ca.pem
+  run_once: true
+  register: powerflex_sdr_add_certificate
+  changed_when: powerflex_sdr_add_certificate.rc == 0
+  delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
+  when: powerflex_sdr_array_version != '3'
 
 - name: Login to MDM for PowerFlex version 4.x
   ansible.builtin.command: scli --login --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }}
