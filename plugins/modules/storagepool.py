@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2021, Dell Technologies
+# Copyright: (c) 2021-24, Dell Technologies
 # Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 """Ansible module for managing Dell Technologies (Dell) PowerFlex storage pool"""
@@ -28,6 +28,7 @@ extends_documentation_fragment:
 author:
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
 - P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 
 options:
   storage_pool_name:
@@ -76,6 +77,160 @@ options:
     description:
     - Enable/Disable RMcache on a specific storage pool.
     type: bool
+  enable_zero_padding:
+    description:
+    - Enable/Disable zero padding on a specific storage pool.
+    type: bool
+  rep_cap_max_ratio:
+    description:
+    - Set replication journal capacity of a storage pool.
+    type: int
+  enable_rebalance:
+    description:
+    - Enable/Disable rebalance on a specific storage pool.
+    type: bool
+  spare_percentage:
+    description:
+    - Set the spare percentage of a specific storage pool.
+    type: int
+  rmcache_write_handling_mode :
+    description:
+    - Set RM cache write handling mode of a storage pool.
+    - I(Passthrough) Writes skip the cache and are stored in storage only.
+    - I(Cached) Writes are stored in both cache and storage (the default).
+    - Caching is only performed for IOs whose size is a multiple of 4k bytes.
+    type: str
+    choices: ['Cached', 'Passthrough']
+    default: 'Cached'
+  enable_rebuild:
+    description:
+    - Enable/Disable rebuild of a specific storage pool.
+    type: bool
+  enable_fragmentation:
+    description:
+    - Enable/Disable fragmentation of a specific storage pool.
+    type: bool
+  parallel_rebuild_rebalance_limit:
+    description:
+    - Set rebuild/rebalance parallelism limit of a storage pool.
+    type: int
+  persistent_checksum:
+    description:
+    - Enable/Disable persistent checksum of a specific storage pool.
+    type: dict
+    suboptions:
+      enable:
+        description:
+        - Enable / disable persistent checksum.
+        type: bool
+      validate_on_read:
+        description:
+        - Validate checksum upon reading data.
+        type: bool
+      builder_limit:
+        description:
+        - Bandwidth limit in KB/s for the checksum building process.
+        - Valid range is 1024 to 10240.
+        default: 3072
+        type: int
+  protected_maintenance_mode_io_priority_policy:
+    description:
+    - Set protected maintenance mode I/O priority policy of a storage pool.
+    type: dict
+    suboptions:
+      policy:
+        description:
+        - The I/O priority policy for protected maintenance mode.
+        - C(unlimited) Protected maintenance mode IOPS are not limited
+        - C(limitNumOfConcurrentIos)Limit the number of allowed concurrent protected maintenance mode
+          migration I/Os to the value defined for I(concurrent_ios_per_device).
+        - C(favorAppIos) Always limit the number of allowed concurrent protected maintenance mode
+          migration I/Os to value defined for I(concurrent_ios_per_device).
+        - If application I/Os are in progress, should also limit the bandwidth of
+          protected maintenance mode migration I/Os to the limit defined for the I(bw_limit_per_device).
+        type: str
+        choices: ['unlimited', 'limitNumOfConcurrentIos', 'favorAppIos']
+        default: 'limitNumOfConcurrentIos'
+      concurrent_ios_per_device:
+        description:
+        - The maximum number of concurrent protected maintenance mode migration I/Os per device.
+        - Valid range is 1 to 20.
+        type: int
+      bw_limit_per_device:
+        description:
+        - The maximum bandwidth of protected maintenance mode migration I/Os,
+          in KB per second, per device.
+        - Valid range is 1024 to 1048576.
+        type: int
+  vtree_migration_io_priority_policy:
+    description:
+    - Set the I/O priority policy for V-Tree migration for a specific Storage Pool.
+    type: dict
+    suboptions:
+      policy:
+        description:
+        - The I/O priority policy for protected maintenance mode.
+        - C(limitNumOfConcurrentIos) Limit the number of allowed concurrent V-Tree
+          migration I/Os (default) to the I(concurrent_ios_per_device).
+        - C(favorAppIos) Always limit the number of allowed concurrent
+          V-Tree migration I/Os to defined for I(concurrent_ios_per_device).
+        - If application I/Os are in progress, should also limit the bandwidth of
+          V-Tree migration I/Os to the limit defined for the I(bw_limit_per_device).
+        type: str
+        choices: ['limitNumOfConcurrentIos', 'favorAppIos']
+      concurrent_ios_per_device:
+        description:
+        - The maximum number of concurrent V-Tree migration I/Os per device.
+        - Valid range is 1 to 20
+        type: int
+      bw_limit_per_device:
+        description:
+        - The maximum bandwidth of V-Tree migration I/Os,
+          in KB per second, per device.
+        - Valid range is 1024 to 25600.
+        type: int
+  rebalance_io_priority_policy:
+    description:
+    - Set the rebalance I/O priority policy for a Storage Pool.
+    type: dict
+    suboptions:
+      policy:
+        description:
+        - Policy to use for rebalance I/O priority.
+        - C(unlimited) Rebalance I/Os are not limited.
+        - C(limitNumOfConcurrentIos) Limit the number of allowed concurrent rebalance I/Os.
+        - C(favorAppIos) Limit the number and bandwidth of rebalance I/Os when application I/Os are in progress.
+        type: str
+        choices: ['unlimited', 'limitNumOfConcurrentIos', 'favorAppIos']
+        default: 'favorAppIos'
+      concurrent_ios_per_device:
+        description:
+        - The maximum number of concurrent rebalance I/Os per device.
+        - Valid range is 1 to 20.
+        type: int
+      bw_limit_per_device:
+        description:
+        - The maximum bandwidth of rebalance I/Os, in KB/s, per device.
+        - Valid range is 1024 to 1048576.
+        type: int
+  cap_alert_thresholds:
+    description:
+    - Set the threshold for triggering capacity usage alerts.
+    - Alerts thresholds are calculated from each Storage Pool
+      capacity after deducting the defined amount of spare capacity.
+    type: dict
+    suboptions:
+      high_threshold:
+        description:
+        - Threshold of the non-spare capacity of the Storage Pool that will trigger a
+          high-priority alert, expressed as a percentage.
+        - This value must be lower than the I(critical_threshold).
+        type: int
+      critical_threshold:
+        description:
+        - Threshold of the non-spare capacity of the Storage Pool that will trigger a
+          critical-priority alert, expressed as a percentage.
+        type: int
   state:
     description:
     - State of the storage pool.
@@ -84,7 +239,7 @@ options:
     required: true
 notes:
   - TRANSITIONAL media type is supported only during modification.
-  - The I(check_mode) is not supported.
+  - The I(check_mode) is supported.
 '''
 
 EXAMPLES = r'''
@@ -107,37 +262,75 @@ EXAMPLES = r'''
     storage_pool_id: "abcd1234ab12r"
     state: "present"
 
-- name: Create a new storage pool by name
+- name: Create a new Storage pool
   dellemc.powerflex.storagepool:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
-    storage_pool_name: "ansible_test_pool"
-    protection_domain_id: "1c957da800000000"
-    media_type: "HDD"
-    state: "present"
-
-- name: Modify a storage pool by name
-  dellemc.powerflex.storagepool:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
-    storage_pool_name: "ansible_test_pool"
-    protection_domain_id: "1c957da800000000"
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    storage_pool_name: "{{ pool_name }}"
+    protection_domain_name: "{{ protection_domain_name }}"
+    cap_alert_thresholds:
+      high_threshold: 30
+      critical_threshold: 50
+    media_type: "TRANSITIONAL"
+    enable_zero_padding: true
+    rep_cap_max_ratio: 40
+    rmcache_write_handling_mode: "Passthrough"
+    spare_percentage: 80
+    enable_rebalance: false
+    enable_fragmentation: false
+    enable_rebuild: false
     use_rmcache: true
     use_rfcache: true
+    parallel_rebuild_rebalance_limit: 3
+    protected_maintenance_mode_io_priority_policy:
+      policy: "unlimited"
+    rebalance_io_priority_policy:
+      policy: "unlimited"
+    vtree_migration_io_priority_policy:
+      policy: "limitNumOfConcurrentIos"
+      concurrent_ios_per_device: 10
+    persistent_checksum:
+      enable: false
     state: "present"
 
-- name: Rename storage pool by id
+- name: Modify a Storage pool by name
   dellemc.powerflex.storagepool:
-    hostname: "{{hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    validate_certs: "{{validate_certs}}"
-    storage_pool_id: "abcd1234ab12r"
-    storage_pool_new_name: "new_ansible_pool"
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    storage_pool_name: "{{ pool_name }}"
+    protection_domain_name: "{{ protection_domain_name }}"
+    storage_pool_new_name: "pool_name_new"
+    cap_alert_thresholds:
+      high_threshold: 50
+      critical_threshold: 70
+    enable_zero_padding: false
+    rep_cap_max_ratio: 60
+    rmcache_write_handling_mode: "Passthrough"
+    spare_percentage: 90
+    enable_rebalance: true
+    enable_fragmentation: true
+    enable_rebuild: true
+    use_rmcache: true
+    use_rfcache: true
+    parallel_rebuild_rebalance_limit: 6
+    protected_maintenance_mode_io_priority_policy:
+      policy: "limitNumOfConcurrentIos"
+      concurrent_ios_per_device: 4
+    rebalance_io_priority_policy:
+      policy: "favorAppIos"
+      concurrent_ios_per_device: 10
+      bw_limit_per_device: 4096
+    vtree_migration_io_priority_policy:
+      policy: "limitNumOfConcurrentIos"
+      concurrent_ios_per_device: 10
+    persistent_checksum:
+      enable: true
+      validate_on_read: true
+      builder_limit: 1024
     state: "present"
 '''
 
@@ -558,75 +751,50 @@ storage_pool_details:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
+    import Configuration
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 
 LOG = utils.get_logger('storagepool')
 
 
-class PowerFlexStoragePool(object):
+class PowerFlexStoragePool(PowerFlexBase):
     """Class with StoragePool operations"""
 
     def __init__(self):
         """ Define all parameters required by this module"""
-
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_storagepool_parameters())
-
         """ initialize the ansible module """
-        mut_ex_args = [['storage_pool_name', 'storage_pool_id'],
-                       ['protection_domain_name', 'protection_domain_id'],
-                       ['storage_pool_id', 'protection_domain_name'],
-                       ['storage_pool_id', 'protection_domain_id']]
+        mutually_exclusive = [['storage_pool_name', 'storage_pool_id'],
+                              ['protection_domain_name', 'protection_domain_id'],
+                              ['storage_pool_id', 'protection_domain_name'],
+                              ['storage_pool_id', 'protection_domain_id']]
 
-        required_one_of_args = [['storage_pool_name', 'storage_pool_id']]
-        self.module = AnsibleModule(argument_spec=self.module_params,
-                                    supports_check_mode=False,
-                                    mutually_exclusive=mut_ex_args,
-                                    required_one_of=required_one_of_args)
+        required_one_of = [['storage_pool_name', 'storage_pool_id']]
+
+        ansible_module_params = {
+            'argument_spec': get_powerflex_storagepool_parameters(),
+            'supports_check_mode': True,
+            'mutually_exclusive': mutually_exclusive,
+            'required_one_of': required_one_of
+        }
+        super().__init__(AnsibleModule, ansible_module_params)
 
         utils.ensure_required_libs(self.module)
+        self.result = dict(
+            changed=False,
+            storage_pool_details={}
+        )
 
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info('Got the PowerFlex system connection object instance')
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
-
-    def get_protection_domain(self, protection_domain_name=None,
-                              protection_domain_id=None):
-        """Get protection domain details
-            :param protection_domain_name: Name of the protection domain
-            :param protection_domain_id: ID of the protection domain
-            :return: Protection domain details
-        """
-        name_or_id = protection_domain_id if protection_domain_id \
-            else protection_domain_name
-        try:
-            filter_fields = {}
-            if protection_domain_id:
-                filter_fields = {'id': protection_domain_id}
-            if protection_domain_name:
-                filter_fields = {'name': protection_domain_name}
-
-            pd_details = self.powerflex_conn.protection_domain.get(
-                filter_fields=filter_fields)
-            if pd_details:
-                return pd_details[0]
-
-            if not pd_details:
-                err_msg = "Unable to find the protection domain with {0}. " \
-                          "Please enter a valid protection domain" \
-                          " name/id.".format(name_or_id)
-                self.module.fail_json(msg=err_msg)
-
-        except Exception as e:
-            errormsg = "Failed to get the protection domain {0} with" \
-                       " error {1}".format(name_or_id, str(e))
-            LOG.error(errormsg)
-            self.module.fail_json(msg=errormsg)
+    def get_protection_domain(
+            self, protection_domain_name=None, protection_domain_id=None
+    ):
+        """Get the details of a protection domain in a given PowerFlex storage
+        system"""
+        return Configuration(self.powerflex_conn, self.module).get_protection_domain(
+            protection_domain_name=protection_domain_name, protection_domain_id=protection_domain_id)
 
     def get_storage_pool(self, storage_pool_id=None, storage_pool_name=None,
                          pd_id=None):
@@ -648,7 +816,7 @@ class PowerFlexStoragePool(object):
                 filter_fields.update({'protectionDomainId': pd_id})
             pool_details = self.powerflex_conn.storage_pool.get(
                 filter_fields=filter_fields)
-            if pool_details:
+            if pool_details != []:
                 if len(pool_details) > 1:
 
                     err_msg = "More than one storage pool found with {0}," \
@@ -666,10 +834,9 @@ class PowerFlexStoragePool(object):
                         protection_domain_id=pd_id)['name']
                     # adding protection domain name in the pool details
                     pool_details['protectionDomainName'] = pd_name
-                else:
-                    pool_details = None
+                    return pool_details
 
-            return pool_details
+            return None
 
         except Exception as e:
             errormsg = "Failed to get the storage pool {0} with error " \
@@ -698,192 +865,206 @@ class PowerFlexStoragePool(object):
                 self.module.fail_json(
                     msg="Please provide protection domain details for "
                         "creation of a storage pool")
-            self.powerflex_conn.storage_pool.create(
-                media_type=media_type,
-                protection_domain_id=pd_id, name=pool_name,
-                use_rfcache=use_rfcache, use_rmcache=use_rmcache)
+            if not self.module.check_mode:
+                pool_id = self.powerflex_conn.storage_pool.create(
+                    media_type=media_type,
+                    protection_domain_id=pd_id, name=pool_name,
+                    use_rfcache=use_rfcache, use_rmcache=use_rmcache)['id']
 
-            return True
+            return self.get_storage_pool(storage_pool_id=pool_id,
+                                         pd_id=pd_id)
+
         except Exception as e:
             errormsg = "Failed to create the storage pool {0} with error " \
                        "{1}".format(pool_name, str(e))
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def modify_storage_pool(self, pool_id, modify_dict):
-        """
-        Modify the parameters of the storage pool.
-        :param modify_dict: Dict containing parameters which are to be
-         modified
-        :param pool_id: Id of the pool.
-        :return: True, if the operation is successful.
-        """
-
-        try:
-
-            if 'new_name' in modify_dict:
-                self.powerflex_conn.storage_pool.rename(
-                    pool_id, modify_dict['new_name'])
-            if 'use_rmcache' in modify_dict:
-                self.powerflex_conn.storage_pool.set_use_rmcache(
-                    pool_id, modify_dict['use_rmcache'])
-            if 'use_rfcache' in modify_dict:
-                self.powerflex_conn.storage_pool.set_use_rfcache(
-                    pool_id, modify_dict['use_rfcache'])
-            if 'media_type' in modify_dict:
-                self.powerflex_conn.storage_pool.set_media_type(
-                    pool_id, modify_dict['media_type'])
-            return True
-
-        except Exception as e:
-            err_msg = "Failed to update the storage pool {0} with error " \
-                      "{1}".format(pool_id, str(e))
-            LOG.error(err_msg)
-            self.module.fail_json(msg=err_msg)
-
-    def verify_params(self, pool_details, pd_name, pd_id):
+    def verify_protection_domain(self, pool_details):
         """
         :param pool_details: Details of the storage pool
         :param pd_name: Name of the protection domain
         :param pd_id: Id of the protection domain
         """
-        if pd_id and pd_id != pool_details['protectionDomainId']:
-            self.module.fail_json(msg="Entered protection domain id does not"
-                                      " match with the storage pool's "
-                                      "protection domain id. Please enter "
-                                      "a correct protection domain id.")
-
-        if pd_name and pd_name != pool_details['protectionDomainName']:
-            self.module.fail_json(msg="Entered protection domain name does"
-                                      " not match with the storage pool's "
-                                      "protection domain name. Please enter"
-                                      " a correct protection domain name.")
-
-    def perform_module_operation(self):
-        """ Perform different actions on Storage Pool based on user input
-            in the playbook """
-
-        pool_name = self.module.params['storage_pool_name']
-        pool_id = self.module.params['storage_pool_id']
-        pool_new_name = self.module.params['storage_pool_new_name']
-        state = self.module.params['state']
         pd_name = self.module.params['protection_domain_name']
         pd_id = self.module.params['protection_domain_id']
-        use_rmcache = self.module.params['use_rmcache']
-        use_rfcache = self.module.params['use_rfcache']
-        media_type = self.module.params['media_type']
-        if media_type == "TRANSITIONAL":
-            media_type = 'Transitional'
+        if pool_details is not None:
+            if pd_id and pd_id != pool_details['protectionDomainId']:
+                self.module.fail_json(msg="Entered protection domain id does not"
+                                          " match with the storage pool's "
+                                          "protection domain id. Please enter "
+                                          "a correct protection domain id.")
 
-        result = dict(
-            storage_pool_details={}
-        )
-        changed = False
-        pd_details = None
-        if pd_name or pd_id:
-            pd_details = self.get_protection_domain(
-                protection_domain_id=pd_id,
-                protection_domain_name=pd_name)
-        if pd_details:
-            pd_id = pd_details['id']
+            if pd_name and pd_name != pool_details['protectionDomainName']:
+                self.module.fail_json(msg="Entered protection domain name does"
+                                          " not match with the storage pool's "
+                                          "protection domain name. Please enter"
+                                          " a correct protection domain name.")
 
-        if pool_name is not None and (len(pool_name.strip()) == 0):
+    def verify_storage_pool_name(self):
+        if (self.module.params['storage_pool_name'] is not None and
+                (len(self.module.params['storage_pool_name'].strip()) == 0)) or \
+                (self.module.params['storage_pool_new_name'] is not None and
+                    (len(self.module.params['storage_pool_new_name'].strip()) == 0)):
             self.module.fail_json(
-                msg="Empty or white spaced string provided in "
-                    "storage_pool_name. Please provide valid storage"
+                msg="Empty or white spaced string provided for "
+                    "storage pool name. Provide valid storage"
                     " pool name.")
 
-        # Get the details of the storage pool.
-        pool_details = self.get_storage_pool(storage_pool_id=pool_id,
-                                             storage_pool_name=pool_name,
-                                             pd_id=pd_id)
-        if pool_name and pool_details:
-            pool_id = pool_details['id']
-            self.verify_params(pool_details, pd_name, pd_id)
+    def set_persistent_checksum(self, pool_details, pool_params):
+        try:
+            if pool_params['persistent_checksum']['enable']:
+                if pool_details['persistentChecksumEnabled'] is not True:
+                    self.powerflex_conn.storage_pool.set_persistent_checksum(
+                        storage_pool_id=pool_details['id'],
+                        enable=pool_params['persistent_checksum']['enable'],
+                        validate=pool_params['persistent_checksum']['validate_on_read'],
+                        builder_limit=pool_params['persistent_checksum']['builder_limit'])
+                else:
+                    self.powerflex_conn.storage_pool.modify_persistent_checksum(
+                        storage_pool_id=pool_details['id'],
+                        validate=pool_params['persistent_checksum']['validate_on_read'],
+                        builder_limit=pool_params['persistent_checksum']['builder_limit'])
 
-        # create a storage pool
-        if state == 'present' and not pool_details:
-            LOG.info("Creating new storage pool")
-            if pool_id:
-                self.module.fail_json(
-                    msg="storage_pool_name is missing & name required to "
-                        "create a storage pool. Please enter a valid "
-                        "storage_pool_name.")
-            if pool_new_name is not None:
-                self.module.fail_json(
-                    msg="storage_pool_new_name is passed during creation. "
-                        "storage_pool_new_name is not allowed during "
-                        "creation of a storage pool.")
-            changed = self.create_storage_pool(
-                pool_name, pd_id, media_type, use_rfcache, use_rmcache)
-            if changed:
-                pool_id = self.get_storage_pool(storage_pool_id=pool_id,
-                                                storage_pool_name=pool_name,
-                                                pd_id=pd_id)['id']
+            pool_details = self.get_storage_pool(storage_pool_id=pool_details['id'])
+            return pool_details
 
-        # modify the storage pool parameters
-        if state == 'present' and pool_details:
-            # check if the parameters are to be updated or not
-            if pool_new_name is not None and len(pool_new_name.strip()) == 0:
-                self.module.fail_json(
-                    msg="Empty/White spaced name is not allowed during "
-                        "renaming of a storage pool. Please enter a valid "
-                        "storage pool new name.")
-            modify_dict = to_modify(pool_details, use_rmcache, use_rfcache,
-                                    pool_new_name, media_type)
-            if bool(modify_dict):
-                LOG.info("Modify attributes of storage pool")
-                changed = self.modify_storage_pool(pool_id, modify_dict)
+        except Exception as e:
+            err_msg = "Failed to set persistent checksum with error " \
+                      "{0}".format(str(e))
+            LOG.error(err_msg)
+            self.module.fail_json(msg=err_msg)
 
-        # Delete a storage pool
-        if state == 'absent' and pool_details:
-            msg = "Deleting storage pool is not supported through" \
-                  " ansible module."
-            LOG.error(msg)
-            self.module.fail_json(msg=msg)
+    def to_modify_persistent_checksum(self, pool_details, pool_params):
+        checksum_dict = dict()
+        if pool_params['persistent_checksum']['enable'] is not None and \
+                pool_params['persistent_checksum']['enable'] != pool_details['persistentChecksumEnabled']:
+            checksum_dict['enable'] = pool_params['persistent_checksum']['enable']
 
-        # Show the updated storage pool details
-        if state == 'present':
-            pool_details = self.get_storage_pool(storage_pool_id=pool_id)
-            # fetching Id from pool details to address a case where
-            # protection domain is not passed
-            pd_id = pool_details['protectionDomainId']
-            pd_name = self.get_protection_domain(
-                protection_domain_id=pd_id)['name']
-            # adding protection domain name in the pool details
-            pool_details['protectionDomainName'] = pd_name
-            result['storage_pool_details'] = pool_details
-        result['changed'] = changed
+        if pool_params['persistent_checksum']['validate_on_read'] is not None and \
+                pool_params['persistent_checksum']['validate_on_read'] != pool_details['persistentChecksumValidateOnRead'] and \
+                pool_params['persistent_checksum']['enable'] is True:
+            checksum_dict['validate_on_read'] = pool_params['persistent_checksum']['validate_on_read']
 
-        self.module.exit_json(**result)
+        if pool_params['persistent_checksum']['builder_limit'] is not None and \
+                pool_params['persistent_checksum']['builder_limit'] != pool_details['persistentChecksumBuilderLimitKb'] and \
+                pool_params['persistent_checksum']['enable'] is True:
+            checksum_dict['builder_limit'] = pool_params['persistent_checksum']['builder_limit']
 
+        return checksum_dict
 
-def to_modify(pool_details, use_rmcache, use_rfcache, new_name, media_type):
-    """
-    Check whether a parameter is required to be updated.
+    def to_modify_rebalance_io_priority_policy(self, pool_details, pool_params):
 
-    :param media_type:  Type of the media supported by the pool.
-    :param pool_details: Details of the storage pool
-    :param use_rmcache: Enable/Disable RMcache on pool
-    :param use_rfcache: Enable/Disable RFcache on pool
-    :param new_name: New name for the storage pool
-    :return: dict, containing parameters to be modified
-    """
-    pool_name = pool_details['name']
-    pool_use_rfcache = pool_details['useRfcache']
-    pool_use_rmcache = pool_details['useRmcache']
-    pool_media_type = pool_details['mediaType']
-    modify_params = {}
+        policy_dict = {
+            'policy': None,
+            'concurrent_ios': None,
+            'bw_limit': None
+        }
+        modify = False
+        if pool_params['rebalance_io_priority_policy']['policy'] is not None and \
+                pool_params['rebalance_io_priority_policy']['policy'] != pool_details['rebalanceIoPriorityPolicy']:
+            policy_dict['policy'] = pool_params['rebalance_io_priority_policy']['policy']
+            modify = True
 
-    if new_name is not None and pool_name != new_name:
-        modify_params['new_name'] = new_name
-    if use_rfcache is not None and pool_use_rfcache != use_rfcache:
-        modify_params['use_rfcache'] = use_rfcache
-    if use_rmcache is not None and pool_use_rmcache != use_rmcache:
-        modify_params['use_rmcache'] = use_rmcache
-    if media_type is not None and media_type != pool_media_type:
-        modify_params['media_type'] = media_type
-    return modify_params
+        if pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'] is not None and \
+                pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'] != pool_details['rebalanceIoPriorityNumOfConcurrentIosPerDevice']:
+            policy_dict['concurrent_ios'] = str(pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'])
+
+        if pool_params['rebalance_io_priority_policy']['bw_limit_per_device'] is not None and \
+                pool_params['rebalance_io_priority_policy']['bw_limit_per_device'] != pool_details['rebalanceIoPriorityBwLimitPerDeviceInKbps']:
+            policy_dict['bw_limit'] = str(pool_params['rebalance_io_priority_policy']['bw_limit_per_device'])
+
+        if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+            policy_dict['policy'] = pool_details['rebalanceIoPriorityPolicy']
+            modify = True
+
+        if modify is True:
+            return policy_dict
+        else:
+            return None
+
+    def to_modify_vtree_migration_io_priority_policy(self, pool_details, pool_params):
+        policy_dict = {
+            'policy': None,
+            'concurrent_ios': None,
+            'bw_limit': None
+        }
+        modify = False
+        if pool_params['vtree_migration_io_priority_policy']['policy'] is not None and \
+                pool_params['vtree_migration_io_priority_policy']['policy'] != pool_details['vtreeMigrationIoPriorityPolicy']:
+            policy_dict['policy'] = pool_params['vtree_migration_io_priority_policy']['policy']
+            modify = True
+
+        if pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'] is not None and \
+                pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'] != \
+                pool_details['vtreeMigrationIoPriorityNumOfConcurrentIosPerDevice']:
+            policy_dict['concurrent_ios'] = str(pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'])
+
+        if pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'] is not None and \
+                pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'] != \
+                pool_details['vtreeMigrationIoPriorityBwLimitPerDeviceInKbps']:
+            policy_dict['bw_limit'] = str(pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'])
+
+        if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+            policy_dict['policy'] = pool_details['vtreeMigrationIoPriorityPolicy']
+            modify = True
+
+        if modify is True:
+            return policy_dict
+        else:
+            return None
+
+    def to_modify_protected_maintenance_mode_io_priority_policy(self, pool_details, pool_params):
+
+        policy_dict = {
+            'policy': None,
+            'concurrent_ios': None,
+            'bw_limit': None
+        }
+        modify = False
+        if pool_params['protected_maintenance_mode_io_priority_policy']['policy'] is not None and \
+                pool_params['protected_maintenance_mode_io_priority_policy']['policy'] != pool_details['protectedMaintenanceModeIoPriorityPolicy']:
+            policy_dict['policy'] = pool_params['protected_maintenance_mode_io_priority_policy']['policy']
+            modify = True
+
+        if pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'] is not None and \
+                pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'] != \
+                pool_details['protectedMaintenanceModeIoPriorityNumOfConcurrentIosPerDevice']:
+            policy_dict['concurrent_ios'] = str(pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'])
+
+        if pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'] is not None and \
+                pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'] != \
+                pool_details['protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps']:
+            policy_dict['bw_limit'] = str(pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'])
+
+        if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
+            policy_dict['policy'] = pool_details['protectedMaintenanceModeIoPriorityPolicy']
+            modify = True
+
+        if modify is True:
+            return policy_dict
+        else:
+            return None
+
+    def to_modify_capacity_alert_thresholds(self, pool_details, pool_params, thresholds):
+        modify = False
+        threshold = dict()
+        if pool_params['cap_alert_thresholds']['high_threshold'] is not None and pool_params['cap_alert_thresholds'][
+                'high_threshold'] != pool_details['capacityAlertHighThreshold']:
+            threshold['high'] = str(pool_params['cap_alert_thresholds']['high_threshold'])
+            modify = True
+        if pool_params['cap_alert_thresholds']['critical_threshold'] is not None and \
+                pool_params['cap_alert_thresholds']['critical_threshold'] != pool_details[
+                'capacityAlertCriticalThreshold']:
+            threshold['critical'] = str(pool_params['cap_alert_thresholds']['critical_threshold'])
+            modify = True
+        if modify is True:
+            if 'high' not in threshold:
+                threshold['high'] = str(pool_details['capacityAlertHighThreshold'])
+            if 'critical' not in threshold:
+                threshold['critical'] = str(pool_details['capacityAlertCriticalThreshold'])
+
+        return threshold
 
 
 def get_powerflex_storagepool_parameters():
@@ -898,15 +1079,464 @@ def get_powerflex_storagepool_parameters():
                         choices=['HDD', 'SSD', 'TRANSITIONAL']),
         use_rfcache=dict(required=False, type='bool'),
         use_rmcache=dict(required=False, type='bool'),
+        enable_zero_padding=dict(type='bool'),
+        rep_cap_max_ratio=dict(type='int'),
+        rmcache_write_handling_mode=dict(choices=['Cached', 'Passthrough'], default='Cached'),
+        spare_percentage=dict(type='int'),
+        enable_rebalance=dict(type='bool'),
+        enable_fragmentation=dict(type='bool'),
+        enable_rebuild=dict(type='bool'),
         storage_pool_new_name=dict(required=False, type='str'),
+        parallel_rebuild_rebalance_limit=dict(type='int'),
+        cap_alert_thresholds=dict(type='dict', options=dict(
+            high_threshold=dict(type='int'),
+            critical_threshold=dict(type='int'))),
+        protected_maintenance_mode_io_priority_policy=dict(type='dict', options=dict(
+            policy=dict(choices=['unlimited', 'limitNumOfConcurrentIos', 'favorAppIos'], default='limitNumOfConcurrentIos'),
+            concurrent_ios_per_device=dict(type='int'),
+            bw_limit_per_device=dict(type='int'))),
+        rebalance_io_priority_policy=dict(type='dict', options=dict(
+            policy=dict(choices=['unlimited', 'limitNumOfConcurrentIos', 'favorAppIos'], default='favorAppIos'),
+            concurrent_ios_per_device=dict(type='int'),
+            bw_limit_per_device=dict(type='int'))),
+        vtree_migration_io_priority_policy=dict(type='dict', options=dict(
+            policy=dict(choices=['limitNumOfConcurrentIos', 'favorAppIos']),
+            concurrent_ios_per_device=dict(type='int'),
+            bw_limit_per_device=dict(type='int'))),
+        persistent_checksum=dict(type='dict', options=dict(
+            enable=dict(type='bool'),
+            validate_on_read=dict(type='bool'),
+            builder_limit=dict(type='int', default=3072))),
         state=dict(required=True, type='str', choices=['present', 'absent']))
 
 
+class StoragePoolExitHandler():
+    def handle(self, pool_obj, pool_details):
+        if pool_details:
+            pool_details = pool_obj.get_storage_pool(storage_pool_id=pool_details['id'])
+        pool_obj.result['storage_pool_details'] = pool_details
+
+        pool_obj.module.exit_json(**pool_obj.result)
+
+
+class StoragePoolDeleteHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        if pool_params['state'] == 'absent' and pool_details:
+            msg = "Deleting storage pool is not supported through" \
+                  " ansible module."
+            LOG.error(msg)
+            pool_obj.module.fail_json(msg=msg)
+
+        StoragePoolExitHandler().handle(pool_obj, pool_details)
+
+
+class StoragePoolModifyPersistentChecksumHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['persistent_checksum'] is not None:
+                    checksum_dict = pool_obj.to_modify_persistent_checksum(
+                        pool_details=pool_details,
+                        pool_params=pool_params)
+                    if checksum_dict != {}:
+                        if not pool_obj.module.check_mode:
+                            pool_details = pool_obj.set_persistent_checksum(
+                                pool_details=pool_details,
+                                pool_params=pool_params)
+                        pool_obj.result['changed'] = True
+
+            StoragePoolDeleteHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify Persistent Checksum failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolModifyRebalanceIOPriorityPolicyHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['rebalance_io_priority_policy'] is not None:
+                    policy_dict = pool_obj.to_modify_rebalance_io_priority_policy(
+                        pool_details=pool_details,
+                        pool_params=pool_params
+                    )
+                    if policy_dict is not None:
+                        if not pool_obj.module.check_mode:
+                            pool_details = pool_obj.powerflex_conn.storage_pool.rebalance_io_priority_policy(
+                                storage_pool_id=pool_details['id'],
+                                policy=policy_dict['policy'],
+                                concurrent_ios_per_device=policy_dict['concurrent_ios'],
+                                bw_limit_per_device=policy_dict['bw_limit'])
+                        pool_obj.result['changed'] = True
+
+            StoragePoolModifyPersistentChecksumHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify rebalance IO Priority Policy failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolSetVtreeMigrationIOPriorityPolicyHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['vtree_migration_io_priority_policy'] is not None:
+                    policy_dict = pool_obj.to_modify_vtree_migration_io_priority_policy(
+                        pool_details=pool_details,
+                        pool_params=pool_params
+                    )
+                    if policy_dict is not None:
+                        if not pool_obj.module.check_mode:
+                            pool_details = pool_obj.powerflex_conn.storage_pool.set_vtree_migration_io_priority_policy(
+                                storage_pool_id=pool_details['id'],
+                                policy=policy_dict['policy'],
+                                concurrent_ios_per_device=policy_dict['concurrent_ios'],
+                                bw_limit_per_device=policy_dict['bw_limit'])
+                        pool_obj.result['changed'] = True
+
+            StoragePoolModifyRebalanceIOPriorityPolicyHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Set Vtree Migration I/O Priority Policy operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolSetProtectedMaintenanceModeIOPriorityPolicyHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['protected_maintenance_mode_io_priority_policy'] is not None:
+                    policy_dict = pool_obj.to_modify_protected_maintenance_mode_io_priority_policy(
+                        pool_details=pool_details,
+                        pool_params=pool_params
+                    )
+                    if policy_dict is not None:
+                        if not pool_obj.module.check_mode:
+                            pool_details = pool_obj.powerflex_conn.storage_pool.set_protected_maintenance_mode_io_priority_policy(
+                                storage_pool_id=pool_details['id'],
+                                policy=policy_dict['policy'],
+                                concurrent_ios_per_device=policy_dict['concurrent_ios'],
+                                bw_limit_per_device=policy_dict['bw_limit'])
+                        pool_obj.result['changed'] = True
+
+            StoragePoolSetVtreeMigrationIOPriorityPolicyHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Set Protected Maintenance Mode IO Priority Policy operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolModifyCapacityAlertThresholdsHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['cap_alert_thresholds'] is not None:
+                    threshold = pool_obj.to_modify_capacity_alert_thresholds(pool_details=pool_details,
+                                                                             pool_params=pool_params,
+                                                                             thresholds=pool_params[
+                                                                                 'cap_alert_thresholds'])
+                    if threshold != {}:
+                        if not pool_obj.module.check_mode:
+                            pool_details = pool_obj.powerflex_conn.storage_pool.set_cap_alert_thresholds(
+                                storage_pool_id=pool_details['id'],
+                                cap_alert_high_threshold=threshold['high'],
+                                cap_alert_critical_threshold=threshold['critical'])
+                        pool_obj.result['changed'] = True
+
+            StoragePoolSetProtectedMaintenanceModeIOPriorityPolicyHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify Capacity Alert Thresholds operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolModifyRebuildRebalanceParallelismLimitHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['parallel_rebuild_rebalance_limit'] is not None and \
+                        pool_params['parallel_rebuild_rebalance_limit'] != pool_details['numOfParallelRebuildRebalanceJobsPerDevice']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_rebuild_rebalance_parallelism_limit(
+                            pool_details['id'], str(pool_params['parallel_rebuild_rebalance_limit']))
+                    pool_obj.result['changed'] = True
+
+            StoragePoolModifyCapacityAlertThresholdsHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify Rebuild/Rebalance Parallelism Limit operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolModifyRMCacheWriteHandlingModeHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['rmcache_write_handling_mode'] is not None and \
+                        pool_params['rmcache_write_handling_mode'] != pool_details['rmcacheWriteHandlingMode']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_rmcache_write_handling_mode(
+                            pool_details['id'], pool_params['rmcache_write_handling_mode'])
+                    pool_obj.result['changed'] = True
+
+            StoragePoolModifyRebuildRebalanceParallelismLimitHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify RMCache Write Handling Mode failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolModifySparePercentageHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['spare_percentage'] is not None and pool_params['spare_percentage'] != pool_details['sparePercentage']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_spare_percentage(
+                            pool_details['id'], str(pool_params['spare_percentage']))
+                    pool_obj.result['changed'] = True
+
+            StoragePoolModifyRMCacheWriteHandlingModeHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify Spare Percentage operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolEnableFragmentationHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['enable_fragmentation'] is not None and pool_params['enable_fragmentation'] != pool_details['fragmentationEnabled']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_fragmentation_enabled(
+                            pool_details['id'], pool_params['enable_fragmentation'])
+                    pool_obj.result['changed'] = True
+
+            StoragePoolModifySparePercentageHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+
+            error_msg = (f"Enable/Disable Fragmentation operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolEnableRebuildHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['enable_rebuild'] is not None and pool_params['enable_rebuild'] != pool_details['rebuildEnabled']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_rebuild_enabled(
+                            pool_details['id'], pool_params['enable_rebuild'])
+                    pool_obj.result['changed'] = True
+
+            StoragePoolEnableFragmentationHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Enable/Disable Rebuild operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolEnableRebalanceHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['enable_rebalance'] is not None and pool_params['enable_rebalance'] != pool_details['rebalanceEnabled']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_rebalance_enabled(
+                            pool_details['id'], pool_params['enable_rebalance'])
+                    pool_obj.result['changed'] = True
+
+            StoragePoolEnableRebuildHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Enable/Disable Rebalance failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolModifyRepCapMaxRatioHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['rep_cap_max_ratio'] is not None and pool_params['rep_cap_max_ratio'] != pool_details['replicationCapacityMaxRatio']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_rep_cap_max_ratio(
+                            pool_details['id'], str(pool_params['rep_cap_max_ratio']))
+                    pool_obj.result['changed'] = True
+
+            StoragePoolEnableRebalanceHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify Replication Capacity max ratio operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolEnableZeroPaddingHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['enable_zero_padding'] is not None and pool_params['enable_zero_padding'] != pool_details['zeroPaddingEnabled']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_zero_padding_policy(
+                            pool_details['id'], pool_params['enable_zero_padding'])
+                    pool_obj.result['changed'] = True
+
+            StoragePoolModifyRepCapMaxRatioHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Enable/Disable zero padding operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolUseRFCacheHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['use_rfcache'] is not None and pool_params['use_rfcache'] != pool_details['useRfcache']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_use_rfcache(
+                            pool_details['id'], pool_params['use_rfcache'])
+                    pool_obj.result['changed'] = True
+
+            StoragePoolEnableZeroPaddingHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify RF cache operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolUseRMCacheHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['use_rmcache'] is not None and pool_params['use_rmcache'] != pool_details['useRmcache']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_use_rmcache(
+                            pool_details['id'], pool_params['use_rmcache'])
+                    pool_obj.result['changed'] = True
+
+            StoragePoolUseRFCacheHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify RM cache operation failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolRenameHandler():
+    def handle(self, pool_obj, pool_params, pool_details):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if pool_params['storage_pool_new_name'] is not None and pool_params['storage_pool_new_name'] != pool_details['name']:
+                    if not pool_obj.module.check_mode:
+                        pool_obj.powerflex_conn.storage_pool.rename(pool_details['id'], pool_params['storage_pool_new_name'])
+                    pool_obj.result['changed'] = True
+
+            StoragePoolUseRMCacheHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify storage pool name failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolModifyMediaTypeHandler():
+    def handle(self, pool_obj, pool_params, pool_details, media_type):
+        try:
+            if pool_params['state'] == 'present' and pool_details:
+                if media_type is not None and media_type != pool_details['mediaType']:
+                    if not pool_obj.module.check_mode:
+                        pool_details = pool_obj.powerflex_conn.storage_pool.set_media_type(
+                            pool_details['id'], media_type)
+                    pool_obj.result['changed'] = True
+
+            StoragePoolRenameHandler().handle(pool_obj, pool_params, pool_details)
+
+        except Exception as e:
+            error_msg = (f"Modify Media Type failed "
+                         f"with error {str(e)}")
+            LOG.error(error_msg)
+            pool_obj.module.fail_json(msg=error_msg)
+
+
+class StoragePoolCreateHandler():
+    def handle(self, pool_obj, pool_params, pool_details, pd_id, media_type):
+        if pool_params['state'] == 'present' and pool_details is None:
+            if not pool_obj.module.check_mode:
+                LOG.info("Creating new storage pool")
+                if pool_params['storage_pool_id']:
+                    self.module.fail_json(
+                        msg="storage_pool_name is missing & name required to "
+                            "create a storage pool. Please enter a valid "
+                            "storage_pool_name.")
+
+                pool_details = pool_obj.create_storage_pool(
+                    pool_name=pool_params['storage_pool_name'],
+                    pd_id=pd_id,
+                    media_type=media_type,
+                    use_rfcache=pool_params['use_rfcache'],
+                    use_rmcache=pool_params['use_rmcache'])
+
+            pool_obj.result['changed'] = True
+
+        StoragePoolModifyMediaTypeHandler().handle(pool_obj, pool_params, pool_details, media_type)
+
+
+class StoragePoolHandler():
+    def handle(self, pool_obj, pool_params):
+        pool_obj.verify_storage_pool_name()
+        media_type = pool_params['media_type']
+        if media_type == "TRANSITIONAL":
+            media_type = 'Transitional'
+        pd_id = None
+        if pool_params['protection_domain_id'] or pool_params['protection_domain_name']:
+            pd_id = pool_obj.get_protection_domain(
+                protection_domain_id=pool_params['protection_domain_id'],
+                protection_domain_name=pool_params['protection_domain_name'])['id']
+        pool_details = pool_obj.get_storage_pool(storage_pool_id=pool_params['storage_pool_id'],
+                                                 storage_pool_name=pool_params['storage_pool_name'],
+                                                 pd_id=pd_id)
+        pool_obj.verify_protection_domain(pool_details=pool_details)
+        StoragePoolCreateHandler().handle(pool_obj, pool_params, pool_details, pd_id, media_type)
+
+
 def main():
-    """ Create PowerFlex Storage Pool object and perform action on it
+    """ Create PowerFlex storage pool object and perform action on it
         based on user input from playbook"""
     obj = PowerFlexStoragePool()
-    obj.perform_module_operation()
+    StoragePoolHandler().handle(obj, obj.module.params)
 
 
 if __name__ == '__main__':
