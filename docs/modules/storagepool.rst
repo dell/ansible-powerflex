@@ -21,9 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- Ansible-core 2.14 or later.
-- PyPowerFlex 1.11.0.
-- Python 3.9, 3.10 or 3.11.
+- PyPowerFlex 1.12.0.
 
 
 
@@ -80,6 +78,163 @@ Parameters
     Enable/Disable RMcache on a specific storage pool.
 
 
+  enable_zero_padding (optional, bool, None)
+    Enable/Disable zero padding on a specific storage pool.
+
+
+  rep_cap_max_ratio (optional, int, None)
+    Set replication journal capacity of a storage pool.
+
+
+  enable_rebalance (optional, bool, None)
+    Enable/Disable rebalance on a specific storage pool.
+
+
+  spare_percentage (optional, int, None)
+    Set the spare percentage of a specific storage pool.
+
+
+  rmcache_write_handling_mode (optional, str, Cached)
+    Set RM cache write handling mode of a storage pool.
+
+    *Passthrough* Writes skip the cache and are stored in storage only.
+
+    *Cached* Writes are stored in both cache and storage (the default).
+
+    Caching is only performed for IOs whose size is a multiple of 4k bytes.
+
+
+  enable_rebuild (optional, bool, None)
+    Enable/Disable rebuild of a specific storage pool.
+
+
+  enable_fragmentation (optional, bool, None)
+    Enable/Disable fragmentation of a specific storage pool.
+
+
+  parallel_rebuild_rebalance_limit (optional, int, None)
+    Set rebuild/rebalance parallelism limit of a storage pool.
+
+
+  persistent_checksum (optional, dict, None)
+    Enable/Disable persistent checksum of a specific storage pool.
+
+
+    enable (optional, bool, None)
+      Enable / disable persistent checksum.
+
+
+    validate_on_read (optional, bool, None)
+      Validate checksum upon reading data.
+
+
+    builder_limit (optional, int, 3072)
+      Bandwidth limit in KB/s for the checksum building process.
+
+      Valid range is 1024 to 10240.
+
+
+
+  protected_maintenance_mode_io_priority_policy (optional, dict, None)
+    Set protected maintenance mode I/O priority policy of a storage pool.
+
+
+    policy (optional, str, limitNumOfConcurrentIos)
+      The I/O priority policy for protected maintenance mode.
+
+      ``unlimited`` Protected maintenance mode IOPS are not limited
+
+      ``limitNumOfConcurrentIos``Limit the number of allowed concurrent protected maintenance mode migration I/Os to the value defined for *concurrent_ios_per_device*.
+
+      ``favorAppIos`` Always limit the number of allowed concurrent protected maintenance mode migration I/Os to value defined for *concurrent_ios_per_device*.
+
+      If application I/Os are in progress, should also limit the bandwidth of protected maintenance mode migration I/Os to the limit defined for the *bw_limit_per_device*.
+
+
+    concurrent_ios_per_device (optional, int, None)
+      The maximum number of concurrent protected maintenance mode migration I/Os per device.
+
+      Valid range is 1 to 20.
+
+
+    bw_limit_per_device (optional, int, None)
+      The maximum bandwidth of protected maintenance mode migration I/Os, in KB per second, per device.
+
+      Valid range is 1024 to 1048576.
+
+
+
+  vtree_migration_io_priority_policy (optional, dict, None)
+    Set the I/O priority policy for V-Tree migration for a specific Storage Pool.
+
+
+    policy (optional, str, None)
+      The I/O priority policy for protected maintenance mode.
+
+      ``limitNumOfConcurrentIos`` Limit the number of allowed concurrent V-Tree migration I/Os (default) to the *concurrent_ios_per_device*.
+
+      ``favorAppIos`` Always limit the number of allowed concurrent V-Tree migration I/Os to defined for *concurrent_ios_per_device*.
+
+      If application I/Os are in progress, should also limit the bandwidth of V-Tree migration I/Os to the limit defined for the *bw_limit_per_device*.
+
+
+    concurrent_ios_per_device (optional, int, None)
+      The maximum number of concurrent V-Tree migration I/Os per device.
+
+      Valid range is 1 to 20
+
+
+    bw_limit_per_device (optional, int, None)
+      The maximum bandwidth of V-Tree migration I/Os, in KB per second, per device.
+
+      Valid range is 1024 to 25600.
+
+
+
+  rebalance_io_priority_policy (optional, dict, None)
+    Set the rebalance I/O priority policy for a Storage Pool.
+
+
+    policy (optional, str, favorAppIos)
+      Policy to use for rebalance I/O priority.
+
+      ``unlimited`` Rebalance I/Os are not limited.
+
+      ``limitNumOfConcurrentIos`` Limit the number of allowed concurrent rebalance I/Os.
+
+      ``favorAppIos`` Limit the number and bandwidth of rebalance I/Os when application I/Os are in progress.
+
+
+    concurrent_ios_per_device (optional, int, None)
+      The maximum number of concurrent rebalance I/Os per device.
+
+      Valid range is 1 to 20.
+
+
+    bw_limit_per_device (optional, int, None)
+      The maximum bandwidth of rebalance I/Os, in KB/s, per device.
+
+      Valid range is 1024 to 1048576.
+
+
+
+  cap_alert_thresholds (optional, dict, None)
+    Set the threshold for triggering capacity usage alerts.
+
+    Alerts thresholds are calculated from each Storage Pool capacity after deducting the defined amount of spare capacity.
+
+
+    high_threshold (optional, int, None)
+      Threshold of the non-spare capacity of the Storage Pool that will trigger a high-priority alert, expressed as a percentage.
+
+      This value must be lower than the *critical_threshold*.
+
+
+    critical_threshold (optional, int, None)
+      Threshold of the non-spare capacity of the Storage Pool that will trigger a critical-priority alert, expressed as a percentage.
+
+
+
   state (True, str, None)
     State of the storage pool.
 
@@ -122,7 +277,7 @@ Notes
 
 .. note::
    - TRANSITIONAL media type is supported only during modification.
-   - The *check_mode* is not supported.
+   - The *check_mode* is supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -153,37 +308,75 @@ Examples
         storage_pool_id: "abcd1234ab12r"
         state: "present"
 
-    - name: Create a new storage pool by name
+    - name: Create a new Storage pool
       dellemc.powerflex.storagepool:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: "{{validate_certs}}"
-        storage_pool_name: "ansible_test_pool"
-        protection_domain_id: "1c957da800000000"
-        media_type: "HDD"
-        state: "present"
-
-    - name: Modify a storage pool by name
-      dellemc.powerflex.storagepool:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: "{{validate_certs}}"
-        storage_pool_name: "ansible_test_pool"
-        protection_domain_id: "1c957da800000000"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_name: "{{ pool_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
+        cap_alert_thresholds:
+          high_threshold: 30
+          critical_threshold: 50
+        media_type: "TRANSITIONAL"
+        enable_zero_padding: true
+        rep_cap_max_ratio: 40
+        rmcache_write_handling_mode: "Passthrough"
+        spare_percentage: 80
+        enable_rebalance: false
+        enable_fragmentation: false
+        enable_rebuild: false
         use_rmcache: true
         use_rfcache: true
+        parallel_rebuild_rebalance_limit: 3
+        protected_maintenance_mode_io_priority_policy:
+          policy: "unlimited"
+        rebalance_io_priority_policy:
+          policy: "unlimited"
+        vtree_migration_io_priority_policy:
+          policy: "limitNumOfConcurrentIos"
+          concurrent_ios_per_device: 10
+        persistent_checksum:
+          enable: false
         state: "present"
 
-    - name: Rename storage pool by id
+    - name: Modify a Storage pool by name
       dellemc.powerflex.storagepool:
-        hostname: "{{hostname}}"
-        username: "{{username}}"
-        password: "{{password}}"
-        validate_certs: "{{validate_certs}}"
-        storage_pool_id: "abcd1234ab12r"
-        storage_pool_new_name: "new_ansible_pool"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_name: "{{ pool_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
+        storage_pool_new_name: "pool_name_new"
+        cap_alert_thresholds:
+          high_threshold: 50
+          critical_threshold: 70
+        enable_zero_padding: false
+        rep_cap_max_ratio: 60
+        rmcache_write_handling_mode: "Passthrough"
+        spare_percentage: 90
+        enable_rebalance: true
+        enable_fragmentation: true
+        enable_rebuild: true
+        use_rmcache: true
+        use_rfcache: true
+        parallel_rebuild_rebalance_limit: 6
+        protected_maintenance_mode_io_priority_policy:
+          policy: "limitNumOfConcurrentIos"
+          concurrent_ios_per_device: 4
+        rebalance_io_priority_policy:
+          policy: "favorAppIos"
+          concurrent_ios_per_device: 10
+          bw_limit_per_device: 4096
+        vtree_migration_io_priority_policy:
+          policy: "limitNumOfConcurrentIos"
+          concurrent_ios_per_device: 10
+        persistent_checksum:
+          enable: true
+          validate_on_read: true
+          builder_limit: 1024
         state: "present"
 
 
@@ -260,4 +453,5 @@ Authors
 
 - Arindam Datta (@dattaarindam) <ansible.team@dell.com>
 - P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>
+- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
 

@@ -4,6 +4,16 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
+v2.5.0
+======
+
+Minor Changes
+-------------
+
+- Fixed the roles to support attaching the MDM cluster to the gateway.
+- The storage pool module has been enhanced to support more features.
+- Added support for PowerFlex Onyx version(4.6.x).
+
 v2.4.0
 ======
 
