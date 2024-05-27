@@ -41,10 +41,10 @@ This section describes the various issue templates and the expected content.
 
 Should explain what happened, what was expected and how to reproduce it together with any additional information that may help giving a complete picture of what happened such as screenshots, output and any environment related information that's applicable and/or maybe related to the reported problem:
 
- - Ansible Version: [e.g. 2.14]
+ - Ansible Version: [e.g. 2.15]
  - Python Version [e.g. 3.11]
- - Ansible modules for Dell PowerFlex Version: [e.g. 2.4.0]
- - PowerFlex SDK version: [e.g. PyPowerFlex 1.11.0]
+ - Ansible modules for Dell PowerFlex Version: [e.g. 2.5.0]
+ - PowerFlex SDK version: [e.g. PyPowerFlex 1.12.0]
  - Any other additional information...
 
 #### Feature requests
