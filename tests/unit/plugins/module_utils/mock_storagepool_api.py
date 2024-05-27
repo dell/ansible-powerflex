@@ -22,13 +22,44 @@ class MockStoragePoolApi:
         "use_rmcache": None,
         "use_rfcache": None,
         "media_type": None,
+        "enable_zero_padding": None,
+        "rep_cap_max_ratio": None,
+        "rmcache_write_handling_mode": None,
+        "spare_percentage": None,
+        "enable_rebalance": None,
+        "enable_fragmentation": None,
+        "enable_rebuild": None,
+        "parallel_rebuild_rebalance_limit": None,
+        "cap_alert_thresholds": {
+            "high_threshold": 30,
+            "critical_threshold": 50
+        },
+        "protected_maintenance_mode_io_priority_policy": {
+            "policy": None,
+            "concurrent_ios_per_device": None,
+            "bw_limit_per_device": None
+        },
+        "rebalance_io_priority_policy": {
+            "policy": None,
+            "concurrent_ios_per_device": None,
+            "bw_limit_per_device": None
+        },
+        "vtree_migration_io_priority_policy": {
+            "policy": None,
+            "concurrent_ios_per_device": None,
+            "bw_limit_per_device": None},
+        "persistent_checksum": {
+            "enable": None,
+            "validate_on_read": None,
+            "builder_limit": None
+        },
         'state': None
     }
 
     STORAGE_POOL_GET_LIST = [
         {
-            'protectionDomainId': '4eeb304600000000',
-            'protectionDomainName': 'test_pd',
+            'protectionDomainId': "7bd6457000000000",
+            'protectionDomainName': "test_pd_1",
             'rebuildEnabled': True,
             'dataLayout': 'MediumGranularity',
             'persistentChecksumState': 'Protected',
@@ -98,8 +129,8 @@ class MockStoragePoolApi:
 
     STORAGE_POOL_GET_MULTI_LIST = [
         {
-            'protectionDomainId': '4eeb304600000000',
-            'protectionDomainName': 'test_pd',
+            'protectionDomainId': "7bd6457000000000",
+            'protectionDomainName': "test_pd_1",
             'rebuildEnabled': True,
             'dataLayout': 'MediumGranularity',
             'persistentChecksumState': 'Protected',
@@ -166,7 +197,7 @@ class MockStoragePoolApi:
             'id': 'test_pool_id_1'
         },
         {
-            'protectionDomainId': '4eeb304600000002',
+            'protectionDomainId': "7bd6457000000000",
             'protectionDomainName': 'test_pd_1',
             'rebuildEnabled': True,
             'dataLayout': 'MediumGranularity',
@@ -238,6 +269,30 @@ class MockStoragePoolApi:
     PROTECTION_DETAILS = [{"pd_id": "4eeb304600000000", "pd_name": "test_pd"}]
 
     PROTECTION_DETAILS_1 = [{"id": "4eeb304600000001", "name": "test_pd_name"}]
+
+    PROTECTION_DOMAIN = {
+        "protectiondomain": [
+            {
+                "id": "7bd6457000000000",
+                "name": "test_pd_1",
+                "protectionDomainState": "Active",
+                "overallIoNetworkThrottlingInKbps": 20480,
+                "rebalanceNetworkThrottlingInKbps": 10240,
+                "rebuildNetworkThrottlingInKbps": 10240,
+                "vtreeMigrationNetworkThrottlingInKbps": 10240,
+                "rfcacheEnabled": "false",
+                "rfcacheMaxIoSizeKb": 128,
+                "rfcacheOpertionalMode": "None",
+                "rfcachePageSizeKb": 64,
+                "storagePools": [
+                    {
+                        "id": "8d1cba1700000000",
+                        "name": "pool1"
+                    }
+                ]
+            }
+        ]
+    }
 
     STORAGE_POOL_STATISTICS = {
         'backgroundScanFixedReadErrorCount': 0,
@@ -616,10 +671,26 @@ class MockStoragePoolApi:
         "get_multi_details": "More than one storage pool found",
         "create_wo_pd": "Please provide protection domain details",
         "create_transitional": "TRANSITIONAL media type is not supported during creation.",
-        "create_pool_name_empty": "Empty or white spaced string provided in storage_pool_name.",
+        "create_pool_name_empty": "Empty or white spaced string provided for storage pool name. Provide valid storage pool name",
         "create_pool_new_name": "storage_pool_new_name is passed during creation.",
-        "rename_storage_pool_empty": "Empty/White spaced name is not allowed during renaming of a storage pool.",
-        "delete_storage_pool": "Deleting storage pool is not supported through ansible module."
+        "rename_storage_pool_empty": "Empty or white spaced string provided for storage pool name. Provide valid storage pool name",
+        "delete_storage_pool": "Deleting storage pool is not supported through ansible module.",
+        "rename_pool": "Modify storage pool name failed",
+        "modify_pool_rmcache": "Modify RM cache operation failed",
+        "modify_pool_rfcache": "Modify RF cache operation failed",
+        "modify_pool_zero_padding_enabled": "Enable/Disable zero padding operation failed",
+        "modify_pool_rep_cap_max_ratio": "Modify Replication Capacity max ratio operation failed",
+        "modify_pool_enable_rebalance": "Enable/Disable Rebalance failed",
+        "modify_pool_enable_rebuild": "Enable/Disable Rebuild operation failed",
+        "modify_pool_enable_fragmentation": "Enable/Disable Fragmentation operation failed",
+        "modify_pool_spare_percentage": "Modify Spare Percentage operation failed",
+        "modify_pool_rmcache_write_handling_mode": "Modify RMCache Write Handling Mode failed",
+        "modify_pool_rebuild_rebalance_parallelism_limit": "Modify Rebuild/Rebalance Parallelism Limit operation failed",
+        "modify_pool_capacity_alert_thresholds": "Modify Capacity Alert Thresholds operation failed",
+        "modify_pool_protected_maintenance_mode_io_priority_policy": "Set Protected Maintenance Mode IO Priority Policy operation failed",
+        "modify_pool_vtree_migration_io_priority_policy": "Set Vtree Migration I/O Priority Policy operation failed",
+        "modify_pool_rebalance_io_priority_policy": "Modify rebalance IO Priority Policy failed",
+        "modify_pool_persistent_checksum": "Modify Persistent Checksum failed"
     }
 
     @staticmethod
