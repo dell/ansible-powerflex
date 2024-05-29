@@ -1344,6 +1344,9 @@ class PowerFlexVolume(object):
             LOG.info(msg)
 
         # Mapping the SDCs to a volume
+        map_changed = False
+        mode_changed = False
+        limits_changed = False
         if state == 'present' and volume_details and sdc and \
                 sdc_state == 'mapped':
             mode_changed, limits_changed, map_changed = self.sdc_state_mapped(
