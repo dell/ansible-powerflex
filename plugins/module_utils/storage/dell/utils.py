@@ -223,7 +223,5 @@ def get_filter(name, id=None):
 
 
 def random_uuid_generation():
-    generate_uuid = ''.join(
-        [random.choice(string.ascii_lowercase + string.digits) for n in range(32)])
-
-    return generate_uuid
+    """Generate a random UUID using lowercase letters and digits."""
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=32))

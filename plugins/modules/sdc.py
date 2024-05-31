@@ -296,7 +296,7 @@ class PowerFlexSdc(object):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def validate_parameters(self, sdc_name=None, sdc_id=None, sdc_ip=None):
+    def validate_parameters(self):
         """Validate the input parameters"""
 
         sdc_identifiers = ['sdc_name', 'sdc_id', 'sdc_ip']
@@ -367,7 +367,7 @@ class PowerFlexSdc(object):
             sdc_details={}
         )
 
-        self.validate_parameters(sdc_name, sdc_id, sdc_ip)
+        self.validate_parameters()
         sdc_details = self.get_sdc(sdc_name=sdc_name, sdc_id=sdc_id,
                                    sdc_ip=sdc_ip)
         id_ip_name = sdc_name or sdc_ip or sdc_id
