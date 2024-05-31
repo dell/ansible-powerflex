@@ -2392,7 +2392,8 @@ class PowerFlexInfo(object):
         api_version = self.get_api_details()
         array_details = self.get_array_details()
         subset = self.module.params['gather_subset']
-
+        subset_result_filter = {}
+        subset_result_wo_param = {}
         self.validate_subset(api_version, subset)
 
         subset_dict_with_filter = {
@@ -2414,11 +2415,11 @@ class PowerFlexInfo(object):
             "deployment": self.get_deployments_list,
             "firmware_repository": self.get_firmware_repository_list
         }
-
-        subset_result_filter = {key: subset_dict_with_filter[key](
-            filter_dict=filter_dict) for key in subset if key in subset_dict_with_filter}
-        subset_result_wo_param = {key: subset_wo_param[key](
-        ) for key in subset if key in subset_wo_param}
+        if subset:
+            subset_result_filter = {key: subset_dict_with_filter[key](
+                filter_dict=filter_dict) for key in subset if key in subset_dict_with_filter}
+            subset_result_wo_param = {key: subset_wo_param[key](
+            ) for key in subset if key in subset_wo_param}
 
         self.module.exit_json(
             Array_Details=array_details,
