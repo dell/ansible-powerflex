@@ -21,6 +21,7 @@ import string
 try:
     from PyPowerFlex import PowerFlexClient
     from PyPowerFlex.objects.system import SnapshotDef  # pylint: disable=unused-import
+    from PyPowerFlex.utils import filter_response  # pylint: disable=unused-import
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = True, None
 except ImportError:
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = False, traceback.format_exc()

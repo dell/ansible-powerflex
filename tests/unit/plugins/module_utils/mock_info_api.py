@@ -301,6 +301,25 @@ class MockInfoApi:
         }
     ]
 
+    INFO_NVME_HOST_LIST = [
+        {
+            "id": "fake_host_id_1",
+            "name": "fake_host_name_1",
+            "hostType": "NVMeHost"
+        },
+        {
+            "id": "fake_host_id_2",
+            "hostType": "NVMeHost"
+        }
+    ]
+
+    INFO_NVME_HOST_FILTER_LIST = [
+        {
+            "id": "fake_host_id",
+            "name": "fake_host_name",
+        }
+    ]
+
     RESPONSE_EXEC_DICT = {
         'volume_get_details': "Get volumes list from powerflex array failed with error",
         'snapshot_policy_get_details': "Get snapshot policies list from powerflex array failed with error ",
@@ -320,7 +339,8 @@ class MockInfoApi:
         'managed_device_get_error': "Get managed devices from PowerFlex Manager failed with error",
         'service_template_get_error': "Get service templates from PowerFlex Manager failed with error",
         'deployment_get_error': "Get deployments from PowerFlex Manager failed with error",
-        'firmware_repository_get_error': "Get firmware repository from PowerFlex Manager failed with error"
+        'firmware_repository_get_error': "Get firmware repository from PowerFlex Manager failed with error",
+        'nvme_host_get_details': "Get NVMe host list from powerflex array failed with error",
     }
 
     @staticmethod
