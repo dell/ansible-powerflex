@@ -22,7 +22,9 @@
   when: powerflex_common_ubuntu_tar_file.changed
 
 - name: Execute the siob_extract # noqa: no-handler
-  ansible.builtin.command: /var/tmp/siob_extract "{{ powerflex_common_siob_file.files[0].path }}" chdir="/var/tmp"
+  ansible.builtin.command:
+    cmd: /var/tmp/siob_extract "{{ powerflex_common_siob_file.files[0].path }}"
+    chdir: /var/tmp
   when: powerflex_common_ubuntu_tar_file.changed
   register: powerflex_common_siob_extract_output
   changed_when: powerflex_common_siob_extract_output.rc == 0
