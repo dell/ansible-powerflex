@@ -43,7 +43,6 @@ description: Ansible modules for PowerFlex
 # This key is mutually exclusive with 'license_file'
 license:
   - GPL-3.0-or-later
-  - Apache-2.0
 
 # A list of tags you want to associate with the collection
 # for indexing/searching.
