@@ -31,7 +31,7 @@ jobs:
         run: ansible-galaxy collection build --output-path "${GITHUB_WORKSPACE}/.cache/collection-tarballs"
 
       - name: Store migrated collection artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: collection
           path: .cache/collection-tarballs
@@ -148,7 +148,7 @@ jobs:
         run: pip install ansible-lint --disable-pip-version-check
 
       - name: Download migrated collection artifacts
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: collection
           path: .cache/collection-tarballs
