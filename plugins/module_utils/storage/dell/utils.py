@@ -28,7 +28,7 @@ except ImportError:
 """importing importlib.metadata"""
 try:
     from importlib.metadata import version as get_version
-    from packaging.version import parse as parse_version
+    from ansible.module_utils.compat.version import LooseVersion
 
     PKG_RSRC_IMPORTED, PKG_RSRC_IMP_ERR = True, None
 except ImportError:
@@ -89,7 +89,7 @@ def ensure_required_libs(module):
     min_ver = '1.12.0'
     try:
         curr_version = get_version("PyPowerFlex")
-        supported_version = (parse_version(curr_version) >= parse_version(min_ver))
+        supported_version = (LooseVersion(curr_version) >= LooseVersion(min_ver))
         if not supported_version:
             module.fail_json(msg="PyPowerFlex {0} is not supported. "
                              "Required minimum version is "
@@ -171,7 +171,7 @@ def is_version_less_than_3_6(version):
     """Verifies if powerflex version is less than 3.6"""
     version = re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
     return \
-        parse_version(version) < parse_version('3.6')
+        LooseVersion(version) < LooseVersion('3.6')
 
 
 def is_invalid_name(name):
