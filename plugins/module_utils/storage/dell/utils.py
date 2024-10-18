@@ -1,5 +1,5 @@
 # Copyright: (c) 2024, Dell Technologies
-# Apache License version 2.0 (see MODULE-LICENSE or http://www.apache.org/licenses/LICENSE-2.0.txt)
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
 
@@ -25,10 +25,10 @@ try:
 except ImportError:
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = False, traceback.format_exc()
 
-"""importing pkg_resources"""
+"""importing importlib.metadata"""
 try:
-    from pkg_resources import parse_version
-    import pkg_resources
+    from importlib.metadata import version as get_version
+    from ansible.module_utils.compat.version import LooseVersion
 
     PKG_RSRC_IMPORTED, PKG_RSRC_IMP_ERR = True, None
 except ImportError:
@@ -79,7 +79,7 @@ def ensure_required_libs(module):
                          exception=DATEUTIL_IMP_ERR)
 
     if not PKG_RSRC_IMPORTED:
-        module.fail_json(msg=missing_required_lib("pkg_resources"),
+        module.fail_json(msg=missing_required_lib("importlib.metadata"),
                          exception=PKG_RSRC_IMP_ERR)
 
     if not HAS_POWERFLEX_SDK:
@@ -88,8 +88,8 @@ def ensure_required_libs(module):
 
     min_ver = '1.12.0'
     try:
-        curr_version = pkg_resources.require("PyPowerFlex")[0].version
-        supported_version = (parse_version(curr_version) >= parse_version(min_ver))
+        curr_version = get_version("PyPowerFlex")
+        supported_version = (LooseVersion(curr_version) >= LooseVersion(min_ver))
         if not supported_version:
             module.fail_json(msg="PyPowerFlex {0} is not supported. "
                              "Required minimum version is "
@@ -171,7 +171,7 @@ def is_version_less_than_3_6(version):
     """Verifies if powerflex version is less than 3.6"""
     version = re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
     return \
-        pkg_resources.parse_version(version) < pkg_resources.parse_version('3.6')
+        LooseVersion(version) < LooseVersion('3.6')
 
 
 def is_invalid_name(name):
