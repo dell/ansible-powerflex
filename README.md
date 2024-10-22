@@ -35,7 +35,7 @@ The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, s
 
 | **Ansible Modules** | **PowerFlex/VxFlex OS Version** | **SDK version** | **Python version** | **Ansible**              |
 |---------------------|-----------------------|-------|--------------------|--------------------------|
-| v2.5.0 |3.6 <br> 4.0 <br> 4.5 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 1.12.0 | 3.9.x <br> 3.10.x <br> 3.11.x <br> 3.12.x | 2.15 <br> 2.16 <br> 2.17 |
+| v2.5.0 |3.6 <br> 4.0 <br> 4.5 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 1.13.0 | 3.9.x <br> 3.10.x <br> 3.11.x <br> 3.12.x | 2.15 <br> 2.16 <br> 2.17 |
 
   * Please follow PyPowerFlex installation instructions on [PyPowerFlex Documentation](https://github.com/dell/python-powerflex)
 
