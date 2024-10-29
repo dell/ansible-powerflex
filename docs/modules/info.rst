@@ -61,7 +61,9 @@ Parameters
 
     FirmwareRepository - :literal:`firmware\_repository`.
 
-    NVMe host - :literal:`nvme\_host`
+    NVMe host - :literal:`nvme\_host`.
+
+    NVMe Storage Data Target  - :literal:`sdt`.
 
 
   filters (optional, list, None)
@@ -220,6 +222,7 @@ Examples
           - replication_pair
           - fault_set
           - nvme_host
+          - sdt
 
     - name: Get a subset list of PowerFlex volumes
       dellemc.powerflex.info:
@@ -329,6 +332,15 @@ Examples
           - filter_key: "name"
             filter_operator: "equal"
             filter_value: "ansible_test"
+
+    - name: Get the list of NVMe Storage Data Target
+      dellemc.powerflex.info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - sdt
 
 
 
@@ -1085,6 +1097,138 @@ NVMe_Hosts (always, list, [{'hostOsFullType': 'Generic', 'systemId': 'f4c3b7f5c4
 
   versionInfo (, str, )
     Version information.
+
+
+
+SDT (when I(gather_subset) is C(sdt), list, )
+  Details of NVMe storage data targets.
+
+
+  id (, str, )
+    The unique identifier of the SDT object.
+
+
+  name (, str, )
+    The name of the SDT object.
+
+
+  ipList (, list, )
+    The list of IP addresses of the SDT object.
+
+
+    ip (, str, )
+      The IP address of the SDT object.
+
+
+    role (, str, )
+      The role associated with the IP address of the SDT object.
+
+
+
+  storagePort (, int, )
+    The storage port number of the SDT object.
+
+
+  nvmePort (, int, )
+    The NVMe port number of the SDT object.
+
+
+  discoveryPort (, int, )
+    The discovery port number of the SDT object.
+
+
+  sdtState (, str, )
+    The state of the SDT object.
+
+
+  membershipState (, str, )
+    The membership state of the SDT object.
+
+
+  mdmConnectionState (, str, )
+    The MDM connection state of the SDT object.
+
+
+  protectionDomainId (, str, )
+    The Protection Domain ID associated with the SDT object.
+
+
+  maintenanceState (, str, )
+    The maintenance state of the SDT object.
+
+
+  softwareVersionInfo (, str, )
+    The software version information of the SDT object.
+
+
+  certificateInfo (, str, )
+    The certificate information of the SDT object.
+
+
+  authenticationError (, str, )
+    The authentication error details of the SDT object.
+
+
+  nvme_hosts (, list, )
+    The list of NVMe hosts associated with the SDT object.
+
+
+    isConnected (, bool, )
+      Indicates if the NVMe controller is connected.
+
+
+    sdtId (, str, )
+      The SDT ID associated with the NVMe controller.
+
+
+    hostIp (, str, )
+      The IP address of the host.
+
+
+    hostId (, str, )
+      The host ID associated with the NVMe controller.
+
+
+    controllerId (, int, )
+      The controller ID.
+
+
+    sysPortId (, int, )
+      The system port ID.
+
+
+    sysPortIp (, str, )
+      The IP address of the system port.
+
+
+    subsystem (, str, )
+      The subsystem associated with the NVMe controller.
+
+
+    isAssigned (, bool, )
+      Indicates if the NVMe controller is assigned.
+
+
+    name (, str, )
+      The name of the NVMe controller. Can be null.
+
+
+    id (, str, )
+      The unique identifier of the NVMe controller.
+
+
+    links (, list, )
+      Hyperlinks related to the NVMe controller.
+
+
+      rel (, str, )
+        The relation type of the link.
+
+
+      href (, str, )
+        The URL of the link.
+
+
 
 
 

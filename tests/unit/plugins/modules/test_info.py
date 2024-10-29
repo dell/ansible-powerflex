@@ -659,3 +659,57 @@ class TestPowerflexInfo():
         )
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'nvme_host_get_details'), info_module_mock)
+
+    def test_get_sdt_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['sdt']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.sdt.get = MagicMock(
+            return_value=MockInfoApi.INFO_GET_SDT_LIST
+        )
+        info_module_mock.powerflex_conn.sdc.get = MagicMock(
+            return_value=MockInfoApi.INFO_GET_SDT_NVME_HOST_LIST
+        )
+        info_module_mock.powerflex_conn.host.get_related = MagicMock(
+            return_value=MockInfoApi.INFO_GET_SDT_NVME_CONTROLLER_LIST
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.sdt.get.assert_called()
+        info_module_mock.powerflex_conn.sdc.get.assert_called()
+        info_module_mock.powerflex_conn.host.get_related.assert_called()
+
+    def test_get_sdt_details_filter(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['sdt'],
+            "filters": [{
+                "filter_key": "name",
+                "filter_operator": "equal",
+                "filter_value": "sdt-name",
+            }]
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.sdt.get = MagicMock(
+            return_value=MockInfoApi.INFO_GET_SDT_LIST
+        )
+        info_module_mock.powerflex_conn.sdc.get = MagicMock(
+            return_value=MockInfoApi.INFO_GET_SDT_NVME_HOST_LIST
+        )
+        info_module_mock.powerflex_conn.host.get_related = MagicMock(
+            return_value=MockInfoApi.INFO_GET_SDT_NVME_CONTROLLER_LIST
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.sdt.get.assert_called()
+        info_module_mock.powerflex_conn.sdc.get.assert_called()
+        info_module_mock.powerflex_conn.host.get_related.assert_called()
+
+    def test_get_sdt_details_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['sdt']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.sdc.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'sdt_get_error'), info_module_mock)

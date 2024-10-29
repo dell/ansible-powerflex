@@ -319,6 +319,33 @@ class MockInfoApi:
             "name": "fake_host_name",
         }
     ]
+    INFO_GET_SDT_LIST = [
+        {
+            "mdmConnectionState": "Connected",
+            "softwareVersionInfo": "R4_5.2100.0",
+            "name": "sdt-name",
+            "id": "8bddf18c00000001"
+        }
+    ]
+    INFO_GET_SDT_NVME_HOST_LIST = [
+        {
+            "hostType": "NVMeHost",
+            "id": "1040d69e00010001"
+        }
+    ]
+    INFO_GET_SDT_NVME_CONTROLLER_LIST = [
+        {
+            "isConnected": True,
+            "sdtId": "8bddf18c00000001",
+            "hostIp": "172.171.1.17",
+            "hostId": "1040d69e00010001",
+            "controllerId": 1,
+            "sysPortId": 0,
+            "sysPortIp": "172.171.3.21",
+            "subsystem": "Io",
+            "id": "cc00010001000002"
+        }
+    ]
 
     RESPONSE_EXEC_DICT = {
         'volume_get_details': "Get volumes list from powerflex array failed with error",
@@ -341,6 +368,7 @@ class MockInfoApi:
         'deployment_get_error': "Get deployments from PowerFlex Manager failed with error",
         'firmware_repository_get_error': "Get firmware repository from PowerFlex Manager failed with error",
         'nvme_host_get_details': "Get NVMe host list from powerflex array failed with error",
+        "sdt_get_error": "Get sdt from PowerFlex Manager failed with error"
     }
 
     @staticmethod
