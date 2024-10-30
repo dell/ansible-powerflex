@@ -1950,7 +1950,7 @@ NVMe_Hosts:
         "memoryAllocationFailure": null,
         "versionInfo": null,
         "sdcType": null,
-        "nqn": "nqn.2014-08.org.nvmexpress:uuid:79e90a42-47c9-a0f6-d9d3-51c47c72c7c1",
+        "nqn": "nqn.org.nvmexpress:uuid",
         "maxNumPaths": 3,
         "maxNumSysPorts": 3,
         "sdcGuid": null,

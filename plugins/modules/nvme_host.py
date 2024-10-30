@@ -11,7 +11,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r"""
 module: nvme_host
-version_added: '1.0.0'
+version_added: '2.6.0'
 short_description: Manage NVMe hosts on Dell PowerFlex
 description:
 - Managing NVMe hosts on PowerFlex storage system includes getting details of NVMe hosts
@@ -26,20 +26,20 @@ extends_documentation_fragment:
 options:
   max_num_paths:
     description:
-    - Maximum number of paths per volume. Used to create/modify the NVMe host.
+    - Maximum number of paths per volume. Used to create or modify the NVMe host.
     type: str
   max_num_sys_ports:
     description:
-    - Maximum number of ports per protection domain. Used to create/modify the NVMe host.
+    - Maximum number of ports per protection domain. Used to create or modify the NVMe host.
     type: str
   nqn:
     description:
-    - NQN of the NVMe host. Used to create/get/modify the NVMe host.
+    - NQN of the NVMe host. Used to create, get or modify the NVMe host.
     type: str
   nvme_host_name:
     description:
     - Name of the NVMe host.
-    - Specify either I(nvme_host_name), I(nqn) for create/get/rename operation.
+    - Specify either I(nvme_host_name), I(nqn) for create, get or rename operation.
     type: str
   nvme_host_new_name:
     description:
@@ -49,10 +49,10 @@ options:
     description:
     - State of the NVMe host.
     choices: ['present', 'absent']
-    required: true
+    default: present
     type: str
 notes:
-  - The I(check_mode) is not supported.
+  - The I(check_mode) is supported.
 """
 
 EXAMPLES = r"""
@@ -110,16 +110,16 @@ nvme_host_details:
     type: dict
     contains:
         max_num_paths:
-            description: Maximum number of paths per volume. Used to create/modify the NVMe host.
+            description: Maximum number of paths per volume. Used to create or modify the NVMe host.
             type: str
         max_num_sys_ports:
-            description: Maximum number of ports per protection domain. Used to create/modify the NVMe host.
+            description: Maximum number of ports per protection domain. Used to create or modify the NVMe host.
             type: str
         nvme_host_name:
             description: Name of the NVMe host.
             type: str
         nqn:
-            description: NQN of the NVMe host. Used to create/get/modify the NVMe host.
+            description: NQN of the NVMe host. Used to create, get or modify the NVMe host.
             type: str
     sample: {
         "hostOsFullType": "Generic",
@@ -140,7 +140,7 @@ nvme_host_details:
         "memoryAllocationFailure": null,
         "versionInfo": null,
         "sdcType": null,
-        "nqn": "nqn.2014-08.org.nvmexpress:uuid:79e90a42-47c9-a0f6-d9d3-51c47c72c7c1",
+        "nqn": "nqn.org.nvmexpress:uuid",
         "maxNumPaths": 6,
         "maxNumSysPorts": 10,
         "sdcGuid": null,
@@ -173,6 +173,8 @@ nvme_host_details:
 """
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell import (
     utils,
 )
@@ -180,115 +182,41 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell imp
 LOG = utils.get_logger("nvme")
 
 
-class PowerFlexNvmeHost(object):
+class PowerFlexNVMeHost(PowerFlexBase):
     """Class with NVMe host operations"""
 
     def __init__(self):
         """Define all parameters required by this module"""
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_nvme_host_parameters())
-
         required_one_of = [["nvme_host_name", "nqn"]]
 
-        # initialize the Ansible module
-        self.module = AnsibleModule(
-            argument_spec=self.module_params,
-            supports_check_mode=False,
-            required_one_of=required_one_of,
+        ansible_module_params = {
+            'argument_spec': get_powerflex_nvme_host_parameters(),
+            'supports_check_mode': True,
+            'required_one_of': required_one_of
+        }
+        super().__init__(AnsibleModule, ansible_module_params)
+
+        self.result = dict(
+            changed=False,
+            nvme_host_details={}
         )
 
-        utils.ensure_required_libs(self.module)
-
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params
-            )
-            LOG.info("Got the PowerFlex system connection object instance")
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
-
-    def perform_module_operation(self):
+    def validate_parameters(self, nvme_host_params):
+        """Validate the input parameters
+        :param nvme_host_params: The dict of NVMe host parameters
+        :type nvme_host_params: dict
         """
-        Perform different actions on NVMe host based on parameters passed in the playbook
-        """
-        nvme_host_name = self.module.params["nvme_host_name"]
-        nvme_host_new_name = self.module.params["nvme_host_new_name"]
-        max_num_paths = self.module.params["max_num_paths"]
-        max_num_sys_ports = self.module.params["max_num_sys_ports"]
-        nqn = self.module.params["nqn"]
-        state = self.module.params["state"]
 
-        changed = False
-        result = dict(changed=False, nvme_host_details={})
-
-        self.validate_parameters()
-
-        # try to get NVMe host detail
-        # nvme host can be queried using name or id
-        nvme_host_details = self.get_nvme_host(
-            nvme_host_name=nvme_host_name, nqn=nqn
-        )
-        if nvme_host_details:
-            msg = "Fetched the NVMe host details %s" % str(nvme_host_details)
-            LOG.info(msg)
-        if state == "absent" and nvme_host_details:
-            changed = self.remove(nvme_host_details["id"])
-
-        if state == "present" and nvme_host_details:
-            changed = self.perform_modify(
-                nvme_host_details, nvme_host_new_name, max_num_paths, max_num_sys_ports
-            )
-
-        # do create operation if no host exists
-        if state == "present" and not nvme_host_details:
-            nvme_host_details, changed = self.process_host_creation(
-                nvme_host_name,
-                nvme_host_new_name,
-                nqn,
-                max_num_paths,
-                max_num_sys_ports,
-            )
-
-        if changed:
-            nvme_host_details = self.get_nvme_host(
-                nvme_host_name=nvme_host_new_name or nvme_host_name,
-                nqn=nqn,
-            )
-
-        result["nvme_host_details"] = nvme_host_details
-        result["changed"] = changed
-        self.module.exit_json(**result)
-
-    def process_host_creation(
-        self, nvme_host_name, nvme_host_new_name, nqn, max_num_paths, max_num_sys_ports
-    ):
-        """
-        Create a new NVMe host based on the given parameters and retrieve the NVMe host details
-        """
-        if nvme_host_new_name:
-            self.module.fail_json(
-                msg="nvme_host_new_name parameter is not supported during "
-                "creation of a NVMe host. Try renaming the NVMe host after"
-                " the creation."
-            )
-
-        created_nvme = self.create_nvme_host(
-            nqn=nqn,
-            name=nvme_host_name,
-            max_num_paths=max_num_paths,
-            max_num_sys_ports=max_num_sys_ports,
-        )
-
-        if created_nvme:
-            nvme_host_details = self.get_nvme_host(nvme_host_id=created_nvme["id"])
-            msg = (
-                "NVMe host created successfully, fetched "
-                "NVMe host details %s" % str(nvme_host_details)
-            )
-            LOG.info(msg)
-            return nvme_host_details, True
-        return None, False
+        host_identifiers = ["nvme_host_name", "nqn",
+                            "max_num_paths", "max_num_sys_ports"]
+        for param in host_identifiers:
+            if (
+                nvme_host_params[param] is not None
+                and len(nvme_host_params[param].strip()) == 0
+            ):
+                msg = f"Provide valid {param}"
+                LOG.error(msg)
+                self.module.fail_json(msg=msg)
 
     def get_nvme_host(self, nvme_host_id=None, nvme_host_name=None, nqn=None):
         """Get the NVMe host Details
@@ -327,71 +255,57 @@ class PowerFlexNvmeHost(object):
             return nvme_host_details[0] if nvme_host_details else None
 
         except Exception as e:
-            errormsg = "Failed to get the NVMe host %s with error %s" % (
-                id_name,
-                str(e),
-            )
+            errormsg = "Failed to get NVMe host with error: %s" % str(e)
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def create_nvme_host(self, nqn, name, max_num_paths, max_num_sys_ports):
+    def create_nvme_host(self, nvme_host_params):
         """Create the NVMe host
-        :param nqn: The NQN of the NVMe host
-        :param name: The name of the NVMe host
-        :param max_num_paths: The maximum number of paths per volume
-        :param max_num_sys_ports: Maximum Number of Ports Per Protection Domain
+        :param nvme_host_params: The dict of NVMe host parameters
+        :type nvme_host_params: dict
+        :return: The dict containing NVMe host details
         """
         try:
-            if nqn is None or len(nqn.strip()) == 0:
-                self.module.fail_json(msg="Please provide valid NQN.")
-            host_id = self.powerflex_conn.host.create(
-                nqn=nqn,
-                name=name,
-                max_num_paths=max_num_paths,
-                max_num_sys_ports=max_num_sys_ports,
-            )
-            return host_id
+            if not nvme_host_params['nqn']:
+                errormsg = "nqn is required for creating NVMe host"
+                LOG.error(errormsg)
+                self.module.fail_json(msg=errormsg)
+
+            if not self.module.check_mode:
+                msg = (f"Creating NVMe host with nqn: {nvme_host_params['nqn']}")
+                LOG.info(msg)
+                return self.powerflex_conn.host.create(
+                    nqn=nvme_host_params['nqn'],
+                    name=nvme_host_params['nvme_host_name'],
+                    max_num_paths=nvme_host_params['max_num_paths'],
+                    max_num_sys_ports=nvme_host_params['max_num_sys_ports'],
+                )
+            return self.get_nvme_host(nqn=nvme_host_params['nqn'])
 
         except Exception as e:
             errormsg = "Create NVMe host operation failed with " "error %s" % str(e)
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def validate_parameters(self):
-        """Validate the input parameters"""
-
-        host_identifiers = ["nvme_host_name", "nqn"]
-        for param in host_identifiers:
-            if (
-                self.module.params[param] is not None
-                and len(self.module.params[param].strip()) == 0
-            ):
-                msg = f"Please provide valid {param}"
-                LOG.error(msg)
-                self.module.fail_json(msg=msg)
-
-        if (
-            self.module.params["nvme_host_name"] is None
-            and self.module.params["nqn"] is None
-        ):
-            msg = "Please provide at least one of nvme_host_name or nqn"
-            LOG.error(msg)
-            self.module.fail_json(msg=msg)
-
-    def remove(self, nvme_id):
-        """Remove the NVMe host"""
+    def delete_nvme_host(self, nvme_host_id):
+        """Remove the NVMe host
+        :param nvme_host_id: The ID of the NVMe host
+        :type nvme_host_id: str
+        :return: The dict containing NVMe host details
+        """
         try:
-            LOG.info(msg=f"Failed to remove NVMe host {nvme_id}")
-            self.powerflex_conn.sdc.delete(nvme_id)
-            return True
+            if not self.module.check_mode:
+                LOG.info(msg=f"Failed to remove NVMe host {nvme_host_id}")
+                self.powerflex_conn.sdc.delete(nvme_host_id)
+                return None
+            return self.get_nvme_host(nvme_host_id=nvme_host_id)
+
         except Exception as e:
-            errormsg = f"Failed to remove NVMe host {nvme_id} with error {str(e)}"
+            errormsg = f"Failed to remove NVMe host {nvme_host_id} with error {str(e)}"
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def perform_modify(
-        self, nvme_host_details, nvme_host_new_name, max_num_paths, max_num_sys_ports
-    ):
+    def modify_nvme_host(self, nvme_host_details, nvme_host_params):
         """
         Modifies the NVMe host with the given details.
 
@@ -409,59 +323,53 @@ class PowerFlexNvmeHost(object):
         """
         modified = False
         modified_fields = []
-        if (
-            nvme_host_new_name is not None
-            and nvme_host_new_name != nvme_host_details["name"]
-        ):
-            try:
-                self.powerflex_conn.sdc.rename(
-                    sdc_id=nvme_host_details["id"], name=nvme_host_new_name
-                )
-                modified_fields.append("name")
-                modified = True
-            except Exception as e:
-                errormsg = "Failed to rename NVMe host %s with error %s" % (
-                    nvme_host_details["id"],
-                    str(e),
-                )
-                LOG.error(errormsg)
-                self.module.fail_json(msg=errormsg)
 
-        if max_num_paths and max_num_paths != str(nvme_host_details["maxNumPaths"]):
-            try:
-                self.powerflex_conn.host.modify_max_num_paths(
-                    host_id=nvme_host_details["id"], max_num_paths=max_num_paths
-                )
-                modified_fields.append("max_num_paths")
-                modified = True
-            except Exception as e:
-                msg = "Successfully modified the following fields: %s " % ", ".join(modified_fields)
-                errormsg = (
-                    "Failed to modify NVMe host %s max_num_paths with error %s. %s"
-                    % (nvme_host_details["id"], str(e), msg if modified_fields else "")
-                )
-                LOG.error(errormsg)
-                self.module.fail_json(msg=errormsg)
+        def handle_exception(operation, field, ex):
+            msg = f"Successfully modified the following fields: {', '.join(modified_fields)} " if modified_fields else ""
+            errormsg = f"Failed to {operation} NVMe host {nvme_host_details['id']} {field} with error {str(ex)}. {msg}"
+            LOG.error(errormsg)
+            self.module.fail_json(msg=errormsg)
 
-        if max_num_sys_ports and max_num_sys_ports != str(nvme_host_details["maxNumSysPorts"]):
-            try:
-                self.powerflex_conn.host.modify_max_num_sys_ports(
-                    host_id=nvme_host_details["id"], max_num_sys_ports=max_num_sys_ports
-                )
-                modified = True
-            except Exception as e:
-                msg = "Successfully modified the following fields: %s " % ", ".join(modified_fields)
-                errormsg = (
-                    "Failed to modify NVMe host %s max_num_sys_ports with error %s. %s"
-                    % (nvme_host_details["id"], str(e), msg if modified_fields else "")
-                )
-                LOG.error(errormsg)
-                self.module.fail_json(msg=errormsg)
-        return modified
+        def modify_field(condition, operation, field, modify_function):
+            nonlocal modified, modified_fields
+            if condition:
+                try:
+                    if not self.module.check_mode:
+                        modify_function()
+                    modified_fields.append(field)
+                    modified = True
+                except Exception as e:
+                    handle_exception(operation, field, e)
+
+        modify_field(
+            nvme_host_params['nvme_host_new_name'] and nvme_host_params['nvme_host_new_name'] != nvme_host_details["name"],
+            "rename", "name",
+            lambda: self.powerflex_conn.sdc.rename(
+                sdc_id=nvme_host_details["id"], name=nvme_host_params['nvme_host_new_name']
+            )
+        )
+
+        modify_field(
+            nvme_host_params['max_num_paths'] and nvme_host_params['max_num_paths'] != nvme_host_details["maxNumPaths"],
+            "modify", "max_num_paths",
+            lambda: self.powerflex_conn.host.modify_max_num_paths(
+                host_id=nvme_host_details["id"], max_num_paths=nvme_host_params['max_num_paths']
+            )
+        )
+
+        modify_field(
+            nvme_host_params['max_num_sys_ports'] and nvme_host_params['max_num_sys_ports'] != nvme_host_details["maxNumSysPorts"],
+            "modify", "max_num_sys_ports",
+            lambda: self.powerflex_conn.host.modify_max_num_sys_ports(
+                host_id=nvme_host_details["id"], max_num_sys_ports=nvme_host_params['max_num_sys_ports']
+            )
+        )
+
+        return modified, self.get_nvme_host(nvme_host_id=nvme_host_details['id'])
 
 
 def get_powerflex_nvme_host_parameters():
-    """This method provide parameter required for the Ansible NVMe host module on
+    """This method provide parameters for the Ansible NVMe host module on
     PowerFlex"""
     return dict(
         nqn=dict(type="str"),
@@ -469,15 +377,60 @@ def get_powerflex_nvme_host_parameters():
         nvme_host_new_name=dict(type="str"),
         max_num_paths=dict(type="str"),
         max_num_sys_ports=dict(type="str"),
-        state=dict(required=True, type="str", choices=["present", "absent"]),
+        state=dict(default="present", type="str", choices=["present", "absent"]),
     )
+
+
+class NVMeHostExitHandler():
+    def handle(self, nvme_host_obj, nvme_host_details):
+        if nvme_host_details:
+            nvme_host_obj.result['nvme_host_details'] = nvme_host_details
+        else:
+            nvme_host_obj.result['nvme_host_details'] = {}
+        nvme_host_obj.module.exit_json(**nvme_host_obj.result)
+
+
+class NVMeHostDeleteHandler():
+    def handle(self, nvme_host_obj, nvme_host_params, nvme_host_details):
+        if nvme_host_params['state'] == 'absent' and nvme_host_details:
+            nvme_host_details = nvme_host_obj.delete_nvme_host(nvme_host_details['id'])
+            nvme_host_obj.result['changed'] = True
+
+        NVMeHostExitHandler().handle(nvme_host_obj, nvme_host_details)
+
+
+class NVMeHostModifyHandler():
+    def handle(self, nvme_host_obj, nvme_host_params, nvme_host_details):
+        if nvme_host_params['state'] == 'present' and nvme_host_details:
+            changed, nvme_host_details = nvme_host_obj.modify_nvme_host(nvme_host_details, nvme_host_params)
+            # if created or modified, set changed to true
+            nvme_host_obj.result['changed'] |= changed
+
+        NVMeHostDeleteHandler().handle(nvme_host_obj, nvme_host_params, nvme_host_details)
+
+
+class NVMeHostCreateHandler():
+    def handle(self, nvme_host_obj, nvme_host_params, nvme_host_details):
+        if nvme_host_params['state'] == 'present' and not nvme_host_details:
+            nvme_host_details = nvme_host_obj.create_nvme_host(nvme_host_params)
+            nvme_host_obj.result['changed'] = True
+
+        NVMeHostModifyHandler().handle(nvme_host_obj, nvme_host_params, nvme_host_details)
+
+
+class NVMeHostHandler():
+    def handle(self, nvme_host_obj, nvme_host_params):
+        nvme_host_obj.validate_parameters(nvme_host_params=nvme_host_params)
+        nvme_host_details = nvme_host_obj.get_nvme_host(nvme_host_name=nvme_host_params['nvme_host_name'],
+                                                        nqn=nvme_host_params['nqn'])
+        NVMeHostCreateHandler().handle(nvme_host_obj, nvme_host_params, nvme_host_details)
 
 
 def main():
     """Create PowerFlex NVMe host and perform actions on it
     based on user input from playbook"""
-    obj = PowerFlexNvmeHost()
-    obj.perform_module_operation()
+    obj = PowerFlexNVMeHost()
+    NVMeHostHandler().handle(obj, obj.module.params)
 
 
 if __name__ == "__main__":

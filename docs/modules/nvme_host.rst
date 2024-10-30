@@ -29,28 +29,28 @@ Parameters
 ----------
 
   max_num_paths (optional, str, None)
-    Maximum number of paths per volume. Used to create/modify the NVMe host.
+    Maximum number of paths per volume. Used to create or modify the NVMe host.
 
 
   max_num_sys_ports (optional, str, None)
-    Maximum number of ports per protection domain. Used to create/modify the NVMe host.
+    Maximum number of ports per protection domain. Used to create or modify the NVMe host.
 
 
   nqn (optional, str, None)
-    NQN of the NVMe host. Used to create/get/modify the NVMe host.
+    NQN of the NVMe host. Used to create, get or modify the NVMe host.
 
 
   nvme_host_name (optional, str, None)
     Name of the NVMe host.
 
-    Specify either :emphasis:`nvme\_host\_name`\ , :emphasis:`nqn` for create/get/rename operation.
+    Specify either :emphasis:`nvme\_host\_name`\ , :emphasis:`nqn` for create, get or rename operation.
 
 
   nvme_host_new_name (optional, str, None)
     New name of the NVMe host. Used to rename the NVMe host.
 
 
-  state (True, str, None)
+  state (optional, str, present)
     State of the NVMe host.
 
 
@@ -91,7 +91,7 @@ Notes
 -----
 
 .. note::
-   - The :emphasis:`check\_mode` is not supported.
+   - The :emphasis:`check\_mode` is supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -152,16 +152,16 @@ changed (always, bool, false)
   Whether or not the resource has changed.
 
 
-nvme_host_details (When NVMe host exists, dict, {'hostOsFullType': 'Generic', 'systemId': '264ec85b3855280f', 'name': 'name', 'sdcApproved': None, 'sdcAgentActive': None, 'mdmIpAddressesCurrent': None, 'sdcIp': None, 'sdcIps': None, 'osType': None, 'perfProfile': None, 'peerMdmId': None, 'sdtId': None, 'mdmConnectionState': None, 'softwareVersionInfo': None, 'socketAllocationFailure': None, 'memoryAllocationFailure': None, 'versionInfo': None, 'sdcType': None, 'nqn': 'nqn.2014-08.org.nvmexpress:uuid:79e90a42-47c9-a0f6-d9d3-51c47c72c7c1', 'maxNumPaths': 6, 'maxNumSysPorts': 10, 'sdcGuid': None, 'installedSoftwareVersionInfo': None, 'kernelVersion': None, 'kernelBuildNumber': None, 'sdcApprovedIps': None, 'hostType': 'NVMeHost', 'sdrId': None, 'id': '1040d67200010000', 'links': [{'rel': 'self', 'href': '/api/instances/Host::1040d67200010000'}, {'rel': '/api/Host/relationship/Volume', 'href': '/api/instances/Host::1040d67200010000/relationships/Volume'}, {'rel': '/api/Host/relationship/NvmeController', 'href': '/api/instances/Host::1040d67200010000/relationships/NvmeController'}, {'rel': '/api/parent/relationship/systemId', 'href': '/api/instances/System::264ec85b3855280f'}]})
+nvme_host_details (When NVMe host exists, dict, {'hostOsFullType': 'Generic', 'systemId': '264ec85b3855280f', 'name': 'name', 'sdcApproved': None, 'sdcAgentActive': None, 'mdmIpAddressesCurrent': None, 'sdcIp': None, 'sdcIps': None, 'osType': None, 'perfProfile': None, 'peerMdmId': None, 'sdtId': None, 'mdmConnectionState': None, 'softwareVersionInfo': None, 'socketAllocationFailure': None, 'memoryAllocationFailure': None, 'versionInfo': None, 'sdcType': None, 'nqn': 'nqn.org.nvmexpress:uuid', 'maxNumPaths': 6, 'maxNumSysPorts': 10, 'sdcGuid': None, 'installedSoftwareVersionInfo': None, 'kernelVersion': None, 'kernelBuildNumber': None, 'sdcApprovedIps': None, 'hostType': 'NVMeHost', 'sdrId': None, 'id': '1040d67200010000', 'links': [{'rel': 'self', 'href': '/api/instances/Host::1040d67200010000'}, {'rel': '/api/Host/relationship/Volume', 'href': '/api/instances/Host::1040d67200010000/relationships/Volume'}, {'rel': '/api/Host/relationship/NvmeController', 'href': '/api/instances/Host::1040d67200010000/relationships/NvmeController'}, {'rel': '/api/parent/relationship/systemId', 'href': '/api/instances/System::264ec85b3855280f'}]})
   Details of the NVMe host.
 
 
   max_num_paths (, str, )
-    Maximum number of paths per volume. Used to create/modify the NVMe host.
+    Maximum number of paths per volume. Used to create or modify the NVMe host.
 
 
   max_num_sys_ports (, str, )
-    Maximum number of ports per protection domain. Used to create/modify the NVMe host.
+    Maximum number of ports per protection domain. Used to create or modify the NVMe host.
 
 
   nvme_host_name (, str, )
@@ -169,7 +169,7 @@ nvme_host_details (When NVMe host exists, dict, {'hostOsFullType': 'Generic', 's
 
 
   nqn (, str, )
-    NQN of the NVMe host. Used to create/get/modify the NVMe host.
+    NQN of the NVMe host. Used to create, get or modify the NVMe host.
 
 
 
