@@ -51,8 +51,14 @@ options:
     choices: ['present', 'absent']
     default: present
     type: str
-notes:
-  - The I(check_mode) is supported.
+attributes:
+  check_mode:
+    description: Runs task to validate without performing action on the target
+                 machine.
+    support: full
+  diff_mode:
+    description: Runs the task to report the changes made or to be made.
+    support: full
 """
 
 EXAMPLES = r"""
