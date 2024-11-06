@@ -132,11 +132,13 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
                 "state": "present"
             })
         powerflex_module_mock.module.check_mode = True
+        powerflex_module_mock.module._diff = True
         powerflex_module_mock.get_nvme_host = MagicMock(
             return_value=None)
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
+        assert powerflex_module_mock.module.exit_json.call_args[1]['diff']['after']['nvme_host_name'] == "nvme_host_test"
 
     def test_create_nvme_host_no_nqn_exception(self, powerflex_module_mock):
         self.set_module_params(
@@ -197,16 +199,18 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
                 "nvme_host_name": "nvme_host_test",
                 "nqn": "test_nqn",
                 "state": "present",
-                "nvme_host_new_name": "fs_new_name",
+                "nvme_host_new_name": "nvme_host_test_new_name",
                 "max_num_paths": "4",
                 "max_num_sys_ports": "10"
             })
         powerflex_module_mock.module.check_mode = True
+        powerflex_module_mock.module._diff = True
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
+        assert powerflex_module_mock.module.exit_json.call_args[1]['diff']['after']['name'] == "nvme_host_test_new_name"
 
     def test_rename_nvme_host_exception(self, powerflex_module_mock):
         self.set_module_params(
@@ -291,11 +295,13 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
                 "state": "absent"
             })
         powerflex_module_mock.module.check_mode = True
+        powerflex_module_mock.module._diff = True
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
+        assert powerflex_module_mock.module.exit_json.call_args[1]['diff']['after'] == {}
 
     def test_delete_nvme_host_exception(self, powerflex_module_mock):
         self.set_module_params(

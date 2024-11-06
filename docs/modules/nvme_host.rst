@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.12.0.
+- PyPowerFlex 1.13.0.
 
 
 
@@ -91,7 +91,6 @@ Notes
 -----
 
 .. note::
-   - The :emphasis:`check\_mode` is supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -156,20 +155,125 @@ nvme_host_details (When NVMe host exists, dict, {'hostOsFullType': 'Generic', 's
   Details of the NVMe host.
 
 
-  max_num_paths (, str, )
+  hostOsFullType (, str, )
+    Full type of the host OS.
+
+
+  hostType (, str, )
+    Type of the host.
+
+
+  id (, str, )
+    ID of the NVMe host.
+
+
+  installedSoftwareVersionInfo (, str, )
+    Installed software version information.
+
+
+  kernelBuildNumber (, str, )
+    Kernel build number.
+
+
+  kernelVersion (, str, )
+    Kernel version.
+
+
+  links (, list, )
+    Links related to the NVMe host.
+
+
+    href (, str, )
+      Hyperlink reference.
+
+
+    rel (, str, )
+      Relation type.
+
+
+
+  max_num_paths (, int, )
     Maximum number of paths per volume. Used to create or modify the NVMe host.
 
 
-  max_num_sys_ports (, str, )
+  max_num_sys_ports (, int, )
     Maximum number of ports per protection domain. Used to create or modify the NVMe host.
 
 
-  nvme_host_name (, str, )
+  mdmConnectionState (, str, )
+    MDM connection state.
+
+
+  mdmIpAddressesCurrent (, list, )
+    Current MDM IP addresses.
+
+
+  name (, str, )
     Name of the NVMe host.
 
 
   nqn (, str, )
     NQN of the NVMe host. Used to create, get or modify the NVMe host.
+
+
+  osType (, str, )
+    OS type.
+
+
+  peerMdmId (, str, )
+    Peer MDM ID.
+
+
+  perfProfile (, str, )
+    Performance profile.
+
+
+  sdcAgentActive (, bool, )
+    Whether the SDC agent is active.
+
+
+  sdcApproved (, bool, )
+    Whether an SDC has approved access to the system.
+
+
+  sdcApprovedIps (, list, )
+    SDC approved IPs.
+
+
+  sdcGuid (, str, )
+    SDC GUID.
+
+
+  sdcIp (, str, )
+    SDC IP address.
+
+
+  sdcIps (, list, )
+    SDC IP addresses.
+
+
+  sdcType (, str, )
+    SDC type.
+
+
+  sdrId (, str, )
+    SDR ID.
+
+
+  sdtId (, str, )
+    SDT ID.
+
+
+  softwareVersionInfo (, str, )
+    Software version information.
+
+
+  systemId (, str, )
+    ID of the system.
+
+
+  versionInfo (, str, )
+    Version information.
 
 
 

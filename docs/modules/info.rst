@@ -966,16 +966,125 @@ NVMe_Hosts (always, list, [{'hostOsFullType': 'Generic', 'systemId': 'f4c3b7f5c4
   Details of all NVMe hosts.
 
 
+  hostOsFullType (, str, )
+    Full type of the host OS.
+
+
+  hostType (, str, )
+    Type of the host.
+
+
   id (, str, )
-    NVMe host id.
+    ID of the NVMe host.
+
+
+  installedSoftwareVersionInfo (, str, )
+    Installed software version information.
+
+
+  kernelBuildNumber (, str, )
+    Kernel build number.
+
+
+  kernelVersion (, str, )
+    Kernel version.
+
+
+  links (, list, )
+    Links related to the NVMe host.
+
+
+    href (, str, )
+      Hyperlink reference.
+
+
+    rel (, str, )
+      Relation type.
+
+
+
+  max_num_paths (, int, )
+    Maximum number of paths per volume. Used to create or modify the NVMe host.
+
+
+  max_num_sys_ports (, int, )
+    Maximum number of ports per protection domain. Used to create or modify the NVMe host.
+
+
+  mdmConnectionState (, str, )
+    MDM connection state.
+
+
+  mdmIpAddressesCurrent (, list, )
+    Current MDM IP addresses.
 
 
   name (, str, )
-    NVMe host name.
+    Name of the NVMe host.
 
 
   nqn (, str, )
-    NQN of the NVMe host.
+    NQN of the NVMe host. Used to create, get or modify the NVMe host.
+
+
+  osType (, str, )
+    OS type.
+
+
+  peerMdmId (, str, )
+    Peer MDM ID.
+
+
+  perfProfile (, str, )
+    Performance profile.
+
+
+  sdcAgentActive (, bool, )
+    Whether the SDC agent is active.
+
+
+  sdcApproved (, bool, )
+    Whether an SDC has approved access to the system.
+
+
+  sdcApprovedIps (, list, )
+    SDC approved IPs.
+
+
+  sdcGuid (, str, )
+    SDC GUID.
+
+
+  sdcIp (, str, )
+    SDC IP address.
+
+
+  sdcIps (, list, )
+    SDC IP addresses.
+
+
+  sdcType (, str, )
+    SDC type.
+
+
+  sdrId (, str, )
+    SDR ID.
+
+
+  sdtId (, str, )
+    SDT ID.
+
+
+  softwareVersionInfo (, str, )
+    Software version information.
+
+
+  systemId (, str, )
+    ID of the system.
+
+
+  versionInfo (, str, )
+    Version information.
 
 
 

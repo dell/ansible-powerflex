@@ -1923,14 +1923,96 @@ NVMe_Hosts:
     returned: always
     type: list
     contains:
-        id:
-            description: NVMe host id.
+        hostOsFullType:
+            description: Full type of the host OS.
             type: str
+        hostType:
+            description: Type of the host.
+            type: str
+        id:
+            description: ID of the NVMe host.
+            type: str
+        installedSoftwareVersionInfo:
+            description: Installed software version information.
+            type: str
+        kernelBuildNumber:
+            description: Kernel build number.
+            type: str
+        kernelVersion:
+            description: Kernel version.
+            type: str
+        links:
+            description: Links related to the NVMe host.
+            type: list
+            contains:
+                href:
+                    description: Hyperlink reference.
+                    type: str
+                rel:
+                    description: Relation type.
+                    type: str
+        max_num_paths:
+            description: Maximum number of paths per volume. Used to create or modify the NVMe host.
+            type: int
+        max_num_sys_ports:
+            description: Maximum number of ports per protection domain. Used to create or modify the NVMe host.
+            type: int
+        mdmConnectionState:
+            description: MDM connection state.
+            type: str
+        mdmIpAddressesCurrent:
+            description: Current MDM IP addresses.
+            type: list
         name:
-            description: NVMe host name.
+            description: Name of the NVMe host.
             type: str
         nqn:
-            description: NQN of the NVMe host.
+            description: NQN of the NVMe host. Used to create, get or modify the NVMe host.
+            type: str
+        osType:
+            description: OS type.
+            type: str
+        peerMdmId:
+            description: Peer MDM ID.
+            type: str
+        perfProfile:
+            description: Performance profile.
+            type: str
+        sdcAgentActive:
+            description: Whether the SDC agent is active.
+            type: bool
+        sdcApproved:
+            description: Whether an SDC has approved access to the system.
+            type: bool
+        sdcApprovedIps:
+            description: SDC approved IPs.
+            type: list
+        sdcGuid:
+            description: SDC GUID.
+            type: str
+        sdcIp:
+            description: SDC IP address.
+            type: str
+        sdcIps:
+            description: SDC IP addresses.
+            type: list
+        sdcType:
+            description: SDC type.
+            type: str
+        sdrId:
+            description: SDR ID.
+            type: str
+        sdtId:
+            description: SDT ID.
+            type: str
+        softwareVersionInfo:
+            description: Software version information.
+            type: str
+        systemId:
+            description: ID of the system.
+            type: str
+        versionInfo:
+            description: Version information.
             type: str
     sample: [{
         "hostOsFullType": "Generic",
