@@ -2074,16 +2074,22 @@ NVMe_Hosts:
             }
         ]
     }]
-SDT:
+sdt:
     description: Details of NVMe storage data targets.
     returned: when I(gather_subset) is C(sdt)
     type: list
     contains:
+        authenticationError:
+            description: The authentication error details of the SDT object.
+            type: str
+        certificateInfo:
+            description: The certificate information of the SDT object.
+            type: str
+        discoveryPort:
+            description: The discovery port number of the SDT object.
+            type: int
         id:
             description: The unique identifier of the SDT object.
-            type: str
-        name:
-            description: The name of the SDT object.
             type: str
         ipList:
             description: The list of IP addresses of the SDT object.
@@ -2095,86 +2101,80 @@ SDT:
                 role:
                     description: The role associated with the IP address of the SDT object.
                     type: str
-        storagePort:
-            description: The storage port number of the SDT object.
-            type: int
-        nvmePort:
-            description: The NVMe port number of the SDT object.
-            type: int
-        discoveryPort:
-            description: The discovery port number of the SDT object.
-            type: int
-        sdtState:
-            description: The state of the SDT object.
-            type: str
-        membershipState:
-            description: The membership state of the SDT object.
+        maintenanceState:
+            description: The maintenance state of the SDT object.
             type: str
         mdmConnectionState:
             description: The MDM connection state of the SDT object.
             type: str
-        protectionDomainId:
-            description: The Protection Domain ID associated with the SDT object.
+        membershipState:
+            description: The membership state of the SDT object.
             type: str
-        maintenanceState:
-            description: The maintenance state of the SDT object.
+        name:
+            description: The name of the SDT object.
             type: str
-        softwareVersionInfo:
-            description: The software version information of the SDT object.
-            type: str
-        certificateInfo:
-            description: The certificate information of the SDT object.
-            type: str
-        authenticationError:
-            description: The authentication error details of the SDT object.
-            type: str
+        nvmePort:
+            description: The NVMe port number of the SDT object.
+            type: int
         nvme_hosts:
             description: The list of NVMe hosts associated with the SDT object.
             type: list
             contains:
-                isConnected:
-                    description: Indicates if the NVMe controller is connected.
-                    type: bool
-                sdtId:
-                    description: The SDT ID associated with the NVMe controller.
+                controllerId:
+                    description: The controller ID.
+                    type: int
+                hostId:
+                    description: The host ID associated with the NVMe controller.
                     type: str
                 hostIp:
                     description: The IP address of the host.
                     type: str
-                hostId:
-                    description: The host ID associated with the NVMe controller.
+                id:
+                    description: The unique identifier of the NVMe controller.
                     type: str
-                controllerId:
-                    description: The controller ID.
-                    type: int
+                isAssigned:
+                    description: Indicates if the NVMe controller is assigned.
+                    type: bool
+                isConnected:
+                    description: Indicates if the NVMe controller is connected.
+                    type: bool
+                links:
+                    description: Hyperlinks related to the NVMe controller.
+                    type: list
+                    contains:
+                        href:
+                            description: The URL of the link.
+                            type: str
+                        rel:
+                            description: The relation type of the link.
+                            type: str
+                name:
+                    description: The name of the NVMe controller. Can be null.
+                    type: str
+                sdtId:
+                    description: The SDT ID associated with the NVMe controller.
+                    type: str
+                subsystem:
+                    description: The subsystem associated with the NVMe controller.
+                    type: str
                 sysPortId:
                     description: The system port ID.
                     type: int
                 sysPortIp:
                     description: The IP address of the system port.
                     type: str
-                subsystem:
-                    description: The subsystem associated with the NVMe controller.
-                    type: str
-                isAssigned:
-                    description: Indicates if the NVMe controller is assigned.
-                    type: bool
-                name:
-                    description: The name of the NVMe controller. Can be null.
-                    type: str
-                id:
-                    description: The unique identifier of the NVMe controller.
-                    type: str
-                links:
-                    description: Hyperlinks related to the NVMe controller.
-                    type: list
-                    contains:
-                        rel:
-                            description: The relation type of the link.
-                            type: str
-                        href:
-                            description: The URL of the link.
-                            type: str
+        protectionDomainId:
+            description: The Protection Domain ID associated with the SDT object.
+            type: str
+        sdtState:
+            description: The state of the SDT object.
+            type: str
+        softwareVersionInfo:
+            description: The software version information of the SDT object.
+            type: str
+        storagePort:
+            description: The storage port number of the SDT object.
+            type: int
     sample: [{
         "authenticationError": "None",
         "certificateInfo": null,
@@ -2183,11 +2183,11 @@ SDT:
         "id": "8bddf18b00000000",
         "ipList": [
             {
-                "ip": "172.171.3.21",
+                "ip": "10.1.1.1",
                 "role": "HostOnly"
             },
             {
-                "ip": "172.171.2.21",
+                "ip": "10.1.1.2",
                 "role": "StorageOnly"
             }
         ],
@@ -2214,7 +2214,7 @@ SDT:
             {
                 "controllerId": 1,
                 "hostId": "1040d69e00010001",
-                "hostIp": "172.171.1.17",
+                "hostIp": "10.0.1.1",
                 "id": "cc00010001000002",
                 "isAssigned": false,
                 "isConnected": true,
@@ -2228,7 +2228,7 @@ SDT:
                 "sdtId": "8bddf18b00000000",
                 "subsystem": "Io",
                 "sysPortId": 0,
-                "sysPortIp": "172.171.3.21"
+                "sysPortIp": "10.1.1.1"
             }
         ],
         "persistentDiscoveryControllersNum": 0,

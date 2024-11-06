@@ -61,7 +61,7 @@ Parameters
 
     FirmwareRepository - :literal:`firmware\_repository`.
 
-    NVMe host - :literal:`nvme\_host`.
+    NVMe host - :literal:`nvme\_host`
 
     NVMe Storage Data Target  - :literal:`sdt`.
 
@@ -1100,16 +1100,24 @@ NVMe_Hosts (always, list, [{'hostOsFullType': 'Generic', 'systemId': 'f4c3b7f5c4
 
 
 
-SDT (when I(gather_subset) is C(sdt), list, )
+sdt (when I(gather_subset) is C(sdt), list, [{'authenticationError': 'None', 'certificateInfo': None, 'discoveryPort': 8009, 'faultSetId': None, 'id': '8bddf18b00000000', 'ipList': [{'ip': '10.1.1.1', 'role': 'HostOnly'}, {'ip': '10.1.1.2', 'role': 'StorageOnly'}], 'links': [{'href': '/api/instances/Sdt::8bddf18b00000000', 'rel': 'self'}, {'href': '/api/instances/Sdt::8bddf18b00000000/relationships/Statistics', 'rel': '/api/Sdt/relationship/Statistics'}, {'href': '/api/instances/ProtectionDomain::32a39aa600000000', 'rel': '/api/parent/relationship/protectionDomainId'}], 'maintenanceState': 'NoMaintenance', 'mdmConnectionState': 'Connected', 'membershipState': 'Joined', 'name': 'Sdt-yulan3-pf460-svm-1', 'nvmePort': 4420, 'nvme_hosts': [{'controllerId': 1, 'hostId': '1040d69e00010001', 'hostIp': '10.0.1.1', 'id': 'cc00010001000002', 'isAssigned': False, 'isConnected': True, 'links': [{'href': '/api/instances/NvmeController::cc00010001000002', 'rel': 'self'}], 'name': None, 'sdtId': '8bddf18b00000000', 'subsystem': 'Io', 'sysPortId': 0, 'sysPortIp': '10.1.1.1'}], 'persistentDiscoveryControllersNum': 0, 'protectionDomainId': '32a39aa600000000', 'sdtState': 'Normal', 'softwareVersionInfo': 'R4_5.2100.0', 'storagePort': 12200, 'systemId': '264ec85b3855280f'}])
   Details of NVMe storage data targets.
+
+
+  authenticationError (, str, )
+    The authentication error details of the SDT object.
+
+
+  certificateInfo (, str, )
+    The certificate information of the SDT object.
+
+
+  discoveryPort (, int, )
+    The discovery port number of the SDT object.
 
 
   id (, str, )
     The unique identifier of the SDT object.
-
-
-  name (, str, )
-    The name of the SDT object.
 
 
   ipList (, list, )
@@ -1125,72 +1133,77 @@ SDT (when I(gather_subset) is C(sdt), list, )
 
 
 
-  storagePort (, int, )
-    The storage port number of the SDT object.
-
-
-  nvmePort (, int, )
-    The NVMe port number of the SDT object.
-
-
-  discoveryPort (, int, )
-    The discovery port number of the SDT object.
-
-
-  sdtState (, str, )
-    The state of the SDT object.
-
-
-  membershipState (, str, )
-    The membership state of the SDT object.
+  maintenanceState (, str, )
+    The maintenance state of the SDT object.
 
 
   mdmConnectionState (, str, )
     The MDM connection state of the SDT object.
 
 
-  protectionDomainId (, str, )
-    The Protection Domain ID associated with the SDT object.
+  membershipState (, str, )
+    The membership state of the SDT object.
 
 
-  maintenanceState (, str, )
-    The maintenance state of the SDT object.
+  name (, str, )
+    The name of the SDT object.
 
 
-  softwareVersionInfo (, str, )
-    The software version information of the SDT object.
-
-
-  certificateInfo (, str, )
-    The certificate information of the SDT object.
-
-
-  authenticationError (, str, )
-    The authentication error details of the SDT object.
+  nvmePort (, int, )
+    The NVMe port number of the SDT object.
 
 
   nvme_hosts (, list, )
     The list of NVMe hosts associated with the SDT object.
 
 
-    isConnected (, bool, )
-      Indicates if the NVMe controller is connected.
-
-
-    sdtId (, str, )
-      The SDT ID associated with the NVMe controller.
-
-
-    hostIp (, str, )
-      The IP address of the host.
+    controllerId (, int, )
+      The controller ID.
 
 
     hostId (, str, )
       The host ID associated with the NVMe controller.
 
 
-    controllerId (, int, )
-      The controller ID.
+    hostIp (, str, )
+      The IP address of the host.
+
+
+    id (, str, )
+      The unique identifier of the NVMe controller.
+
+
+    isAssigned (, bool, )
+      Indicates if the NVMe controller is assigned.
+
+
+    isConnected (, bool, )
+      Indicates if the NVMe controller is connected.
+
+
+    links (, list, )
+      Hyperlinks related to the NVMe controller.
+
+
+      href (, str, )
+        The URL of the link.
+
+
+      rel (, str, )
+        The relation type of the link.
+
+
+
+    name (, str, )
+      The name of the NVMe controller. Can be null.
+
+
+    sdtId (, str, )
+      The SDT ID associated with the NVMe controller.
+
+
+    subsystem (, str, )
+      The subsystem associated with the NVMe controller.
 
 
     sysPortId (, int, )
@@ -1201,34 +1214,21 @@ SDT (when I(gather_subset) is C(sdt), list, )
       The IP address of the system port.
 
 
-    subsystem (, str, )
-      The subsystem associated with the NVMe controller.
+
+  protectionDomainId (, str, )
+    The Protection Domain ID associated with the SDT object.
 
 
-    isAssigned (, bool, )
-      Indicates if the NVMe controller is assigned.
+  sdtState (, str, )
+    The state of the SDT object.
 
 
-    name (, str, )
-      The name of the NVMe controller. Can be null.
+  softwareVersionInfo (, str, )
+    The software version information of the SDT object.
 
 
-    id (, str, )
-      The unique identifier of the NVMe controller.
-
-
-    links (, list, )
-      Hyperlinks related to the NVMe controller.
-
-
-      rel (, str, )
-        The relation type of the link.
-
-
-      href (, str, )
-        The URL of the link.
-
-
+  storagePort (, int, )
+    The storage port number of the SDT object.
 
 
 
