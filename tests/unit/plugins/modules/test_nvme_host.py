@@ -63,6 +63,20 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.sdc.get.assert_called()
 
+    def test_get_nvme_host_no_name_response(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                'nqn': 'test_nqn',
+                'state': "present"
+            })
+        powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
+            return_value=MockNVMeHostApi.NVME_HOST_NO_NAME_DETAILS)
+        NVMeHostHandler().handle(
+            powerflex_module_mock, powerflex_module_mock.module.params)
+        powerflex_module_mock.powerflex_conn.sdc.get.assert_called()
+
     def test_get_nvme_host_using_name_response(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock,

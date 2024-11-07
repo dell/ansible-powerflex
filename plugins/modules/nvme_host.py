@@ -391,7 +391,7 @@ class PowerFlexNVMeHost(PowerFlexBase):
                 self.result.update({"diff": {"before": nvme_host_details, "after": {}}})
 
             if not self.module.check_mode:
-                LOG.info(msg=f"Failed to remove NVMe host {nvme_host_id}")
+                LOG.info(msg=f"Deleting NVMe host {nvme_host_id}")
                 self.powerflex_conn.sdc.delete(nvme_host_id)
                 return None
             return self.get_nvme_host(nvme_host_id=nvme_host_id)
