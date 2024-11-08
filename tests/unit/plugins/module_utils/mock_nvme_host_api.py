@@ -3,7 +3,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """
-Mock Api response for Unit tests of NVMe host module on Dell Technologies (Dell) PowerFlex
+Mock Api response for Unit tests of NVMe host module on Dell Technologies PowerFlex
 """
 
 from __future__ import absolute_import, division, print_function

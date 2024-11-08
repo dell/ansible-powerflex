@@ -12,7 +12,7 @@ nvme_host -- Manage NVMe hosts on Dell PowerFlex
 Synopsis
 --------
 
-Managing NVMe hosts on PowerFlex storage system includes getting details of NVMe hosts and renaming NVMe hosts.
+Managing NVMe hosts on PowerFlex storage system includes creating, getting details of NVMe hosts , modifying and deleting NVMe hosts.
 
 
 

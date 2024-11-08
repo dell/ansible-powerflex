@@ -3,7 +3,7 @@
 # Copyright: (c) 2024, Dell Technologies
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-""" Ansible module for managing NVMe hosts on Dell Technologies (Dell) PowerFlex"""
+""" Ansible module for managing NVMe hosts on Dell Technologies PowerFlex"""
 
 from __future__ import absolute_import, division, print_function
 
@@ -14,8 +14,8 @@ module: nvme_host
 version_added: '2.6.0'
 short_description: Manage NVMe hosts on Dell PowerFlex
 description:
-- Managing NVMe hosts on PowerFlex storage system includes getting details of NVMe hosts
-  and renaming NVMe hosts.
+- Managing NVMe hosts on PowerFlex storage system includes creating, getting details of NVMe hosts
+  , modifying and deleting NVMe hosts.
 
 author:
 - Peter Cao (@P-Cao) <ansible.team@dell.com>
