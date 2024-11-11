@@ -35,6 +35,7 @@ options:
   nqn:
     description:
     - NQN of the NVMe host. Used to create, get or modify the NVMe host.
+    - To retrieve NQN of NVMe host, use command :command:`cat /etc/nvme/hostnqn`
     type: str
   nvme_host_name:
     description:
@@ -44,6 +45,7 @@ options:
   nvme_host_new_name:
     description:
     - New name of the NVMe host. Used to rename the NVMe host.
+    - Only used for updates. Ignored during creation.
     type: str
   state:
     description:
@@ -366,7 +368,7 @@ class PowerFlexNVMeHost(PowerFlexBase):
             if not self.module.check_mode:
                 msg = (f"Creating NVMe host with nqn: {nvme_host_params['nqn']}")
                 LOG.info(msg)
-                return self.powerflex_conn.host.create(
+                self.powerflex_conn.host.create(
                     nqn=nvme_host_params['nqn'],
                     name=nvme_host_params['nvme_host_name'],
                     max_num_paths=nvme_host_params['max_num_paths'],
@@ -503,8 +505,8 @@ class NVMeHostDeleteHandler():
 
 
 class NVMeHostModifyHandler():
-    def handle(self, nvme_host_obj, nvme_host_params, nvme_host_details):
-        if nvme_host_params['state'] == 'present' and nvme_host_details:
+    def handle(self, nvme_host_obj, nvme_host_params, nvme_host_details, create_flag=False):
+        if not create_flag and nvme_host_params['state'] == 'present' and nvme_host_details:
             changed, nvme_host_details = nvme_host_obj.modify_nvme_host(nvme_host_details, nvme_host_params)
             # if created or modified, set changed to true
             nvme_host_obj.result['changed'] |= changed
@@ -514,11 +516,13 @@ class NVMeHostModifyHandler():
 
 class NVMeHostCreateHandler():
     def handle(self, nvme_host_obj, nvme_host_params, nvme_host_details):
+        create_flag = False
         if nvme_host_params['state'] == 'present' and not nvme_host_details:
             nvme_host_details = nvme_host_obj.create_nvme_host(nvme_host_params)
             nvme_host_obj.result['changed'] = True
+            create_flag = True
 
-        NVMeHostModifyHandler().handle(nvme_host_obj, nvme_host_params, nvme_host_details)
+        NVMeHostModifyHandler().handle(nvme_host_obj, nvme_host_params, nvme_host_details, create_flag)
 
 
 class NVMeHostHandler():

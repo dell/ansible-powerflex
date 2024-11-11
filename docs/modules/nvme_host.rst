@@ -39,6 +39,8 @@ Parameters
   nqn (optional, str, None)
     NQN of the NVMe host. Used to create, get or modify the NVMe host.
 
+    To retrieve NQN of NVMe host, use command :command:\`cat /etc/nvme/hostnqn\`
+
 
   nvme_host_name (optional, str, None)
     Name of the NVMe host.
@@ -48,6 +50,8 @@ Parameters
 
   nvme_host_new_name (optional, str, None)
     New name of the NVMe host. Used to rename the NVMe host.
+
+    Only used for updates. Ignored during creation.
 
 
   state (optional, str, present)
