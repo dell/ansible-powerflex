@@ -51,13 +51,29 @@ class MockNVMeHostApi:
     ]
 
     RESPONSE_EXEC_DICT = {
-        "rename_host": "Failed to rename NVMe host",
         "modify_host": "Failed to modify NVMe host",
         "create_host": "Create NVMe host operation failed",
         "delete_host": "Failed to remove NVMe host",
         "get_host": "Failed to get NVMe host",
-        "invalid_params": "Provide valid nqn"
+        "invalid_params": "Provide valid nqn",
+        "modify_host_version_check": "not supported in PowerFlex versions earlier than 4.6"
     }
+
+    INFO_ARRAY_DETAILS = [{
+        'mdmCluster': {
+            'master': {
+                'versionInfo': 'R4_6.0.0'
+            }
+        }
+    }]
+
+    INFO_ARRAY_DETAILS_4_5 = [{
+        'mdmCluster': {
+            'master': {
+                'versionInfo': 'R4_5.0.0'
+            }
+        }
+    }]
 
     @staticmethod
     def get_exception_response(response_type):

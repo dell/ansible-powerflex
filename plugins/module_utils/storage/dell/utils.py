@@ -175,6 +175,13 @@ def is_version_less_than_3_6(version):
         LooseVersion(version) < LooseVersion('3.6')
 
 
+def is_version_less_than_4_6(version):
+    """Verifies if powerflex version is less than 3.6"""
+    version = re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
+    return \
+        LooseVersion(version) < LooseVersion('4.6')
+
+
 def is_invalid_name(name):
     """Validates string against regex pattern"""
     if name is not None:

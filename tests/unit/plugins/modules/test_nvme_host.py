@@ -59,6 +59,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.sdc.get.assert_called()
@@ -73,6 +76,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_NO_NAME_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.sdc.get.assert_called()
@@ -87,6 +93,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.sdc.get.assert_called()
@@ -101,6 +110,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             side_effect=MockApiException)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         self.capture_fail_json_call(
             MockNVMeHostApi.get_exception_response(
                 'get_host'), powerflex_module_mock, NVMeHostHandler)
@@ -116,6 +128,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.get_nvme_host = MagicMock(
             return_value=None)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.host.create.assert_called()
@@ -132,6 +147,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             return_value=None)
         powerflex_module_mock.powerflex_conn.host.create = MagicMock(
             side_effect=MockNVMeHostApi.NVME_HOST_NO_NAME_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.host.create.assert_called()
@@ -149,6 +167,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
         powerflex_module_mock.module._diff = True
         powerflex_module_mock.get_nvme_host = MagicMock(
             return_value=None)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
@@ -164,6 +185,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.get_nvme_host = MagicMock(
             return_value=None)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         self.capture_fail_json_call(
             MockNVMeHostApi.get_exception_response(
                 'create_host'), powerflex_module_mock, NVMeHostHandler)
@@ -179,6 +203,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.get_nvme_host = MagicMock(
             return_value=None)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         powerflex_module_mock.powerflex_conn.host.create = MagicMock(
             side_effect=MockApiException)
         self.capture_fail_json_call(
@@ -199,6 +226,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.sdc.rename.assert_called()
@@ -221,6 +251,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
         powerflex_module_mock.module._diff = True
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
@@ -242,9 +275,12 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
         powerflex_module_mock.powerflex_conn.sdc.rename = MagicMock(
             side_effect=MockApiException)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         self.capture_fail_json_call(
             MockNVMeHostApi.get_exception_response(
-                'rename_host'), powerflex_module_mock, NVMeHostHandler)
+                'modify_host'), powerflex_module_mock, NVMeHostHandler)
 
     def test_modify_max_num_sys_ports_nvme_host_exception(self, powerflex_module_mock):
         self.set_module_params(
@@ -260,6 +296,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         powerflex_module_mock.powerflex_conn.host.modify_max_num_sys_ports = MagicMock(
             side_effect=MockApiException)
         self.capture_fail_json_call(
@@ -280,11 +319,36 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         powerflex_module_mock.powerflex_conn.sdc.modify_max_num_paths = MagicMock(
             side_effect=MockApiException)
         self.capture_fail_json_call(
             MockNVMeHostApi.get_exception_response(
                 'modify_host'), powerflex_module_mock, NVMeHostHandler)
+
+    def test_modify_max_num_paths_nvme_host_version_exception(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "nvme_host_name": "nvme_host_test",
+                "nqn": "test_nqn",
+                "state": "present",
+                "max_num_paths": "4",
+                "max_num_sys_ports": "10"
+            })
+        powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
+            return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS_4_5
+        )
+        powerflex_module_mock.powerflex_conn.sdc.modify_max_num_paths = MagicMock(
+            side_effect=MockApiException)
+        self.capture_fail_json_call(
+            MockNVMeHostApi.get_exception_response(
+                'modify_host_version_check'), powerflex_module_mock, NVMeHostHandler)
 
     def test_delete_nvme_host(self, powerflex_module_mock):
         self.set_module_params(
@@ -296,6 +360,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.sdc.delete.assert_called()
@@ -312,6 +379,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
         powerflex_module_mock.module._diff = True
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         NVMeHostHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
@@ -327,6 +397,9 @@ class TestPowerflexNVMeHost(PowerFlexUnitBase):
             })
         powerflex_module_mock.powerflex_conn.sdc.get = MagicMock(
             return_value=MockNVMeHostApi.NVME_HOST_DETAILS)
+        powerflex_module_mock.powerflex_conn.system.get = MagicMock(
+            return_value=MockNVMeHostApi.INFO_ARRAY_DETAILS
+        )
         powerflex_module_mock.powerflex_conn.sdc.delete = MagicMock(
             side_effect=MockApiException)
         self.capture_fail_json_call(

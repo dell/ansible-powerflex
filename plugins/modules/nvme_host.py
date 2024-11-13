@@ -409,9 +409,7 @@ class PowerFlexNVMeHost(PowerFlexBase):
 
         Args:
             nvme_host_details (dict): The details of the NVMe host.
-            nvme_host_new_name (str): The new name of the NVMe host.
-            max_num_paths (int): The new maximum number of paths per volume.
-            max_num_sys_ports (int): The new maximum number of ports per protection domain.
+            nvme_host_params (dict): The parameters for modification.
 
         Returns:
             bool: True if the NVMe host was modified, False otherwise.
@@ -419,58 +417,82 @@ class PowerFlexNVMeHost(PowerFlexBase):
         Raises:
             Exception: If there was an error renaming the NVMe host or modifying its properties.
         """
-        modified = False
-        modified_fields = []
-        before_dict = {}
-        after_dict = {}
+        modified, modified_fields, before_dict, after_dict = False, [], {}, {}
+        version_check = self._get_api_version_and_check()
 
-        def handle_exception(operation, field, ex):
-            msg = f"Successfully modified the following fields: {', '.join(modified_fields)} " if modified_fields else ""
-            errormsg = f"Failed to {operation} NVMe host {nvme_host_details['id']} {field} with error {str(ex)}. {msg}"
-            LOG.error(errormsg)
-            self.module.fail_json(msg=errormsg)
+        modification_funcs = {
+            "nvme_host_new_name": {
+                "field": "name",
+                "modify_func": lambda: self.powerflex_conn.sdc.rename(sdc_id=nvme_host_details["id"], name=nvme_host_params['nvme_host_new_name']),
+                "condition": nvme_host_params['nvme_host_new_name'] and nvme_host_params['nvme_host_new_name'] != nvme_host_details["name"],
+            },
+            "max_num_paths": {
+                "field": "maxNumPaths",
+                "modify_func": lambda: self.powerflex_conn.host.modify_max_num_paths(host_id=nvme_host_details["id"],
+                                                                                     max_num_paths=nvme_host_params['max_num_paths']),
+                "condition": nvme_host_params['max_num_paths'] and nvme_host_params['max_num_paths'] != str(nvme_host_details["maxNumPaths"]),
+            },
+            "max_num_sys_ports": {
+                "field": "maxNumSysPorts",
+                "modify_func": lambda: self.powerflex_conn.host.modify_max_num_sys_ports(host_id=nvme_host_details["id"],
+                                                                                         max_num_sys_ports=nvme_host_params['max_num_sys_ports']),
+                "condition": nvme_host_params['max_num_sys_ports'] and nvme_host_params['max_num_sys_ports'] != str(nvme_host_details["maxNumSysPorts"]),
+            },
+        }
 
-        def modify_field(condition, operation, param_field, field, modify_function):
-            nonlocal modified, modified_fields, before_dict, after_dict
-            if condition:
-                before_dict[field] = nvme_host_details[field]
-                after_dict[field] = nvme_host_params[param_field]
+        for k, v in modification_funcs.items():
+            if v["condition"]:
+                before_dict[v["field"]] = nvme_host_details[v["field"]]
+                after_dict[v["field"]] = nvme_host_params[k]
                 try:
                     if not self.module.check_mode:
-                        modify_function()
-                    modified_fields.append(field)
+                        v["modify_func"]()
+                    modified_fields.append(v["field"])
                     modified = True
                 except Exception as e:
-                    handle_exception(operation, field, e)
-
-        modify_field(
-            nvme_host_params['nvme_host_new_name'] and nvme_host_params['nvme_host_new_name'] != nvme_host_details["name"],
-            "rename", "nvme_host_new_name", "name",
-            lambda: self.powerflex_conn.sdc.rename(
-                sdc_id=nvme_host_details["id"], name=nvme_host_params['nvme_host_new_name']
-            )
-        )
-
-        modify_field(
-            nvme_host_params['max_num_paths'] and nvme_host_params['max_num_paths'] != str(nvme_host_details["maxNumPaths"]),
-            "modify", "max_num_paths", "maxNumPaths",
-            lambda: self.powerflex_conn.host.modify_max_num_paths(
-                host_id=nvme_host_details["id"], max_num_paths=nvme_host_params['max_num_paths']
-            )
-        )
-
-        modify_field(
-            nvme_host_params['max_num_sys_ports'] and nvme_host_params['max_num_sys_ports'] != str(nvme_host_details["maxNumSysPorts"]),
-            "modify", "max_num_sys_ports", "maxNumSysPorts",
-            lambda: self.powerflex_conn.host.modify_max_num_sys_ports(
-                host_id=nvme_host_details["id"], max_num_sys_ports=nvme_host_params['max_num_sys_ports']
-            )
-        )
+                    self.handle_exception("modify", v["field"], e, version_check, nvme_host_details, modified_fields)
 
         if self.module._diff and modified:
             self.result.update({"diff": {"before": before_dict, "after": after_dict}})
 
         return modified, self.get_nvme_host(nvme_host_id=nvme_host_details['id'])
+
+    def handle_exception(self, operation, field, ex, version_check, nvme_host_details, modified_fields):
+        """
+        Handles exceptions that occur during the modification of NVMe host fields.
+
+        Args:
+            operation (str): The operation being performed.
+            field (str): The field being modified.
+            ex (Exception): The exception that occurred.
+            version_check (bool): Whether the version check is enabled.
+            nvme_host_details (dict): The details of the NVMe host.
+            modified_fields (list): The list of modified fields.
+
+        Returns:
+            None
+
+        Raises:
+            Exception: If the modification fails.
+
+        """
+        version_support_err = f"Updating the NVMe host {field} is not supported in PowerFlex versions earlier than 4.6"
+        ex_msg = version_support_err if version_check and field != "name" else str(ex)
+        msg = f"Successfully modified the following fields: {', '.join(modified_fields)}" if modified_fields else ""
+        errormsg = f"Failed to {operation} NVMe host {nvme_host_details['id']} {field} with error {ex_msg}. {msg}"
+        LOG.error(errormsg)
+        self.module.fail_json(msg=errormsg)
+
+    def _get_api_version_and_check(self):
+        """
+        Get the API version and check if it is less than version 4.6.
+
+        Returns:
+            bool: True if the API version is less than version 4.6, False otherwise.
+        """
+        api_version = self.powerflex_conn.system.get()[0]['mdmCluster']['master']['versionInfo']
+        version_check = utils.is_version_less_than_4_6(api_version)
+        return version_check
 
 
 def get_powerflex_nvme_host_parameters():
