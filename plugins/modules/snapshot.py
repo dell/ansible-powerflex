@@ -484,10 +484,9 @@ class PowerFlexSnapshot(object):
                     snapshot_details[0]['secureSnapshotExpTime'])
                 creation_obj = datetime.fromtimestamp(
                     snapshot_details[0]['creationTime'])
-
-                td = utils.dateutil.relativedelta.relativedelta(
-                    expiry_obj, creation_obj)
-                snapshot_details[0]['retentionInHours'] = td.hours
+                # Get datetime diff in hours
+                td_hour = int(round(get_datetime_diff_in_minuets(expiry_obj, creation_obj) / 60))
+                snapshot_details[0]['retentionInHours'] = td_hour
             else:
                 snapshot_details[0]['retentionInHours'] = 0
 
@@ -1208,7 +1207,7 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
         existing_time_obj = datetime.fromtimestamp(existing_timestamp)
         new_time_obj = datetime.fromtimestamp(new_timestamp)
 
-        td = get_td(existing_time_obj, new_time_obj)
+        td = get_datetime_diff_in_minuets(existing_time_obj, new_time_obj)
 
         LOG.info("Time difference: %s", td.minutes)
 
@@ -1229,15 +1228,26 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
     return is_modified, is_timestamp_modified, is_size_modified, is_access_modified
 
 
-def get_td(existing_time_obj, new_time_obj):
-    if existing_time_obj > new_time_obj:
-        td = utils.dateutil.relativedelta.relativedelta(
-            existing_time_obj, new_time_obj)
-    else:
-        td = utils.dateutil.relativedelta.relativedelta(
-            new_time_obj, existing_time_obj)
+def get_datetime_diff_in_minuets(dt1, dt2):
+    """
+    Calculates the difference in two datetime objects.
+    Args:
+        dt1 (datetime): The first datetime object.
+        dt2 (datetime): The second datetime object.
+    Returns:
+        int: The difference in minutes between dt1 and dt2.
+    Raises:
+        TypeError: If dt1 or dt2 are None.
+    """
 
-    return td
+    if dt1 is None or dt2 is None:
+        raise TypeError("Datetime objects cannot be None")
+
+    if dt1 > dt2:
+        td = dt1 - dt2
+    else:
+        td = dt2 - dt1
+    return int(round(td.total_seconds() / 60))
 
 
 def get_new_size(size, cap_unit):
