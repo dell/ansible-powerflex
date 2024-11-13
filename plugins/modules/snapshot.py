@@ -1239,9 +1239,14 @@ def get_datetime_diff_in_minuets(dt1, dt2):
     Raises:
         TypeError: If dt1 or dt2 are None.
     """
-
-    if dt1 is None or dt2 is None:
-        raise TypeError("Datetime objects cannot be None")
+    if dt1 is None:
+        raise ValueError("First datetime cannot be None")
+    if dt2 is None:
+        raise ValueError("Second datetime cannot be None")
+    if not isinstance(dt1, datetime):
+        raise TypeError(f"First parameter is not a datetime object, it is {type(dt1).__name__}.")
+    if not isinstance(dt2, datetime):
+        raise TypeError(f"Second parameter not a datetime object, it is {type(dt2).__name__}.")
 
     if dt1 > dt2:
         td = dt1 - dt2
