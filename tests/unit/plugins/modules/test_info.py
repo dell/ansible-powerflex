@@ -24,6 +24,7 @@ from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_
 utils.get_logger = MagicMock()
 utils.get_powerflex_gateway_host_connection = MagicMock()
 utils.PowerFlexClient = MagicMock()
+utils.filter_response = MagicMock()
 
 from ansible.module_utils import basic
 basic.AnsibleModule = MagicMock()
@@ -618,3 +619,43 @@ class TestPowerflexInfo():
         )
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'firmware_repository_get_error'), info_module_mock)
+
+    def test_get_nvme_host_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['nvme_host']
+        })
+        info_module_mock.module.params = self.get_module_args
+        nvme_host_resp = MockInfoApi.INFO_NVME_HOST_LIST
+        info_module_mock.powerflex_conn.sdc.get = MagicMock(
+            return_value=nvme_host_resp
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.sdc.get.assert_called()
+
+    def test_get_nvme_host_details_filter(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['nvme_host'],
+            "filters": [{
+                "filter_key": "name",
+                "filter_operator": "equal",
+                "filter_value": "fake_host_name_1"
+            }]
+        })
+        info_module_mock.module.params = self.get_module_args
+        nvme_host_resp = MockInfoApi.INFO_SDC_FILTER_LIST
+        info_module_mock.powerflex_conn.sdc.get = MagicMock(
+            return_value=nvme_host_resp
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.sdc.get.assert_called()
+
+    def test_get_nvme_host_details_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['nvme_host']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.sdc.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'nvme_host_get_details'), info_module_mock)
