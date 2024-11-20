@@ -57,3 +57,10 @@
     - vars_files/connection.yml
   roles:
     - powerflex_sdr
+
+- name: Install and configure PowerFlex SDT
+  hosts: sdt
+  vars_files:
+    - vars_files/connection.yml
+  roles:
+    - powerflex_sdt

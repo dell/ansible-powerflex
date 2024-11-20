@@ -59,3 +59,12 @@
     - vars_files/connection.yml
   roles:
     - powerflex_activemq
+
+- name: Uninstall PowerFlex SDT
+  hosts: sdt
+  vars_files:
+    - vars_files/connection.yml
+  roles:
+    - powerflex_sdt
+  vars:
+    powerflex_sdt_state: absent
