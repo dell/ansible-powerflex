@@ -21,6 +21,7 @@ import string
 try:
     from PyPowerFlex import PowerFlexClient
     from PyPowerFlex.objects.system import SnapshotDef  # pylint: disable=unused-import
+    from PyPowerFlex.utils import filter_response  # pylint: disable=unused-import
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = True, None
 except ImportError:
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = False, traceback.format_exc()
@@ -161,6 +162,13 @@ def is_version_less_than_3_6(version):
     version = re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
     return \
         LooseVersion(version) < LooseVersion('3.6')
+
+
+def is_version_less_than_4_6(version):
+    """Verifies if powerflex version is less than 3.6"""
+    version = re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
+    return \
+        LooseVersion(version) < LooseVersion('4.6')
 
 
 def is_invalid_name(name):
