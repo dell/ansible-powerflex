@@ -34,13 +34,6 @@ try:
 except ImportError:
     PKG_RSRC_IMPORTED, PKG_RSRC_IMP_ERR = False, traceback.format_exc()
 
-"""importing dateutil"""
-try:
-    import dateutil.relativedelta  # noqa   # pylint: disable=unused-import
-    HAS_DATEUTIL, DATEUTIL_IMP_ERR = True, None
-except ImportError:
-    HAS_DATEUTIL, DATEUTIL_IMP_ERR = False, traceback.format_exc()
-
 
 def get_powerflex_gateway_host_parameters():
     """Provides common access parameters required for the
@@ -73,10 +66,6 @@ def get_powerflex_gateway_host_connection(module_params):
 
 def ensure_required_libs(module):
     """Check required libraries"""
-
-    if not HAS_DATEUTIL:
-        module.fail_json(msg=missing_required_lib("python-dateutil"),
-                         exception=DATEUTIL_IMP_ERR)
 
     if not PKG_RSRC_IMPORTED:
         module.fail_json(msg=missing_required_lib("importlib.metadata"),
