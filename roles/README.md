@@ -14,6 +14,7 @@ Here is the list of supported roles.
 ├── powerflex_lia
 ├── powerflex_tb
 ├── powerflex_sds
+├── powerflex_sdt
 ├── powerflex_config
 ├── powerflex_activeMQ
 
@@ -58,6 +59,10 @@ Below is the brief description of each role
   <tr>
     <td>powerflex_sds</td>
     <td>Role to manage the installation and uninstallation of Powerflex SDS.</td>
+  </tr>
+  <tr>
+    <td>powerflex_sdt</td>
+    <td>Role to manage the installation and uninstallation of Powerflex SDT.</td>
   </tr>
   <tr>
     <td>powerflex_tb</td>
@@ -108,6 +113,10 @@ Below is the list of full form of the acronyms which are refered throughout the 
   <tr>
     <td>SDS</td>
     <td>Storage Data Server.</td>
+  </tr>
+  <tr>
+    <td>SDT</td>
+    <td>Storage Data Target.</td>
   </tr>
   <tr>
     <td>TB</td>
