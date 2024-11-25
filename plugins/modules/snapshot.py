@@ -1209,10 +1209,10 @@ def check_snapshot_modified(snapshot=None, desired_retention=None,
 
         td = get_datetime_diff_in_minuets(existing_time_obj, new_time_obj)
 
-        LOG.info("Time difference: %s", td.minutes)
+        LOG.info("Time difference: %s", td)
 
         # A delta of two minutes is treated as idempotent
-        if td.seconds > 120 or td.minutes > 2:
+        if td > 2:
             is_timestamp_modified = True
 
     if size:
