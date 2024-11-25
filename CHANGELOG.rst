@@ -4,6 +4,21 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
+v2.6.0
+======
+
+Minor Changes
+-------------
+
+- Added Ansible role to support installation and uninstallation of SDT.
+- Info module is enhanced to support the listing of SDTs and NVMe hosts.
+
+New Modules
+-----------
+
+- dellemc.powerflex.sdt - Manage SDTs on Dell PowerFlex
+- dellemc.powerflex.nvme_host - Manage NVMe Hosts on Dell PowerFlex
+
 v2.5.0
 ======
 
