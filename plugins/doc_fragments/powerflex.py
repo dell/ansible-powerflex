@@ -52,7 +52,7 @@ class ModuleDocFragment(object):
             default: 120
     requirements:
       - A Dell PowerFlex storage system version 3.6 or later.
-      - PyPowerFlex 1.13.0.
+      - PyPowerFlex 1.14.0.
     notes:
       - The modules present in the collection named as 'dellemc.powerflex'
         are built to support the Dell PowerFlex storage platform.
