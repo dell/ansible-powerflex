@@ -170,3 +170,16 @@ releases:
         - Fixed the roles to support attaching the MDM cluster to the gateway.
         - Added support for PowerFlex Onyx version(4.6.x).
     release_date: '2024-05-31'
+  2.6.0:
+    changes:
+      minor_changes:
+        - Added Ansible role to support installation and uninstallation of SDT.
+        - Info module is enhanced to support the listing of SDTs and NVMe hosts.
+    modules:
+      - description: Manage SDTs on Dell PowerFlex
+        name: sdt
+        namespace: ''
+      - description: Manage NVMe Hosts on Dell PowerFlex
+        name: nvme_host
+        namespace: ''
+    release_date: '2024-12-05'

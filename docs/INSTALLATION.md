@@ -31,7 +31,7 @@
 
   * Download the latest tar build from any of the available distribution channel [Ansible Galaxy](https://galaxy.ansible.com/dellemc/powerflex) /[Automation Hub](https://console.redhat.com/ansible/automation-hub/repo/published/dellemc/powerflex) and use this command to install the collection anywhere in your system:
  
-        ansible-galaxy collection install dellemc-powerflex-2.5.0.tar.gz -p <install_path>
+        ansible-galaxy collection install dellemc-powerflex-2.6.0.tar.gz -p <install_path>
 
   * Set the environment variable:
   

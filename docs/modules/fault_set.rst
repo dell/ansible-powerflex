@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.13.0.
+- PyPowerFlex 1.14.0.
 
 
 

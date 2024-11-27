@@ -10,7 +10,7 @@
 
 The Ansible Modules for Dell Technologies (Dell) PowerFlex allow Data Center and IT administrators to use RedHat Ansible to automate and orchestrate the provisioning and management of Dell PowerFlex storage systems.
 
-The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, snapshot policy, storage pools, replication consistency groups, replication pairs, SDSs, devices, protection domains, MDM cluster, Fault Set and to gather high level facts from the storage system. The options available are list, show, create, modify and delete. These tasks can be executed by running simple playbooks written in yaml syntax. The modules are written so that all the operations are idempotent, so making multiple identical requests has the same effect as making a single request.
+The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, snapshot policy, storage pools, replication consistency groups, replication pairs, SDSs, SDTs, NVMe hosts, devices, protection domains, MDM cluster, Fault Set and to gather high level facts from the storage system. The options available are list, show, create, modify and delete. These tasks can be executed by running simple playbooks written in yaml syntax. The modules are written so that all the operations are idempotent, so making multiple identical requests has the same effect as making a single request.
 
 ## Table of contents
 
@@ -35,7 +35,7 @@ The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, s
 
 | **Ansible Modules** | **PowerFlex/VxFlex OS Version** | **SDK version** | **Python version** | **Ansible**              |
 |---------------------|-----------------------|-------|--------------------|--------------------------|
-| v2.5.0 |3.6 <br> 4.0 <br> 4.5 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 1.13.0 | 3.9.x <br> 3.10.x <br> 3.11.x <br> 3.12.x | 2.15 <br> 2.16 <br> 2.17 |
+| v2.6.0 |3.6 <br> 4.0 <br> 4.5 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 1.14.0 | 3.9.x <br> 3.10.x <br> 3.11.x <br> 3.12.x | 2.15 <br> 2.16 <br> 2.17 |
 
   * Please follow PyPowerFlex installation instructions on [PyPowerFlex Documentation](https://github.com/dell/python-powerflex)
 
@@ -76,6 +76,8 @@ The modules are written in such a way that all requests are idempotent and hence
   * [Storage pool module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/storagepool.rst)
   * [Volume module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/volume.rst)
   * [SDS module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/sds.rst)
+  * [SDT module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/sdt.rst)
+  * [NVMe Host module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/nvme_host.rst)
   * [Device Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/device.rst)
   * [Protection Domain Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/protection_domain.rst)
   * [MDM Cluster Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/mdm_cluster.rst)
