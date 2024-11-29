@@ -1018,7 +1018,6 @@ class PowerFlexSnapshot(object):
         if state == 'present' and snapshot_details and sdc and sdc_state == 'mapped':
             changed = self.sdc_state_mapped(sdc, snapshot_details)
 
-
         if state == 'present' and snapshot_details and sdc and \
                 sdc_state == 'unmapped':
             changed = self.unmap_snapshot_from_sdc(snapshot_details, sdc)
