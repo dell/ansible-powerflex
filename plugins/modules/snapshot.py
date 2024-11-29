@@ -1007,6 +1007,8 @@ class PowerFlexSnapshot(object):
                                                        cap_unit,
                                                        desired_retention,
                                                        retention_unit)
+            if changed:
+                snapshot_details = self.get_snapshot(snapshot_name)
 
         if is_modified:
             changed = self.modify_val(size, cap_unit, desired_retention,
@@ -1015,6 +1017,7 @@ class PowerFlexSnapshot(object):
 
         if state == 'present' and snapshot_details and sdc and sdc_state == 'mapped':
             changed = self.sdc_state_mapped(sdc, snapshot_details)
+
 
         if state == 'present' and snapshot_details and sdc and \
                 sdc_state == 'unmapped':
@@ -1084,7 +1087,7 @@ class PowerFlexSnapshot(object):
                     "iops_limit": temp['iops_limit']
                 }
                 changed_limits = self.modify_limits(payload)
-        return changed_mode or changed_limits
+        return changed_mode or changed_limits or _changed
 
     def modify_val(self, size, cap_unit, desired_retention, retention_unit,
                    snapshot_details, snap_access_mode, flag1, flag2, flag3):
