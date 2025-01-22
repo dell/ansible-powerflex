@@ -336,7 +336,7 @@ class PowerFlexSdc(object):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-        if sdc_new_name and len(sdc_new_name.strip()) == 0:
+        if sdc_new_name is not None and len(sdc_new_name.strip()) == 0:
             self.module.fail_json(msg="Provide valid SDC name to rename to.")
 
     def perform_modify(self, sdc_details, sdc_new_name, performance_profile):
