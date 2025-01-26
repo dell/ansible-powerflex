@@ -1,8 +1,8 @@
 ---
 # common params
-hostname: 10.XX.XX.XX
-username: 'user'
-password: 'password'
+hostname: pflex4env7.pie.lab.emc.com
+username: 'admin'
+password: 'Notuse4per!'
 validate_certs: false
 port: 443
 timeout: 120
