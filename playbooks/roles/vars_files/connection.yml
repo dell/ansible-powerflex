@@ -1,6 +1,6 @@
 ---
 # common params
-hostname: pflex4env7.pie.lab.emc.com
+hostname: pflex4env9.pie.lab.emc.com
 username: 'admin'
 password: 'Notuse4per!'
 validate_certs: false
