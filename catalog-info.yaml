@@ -3,7 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: dell-ansible-powerflex
-  description: "Ansible Modules for Dell PowerFlex"
+  description: "Ansible Modules for Dell Technologies PowerFlex"
   tags:
     - ansible
     - devops
