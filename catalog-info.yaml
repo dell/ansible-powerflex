@@ -14,7 +14,7 @@ metadata:
   annotations:
     backstage.io/techdocs-ref: dir:.
     github.com/project-slug: dell/ansible-powerflex
-  links:   
+  links:
     - url: 'https://galaxy.ansible.com/dellemc/powerflex'
       title: 'Ansible Galaxy'
       icon: 'web'
