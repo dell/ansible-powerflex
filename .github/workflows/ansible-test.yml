@@ -85,7 +85,7 @@ jobs:
     needs: [build]
     strategy:
       matrix:
-        python: ['3.10', '3.11']
+        python: ['3.10', '3.11', '3.12']
         ansible:
           - stable-2.15
           - stable-2.16
@@ -93,6 +93,8 @@ jobs:
           - stable-2.18
           - devel
         exclude:
+          - ansible: stable-2.15
+            python: '3.12'
           - ansible: stable-2.18
             python: '3.10'
           - ansible: devel
