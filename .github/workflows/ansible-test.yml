@@ -6,7 +6,7 @@ on:
     branches: [main]
   pull_request:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 2 * * *'
 
 jobs:
   build:
@@ -51,14 +51,11 @@ jobs:
       matrix:
         python: ['3.10', '3.11', '3.12']
         ansible:
-          - stable-2.15
           - stable-2.16
           - stable-2.17
           - stable-2.18
           - devel
         exclude:
-          - ansible: stable-2.15
-            python: '3.12'
           - ansible: stable-2.18
             python: '3.10'
           - ansible: devel
@@ -87,14 +84,11 @@ jobs:
       matrix:
         python: ['3.10', '3.11', '3.12']
         ansible:
-          - stable-2.15
           - stable-2.16
           - stable-2.17
           - stable-2.18
           - devel
         exclude:
-          - ansible: stable-2.15
-            python: '3.12'
           - ansible: stable-2.18
             python: '3.10'
           - ansible: devel
