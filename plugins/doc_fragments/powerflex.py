@@ -1,4 +1,4 @@
-# Copyright: (c) 2024, Dell Technologies.
+# Copyright: (c) 2024-2025, Dell Technologies.
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -52,7 +52,7 @@ class ModuleDocFragment(object):
             default: 120
     requirements:
       - A Dell PowerFlex storage system version 3.6 or later.
-      - PyPowerFlex 1.14.0.
+      - PyPowerFlex 1.14.1.
     notes:
       - The modules present in the collection named as 'dellemc.powerflex'
         are built to support the Dell PowerFlex storage platform.

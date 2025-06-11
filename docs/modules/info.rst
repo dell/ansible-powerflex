@@ -23,7 +23,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -33,43 +33,43 @@ Parameters
   gather_subset (optional, list, None)
     List of string variables to specify the PowerFlex storage system entities for which information is required.
 
-    Volumes - :literal:`vol`.
+    Volumes - \ :literal:`vol`\ .
 
-    Storage pools - :literal:`storage\_pool`.
+    Storage pools - \ :literal:`storage\_pool`\ .
 
-    Protection domains - :literal:`protection\_domain`.
+    Protection domains - \ :literal:`protection\_domain`\ .
 
-    SDCs - :literal:`sdc`.
+    SDCs - \ :literal:`sdc`\ .
 
-    SDSs - :literal:`sds`.
+    SDSs - \ :literal:`sds`\ .
 
-    Snapshot policies - :literal:`snapshot\_policy`.
+    Snapshot policies - \ :literal:`snapshot\_policy`\ .
 
-    Devices - :literal:`device`.
+    Devices - \ :literal:`device`\ .
 
-    Replication consistency groups - :literal:`rcg`.
+    Replication consistency groups - \ :literal:`rcg`\ .
 
-    Replication pairs - :literal:`replication\_pair`.
+    Replication pairs - \ :literal:`replication\_pair`\ .
 
-    Fault Sets - :literal:`fault\_set`.
+    Fault Sets - \ :literal:`fault\_set`\ .
 
-    Service templates - :literal:`service\_template`.
+    Service templates - \ :literal:`service\_template`\ .
 
-    Managed devices - :literal:`managed\_device`.
+    Managed devices - \ :literal:`managed\_device`\ .
 
-    Deployments - :literal:`deployment`.
+    Deployments - \ :literal:`deployment`\ .
 
-    FirmwareRepository - :literal:`firmware\_repository`.
+    FirmwareRepository - \ :literal:`firmware\_repository`\ .
 
-    NVMe host - :literal:`nvme\_host`
+    NVMe host - \ :literal:`nvme\_host`\ 
 
-    NVMe Storage Data Target  - :literal:`sdt`.
+    NVMe Storage Data Target  - \ :literal:`sdt`\ .
 
 
   filters (optional, list, None)
     List of filters to support filtered output for storage entities.
 
-    Each filter is a list of :emphasis:`filter\_key`\ , :emphasis:`filter\_operator`\ , :emphasis:`filter\_value`.
+    Each filter is a list of \ :emphasis:`filter\_key`\ , \ :emphasis:`filter\_operator`\ , \ :emphasis:`filter\_value`\ .
 
     Supports passing of multiple filters.
 
@@ -81,7 +81,7 @@ Parameters
     filter_operator (True, str, None)
       Operation to be performed on filter key.
 
-      Choice :literal:`contains` is supported for :emphasis:`gather\_subset` keys :literal:`service\_template`\ , :literal:`managed\_device`\ , :literal:`deployment`\ , :literal:`firmware\_repository`.
+      Choice \ :literal:`contains`\  is supported for \ :emphasis:`gather\_subset`\  keys \ :literal:`service\_template`\ , \ :literal:`managed\_device`\ , \ :literal:`deployment`\ , \ :literal:`firmware\_repository`\ .
 
 
     filter_value (True, str, None)
@@ -92,65 +92,65 @@ Parameters
   limit (optional, int, 50)
     Page limit.
 
-    Supported for :emphasis:`gather\_subset` keys :literal:`service\_template`\ , :literal:`managed\_device`\ , :literal:`deployment`\ , :literal:`firmware\_repository`.
+    Supported for \ :emphasis:`gather\_subset`\  keys \ :literal:`service\_template`\ , \ :literal:`managed\_device`\ , \ :literal:`deployment`\ , \ :literal:`firmware\_repository`\ .
 
 
   offset (optional, int, 0)
     Pagination offset.
 
-    Supported for :emphasis:`gather\_subset` keys :literal:`service\_template`\ , :literal:`managed\_device`\ , :literal:`deployment`\ , :literal:`firmware\_repository`.
+    Supported for \ :emphasis:`gather\_subset`\  keys \ :literal:`service\_template`\ , \ :literal:`managed\_device`\ , \ :literal:`deployment`\ , \ :literal:`firmware\_repository`\ .
 
 
   sort (optional, str, None)
     Sort the returned components based on specified field.
 
-    Supported for :emphasis:`gather\_subset` keys :literal:`service\_template`\ , :literal:`managed\_device`\ , :literal:`deployment`\ , :literal:`firmware\_repository`.
+    Supported for \ :emphasis:`gather\_subset`\  keys \ :literal:`service\_template`\ , \ :literal:`managed\_device`\ , \ :literal:`deployment`\ , \ :literal:`firmware\_repository`\ .
 
-    The supported sort keys for the :emphasis:`gather\_subset` can be referred from PowerFlex Manager API documentation in \ `https://developer.dell.com <https://developer.dell.com>`__.
+    The supported sort keys for the \ :emphasis:`gather\_subset`\  can be referred from PowerFlex Manager API documentation in \ https://developer.dell.com\ .
 
 
   include_devices (optional, bool, True)
     Include devices in response.
 
-    Applicable when :emphasis:`gather\_subset` is :literal:`deployment`.
+    Applicable when \ :emphasis:`gather\_subset`\  is \ :literal:`deployment`\ .
 
 
   include_template (optional, bool, True)
     Include service templates in response.
 
-    Applicable when :emphasis:`gather\_subset` is :literal:`deployment`.
+    Applicable when \ :emphasis:`gather\_subset`\  is \ :literal:`deployment`\ .
 
 
   full (optional, bool, False)
     Specify if response is full or brief.
 
-    Applicable when :emphasis:`gather\_subset` is :literal:`deployment`\ , :literal:`service\_template`.
+    Applicable when \ :emphasis:`gather\_subset`\  is \ :literal:`deployment`\ , \ :literal:`service\_template`\ .
 
-    For :literal:`deployment` specify to use full templates including resources in response.
+    For \ :literal:`deployment`\  specify to use full templates including resources in response.
 
 
   include_attachments (optional, bool, True)
     Include attachments.
 
-    Applicable when :emphasis:`gather\_subset` is :literal:`service\_template`.
+    Applicable when \ :emphasis:`gather\_subset`\  is \ :literal:`service\_template`\ .
 
 
   include_related (optional, bool, False)
     Include related entities.
 
-    Applicable when :emphasis:`gather\_subset` is :literal:`firmware\_repository`.
+    Applicable when \ :emphasis:`gather\_subset`\  is \ :literal:`firmware\_repository`\ .
 
 
   include_bundles (optional, bool, False)
     Include software bundle entities.
 
-    Applicable when :emphasis:`gather\_subset` is :literal:`firmware\_repository`.
+    Applicable when \ :emphasis:`gather\_subset`\  is \ :literal:`firmware\_repository`\ .
 
 
   include_components (optional, bool, False)
     Include software component entities.
 
-    Applicable when :emphasis:`gather\_subset` is :literal:`firmware\_repository`.
+    Applicable when \ :emphasis:`gather\_subset`\  is \ :literal:`firmware\_repository`\ .
 
 
   hostname (True, str, None)
@@ -168,9 +168,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    :literal:`true` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    :literal:`false` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -190,9 +190,9 @@ Notes
 -----
 
 .. note::
-   - The :emphasis:`check\_mode` is supported.
-   - The supported filter keys for the :emphasis:`gather\_subset` can be referred from PowerFlex Manager API documentation in \ `https://developer.dell.com <https://developer.dell.com>`__.
-   - The :emphasis:`filter`\ , :emphasis:`sort`\ , :emphasis:`limit` and :emphasis:`offset` options will be ignored when more than one :emphasis:`gather\_subset` is specified along with :literal:`service\_template`\ , :literal:`managed\_device`\ , :literal:`deployment` or :literal:`firmware\_repository`.
+   - The \ :emphasis:`check\_mode`\  is supported.
+   - The supported filter keys for the \ :emphasis:`gather\_subset`\  can be referred from PowerFlex Manager API documentation in \ https://developer.dell.com\ .
+   - The \ :emphasis:`filter`\ , \ :emphasis:`sort`\ , \ :emphasis:`limit`\  and \ :emphasis:`offset`\  options will be ignored when more than one \ :emphasis:`gather\_subset`\  is specified along with \ :literal:`service\_template`\ , \ :literal:`managed\_device`\ , \ :literal:`deployment`\  or \ :literal:`firmware\_repository`\ .
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
