@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -31,25 +31,25 @@ Parameters
   fault_set_name (optional, str, None)
     Name of the Fault Set.
 
-    Mutually exclusive with *fault_set_id*.
+    Mutually exclusive with \ :emphasis:`fault\_set\_id`\ .
 
 
   fault_set_id (optional, str, None)
     ID of the Fault Set.
 
-    Mutually exclusive with *fault_set_name*.
+    Mutually exclusive with \ :emphasis:`fault\_set\_name`\ .
 
 
   protection_domain_name (optional, str, None)
     Name of protection domain.
 
-    Mutually exclusive with *protection_domain_id*.
+    Mutually exclusive with \ :emphasis:`protection\_domain\_id`\ .
 
 
   protection_domain_id (optional, str, None)
     ID of the protection domain.
 
-    Mutually exclusive with *protection_domain_name*.
+    Mutually exclusive with \ :emphasis:`protection\_domain\_name`\ .
 
 
   fault_set_new_name (optional, str, None)
@@ -75,9 +75,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -97,8 +97,8 @@ Notes
 -----
 
 .. note::
-   - The *check_mode* is supported.
-   - When *fault_set_name* is provided, *protection_domain_name* or *protection_domain_id* must be provided.
+   - The \ :emphasis:`check\_mode`\  is supported.
+   - When \ :emphasis:`fault\_set\_name`\  is provided, \ :emphasis:`protection\_domain\_name`\  or \ :emphasis:`protection\_domain\_id`\  must be provided.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
@@ -211,3 +211,4 @@ Authors
 
 - Carlos Tronco (@ctronco) <ansible.team@dell.com>
 - Trisha Datta (@trisha-dell) <ansible.team@dell.com>
+

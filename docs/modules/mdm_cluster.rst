@@ -23,7 +23,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -33,15 +33,15 @@ Parameters
   mdm_name (optional, str, None)
     The name of the MDM. It is unique across the PowerFlex array.
 
-    Mutually exclusive with *mdm_id*.
+    Mutually exclusive with \ :emphasis:`mdm\_id`\ .
 
-    If mdm_name passed in add standby operation, then same name will be assigned to the new standby mdm.
+    If mdm\_name passed in add standby operation, then same name will be assigned to the new standby mdm.
 
 
   mdm_id (optional, str, None)
     The ID of the MDM.
 
-    Mutually exclusive with *mdm_name*.
+    Mutually exclusive with \ :emphasis:`mdm\_name`\ .
 
 
   mdm_new_name (optional, str, None)
@@ -78,9 +78,9 @@ Parameters
 
 
   is_primary (optional, bool, None)
-    Set *is_primary* as ``true`` to change MDM cluster ownership from the current master MDM to different MDM.
+    Set \ :emphasis:`is\_primary`\  as \ :literal:`true`\  to change MDM cluster ownership from the current master MDM to different MDM.
 
-    Set *is_primary* as ``false``, will return MDM cluster details.
+    Set \ :emphasis:`is\_primary`\  as \ :literal:`false`\ , will return MDM cluster details.
 
     New owner MDM must be an MDM with a manager role.
 
@@ -104,7 +104,7 @@ Parameters
     mdm_type (True, str, None)
       Type of the MDM.
 
-      Either *mdm_id* or *mdm_name* must be passed with mdm_type.
+      Either \ :emphasis:`mdm\_id`\  or \ :emphasis:`mdm\_name`\  must be passed with mdm\_type.
 
 
 
@@ -119,13 +119,13 @@ Parameters
 
     Interfaces of the primary and secondary type MDMs are allowed to modify.
 
-    The *virtual_ip_interfaces* is mutually exclusive with *clear_interfaces*.
+    The \ :emphasis:`virtual\_ip\_interfaces`\  is mutually exclusive with \ :emphasis:`clear\_interfaces`\ .
 
 
   clear_interfaces (optional, bool, None)
     Clear all virtual IP interfaces.
 
-    The *clear_interfaces* is mutually exclusive with *virtual_ip_interfaces*.
+    The \ :emphasis:`clear\_interfaces`\  is mutually exclusive with \ :emphasis:`virtual\_ip\_interfaces`\ .
 
 
   performance_profile (optional, str, None)
@@ -151,9 +151,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -173,12 +173,12 @@ Notes
 -----
 
 .. note::
-   - Parameters *mdm_name* or *mdm_id* are mandatory for rename and modify virtual IP interfaces.
-   - Parameters *mdm_name* or *mdm_id* are not required while modifying performance profile.
+   - Parameters \ :emphasis:`mdm\_name`\  or \ :emphasis:`mdm\_id`\  are mandatory for rename and modify virtual IP interfaces.
+   - Parameters \ :emphasis:`mdm\_name`\  or \ :emphasis:`mdm\_id`\  are not required while modifying performance profile.
    - For change MDM cluster ownership operation, only changed as true will be returned and for idempotency case MDM cluster details will be returned.
    - Reinstall all SDC after changing ownership to some newly added MDM.
    - To add manager standby MDM, MDM package must be installed with manager role.
-   - The *check_mode* is supported.
+   - The \ :emphasis:`check\_mode`\  is supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

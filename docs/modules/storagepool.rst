@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -33,7 +33,7 @@ Parameters
 
     If more than one storage pool is found with the same name then protection domain id/name is required to perform the task.
 
-    Mutually exclusive with *storage_pool_id*.
+    Mutually exclusive with \ :emphasis:`storage\_pool\_id`\ .
 
 
   storage_pool_id (optional, str, None)
@@ -41,7 +41,7 @@ Parameters
 
     It is auto generated, hence should not be provided during creation of a storage pool.
 
-    Mutually exclusive with *storage_pool_name*.
+    Mutually exclusive with \ :emphasis:`storage\_pool\_name`\ .
 
 
   protection_domain_name (optional, str, None)
@@ -49,7 +49,7 @@ Parameters
 
     During creation of a pool, either protection domain name or id must be mentioned.
 
-    Mutually exclusive with *protection_domain_id*.
+    Mutually exclusive with \ :emphasis:`protection\_domain\_id`\ .
 
 
   protection_domain_id (optional, str, None)
@@ -57,7 +57,7 @@ Parameters
 
     During creation of a pool, either protection domain name or id must be mentioned.
 
-    Mutually exclusive with *protection_domain_name*.
+    Mutually exclusive with \ :emphasis:`protection\_domain\_name`\ .
 
 
   media_type (optional, str, None)
@@ -97,9 +97,9 @@ Parameters
   rmcache_write_handling_mode (optional, str, Cached)
     Set RM cache write handling mode of a storage pool.
 
-    *Passthrough* Writes skip the cache and are stored in storage only.
+    \ :emphasis:`Passthrough`\  Writes skip the cache and are stored in storage only.
 
-    *Cached* Writes are stored in both cache and storage (the default).
+    \ :emphasis:`Cached`\  Writes are stored in both cache and storage (the default).
 
     Caching is only performed for IOs whose size is a multiple of 4k bytes.
 
@@ -142,13 +142,13 @@ Parameters
     policy (optional, str, limitNumOfConcurrentIos)
       The I/O priority policy for protected maintenance mode.
 
-      ``unlimited`` Protected maintenance mode IOPS are not limited
+      \ :literal:`unlimited`\  Protected maintenance mode IOPS are not limited
 
-      ``limitNumOfConcurrentIos``Limit the number of allowed concurrent protected maintenance mode migration I/Os to the value defined for *concurrent_ios_per_device*.
+      \ :literal:`limitNumOfConcurrentIos`\ Limit the number of allowed concurrent protected maintenance mode migration I/Os to the value defined for \ :emphasis:`concurrent\_ios\_per\_device`\ .
 
-      ``favorAppIos`` Always limit the number of allowed concurrent protected maintenance mode migration I/Os to value defined for *concurrent_ios_per_device*.
+      \ :literal:`favorAppIos`\  Always limit the number of allowed concurrent protected maintenance mode migration I/Os to value defined for \ :emphasis:`concurrent\_ios\_per\_device`\ .
 
-      If application I/Os are in progress, should also limit the bandwidth of protected maintenance mode migration I/Os to the limit defined for the *bw_limit_per_device*.
+      If application I/Os are in progress, should also limit the bandwidth of protected maintenance mode migration I/Os to the limit defined for the \ :emphasis:`bw\_limit\_per\_device`\ .
 
 
     concurrent_ios_per_device (optional, int, None)
@@ -171,11 +171,11 @@ Parameters
     policy (optional, str, None)
       The I/O priority policy for protected maintenance mode.
 
-      ``limitNumOfConcurrentIos`` Limit the number of allowed concurrent V-Tree migration I/Os (default) to the *concurrent_ios_per_device*.
+      \ :literal:`limitNumOfConcurrentIos`\  Limit the number of allowed concurrent V-Tree migration I/Os (default) to the \ :emphasis:`concurrent\_ios\_per\_device`\ .
 
-      ``favorAppIos`` Always limit the number of allowed concurrent V-Tree migration I/Os to defined for *concurrent_ios_per_device*.
+      \ :literal:`favorAppIos`\  Always limit the number of allowed concurrent V-Tree migration I/Os to defined for \ :emphasis:`concurrent\_ios\_per\_device`\ .
 
-      If application I/Os are in progress, should also limit the bandwidth of V-Tree migration I/Os to the limit defined for the *bw_limit_per_device*.
+      If application I/Os are in progress, should also limit the bandwidth of V-Tree migration I/Os to the limit defined for the \ :emphasis:`bw\_limit\_per\_device`\ .
 
 
     concurrent_ios_per_device (optional, int, None)
@@ -198,11 +198,11 @@ Parameters
     policy (optional, str, favorAppIos)
       Policy to use for rebalance I/O priority.
 
-      ``unlimited`` Rebalance I/Os are not limited.
+      \ :literal:`unlimited`\  Rebalance I/Os are not limited.
 
-      ``limitNumOfConcurrentIos`` Limit the number of allowed concurrent rebalance I/Os.
+      \ :literal:`limitNumOfConcurrentIos`\  Limit the number of allowed concurrent rebalance I/Os.
 
-      ``favorAppIos`` Limit the number and bandwidth of rebalance I/Os when application I/Os are in progress.
+      \ :literal:`favorAppIos`\  Limit the number and bandwidth of rebalance I/Os when application I/Os are in progress.
 
 
     concurrent_ios_per_device (optional, int, None)
@@ -227,7 +227,7 @@ Parameters
     high_threshold (optional, int, None)
       Threshold of the non-spare capacity of the Storage Pool that will trigger a high-priority alert, expressed as a percentage.
 
-      This value must be lower than the *critical_threshold*.
+      This value must be lower than the \ :emphasis:`critical\_threshold`\ .
 
 
     critical_threshold (optional, int, None)
@@ -254,9 +254,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -277,7 +277,7 @@ Notes
 
 .. note::
    - TRANSITIONAL media type is supported only during modification.
-   - The *check_mode* is supported.
+   - The \ :emphasis:`check\_mode`\  is supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -31,25 +31,25 @@ Parameters
   sdc_name (optional, str, None)
     Name of the SDC.
 
-    Specify either *sdc_name*, *sdc_id* or *sdc_ip* for get/rename operation.
+    Specify either \ :emphasis:`sdc\_name`\ , \ :emphasis:`sdc\_id`\  or \ :emphasis:`sdc\_ip`\  for get/rename operation.
 
-    Mutually exclusive with *sdc_id* and *sdc_ip*.
+    Mutually exclusive with \ :emphasis:`sdc\_id`\  and \ :emphasis:`sdc\_ip`\ .
 
 
   sdc_id (optional, str, None)
     ID of the SDC.
 
-    Specify either *sdc_name*, *sdc_id* or *sdc_ip* for get/rename operation.
+    Specify either \ :emphasis:`sdc\_name`\ , \ :emphasis:`sdc\_id`\  or \ :emphasis:`sdc\_ip`\  for get/rename operation.
 
-    Mutually exclusive with *sdc_name* and *sdc_ip*.
+    Mutually exclusive with \ :emphasis:`sdc\_name`\  and \ :emphasis:`sdc\_ip`\ .
 
 
   sdc_ip (optional, str, None)
     IP of the SDC.
 
-    Specify either *sdc_name*, *sdc_id* or *sdc_ip* for get/rename operation.
+    Specify either \ :emphasis:`sdc\_name`\ , \ :emphasis:`sdc\_id`\  or \ :emphasis:`sdc\_ip`\  for get/rename operation.
 
-    Mutually exclusive with *sdc_id* and *sdc_name*.
+    Mutually exclusive with \ :emphasis:`sdc\_id`\  and \ :emphasis:`sdc\_name`\ .
 
 
   sdc_new_name (optional, str, None)
@@ -57,7 +57,7 @@ Parameters
 
 
   performance_profile (optional, str, None)
-    Define the performance profile as *Compact* or *HighPerformance*.
+    Define the performance profile as \ :emphasis:`Compact`\  or \ :emphasis:`HighPerformance`\ .
 
     The high performance profile configures a predefined set of parameters for very high performance use cases.
 
@@ -81,9 +81,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -103,7 +103,7 @@ Notes
 -----
 
 .. note::
-   - The *check_mode* is not supported.
+   - The \ :emphasis:`check\_mode`\  is not supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

@@ -1,3 +1,7 @@
+.vscode
+.env
+.coverage
 output
 __pycache__/
 *.log
+dellemc-powerflex*.tar.gz

@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -31,25 +31,25 @@ Parameters
   pair_id (optional, str, None)
     The ID of the replication pair.
 
-    Mutually exclusive with *pair_name*.
+    Mutually exclusive with \ :emphasis:`pair\_name`\ .
 
 
   pair_name (optional, str, None)
     The name of the replication pair.
 
-    Mutually exclusive with *pair_id*.
+    Mutually exclusive with \ :emphasis:`pair\_id`\ .
 
 
   rcg_name (optional, str, None)
     The name of the replication consistency group.
 
-    Mutually exclusive with *rcg_id*.
+    Mutually exclusive with \ :emphasis:`rcg\_id`\ .
 
 
   rcg_id (optional, str, None)
     The ID of the replication consistency group.
 
-    Mutually exclusive with *rcg_name*.
+    Mutually exclusive with \ :emphasis:`rcg\_name`\ .
 
 
   pause (optional, bool, None)
@@ -63,27 +63,27 @@ Parameters
     source_volume_id (optional, str, None)
       Source volume ID.
 
-      Mutually exclusive with *source_volume_name*.
+      Mutually exclusive with \ :emphasis:`source\_volume\_name`\ .
 
 
     source_volume_name (optional, str, None)
       Source volume name.
 
-      Mutually exclusive with *source_volume_id*.
+      Mutually exclusive with \ :emphasis:`source\_volume\_id`\ .
 
 
     target_volume_id (optional, str, None)
       Target volume ID.
 
-      Mutually exclusive with *target_volume_name*.
+      Mutually exclusive with \ :emphasis:`target\_volume\_name`\ .
 
 
     target_volume_name (optional, str, None)
       Target volume name.
 
-      If specified, *remote_peer* details should also be specified.
+      If specified, \ :emphasis:`remote\_peer`\  details should also be specified.
 
-      Mutually exclusive with *target_volume_id*.
+      Mutually exclusive with \ :emphasis:`target\_volume\_id`\ .
 
 
     copy_type (True, str, None)
@@ -114,9 +114,9 @@ Parameters
     validate_certs (optional, bool, True)
       Boolean variable to specify whether or not to validate SSL certificate.
 
-      ``true`` - Indicates that the SSL certificate should be verified.
+      \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-      ``false`` - Indicates that the SSL certificate should not be verified.
+      \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
     port (optional, int, 443)
@@ -149,9 +149,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -171,8 +171,8 @@ Notes
 -----
 
 .. note::
-   - The *check_mode* is supported.
-   - In 4.0 the creation of replication pair fails when *copy_type* is specified as ``OfflineCopy``.
+   - The \ :emphasis:`check\_mode`\  is supported.
+   - In 4.0 the creation of replication pair fails when \ :emphasis:`copy\_type`\  is specified as \ :literal:`OfflineCopy`\ .
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

@@ -1,6 +1,6 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 2.6.0
+### Release notes 2.6.1
 
 >   © 2024 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
@@ -28,6 +28,7 @@ Table 1. Revision history
 
 | Revision | Date            | Description                                                 |
 |----------|-----------------|-------------------------------------------------------------|
+| 02       | June 2025        | Current release of Ansible Modules for Dell PowerFlex 2.6.1 |
 | 01       | Dec 2024        | Current release of Ansible Modules for Dell PowerFlex 2.6.0 |
 
 Product description
