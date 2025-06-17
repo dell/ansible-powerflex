@@ -4,6 +4,20 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
+v2.6.1
+======
+
+Minor Changes
+-------------
+
+- Added none check for mdm cluster id in mdm_cluster module.
+- Updated minimum SDK version to 2.6.1.
+
+Bugfixes
+--------
+
+- snapshot_policy - Reanmed snapshotAccessMode and secureSnapshots to snapshot_access_mode and secure_snapshots respectively.
+
 v2.6.0
 ======
 
