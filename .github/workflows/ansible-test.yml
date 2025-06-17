@@ -1,11 +1,12 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 2 * * *'
 
 jobs:
   build:
@@ -48,19 +49,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.9', '3.10', '3.11']
+        python: ['3.10', '3.11', '3.12']
         ansible:
-          - stable-2.15
           - stable-2.16
           - stable-2.17
+          - stable-2.18
           - devel
         exclude:
-          - ansible: stable-2.16
-            python: '3.9'
-          - ansible: stable-2.17
-            python: '3.9'
-          - ansible: devel
-            python: '3.9'
+          - ansible: stable-2.18
+            python: '3.10'
           - ansible: devel
             python: '3.10'
 
@@ -69,9 +66,11 @@ jobs:
         uses: ansible-community/ansible-test-gh-action@release/v1
         with:
           testing-type: units
-          coverage: always
+          coverage: ${{ (matrix.python == '3.11' && matrix.ansible == 'stable-2.18') && 'always' ||  'never' }}
           ansible-core-version: ${{ matrix.ansible }}
           target-python-version: ${{ matrix.python }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   ###
   # Sanity tests (REQUIRED)
@@ -83,19 +82,15 @@ jobs:
     needs: [build]
     strategy:
       matrix:
-        python: ['3.9', '3.10', '3.11']
+        python: ['3.10', '3.11', '3.12']
         ansible:
-          - stable-2.15
           - stable-2.16
           - stable-2.17
+          - stable-2.18
           - devel
         exclude:
-          - ansible: stable-2.16
-            python: '3.9'
-          - ansible: stable-2.17
-            python: '3.9'
-          - ansible: devel
-            python: '3.9'
+          - ansible: stable-2.18
+            python: '3.10'
           - ansible: devel
             python: '3.10'
     runs-on: ubuntu-latest

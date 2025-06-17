@@ -1,4 +1,4 @@
-# Copyright: (c) 2024, Dell Technologies
+# Copyright: (c) 2024-2025, Dell Technologies
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -73,10 +73,10 @@ def ensure_required_libs(module):
                          exception=PKG_RSRC_IMP_ERR)
 
     if not HAS_POWERFLEX_SDK:
-        module.fail_json(msg=missing_required_lib("PyPowerFlex V 1.14.0 or above"),
+        module.fail_json(msg=missing_required_lib("PyPowerFlex V 1.14.1 or above"),
                          exception=POWERFLEX_SDK_IMP_ERR)
 
-    min_ver = '1.14.0'
+    min_ver = '1.14.1'
     try:
         curr_version = get_version("PyPowerFlex")
         supported_version = (LooseVersion(curr_version) >= LooseVersion(min_ver))

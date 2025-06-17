@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -33,45 +33,45 @@ Parameters
 
     This is a required field to deploy a resource group.
 
-    Either *resource_group_id* or *resource_group_name* must be specified to perform resource group operations.
+    Either \ :emphasis:`resource\_group\_id`\  or \ :emphasis:`resource\_group\_name`\  must be specified to perform resource group operations.
 
-    Mutually exclusive with *resource_group_id*.
+    Mutually exclusive with \ :emphasis:`resource\_group\_id`\ .
 
 
   resource_group_id (optional, str, None)
     The ID of the resource group.
 
-    Either *resource_group_id* or *resource_group_name* must be specified to perform resource group operations.
+    Either \ :emphasis:`resource\_group\_id`\  or \ :emphasis:`resource\_group\_name`\  must be specified to perform resource group operations.
 
-    Mutually exclusive with *resource_group_name*.
+    Mutually exclusive with \ :emphasis:`resource\_group\_name`\ .
 
 
   template_name (optional, str, None)
     The name of the published template.
 
-    Either *template_id* or *template_name* must be specified to deploy a resource group.
+    Either \ :emphasis:`template\_id`\  or \ :emphasis:`template\_name`\  must be specified to deploy a resource group.
 
-    Mutually exclusive with *template_id*.
+    Mutually exclusive with \ :emphasis:`template\_id`\ .
 
 
   template_id (optional, str, None)
     The ID of the published template.
 
-    Either *template_id* or *template_name* must be specified to deploy a resource group.
+    Either \ :emphasis:`template\_id`\  or \ :emphasis:`template\_name`\  must be specified to deploy a resource group.
 
-    Mutually exclusive with *template_name*.
+    Mutually exclusive with \ :emphasis:`template\_name`\ .
 
 
   firmware_repository_id (optional, str, None)
     The ID of the firmware repository if not using the appliance default catalog.
 
-    Mutually exclusive with *firmware_repository_name*.
+    Mutually exclusive with \ :emphasis:`firmware\_repository\_name`\ .
 
 
   firmware_repository_name (optional, str, None)
     The name of the firmware repository if not using the appliance default catalog.
 
-    Mutually exclusive with *firmware_repository_id*.
+    Mutually exclusive with \ :emphasis:`firmware\_repository\_id`\ .
 
 
   new_resource_group_name (optional, str, None)
@@ -123,9 +123,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -145,7 +145,7 @@ Notes
 -----
 
 .. note::
-   - The *check_mode* is supported.
+   - The \ :emphasis:`check\_mode`\  is supported.
    - Resource group scale up can be done only when deployment is complete.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
