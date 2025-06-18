@@ -191,4 +191,4 @@ releases:
       minor_changes:
         - Added none check for mdm cluster id in mdm_cluster module.
         - Updated minimum SDK version to 2.6.1.
-    release_date: '2024-06-30'
+    release_date: '2025-06-26'
