@@ -137,10 +137,10 @@ releases:
   2.2.0:
     changes:
       minor_changes:
-        - The SDS module has been enhanced to facilitate SDS creation within
-          a fault set.
-        - The Info module is enhanced to retrieve lists related to fault sets,
-          service templates, deployments, and managed devices.
+        - The Info module is enhanced to retrieve lists related to fault sets, service
+          templates, deployments, and managed devices.
+        - The SDS module has been enhanced to facilitate SDS creation within a fault
+          set.
     modules:
       - description: Manage Fault Sets on Dell PowerFlex
         name: fault_set
@@ -149,10 +149,10 @@ releases:
   2.3.0:
     changes:
       minor_changes:
-        - Added support for resource group provisioning to validate, deploy,
-          edit, add nodes and delete a resource group.
-        - The Info module is enhanced to list the firmware repositories.
         - Added support for PowerFlex ansible modules and roles on Azure.
+        - Added support for resource group provisioning to validate, deploy, edit, add
+          nodes and delete a resource group.
+        - The Info module is enhanced to list the firmware repositories.
     modules:
       - description: Manage resource group deployments on Dell PowerFlex
         name: resource_group
@@ -166,9 +166,9 @@ releases:
   2.5.0:
     changes:
       minor_changes:
-        - The storage pool module has been enhanced to support more features.
-        - Fixed the roles to support attaching the MDM cluster to the gateway.
         - Added support for PowerFlex Onyx version(4.6.x).
+        - Fixed the roles to support attaching the MDM cluster to the gateway.
+        - The storage pool module has been enhanced to support more features.
     release_date: '2024-05-31'
   2.6.0:
     changes:
@@ -183,3 +183,14 @@ releases:
         name: nvme_host
         namespace: ''
     release_date: '2024-12-05'
+  2.6.1:
+    changes:
+      bugfixes:
+        - snapshot_policy - Renamed snapshotAccessMode and secureSnapshots to snapshot_access_mode
+          and secure_snapshots respectively.
+      minor_changes:
+        - Added none check for mdm cluster id in mdm_cluster module.
+        - Updated minimum SDK version to 2.6.1.
+      release_summary: This release brings several bug fixes and minor changes to
+        the PowerFlex Ansible Modules.
+    release_date: '2025-06-26'

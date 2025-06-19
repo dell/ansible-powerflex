@@ -2,7 +2,7 @@
 =========================================
 ### Release notes 2.6.1
 
->   © 2024 Dell Inc. or its subsidiaries. All rights reserved. Dell
+>   © 2025 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
 >   subsidiaries. Other trademarks may be trademarks of their respective
 >   owners.
@@ -45,9 +45,10 @@ each of the entities.
 New features and enhancements
 -----------------------------
 Along with the previous release deliverables, this release supports following features - 
- - Added new modules to support the management of SDT and NVMe Host.
- - Added Ansible role to support installation and uninstallation of SDT.
- - Info module is enhanced to support the listing of SDTs and NVMe hosts.
+ - snapshot_policy - Reanmed snapshotAccessMode and secureSnapshots to
+   snapshot_access_mode and secure_snapshots respectively.
+ - Updated minimum SDK version to 2.6.1.
+ - Added none check for mdm cluster id in mdm_cluster module.
 
 Known issues
 ------------

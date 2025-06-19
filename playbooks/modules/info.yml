@@ -5,7 +5,7 @@
   vars:
     hostname: 'x.x.x.x'
     username: 'admin'
-    password: 'Password'
+    password: ''
     validate_certs: false
     host_port: 443
   tasks:
@@ -89,7 +89,7 @@
         gather_subset:
           - firmware_repository
 
-    - name: Get the list of firmware repository
+    - name: Get the list of firmware repository with bundles and components
       dellemc.powerflex.info:
         hostname: "{{ hostname }}"
         username: "{{ username }}"

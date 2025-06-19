@@ -809,10 +809,12 @@ class PowerFlexMdmCluster(object):
                 mdm_details = self. \
                     is_mdm_name_id_exists(mdm_id=node['mdm_id'],
                                           cluster_details=cluster_details)
-                if mdm_details is None:
+
+                if mdm_details is not None and mdm_details.get('id'):
+                    remove_tb.append(mdm_details.get('id'))
+                else:
                     err_msg = self.not_exist_msg.format(name_or_id)
                     self.module.fail_json(msg=err_msg)
-                remove_tb.append(mdm_details['id'])
 
             elif node['mdm_type'] == 'TieBreaker' and \
                     node['mdm_name'] is not None:
