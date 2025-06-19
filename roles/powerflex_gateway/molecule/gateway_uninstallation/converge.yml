@@ -28,20 +28,20 @@
           - powerflex_gateway_uninstall_output.results[0].msg == 'Nothing to do'
       when: not ansible_check_mode and not powerflex_gateway_uninstall_output.changed and ansible_distribution in ("RedHat", "CentOS", "SLES")
 
-    - name: Verifying uninstall package in check mode
+    - name: Verifying uninstall package in check mode for ubuntu package
       ansible.builtin.assert:
         that:
           - powerflex_gateway_uninstall_deb_output.msg == "Check mode: No changes made, but would have if not in check mode"
           - powerflex_gateway_uninstall_deb_output.changed is true
       when: ansible_check_mode and ansible_distribution == "Ubuntu"
 
-    - name: Verifying uninstall package in converge
+    - name: Verifying uninstall package in converge for ubuntu package
       ansible.builtin.assert:
         that:
           - " 'Removed:' in powerflex_gateway_uninstall_deb_output.results[0].results[0]"
       when: not ansible_check_mode and powerflex_gateway_uninstall_deb_output.changed and ansible_distribution == "Ubuntu"
 
-    - name: Verifying uninstall package in Idempotency
+    - name: Verifying uninstall package in Idempotency for ubuntu package
       ansible.builtin.assert:
         that:
           - powerflex_gateway_uninstall_deb_output.results[0].msg == 'Nothing to do'
