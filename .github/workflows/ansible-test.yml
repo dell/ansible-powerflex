@@ -37,42 +37,31 @@ jobs:
           name: collection
           path: .cache/collection-tarballs
 
-  ansible-lint:
+  ###
+  # Unit tests (OPTIONAL)
+  #
+  # https://docs.ansible.com/ansible/latest/dev_guide/testing_units.html
+
+  unit:
+    name: Unit Tests (Ⓐ${{ matrix.ansible }} with ${{ matrix.python }} python)
     needs: [build]
-    uses: ansible/ansible-content-actions/.github/workflows/ansible_lint.yaml@main
-  sanity:
-    needs: [build]
-    uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
-  unit-galaxy:
-    needs: [build]
-    uses: ansible/ansible-content-actions/.github/workflows/unit.yaml@main
-  codecov:
-    name: Codecov
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ansible_collections/dellemc/powerflex
-    needs: [build]
     strategy:
       fail-fast: false
       matrix:
-        ansible-version: [stable-2.18]
+        python: ['3.11', '3.12', '3.13']
+        ansible:
+          - stable-2.16
+          - stable-2.17
+          - stable-2.18
+          - devel
+        exclude:
+          - ansible: stable-2.16
+            python: '3.13'
+          - ansible: stable-2.17
+            python: '3.13'
+
     steps:
-      - uses: actions/checkout@v4
-        with:
-          path: ansible_collections/dellemc/openmanage
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.12
-
-      - name: Install ansible (${{ matrix.ansible-version }})
-        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible-version }}.tar.gz --disable-pip-version-check
-
-      - name: Install test dependencies
-        run: pip install -r test-requirements.txt
-
       - name: Perform unit testing with ansible-test
         uses: ansible-community/ansible-test-gh-action@release/v1
         with:
@@ -83,27 +72,14 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./coverage.xml,
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
+  ###
+  # Sanity tests (REQUIRED)
+  #
+  # https://docs.ansible.com/ansible/latest/dev_guide/testing_sanity.html
 
-  all_green:
-    if: ${{ always() }}
-    needs:
-      - sanity
-      - unit-galaxy
-      - ansible-lint
-      - codecov
-    runs-on: ubuntu-latest
-    steps:
-      - run: >-
-          python -c "assert 'failure' not in
-          set([
-          '${{ needs.sanity.result }}',
-          '${{ needs.unit-galaxy.result }}',
-          '${{ needs.ansible-lint.result }}',
-          '${{ needs.codecov.result }}'
-          ])"
+  sanity:
+    needs: [build]
+    uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
+  ansible-lint:
+    needs: [build]
+    uses: ansible/ansible-content-actions/.github/workflows/ansible_lint.yaml@main
