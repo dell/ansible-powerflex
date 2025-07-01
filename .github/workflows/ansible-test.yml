@@ -63,14 +63,7 @@ jobs:
 
     steps:
       - name: Perform unit testing with ansible-test
-        uses: ansible-community/ansible-test-gh-action@release/v1
-        with:
-          testing-type: units
-          coverage: ${{ (matrix.python == '3.11' && matrix.ansible == 'stable-2.18') && 'always' ||  'never' }}
-          ansible-core-version: ${{ matrix.ansible }}
-          target-python-version: ${{ matrix.python }}
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: ansible-test --coverage --cov-config=.coveragerc --verbose --verbose --verbose --verbose --junit-xml=coverage.xml
 
   ###
   # Sanity tests (REQUIRED)
