@@ -660,7 +660,7 @@ class PowerFlexProtectionDomain(object):
                 has_change = True
             if has_change:
                 pd_details = self.update_protection_domain(pd_details, new_pd_details)
-                result['changed'] = changed
+                result['changed'] = True
 
         result['protection_domain_details'] = self.powerflex_conn.protection_domain.dump(pd_details)
         self.module.exit_json(**result)
