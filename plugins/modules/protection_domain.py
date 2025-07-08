@@ -489,7 +489,7 @@ protection_domain_details:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
-import copy
+
 
 LOG = utils.get_logger('protection_domain')
 
@@ -572,16 +572,14 @@ class PowerFlexProtectionDomain(object):
         try:
             LOG.info("Creating protection domain with name: %s ",
                      protection_domain['name'])
-            pd_details = self.powerflex_conn.protection_domain.create(protection_domain)
-            return pd_details
-
+            return self.powerflex_conn.protection_domain.create(protection_domain)
         except Exception as e:
             error_msg = "Create protection domain '%s' operation failed" \
                         " with error '%s'" % (protection_domain.name, str(e))
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-    def update_protection_domain(self, protection_domain, new_protection_domain):
+    def update_protection_domain(self, protection_domain):
         """
         Modify Protection domain attributes
         :param protection_domain: Dictionary containing the attributes of
@@ -595,9 +593,7 @@ class PowerFlexProtectionDomain(object):
         try:
             LOG.info("Updating protection domain with id: %s ",
                      protection_domain.id)
-            pd_details = self.powerflex_conn.protection_domain.update(protection_domain, new_protection_domain)
-            return pd_details
-
+            return self.powerflex_conn.protection_domain.update(protection_domain)
         except Exception as e:
             err_msg = "Failed to update the protection domain {0}" \
                     " with error {1}".format(protection_domain.id,str(e))
@@ -643,26 +639,25 @@ class PowerFlexProtectionDomain(object):
             }
             if is_active is not None:
                 new_protection_domain['protectionDomainState'] = "Active" if is_active else "Inactive"
-            pd_details = self.create_protection_domain(new_protection_domain)
+            self.create_protection_domain(new_protection_domain)
             result['changed'] = True
         else:
             # modify the protection domain
             has_change = False
-            new_pd_details = copy.deepcopy(pd_details)
             if protection_domain_name is not None and protection_domain_name != pd_details.name:
-                new_pd_details.name = protection_domain_name
+                pd_details.name = protection_domain_name
                 has_change = True
             if (is_active == True and "Active" != pd_details.protectionDomainState):
-                new_pd_details.protectionDomainState = "Active"
+                pd_details.protectionDomainState = "Active"
                 has_change = True
             if (is_active == False and "Inactive" != pd_details.protectionDomainState):
-                new_pd_details.protectionDomainState = "Inactive"
+                pd_details.protectionDomainState = "Inactive"
                 has_change = True
             if has_change:
-                pd_details = self.update_protection_domain(pd_details, new_pd_details)
+                self.update_protection_domain(pd_details)
                 result['changed'] = True
 
-        result['protection_domain_details'] = self.powerflex_conn.protection_domain.dump(pd_details)
+        result['protection_domain_details'] = self.powerflex_conn.protection_domain.dump()
         self.module.exit_json(**result)
 
 
