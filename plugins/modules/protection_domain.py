@@ -500,7 +500,23 @@ class PowerFlexProtectionDomain(object):
     def __init__(self):
         """ Define all parameters required by this module"""
         self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_protection_domain_parameters())
+        self.module_params.update(dict(
+            name=dict(type='str'),
+            id=dict(type='str'),
+            is_active=dict(type='bool'),
+            rebuild_enabled=dict(type='bool'),
+            rebalance_enabled=dict(type='bool'),
+            overall_concurrent_io_limit=dict(type='int'),
+            bandwidth_limit_overall_ios=dict(type='int'),
+            bandwidth_limit_bg_dev_scanner=dict(type='int'),
+            bandwidth_limit_garbage_collector=dict(type='int'),
+            bandwidth_limit_singly_impacted_rebuild=dict(type='int'),
+            bandwidth_limit_doubly_impacted_rebuild=dict(type='int'),
+            bandwidth_limit_rebalance=dict(type='int'),
+            bandwidth_limit_other=dict(type='int'),
+            bandwidth_limit_node_network=dict(type='int'),
+            state=dict(type='str', choices=['present', 'absent'])
+        ))
 
         required_one_of_args = [['name', 'id']]
 
@@ -508,7 +524,12 @@ class PowerFlexProtectionDomain(object):
         self.module = AnsibleModule(
             argument_spec=self.module_params,
             supports_check_mode=False,
-            required_one_of=required_one_of_args)
+            required_one_of=required_one_of_args,
+            # mutually_exclusive
+            # required_together
+            # required_if
+            # required_by
+        )
 
         utils.ensure_required_libs(self.module)
 
@@ -682,28 +703,6 @@ class PowerFlexProtectionDomain(object):
             result['changed'], result['protection_domain_details'] = self.update_protection_domain(protection_domain)
 
         self.module.exit_json(**result)
-
-
-def get_powerflex_protection_domain_parameters():
-    """This method provides parameters required for the protection domain
-    module on PowerFlex"""
-    return dict(
-        name=dict(type='str'),
-        id=dict(type='str'),
-        is_active=dict(type='bool'),
-        rebuild_enabled=dict(type='bool'),
-        rebalance_enabled=dict(type='bool'),
-        overall_concurrent_io_limit=dict(type='int'),
-        bandwidth_limit_overall_ios=dict(type='int'),
-        bandwidth_limit_bg_dev_scanner=dict(type='int'),
-        bandwidth_limit_garbage_collector=dict(type='int'),
-        bandwidth_limit_singly_impacted_rebuild=dict(type='int'),
-        bandwidth_limit_doubly_impacted_rebuild=dict(type='int'),
-        bandwidth_limit_rebalance=dict(type='int'),
-        bandwidth_limit_other=dict(type='int'),
-        bandwidth_limit_node_network=dict(type='int'),
-        state=dict(type='str', choices=['present', 'absent'])
-    )
 
 
 def main():
