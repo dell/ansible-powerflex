@@ -575,7 +575,7 @@ class PowerFlexProtectionDomain(object):
             return self.powerflex_conn.protection_domain.create(protection_domain)
         except Exception as e:
             error_msg = "Create protection domain '%s' operation failed" \
-                        " with error '%s'" % (protection_domain.name, str(e))
+                        " with error '%s'" % (protection_domain['name'], str(e))
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
@@ -588,15 +588,16 @@ class PowerFlexProtectionDomain(object):
         :param new_protection_domain: Dictionary containing the new attributes of
                             protection domain which are to be updated
         :type protection_domain: dict
-        :return: Dict representation of the updated protection domain
+        :return: Bool to indicate if protection domain is updated, 
+                 Dict representation of the updated protection domain
         """
         try:
             LOG.info("Updating protection domain with id: %s ",
-                     protection_domain.id)
+                     protection_domain['id'])
             return self.powerflex_conn.protection_domain.update(protection_domain)
         except Exception as e:
             err_msg = "Failed to update the protection domain {0}" \
-                    " with error {1}".format(protection_domain.id,str(e))
+                    " with error {1}".format(protection_domain['id'],str(e))
             LOG.error(err_msg)
             self.module.fail_json(msg=err_msg)
 
@@ -608,6 +609,8 @@ class PowerFlexProtectionDomain(object):
         protection_domain_name = self.module.params['name']
         protection_domain_id = self.module.params['id']
         is_active = self.module.params['is_active']
+        rebuild_enabled = self.module.params['rebuild_enabled']
+        rebalance_enabled = self.module.params['rebalance_enabled']
         state = self.module.params['state']
 
         # result is a dictionary to contain end state and protection domain
@@ -627,37 +630,30 @@ class PowerFlexProtectionDomain(object):
 
         if state == 'absent':
             if pd_details:
-                self.delete_protection_domain(pd_details.id)
+                self.delete_protection_domain(pd_details['id'])
                 result['changed'] = True
             self.module.exit_json(**result)
             return
 
+        protection_domain = {
+            "name": protection_domain_name
+        }
+        if is_active is not None:
+            protection_domain['protectionDomainState'] = "Active" if is_active else "Inactive"
+        if rebuild_enabled is not None:
+            protection_domain['rebuildEnabled'] = rebuild_enabled
+        if rebalance_enabled is not None:
+            protection_domain['rebalanceEnabled'] = rebalance_enabled
+        
         ## to create protection domain
         if not pd_details:
-            new_protection_domain = {
-                "name": protection_domain_name
-            }
-            if is_active is not None:
-                new_protection_domain['protectionDomainState'] = "Active" if is_active else "Inactive"
-            self.create_protection_domain(new_protection_domain)
+            result['protection_domain_details'] = self.create_protection_domain(protection_domain)
             result['changed'] = True
         else:
             # modify the protection domain
-            has_change = False
-            if protection_domain_name is not None and protection_domain_name != pd_details.name:
-                pd_details.name = protection_domain_name
-                has_change = True
-            if (is_active == True and "Active" != pd_details.protectionDomainState):
-                pd_details.protectionDomainState = "Active"
-                has_change = True
-            if (is_active == False and "Inactive" != pd_details.protectionDomainState):
-                pd_details.protectionDomainState = "Inactive"
-                has_change = True
-            if has_change:
-                self.update_protection_domain(pd_details)
-                result['changed'] = True
+            protection_domain['id'] = pd_details['id']
+            result['changed'], result['protection_domain_details'] = self.update_protection_domain(protection_domain)
 
-        result['protection_domain_details'] = self.powerflex_conn.protection_domain.dump()
         self.module.exit_json(**result)
 
 
@@ -665,10 +661,12 @@ def get_powerflex_protection_domain_parameters():
     """This method provides parameters required for the protection domain
     module on PowerFlex"""
     return dict(
-        name=dict(),
-        id=dict(),
+        name=dict(type='str'),
+        id=dict(type='str'),
         is_active=dict(type='bool'),
-        state=dict(required=True, type='str', choices=['present', 'absent'])
+        rebuild_enabled=dict(type='bool'),
+        rebalance_enabled=dict(type='bool'),
+        state=dict(type='str', choices=['present', 'absent'])
     )
 
 
