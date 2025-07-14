@@ -611,6 +611,15 @@ class PowerFlexProtectionDomain(object):
         is_active = self.module.params['is_active']
         rebuild_enabled = self.module.params['rebuild_enabled']
         rebalance_enabled = self.module.params['rebalance_enabled']
+        overall_concurrent_io_limit = self.module.params['overall_concurrent_io_limit']
+        bandwidth_limit_overall_ios = self.module.params['bandwidth_limit_overall_ios']
+        bandwidth_limit_bg_dev_scanner = self.module.params['bandwidth_limit_bg_dev_scanner']
+        bandwidth_limit_garbage_collector = self.module.params['bandwidth_limit_garbage_collector']
+        bandwidth_limit_singly_impacted_rebuild = self.module.params['bandwidth_limit_singly_impacted_rebuild']
+        bandwidth_limit_doubly_impacted_rebuild = self.module.params['bandwidth_limit_doubly_impacted_rebuild']
+        bandwidth_limit_rebalance = self.module.params['bandwidth_limit_rebalance']
+        bandwidth_limit_other = self.module.params['bandwidth_limit_other']
+        bandwidth_limit_node_network = self.module.params['bandwidth_limit_node_network']
         state = self.module.params['state']
 
         # result is a dictionary to contain end state and protection domain
@@ -644,6 +653,24 @@ class PowerFlexProtectionDomain(object):
             protection_domain['rebuildEnabled'] = rebuild_enabled
         if rebalance_enabled is not None:
             protection_domain['rebalanceEnabled'] = rebalance_enabled
+        if overall_concurrent_io_limit is not None:
+            protection_domain['overallConcurrentIoLimit'] = overall_concurrent_io_limit
+        if bandwidth_limit_overall_ios is not None:
+            protection_domain['bandwidthLimitOverallIos'] = bandwidth_limit_overall_ios
+        if bandwidth_limit_bg_dev_scanner is not None:
+            protection_domain['bandwidthLimitBgDevScanner'] = bandwidth_limit_bg_dev_scanner
+        if bandwidth_limit_garbage_collector is not None:
+            protection_domain['bandwidthLimitGarbageCollector'] = bandwidth_limit_garbage_collector
+        if bandwidth_limit_singly_impacted_rebuild is not None:
+            protection_domain['bandwidthLimitSinglyImpactedRebuild'] = bandwidth_limit_singly_impacted_rebuild
+        if bandwidth_limit_doubly_impacted_rebuild is not None:
+            protection_domain['bandwidthLimitDoublyImpactedRebuild'] = bandwidth_limit_doubly_impacted_rebuild
+        if bandwidth_limit_rebalance is not None:
+            protection_domain['bandwidthLimitRebalance'] = bandwidth_limit_rebalance
+        if bandwidth_limit_other is not None:
+            protection_domain['bandwidthLimitOther'] = bandwidth_limit_other
+        if bandwidth_limit_node_network is not None:
+            protection_domain['bandwidthLimitNodeNetwork'] = bandwidth_limit_node_network
         
         ## to create protection domain
         if not pd_details:
@@ -666,6 +693,15 @@ def get_powerflex_protection_domain_parameters():
         is_active=dict(type='bool'),
         rebuild_enabled=dict(type='bool'),
         rebalance_enabled=dict(type='bool'),
+        overall_concurrent_io_limit=dict(type='int'),
+        bandwidth_limit_overall_ios=dict(type='int'),
+        bandwidth_limit_bg_dev_scanner=dict(type='int'),
+        bandwidth_limit_garbage_collector=dict(type='int'),
+        bandwidth_limit_singly_impacted_rebuild=dict(type='int'),
+        bandwidth_limit_doubly_impacted_rebuild=dict(type='int'),
+        bandwidth_limit_rebalance=dict(type='int'),
+        bandwidth_limit_other=dict(type='int'),
+        bandwidth_limit_node_network=dict(type='int'),
         state=dict(type='str', choices=['present', 'absent'])
     )
 
