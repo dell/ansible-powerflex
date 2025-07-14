@@ -635,9 +635,9 @@ class PowerFlexProtectionDomain(object):
             self.module.exit_json(**result)
             return
 
-        protection_domain = {
-            "name": protection_domain_name
-        }
+        protection_domain = {}
+        if protection_domain_name is not None:
+            protection_domain['name'] = protection_domain_name
         if is_active is not None:
             protection_domain['protectionDomainState'] = "Active" if is_active else "Inactive"
         if rebuild_enabled is not None:
