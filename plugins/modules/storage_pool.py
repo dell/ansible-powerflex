@@ -764,7 +764,6 @@ class PowerFlexStoragePool(PowerFlexBase):
 
     def __init__(self):
         """ Define all parameters required by this module"""
-        """ initialize the ansible module """
         argument_spec = dict(
             id=dict(type='str'),
             name=dict(type='str'),
@@ -774,18 +773,22 @@ class PowerFlexStoragePool(PowerFlexBase):
                 high_threshold=dict(type='int'),
                 critical_threshold=dict(type='int'),
             )),
+            compression_method=dict(type='str', choices=['None', 'Normal']),
             over_provisioning_factor=dict(type='int'),
             physical_size_gb=dict(type='int'),
             protection_scheme=dict(type='str', choices=['TwoPlusTwo', 'EightPlusTwo']),
-            compression_method=dict(type='str', choices=['None', 'Normal']),
             state=dict(required=True, type='str', choices=['present', 'absent']),
         )
 
-        required_one_of = [['id', 'protection_domain_id']]
+        required_one_of = [['id', 'name']]
+        required_if = [
+          ('id', None, ('protection_domain_id', 'name')),
+        ]
         module_params = {
             'argument_spec': argument_spec,
             'supports_check_mode': False,
             'required_one_of': required_one_of,
+            'required_if': required_if,
         }
 
         super().__init__(module_params)

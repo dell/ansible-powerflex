@@ -487,6 +487,8 @@ protection_domain_details:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 
@@ -494,14 +496,13 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
 LOG = utils.get_logger('protection_domain')
 
 
-class PowerFlexProtectionDomain(object):
+class PowerFlexProtectionDomain(PowerFlexBase):
     """Class with protection domain operations"""
 
     def __init__(self):
         """ Define all parameters required by this module"""
-        module_params = utils.get_powerflex_gateway_host_parameters()
-        module_params.update(dict(
-            name=dict(type='str'),
+        argument_spec = dict(
+            name=dict(required=True, type='str'),
             id=dict(type='str'),
             is_active=dict(type='bool'),
             rebuild_enabled=dict(type='bool'),
@@ -518,30 +519,17 @@ class PowerFlexProtectionDomain(object):
                 bandwidth_limit_node_network=dict(type='int'),
             )),
             state=dict(required=True, type='str', choices=['present', 'absent'])
-        ))
-
-        required_one_of_args = [['name', 'id']]
-
-        # initialize the Ansible module
-        self.module = AnsibleModule(
-            argument_spec=module_params,
-            supports_check_mode=False,
-            required_one_of=required_one_of_args,
-            # mutually_exclusive
-            # required_together
-            # required_if
-            # required_by
         )
 
-        utils.ensure_required_libs(self.module)
+        # required_one_of = [['id', 'name']]
 
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info("Got the PowerFlex system connection object instance")
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
+        module_params = {
+            'argument_spec': argument_spec,
+            'supports_check_mode': False,
+            # 'required_one_of': required_one_of,
+        }
+
+        super().__init__(module_params)
 
     def validate_input_params(self):
         """Validate the input parameters"""
@@ -588,12 +576,11 @@ class PowerFlexProtectionDomain(object):
 
     def create(self, protection_domain):
         """
-        Create Protection Domain
+        Create protection domain
         :param protection_domain: Dict of the protection domain
         :type protection_domain: dict
         :return: Dict representation of the created protection domain
         """
-        # Creation of Protection domain
         try:
             LOG.info("Creating protection domain with name: %s ",
                      protection_domain['name'])
@@ -606,11 +593,8 @@ class PowerFlexProtectionDomain(object):
 
     def update(self, protection_domain):
         """
-        Modify Protection domain attributes
+        Modify protection domain attributes
         :param protection_domain: Dictionary containing the attributes of
-                            protection domain which are to be updated
-        :type protection_domain: dict
-        :param new_protection_domain: Dictionary containing the new attributes of
                             protection domain which are to be updated
         :type protection_domain: dict
         :return: Bool to indicate if protection domain is updated, 
@@ -648,17 +632,13 @@ class PowerFlexProtectionDomain(object):
         bandwidth_limit_node_network = None if io_policy is None else io_policy['bandwidth_limit_node_network']
         state = self.module.params['state']
 
-        # result is a dictionary to contain end state and protection domain
-        # details
         result = dict(
             changed=False,
             protection_domain_details=None
         )
 
-        # Checking invalid value for id, name and rename
         self.validate_input_params()
 
-        # get Protection Domain details
         pd_details = self.get(
             protection_domain_id,
             protection_domain_name,
@@ -699,12 +679,10 @@ class PowerFlexProtectionDomain(object):
         if bandwidth_limit_node_network is not None:
             protection_domain['bandwidthLimitNodeNetwork'] = bandwidth_limit_node_network
         
-        ## to create protection domain
         if not pd_details:
             result['protection_domain_details'] = self.create(protection_domain)
             result['changed'] = True
         else:
-            # modify the protection domain
             protection_domain['id'] = pd_details['id']
             result['changed'], result['protection_domain_details'] = self.update(protection_domain)
 
