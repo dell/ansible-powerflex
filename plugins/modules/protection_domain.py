@@ -499,30 +499,32 @@ class PowerFlexProtectionDomain(object):
 
     def __init__(self):
         """ Define all parameters required by this module"""
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(dict(
+        module_params = utils.get_powerflex_gateway_host_parameters()
+        module_params.update(dict(
             name=dict(type='str'),
             id=dict(type='str'),
             is_active=dict(type='bool'),
             rebuild_enabled=dict(type='bool'),
             rebalance_enabled=dict(type='bool'),
-            overall_concurrent_io_limit=dict(type='int'),
-            bandwidth_limit_overall_ios=dict(type='int'),
-            bandwidth_limit_bg_dev_scanner=dict(type='int'),
-            bandwidth_limit_garbage_collector=dict(type='int'),
-            bandwidth_limit_singly_impacted_rebuild=dict(type='int'),
-            bandwidth_limit_doubly_impacted_rebuild=dict(type='int'),
-            bandwidth_limit_rebalance=dict(type='int'),
-            bandwidth_limit_other=dict(type='int'),
-            bandwidth_limit_node_network=dict(type='int'),
-            state=dict(type='str', choices=['present', 'absent'])
+            io_policy=dict(type='dict', options=dict(
+                overall_concurrent_io_limit=dict(type='int'),
+                bandwidth_limit_overall_ios=dict(type='int'),
+                bandwidth_limit_bg_dev_scanner=dict(type='int'),
+                bandwidth_limit_garbage_collector=dict(type='int'),
+                bandwidth_limit_singly_impacted_rebuild=dict(type='int'),
+                bandwidth_limit_doubly_impacted_rebuild=dict(type='int'),
+                bandwidth_limit_rebalance=dict(type='int'),
+                bandwidth_limit_other=dict(type='int'),
+                bandwidth_limit_node_network=dict(type='int'),
+            )),
+            state=dict(required=True, type='str', choices=['present', 'absent'])
         ))
 
         required_one_of_args = [['name', 'id']]
 
         # initialize the Ansible module
         self.module = AnsibleModule(
-            argument_spec=self.module_params,
+            argument_spec=module_params,
             supports_check_mode=False,
             required_one_of=required_one_of_args,
             # mutually_exclusive
@@ -544,11 +546,13 @@ class PowerFlexProtectionDomain(object):
     def validate_input_params(self):
         """Validate the input parameters"""
 
-    def get_protection_domain(self, name=None, id=None):
+    def get(self, id, name):
         """
         Get protection domain details
-        :param name: Name of the protection domain
         :param id: ID of the protection domain
+        :type id: str
+        :param name: Name of the protection domain
+        :type name: str
         :return: Protection domain details if exists
         :rtype: dict
         """
@@ -566,7 +570,7 @@ class PowerFlexProtectionDomain(object):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
     
-    def delete_protection_domain(self, id):
+    def delete(self, id):
         """
         Delete Protection Domain
         :param id: ID of the protection domain
@@ -582,7 +586,7 @@ class PowerFlexProtectionDomain(object):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-    def create_protection_domain(self, protection_domain):
+    def create(self, protection_domain):
         """
         Create Protection Domain
         :param protection_domain: Dict of the protection domain
@@ -600,7 +604,7 @@ class PowerFlexProtectionDomain(object):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-    def update_protection_domain(self, protection_domain):
+    def update(self, protection_domain):
         """
         Modify Protection domain attributes
         :param protection_domain: Dictionary containing the attributes of
@@ -632,20 +636,20 @@ class PowerFlexProtectionDomain(object):
         is_active = self.module.params['is_active']
         rebuild_enabled = self.module.params['rebuild_enabled']
         rebalance_enabled = self.module.params['rebalance_enabled']
-        overall_concurrent_io_limit = self.module.params['overall_concurrent_io_limit']
-        bandwidth_limit_overall_ios = self.module.params['bandwidth_limit_overall_ios']
-        bandwidth_limit_bg_dev_scanner = self.module.params['bandwidth_limit_bg_dev_scanner']
-        bandwidth_limit_garbage_collector = self.module.params['bandwidth_limit_garbage_collector']
-        bandwidth_limit_singly_impacted_rebuild = self.module.params['bandwidth_limit_singly_impacted_rebuild']
-        bandwidth_limit_doubly_impacted_rebuild = self.module.params['bandwidth_limit_doubly_impacted_rebuild']
-        bandwidth_limit_rebalance = self.module.params['bandwidth_limit_rebalance']
-        bandwidth_limit_other = self.module.params['bandwidth_limit_other']
-        bandwidth_limit_node_network = self.module.params['bandwidth_limit_node_network']
+        io_policy = self.module.params['io_policy']
+        overall_concurrent_io_limit = None if io_policy is None else io_policy['overall_concurrent_io_limit']
+        bandwidth_limit_overall_ios = None if io_policy is None else io_policy['bandwidth_limit_overall_ios']
+        bandwidth_limit_bg_dev_scanner = None if io_policy is None else io_policy['bandwidth_limit_bg_dev_scanner']
+        bandwidth_limit_garbage_collector = None if io_policy is None else io_policy['bandwidth_limit_garbage_collector']
+        bandwidth_limit_singly_impacted_rebuild = None if io_policy is None else io_policy['bandwidth_limit_singly_impacted_rebuild']
+        bandwidth_limit_doubly_impacted_rebuild = None if io_policy is None else io_policy['bandwidth_limit_doubly_impacted_rebuild']
+        bandwidth_limit_rebalance = None if io_policy is None else io_policy['bandwidth_limit_rebalance']
+        bandwidth_limit_other = None if io_policy is None else io_policy['bandwidth_limit_other']
+        bandwidth_limit_node_network = None if io_policy is None else io_policy['bandwidth_limit_node_network']
         state = self.module.params['state']
 
         # result is a dictionary to contain end state and protection domain
         # details
-        changed = False
         result = dict(
             changed=False,
             protection_domain_details=None
@@ -655,12 +659,14 @@ class PowerFlexProtectionDomain(object):
         self.validate_input_params()
 
         # get Protection Domain details
-        pd_details = self.get_protection_domain(protection_domain_name,
-                                                protection_domain_id)
+        pd_details = self.get(
+            protection_domain_id,
+            protection_domain_name,
+        )
 
         if state == 'absent':
             if pd_details:
-                self.delete_protection_domain(pd_details['id'])
+                self.delete(pd_details['id'])
                 result['changed'] = True
             self.module.exit_json(**result)
             return
@@ -695,12 +701,12 @@ class PowerFlexProtectionDomain(object):
         
         ## to create protection domain
         if not pd_details:
-            result['protection_domain_details'] = self.create_protection_domain(protection_domain)
+            result['protection_domain_details'] = self.create(protection_domain)
             result['changed'] = True
         else:
             # modify the protection domain
             protection_domain['id'] = pd_details['id']
-            result['changed'], result['protection_domain_details'] = self.update_protection_domain(protection_domain)
+            result['changed'], result['protection_domain_details'] = self.update(protection_domain)
 
         self.module.exit_json(**result)
 
