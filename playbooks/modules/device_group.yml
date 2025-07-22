@@ -1,0 +1,86 @@
+---
+- name: Device Group Operations
+  hosts: localhost
+  connection: local
+  vars:
+    hostname: '10.225.106.64' # todo TTHE remove ip or specfic value in playbook
+    username: 'admin'
+    password: 'Notuse4per!'
+    validate_certs: false
+    host_port: 443
+
+  tasks:
+    - name: Add a device group with all params
+      dellemc.powerflex.device_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        media_type: "SSD"
+        protection_domain_id: "95d9a02100000001"
+        device_group_name: "tthe-test"
+        spare_node_count: 0
+        spare_device_count: 0
+        state: "present"
+      diff: true
+
+    - name: Add a device with required params using protection_domain_name
+      register: result
+      dellemc.powerflex.device_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        media_type: "PMEM"
+        protection_domain_name: "ANS_PD"
+        device_group_name: "tthe-test-2"
+        state: "present"
+
+    - name: Get device group details using device_group_id
+      dellemc.powerflex.device_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_group_id: "{{ result.device_group_details.id }}"
+        state: "present"
+
+    - name: Get device details using device_group_name)
+      dellemc.powerflex.device_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_group_name: "tthe-test"
+        state: "present"
+
+    - name: Modify a device group with device_group_name
+      dellemc.powerflex.device_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_group_name: "tthe-test"
+        new_name: "tthe-test-rename"
+        spare_node_count: 1
+        spare_device_count: 1
+        state: "present"
+      diff: true
+
+    - name: Remove a device group using device_id
+      dellemc.powerflex.device_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_group_id: "{{ result.device_group_details.id }}"
+        state: "absent"
+
+    - name: Remove a device group using device_group_name
+      dellemc.powerflex.device_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_group_name: "tthe-test-rename"
+        state: "absent"
