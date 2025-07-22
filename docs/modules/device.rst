@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -37,13 +37,13 @@ Parameters
   device_name (optional, str, None)
     Device name.
 
-    Mutually exclusive with *device_id*.
+    Mutually exclusive with \ :emphasis:`device\_id`\ .
 
 
   device_id (optional, str, None)
     Device ID.
 
-    Mutually exclusive with *device_name*.
+    Mutually exclusive with \ :emphasis:`device\_name`\ .
 
 
   sds_name (optional, str, None)
@@ -51,7 +51,7 @@ Parameters
 
     Required while adding a device.
 
-    Mutually exclusive with *sds_id*.
+    Mutually exclusive with \ :emphasis:`sds\_id`\ .
 
 
   sds_id (optional, str, None)
@@ -59,7 +59,7 @@ Parameters
 
     Required while adding a device.
 
-    Mutually exclusive with *sds_name*.
+    Mutually exclusive with \ :emphasis:`sds\_name`\ .
 
 
   storage_pool_name (optional, str, None)
@@ -67,7 +67,7 @@ Parameters
 
     Used while adding a storage device.
 
-    Mutually exclusive with *storage_pool_id*, *acceleration_pool_id* and *acceleration_pool_name*.
+    Mutually exclusive with \ :emphasis:`storage\_pool\_id`\ , \ :emphasis:`acceleration\_pool\_id`\  and \ :emphasis:`acceleration\_pool\_name`\ .
 
 
   storage_pool_id (optional, str, None)
@@ -75,9 +75,9 @@ Parameters
 
     Used while adding a storage device.
 
-    Media type supported are ``SSD`` and ``HDD``.
+    Media type supported are \ :literal:`SSD`\  and \ :literal:`HDD`\ .
 
-    Mutually exclusive with *storage_pool_name*, *acceleration_pool_id* and *acceleration_pool_name*.
+    Mutually exclusive with \ :emphasis:`storage\_pool\_name`\ , \ :emphasis:`acceleration\_pool\_id`\  and \ :emphasis:`acceleration\_pool\_name`\ .
 
 
   acceleration_pool_name (optional, str, None)
@@ -85,9 +85,9 @@ Parameters
 
     Used while adding an acceleration device.
 
-    Media type supported are ``SSD`` and ``NVDIMM``.
+    Media type supported are \ :literal:`SSD`\  and \ :literal:`NVDIMM`\ .
 
-    Mutually exclusive with *storage_pool_id*, *storage_pool_name* and *acceleration_pool_name*.
+    Mutually exclusive with \ :emphasis:`storage\_pool\_id`\ , \ :emphasis:`storage\_pool\_name`\  and \ :emphasis:`acceleration\_pool\_name`\ .
 
 
   acceleration_pool_id (optional, str, None)
@@ -95,25 +95,25 @@ Parameters
 
     Used while adding an acceleration device.
 
-    Media type supported are ``SSD`` and ``NVDIMM``.
+    Media type supported are \ :literal:`SSD`\  and \ :literal:`NVDIMM`\ .
 
-    Mutually exclusive with *acceleration_pool_name*, *storage_pool_name* and *storage_pool_id*.
+    Mutually exclusive with \ :emphasis:`acceleration\_pool\_name`\ , \ :emphasis:`storage\_pool\_name`\  and \ :emphasis:`storage\_pool\_id`\ .
 
 
   protection_domain_name (optional, str, None)
     Protection domain name.
 
-    Used while identifying a storage pool along with *storage_pool_name*.
+    Used while identifying a storage pool along with \ :emphasis:`storage\_pool\_name`\ .
 
-    Mutually exclusive with *protection_domain_id*.
+    Mutually exclusive with \ :emphasis:`protection\_domain\_id`\ .
 
 
   protection_domain_id (optional, str, None)
     Protection domain ID.
 
-    Used while identifying a storage pool along with *storage_pool_name*.
+    Used while identifying a storage pool along with \ :emphasis:`storage\_pool\_name`\ .
 
-    Mutually exclusive with *protection_domain_name*.
+    Mutually exclusive with \ :emphasis:`protection\_domain\_name`\ .
 
 
   external_acceleration_type (optional, str, None)
@@ -155,9 +155,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -177,10 +177,10 @@ Notes
 -----
 
 .. note::
-   - The value for device_id is generated only after successful addition of the device.
-   - To uniquely identify a device, either *device_id* can be passed or one of *current_pathname* or *device_name* must be passed with *sds_id* or *sds_name*.
+   - The value for device\_id is generated only after successful addition of the device.
+   - To uniquely identify a device, either \ :emphasis:`device\_id`\  can be passed or one of \ :emphasis:`current\_pathname`\  or \ :emphasis:`device\_name`\  must be passed with \ :emphasis:`sds\_id`\  or \ :emphasis:`sds\_name`\ .
    - It is recommended to install Rfcache driver for SSD device on SDS in order to add it to an acceleration pool.
-   - The *check_mode* is not supported.
+   - The \ :emphasis:`check\_mode`\  is not supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

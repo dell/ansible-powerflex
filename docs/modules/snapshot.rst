@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -33,7 +33,7 @@ Parameters
 
     Mandatory for create operation.
 
-    Specify either *snapshot_name* or *snapshot_id* (but not both) for any operation.
+    Specify either \ :emphasis:`snapshot\_name`\  or \ :emphasis:`snapshot\_id`\  (but not both) for any operation.
 
 
   snapshot_id (optional, str, None)
@@ -43,7 +43,7 @@ Parameters
   vol_name (optional, str, None)
     The name of the volume for which snapshot will be taken.
 
-    Specify either *vol_name* or *vol_id* while creating snapshot.
+    Specify either \ :emphasis:`vol\_name`\  or \ :emphasis:`vol\_id`\  while creating snapshot.
 
 
   vol_id (optional, str, None)
@@ -53,9 +53,9 @@ Parameters
   read_only (optional, bool, None)
     Specifies whether mapping of the created snapshot volume will have read-write access or limited to read-only access.
 
-    If ``true``, snapshot is created with read-only access.
+    If \ :literal:`true`\ , snapshot is created with read-only access.
 
-    If ``false``, snapshot is created with read-write access.
+    If \ :literal:`false`\ , snapshot is created with read-write access.
 
 
   size (optional, int, None)
@@ -63,7 +63,7 @@ Parameters
 
 
   cap_unit (optional, str, None)
-    The unit of the volume size. It defaults to ``GB``, if not specified.
+    The unit of the volume size. It defaults to \ :literal:`GB`\ , if not specified.
 
 
   snapshot_new_name (optional, str, None)
@@ -77,13 +77,13 @@ Parameters
   desired_retention (optional, int, None)
     The retention value for the Snapshot.
 
-    If the desired_retention is not mentioned during creation, snapshot will be created with unlimited retention.
+    If the desired\_retention is not mentioned during creation, snapshot will be created with unlimited retention.
 
     Maximum supported desired retention is 31 days.
 
 
   retention_unit (optional, str, None)
-    The unit for retention. It defaults to ``hours``, if not specified.
+    The unit for retention. It defaults to \ :literal:`hours`\ , if not specified.
 
 
   sdc (optional, list, None)
@@ -93,25 +93,25 @@ Parameters
     sdc_name (optional, str, None)
       Name of the SDC.
 
-      Specify either *sdc_name*, *sdc_id* or *sdc_ip*.
+      Specify either \ :emphasis:`sdc\_name`\ , \ :emphasis:`sdc\_id`\  or \ :emphasis:`sdc\_ip`\ .
 
-      Mutually exclusive with *sdc_id* and *sdc_ip*.
+      Mutually exclusive with \ :emphasis:`sdc\_id`\  and \ :emphasis:`sdc\_ip`\ .
 
 
     sdc_id (optional, str, None)
       ID of the SDC.
 
-      Specify either *sdc_name*, *sdc_id* or *sdc_ip*.
+      Specify either \ :emphasis:`sdc\_name`\ , \ :emphasis:`sdc\_id`\  or \ :emphasis:`sdc\_ip`\ .
 
-      Mutually exclusive with *sdc_name* and *sdc_ip*.
+      Mutually exclusive with \ :emphasis:`sdc\_name`\  and \ :emphasis:`sdc\_ip`\ .
 
 
     sdc_ip (optional, str, None)
       IP of the SDC.
 
-      Specify either *sdc_name*, *sdc_id* or *sdc_ip*.
+      Specify either \ :emphasis:`sdc\_name`\ , \ :emphasis:`sdc\_id`\  or \ :emphasis:`sdc\_ip`\ .
 
-      Mutually exclusive with *sdc_id* and *sdc_ip*.
+      Mutually exclusive with \ :emphasis:`sdc\_id`\  and \ :emphasis:`sdc\_ip`\ .
 
 
     access_mode (optional, str, None)
@@ -140,7 +140,7 @@ Parameters
   remove_mode (optional, str, None)
     Removal mode for the snapshot.
 
-    It defaults to ``ONLY_ME``, if not specified.
+    It defaults to \ :literal:`ONLY\_ME`\ , if not specified.
 
 
   state (True, str, None)
@@ -162,9 +162,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -184,7 +184,7 @@ Notes
 -----
 
 .. note::
-   - The *check_mode* is not supported.
+   - The \ :emphasis:`check\_mode`\  is not supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

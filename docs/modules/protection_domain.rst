@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.0.
+- PyPowerFlex 1.14.1.
 
 
 
@@ -35,15 +35,15 @@ Parameters
 
     It is unique across the PowerFlex array.
 
-    Mutually exclusive with *protection_domain_id*.
+    Mutually exclusive with \ :emphasis:`protection\_domain\_id`\ .
 
 
   protection_domain_id (optional, str, None)
     The ID of the protection domain.
 
-    Except for create operation, all other operations can be performed using protection_domain_id.
+    Except for create operation, all other operations can be performed using protection\_domain\_id.
 
-    Mutually exclusive with *protection_domain_name*.
+    Mutually exclusive with \ :emphasis:`protection\_domain\_name`\ .
 
 
   protection_domain_new_name (optional, str, None)
@@ -119,9 +119,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    ``true`` - Indicates that the SSL certificate should be verified.
+    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
 
-    ``false`` - Indicates that the SSL certificate should not be verified.
+    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -143,7 +143,7 @@ Notes
 .. note::
    - The protection domain can only be deleted if all its related objects have been dissociated from the protection domain.
    - If the protection domain set to inactive, then no operation can be performed on protection domain.
-   - The *check_mode* is not supported.
+   - The \ :emphasis:`check\_mode`\  is not supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

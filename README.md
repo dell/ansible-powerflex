@@ -2,8 +2,8 @@
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://github.com/dell/ansible-powerflex/blob/main/docs/CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/github/license/dell/ansible-powerflex)](https://github.com/dell/ansible-powerflex/blob/main/LICENSE)
-[![Python version](https://img.shields.io/badge/python-3.9.6+-blue.svg)](https://www.python.org/downloads/)
-[![Ansible version](https://img.shields.io/badge/ansible-2.15.6+-blue.svg)](https://pypi.org/project/ansible/)
+[![Python version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Ansible version](https://img.shields.io/badge/ansible-2.16+-blue.svg)](https://pypi.org/project/ansible/)
 [![PyPowerFlex](https://img.shields.io/github/v/release/dell/python-powerflex?include_prereleases&label=PyPowerFlex&style=flat-square)](https://github.com/dell/python-powerflex/releases)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/dell/ansible-powerflex?include_prereleases&label=latest&style=flat-square)](https://github.com/dell/ansible-powerflex/releases)
 [![codecov](https://codecov.io/gh/dell/ansible-powerflex/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dell/ansible-powerflex)
@@ -35,7 +35,7 @@ The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, s
 
 | **Ansible Modules** | **PowerFlex/VxFlex OS Version** | **SDK version** | **Python version** | **Ansible**              |
 |---------------------|-----------------------|-------|--------------------|--------------------------|
-| v2.6.0 |3.6 <br> 4.0 <br> 4.5 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 1.14.0 | 3.9.x <br> 3.10.x <br> 3.11.x <br> 3.12.x | 2.15 <br> 2.16 <br> 2.17 |
+| v2.6.1 |3.6 <br> 4.5 <br> 4.6 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 1.14.1 | 3.10.x <br> 3.11.x <br> 3.12.x | <br> 2.16 <br> 2.17 <br> 2.18 |
 
   * Please follow PyPowerFlex installation instructions on [PyPowerFlex Documentation](https://github.com/dell/python-powerflex)
 
