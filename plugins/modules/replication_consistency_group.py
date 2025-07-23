@@ -59,11 +59,6 @@ options:
     - This parameter is supported for version 3.6 and above.
     choices: ['Active', 'Inactive']
     type: str
-  pause:
-    description:
-    - Pause or resume the RCG.
-    - This parameter is deprecated. Use rcg_state instead.
-    type: bool
   rcg_state:
     description:
     - Specify an action for RCG.
@@ -81,11 +76,6 @@ options:
   force:
     description:
     - Force switchover the RCG.
-    type: bool
-  freeze:
-    description:
-    - Freeze or unfreeze the RCG.
-    - This parameter is deprecated. Use rcg_state instead.
     type: bool
   pause_mode:
     description:
@@ -923,23 +913,9 @@ class PowerFlexReplicationConsistencyGroup(object):
         :rtype: (bool,bool)
         """
         rcg_state = self.module.params['rcg_state']
-        pause = self.module.params['pause']
-        freeze = self.module.params['freeze']
 
-        if pause is not None:
-            self.module.deprecate(
-                msg="Use 'rcg_state' param instead of 'pause'",
-                version="3.0.0",
-                collection_name="dellemc.powerflex"
-            )
-
-        if freeze is not None:
-            self.module.deprecate(
-                msg="Use 'rcg_state' param instead of 'freeze'",
-                version="3.0.0",
-                collection_name="dellemc.powerflex"
-            )
-
+        pause = None
+        freeze = None
         if rcg_state == 'pause':
             pause = True
         if rcg_state == 'resume':
@@ -1012,7 +988,8 @@ class PowerFlexReplicationConsistencyGroup(object):
     def validate_input(self, rcg_params):
         try:
             api_version = self.powerflex_conn.system.get()[0]['mdmCluster']['master']['versionInfo']
-            if rcg_params['activity_mode'] is not None and utils.is_version_less_than_3_6(api_version):
+            if rcg_params['activity_mode'] is not None and utils.is_version_less(
+                    utils.parse_version(api_version), '3.6'):
                 self.module.fail_json(msg='activity_mode is supported only from version 3.6 and above')
             params = ['rcg_name', 'new_rcg_name']
             for param in params:
@@ -1095,8 +1072,6 @@ def get_powerflex_replication_consistency_group_parameters():
         rpo=dict(type='int'), protection_domain_id=dict(),
         protection_domain_name=dict(), new_rcg_name=dict(),
         activity_mode=dict(choices=['Active', 'Inactive']),
-        pause=dict(type='bool', removed_in_version='3.0.0', removed_from_collection='dellemc.powerflex'),
-        freeze=dict(type='bool', removed_in_version='3.0.0', removed_from_collection='dellemc.powerflex'),
         force=dict(type='bool'),
         rcg_state=dict(choices=['failover', 'reverse',
                                 'restore', 'switchover',
