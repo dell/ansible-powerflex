@@ -20,7 +20,7 @@ import string
 """import PyPowerFlex lib"""
 try:
     from PyPowerFlex import PowerFlexClient
-    from PyPowerFlex.objects.system import SnapshotDef  # pylint: disable=unused-import
+    from PyPowerFlex.objects.common.system import SnapshotDef  # pylint: disable=unused-import
     from PyPowerFlex.utils import filter_response  # pylint: disable=unused-import
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = True, None
 except ImportError:
