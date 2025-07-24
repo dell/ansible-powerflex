@@ -759,7 +759,7 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
 LOG = utils.get_logger('storage_pool')
 
 
-class PowerFlexStoragePool(PowerFlexBase):
+class PowerFlexStoragePoolV2(PowerFlexBase):
     """Class with storage pool operations"""
 
     def __init__(self):
@@ -791,7 +791,8 @@ class PowerFlexStoragePool(PowerFlexBase):
             'required_if': required_if,
         }
 
-        super().__init__(module_params)
+        super().__init__(AnsibleModule, module_params)
+        super().check_module_compatibility()
 
 
     def validate_input_params(self):
@@ -942,7 +943,7 @@ class PowerFlexStoragePool(PowerFlexBase):
 def main():
     """ Create PowerFlex storage pool object and perform action on it
         based on user input from playbook"""
-    obj = PowerFlexStoragePool()
+    obj = PowerFlexStoragePoolV2()
     obj.perform_module_operation()
 
 

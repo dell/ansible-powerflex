@@ -1012,7 +1012,7 @@ class PowerFlexReplicationConsistencyGroup(object):
     def validate_input(self, rcg_params):
         try:
             api_version = self.powerflex_conn.system.get()[0]['mdmCluster']['master']['versionInfo']
-            if rcg_params['activity_mode'] is not None and utils.is_version_less_than_3_6(api_version):
+            if rcg_params['activity_mode'] is not None and utils.is_version_less(api_version, '3.6'):
                 self.module.fail_json(msg='activity_mode is supported only from version 3.6 and above')
             params = ['rcg_name', 'new_rcg_name']
             for param in params:

@@ -6,6 +6,7 @@ from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
 
+import re
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 
@@ -43,3 +44,17 @@ class PowerFlexBase:
         except Exception as e:
             LOG.error(str(e))
             self.module.fail_json(msg=str(e))
+
+    def check_module_compatibility(self):
+        """ Check if the module is compatible with the PowerFlex array """
+        class_name = self.__class__.__name__
+        is_gen1_module = not re.match(r'.*V\d+$', class_name, re.IGNORECASE)
+
+        api_version = self.powerflex_conn.system.api_version(cached=True)
+
+        if is_gen1_module and utils.is_version_ge_or_eq(api_version, '5.0'):
+            self.module.exit_json(changed=False, msg="Task Skipped!",
+                                    warnings=["Please use v2 module for PowerFlex 5.0 and above"],)
+        elif not is_gen1_module and utils.is_version_less(api_version, '5.0'):
+            self.module.exit_json(
+                changed=False, msg="Task Skipped!", warnings=["v2 module is only compatible with PowerFlex 5.0 and above"],)

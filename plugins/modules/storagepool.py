@@ -781,8 +781,9 @@ class PowerFlexStoragePool(PowerFlexBase):
             'required_one_of': required_one_of
         }
         super().__init__(AnsibleModule, ansible_module_params)
+        super().check_module_compatibility()
 
-        utils.ensure_required_libs(self.module)
+        # utils.ensure_required_libs(self.module)
         self.result = dict(
             changed=False,
             storage_pool_details={}
