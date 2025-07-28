@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2021-24, Dell Technologies
+# Copyright: (c) 2021-25, Dell Technologies
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-"""Ansible module for managing Dell Technologies (Dell) PowerFlex storage pool"""
+"""Ansible module for managing storage pool on Dell Technologies (Dell) PowerFlex 5.x"""
 
 from __future__ import absolute_import, division, print_function
 
@@ -11,11 +11,9 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: storage_pool
-
-version_added: '1.0.0'
-
-short_description: Managing Dell PowerFlex storage pool
+module: storage_pool_v2
+version_added: '3.0.0'
+short_description: Managing storage pool on Dell PowerFlex 5.x
 
 description:
 - Dell PowerFlex storage pool module includes getting the details of
@@ -26,9 +24,7 @@ extends_documentation_fragment:
   - dellemc.powerflex.powerflex
 
 author:
-- Arindam Datta (@dattaarindam) <ansible.team@dell.com>
-- P Srinivas Rao (@srinivas-rao5) <ansible.team@dell.com>
-- Trisha Datta (@trisha-dell) <ansible.team@dell.com>
+- Luis Liu (@vangork) <ansible.team@dell.com>
 
 options:
   storage_pool_name:
@@ -756,7 +752,8 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.lib
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 
-LOG = utils.get_logger('storage_pool')
+
+LOG = utils.get_logger('storage_pool_v2')
 
 
 class PowerFlexStoragePoolV2(PowerFlexBase):
@@ -780,23 +777,17 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
             state=dict(required=True, type='str', choices=['present', 'absent']),
         )
 
-        required_one_of = [['id', 'name']]
         required_if = [
           ('id', None, ('protection_domain_id', 'name')),
         ]
         module_params = {
             'argument_spec': argument_spec,
             'supports_check_mode': False,
-            'required_one_of': required_one_of,
             'required_if': required_if,
         }
 
         super().__init__(AnsibleModule, module_params)
         super().check_module_compatibility()
-
-
-    def validate_input_params(self):
-        """Validate the input parameters"""
 
     def get(self, id, protection_domain_id, name):
         """
@@ -854,7 +845,7 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
 
-    def update(self, storage_pool):
+    def update(self, storage_pool, current_storage_pool=None):
         """
         Modify storage pool attributes
         :param storage_pool: Dictionary containing the attributes of
@@ -865,14 +856,14 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
         """
         try:
             LOG.info("Updating storage pool with id: %s ", storage_pool['id'])
-            return self.powerflex_conn.storage_pool.update(storage_pool)
+            return self.powerflex_conn.storage_pool.update(storage_pool, current_storage_pool)
         except Exception as e:
             err_msg = "Failed to update the storage pool {0}" \
                     " with error {1}".format(storage_pool['id'],str(e))
             LOG.error(err_msg)
             self.module.fail_json(msg=err_msg)
 
-    def perform_module_operation(self):
+    def exec(self):
         """
         Perform different actions on protection domain based on parameters
         passed in the playbook
@@ -894,8 +885,6 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
             changed=False,
             storage_pool_details=None
         )
-
-        self.validate_input_params()
 
         sp_details = self.get(
             storage_pool_id,
@@ -935,7 +924,7 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
             result['changed'] = True
         else:
             storage_pool['id'] = sp_details['id']
-            result['changed'], result['storage_pool_details'] = self.update(storage_pool)
+            result['changed'], result['storage_pool_details'] = self.update(storage_pool, sp_details)
 
         self.module.exit_json(**result)
 
@@ -944,7 +933,7 @@ def main():
     """ Create PowerFlex storage pool object and perform action on it
         based on user input from playbook"""
     obj = PowerFlexStoragePoolV2()
-    obj.perform_module_operation()
+    obj.exec()
 
 
 if __name__ == '__main__':
