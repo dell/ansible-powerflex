@@ -6,6 +6,8 @@ from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
 
+import os
+import inspect
 import re
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
@@ -48,12 +50,19 @@ class PowerFlexBase:
         """ Check if the module is compatible with the PowerFlex array """
         class_name = self.__class__.__name__
         is_gen1_module = not re.match(r'.*V\d+$', class_name, re.IGNORECASE)
-
         api_version = self.powerflex_conn.system.api_version(cached=True)
 
+        class_file = inspect.getfile(self.__class__)
+        file_name = os.path.basename(class_file)
+        module_name = os.path.splitext(file_name)[0]
+
         if is_gen1_module and utils.is_version_ge_or_eq(api_version, '5.0'):
-            self.module.exit_json(changed=False, msg="Task Skipped!",
-                                    warnings=["Please use v2 module for PowerFlex 5.0 and above"],)
+            self.module.exit_json(
+                changed=False,
+                msg="Task Skipped!",
+                warnings=[f"Please use {module_name}_v2 for PowerFlex 5.0 and above"],)
         elif not is_gen1_module and utils.is_version_less(api_version, '5.0'):
             self.module.exit_json(
-                changed=False, msg="Task Skipped!", warnings=["v2 module is only compatible with PowerFlex 5.0 and above"],)
+                changed=False,
+                msg="Task Skipped!",
+                warnings=[f"{module_name} is only compatible with PowerFlex 5.0 and above"],)
