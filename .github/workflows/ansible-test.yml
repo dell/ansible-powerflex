@@ -59,6 +59,7 @@ jobs:
             python: '3.13'
           - ansible: stable-2.17
             python: '3.13'
+          - python: devel-3.11
 
     steps:
       - name: Perform unit testing with ansible-test
