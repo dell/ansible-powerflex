@@ -16,7 +16,7 @@
 
 - name: Checking powerflex_protection_domain_name and powerflex_storage_pool_name is provided
   ansible.builtin.set_fact:
-    powerflex_add_sdr_output:
+    powerflex_sdr_add_sdr_output:
       msg: Please provide powerflex_protection_domain_name and powerflex_storage_pool_name in parameter for installing SDR.
   failed_when:
     - powerflex_protection_domain_name is undefined or powerflex_storage_pool_name is undefined
@@ -34,9 +34,9 @@
     --password "{{ powerflex_mdm_password }}"
     --approve_certificate
   run_once: true
-  register: powerflex_initial_login
+  register: powerflex_sdr_initial_login
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_initial_login.rc == 0
+  changed_when: powerflex_sdr_initial_login.rc == 0
   no_log: true
   when: powerflex_sdr_array_version == "3"
 
@@ -80,7 +80,7 @@
 
 - name: Output msg of previous task login to mdm
   ansible.builtin.debug:
-    var: powerflex_initial_login.stdout
+    var: powerflex_sdr_initial_login.stdout
 
 - name: Set replication capacity
   ansible.builtin.command: >
@@ -89,9 +89,9 @@
     --storage_pool_name {{ powerflex_storage_pool_name }}
     --replication_journal_capacity_max_ratio {{ powerflex_sdr_repl_journal_capacity_max_ratio }}
   run_once: true
-  register: powerflex_set_replication_capacity
+  register: powerflex_sdr_set_replication_capacity
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_set_replication_capacity.rc == 0
+  changed_when: powerflex_sdr_set_replication_capacity.rc == 0
 
 - name: Wait for replication capacity to be created
   ansible.builtin.pause:
@@ -105,8 +105,8 @@
     --protection_domain_name {{ powerflex_protection_domain_name }}
   run_once: true
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  register: powerflex_get_replication_capacity
-  changed_when: powerflex_get_replication_capacity.rc == 0
+  register: powerflex_sdr_get_replication_capacity
+  changed_when: powerflex_sdr_get_replication_capacity.rc == 0
 
 - name: Checking if SDR already exists or not for PowerFlex version below 4.x
   ansible.builtin.command: >
@@ -114,8 +114,8 @@
     --query_sdr
     --sdr_name "{{ powerflex_sdr_hostname }}"
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  register: check_sdr_exists
-  changed_when: check_sdr_exists.rc == 0
+  register: powerflex_sdr_check_sdr_exists
+  changed_when: powerflex_sdr_check_sdr_exists.rc == 0
   failed_when: false
   when: powerflex_sdr_array_version == "3"
 
@@ -125,15 +125,15 @@
     --query_sdr
     --sdr_name "{{ powerflex_sdr_hostname }}"
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  register: check_sdr_exists
-  changed_when: check_sdr_exists.rc == 0
+  register: powerflex_sdr_check_sdr_exists
+  changed_when: powerflex_sdr_check_sdr_exists.rc == 0
   failed_when: false
   when: powerflex_sdr_array_version != "3"
 
 - name: Skipping add SDR if already exists
   ansible.builtin.debug:
     msg: "SDR name {{ powerflex_sdr_hostname }} already exists, will skip adding SDR."
-  when: check_sdr_exists.rc == 0
+  when: powerflex_sdr_check_sdr_exists.rc == 0
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
 
 - name: Adding SDR for PowerFlex version below 4.x
@@ -143,10 +143,10 @@
     --sdr_ip {{ powerflex_sdr_ip }}
     --sdr_name "{{ powerflex_sdr_hostname }}"
     --protection_domain_name {{ powerflex_protection_domain_name }}
-  register: powerflex_add_sdr_output
+  register: powerflex_sdr_add_sdr_output
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_add_sdr_output.rc == 0
-  when: check_sdr_exists.rc == 7 and powerflex_sdr_array_version == "3"
+  changed_when: powerflex_sdr_add_sdr_output.rc == 0
+  when: powerflex_sdr_check_sdr_exists.rc == 7 and powerflex_sdr_array_version == "3"
 
 - name: Adding SDR for PowerFlex version 4.x
   ansible.builtin.command: >
@@ -155,14 +155,14 @@
     --sdr_ip {{ powerflex_sdr_ip }}
     --sdr_name "{{ powerflex_sdr_hostname }}"
     --protection_domain_name {{ powerflex_protection_domain_name }}
-  register: powerflex_add_sdr_output
+  register: powerflex_sdr_add_sdr_output
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_add_sdr_output.rc == 0
-  when: check_sdr_exists.rc == 7 and powerflex_sdr_array_version != "3"
+  changed_when: powerflex_sdr_add_sdr_output.rc == 0
+  when: powerflex_sdr_check_sdr_exists.rc == 7 and powerflex_sdr_array_version != "3"
 
 - name: Logging out of the mdm
   ansible.builtin.command: scli --logout
-  register: powerflex_mdm_logout
+  register: powerflex_sdr_mdm_logout
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_mdm_logout.rc == 0
+  changed_when: powerflex_sdr_mdm_logout.rc == 0
   run_once: true
