@@ -20,13 +20,13 @@
 
 - name: Extract file versions
   ansible.builtin.set_fact:
-    version: "{{ powerflex_mdm_package_file_version.files[0].path | regex_search('mdm-(\\d+)', '\\1') }}"
+    powerflex_mdm_version: "{{ powerflex_mdm_package_file_version.files[0].path | regex_search('mdm-(\\d+)', '\\1') }}"
   when: powerflex_mdm_package_file_version.files | length > 0
 
 - name: Install MDM for PowerFlex below 4.x
   ansible.builtin.include_tasks: install_powerflex3x_mdm.yml
-  when: version[0] < "4"
+  when: powerflex_mdm_version[0] < "4"
 
 - name: Install MDM for PowerFlex 4.x
   ansible.builtin.include_tasks: install_powerflex4x_mdm.yml
-  when: version[0] >= "4"
+  when: powerflex_mdm_version[0] >= "4"

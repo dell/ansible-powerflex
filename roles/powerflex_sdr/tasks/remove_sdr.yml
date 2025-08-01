@@ -23,9 +23,9 @@
     --password "{{ powerflex_mdm_password }}"
     --approve_certificate
   run_once: true
-  register: powerflex_initial_login
+  register: powerflex_sdr_initial_login
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_initial_login.rc == 0
+  changed_when: powerflex_sdr_initial_login.rc == 0
   no_log: true
   when: powerflex_sdr_array_version == "3"
 
@@ -69,7 +69,7 @@
 
 - name: Output msg of previous task login to mdm
   ansible.builtin.debug:
-    var: powerflex_initial_login.stdout
+    var: powerflex_sdr_initial_login.stdout
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
 
 - name: Checking if SDR already exists or not for PowerFlex version below 4.x
@@ -78,9 +78,9 @@
     --query_sdr
     --sdr_name "{{ powerflex_sdr_hostname }}"
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  register: check_sdr_exists
+  register: powerflex_sdr_check_sdr_exists
   failed_when: false
-  changed_when: check_sdr_exists.rc == 0
+  changed_when: powerflex_sdr_check_sdr_exists.rc == 0
   when: powerflex_sdr_array_version == "3"
 
 - name: Checking if SDR already exists or not for PowerFlex version 4.x
@@ -89,15 +89,15 @@
     --query_sdr
     --sdr_name "{{ powerflex_sdr_hostname }}"
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  register: check_sdr_exists
+  register: powerflex_sdr_check_sdr_exists
   failed_when: false
-  changed_when: check_sdr_exists.rc == 0
+  changed_when: powerflex_sdr_check_sdr_exists.rc == 0
   when: powerflex_sdr_array_version != "3"
 
 - name: Skipping remove SDR if does not exist
   ansible.builtin.debug:
     msg: "SDR name {{ powerflex_sdr_hostname }} does not exist, will skip removing SDR."
-  when: check_sdr_exists.rc == 7
+  when: powerflex_sdr_check_sdr_exists.rc == 7
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
 
 - name: Removing SDR for PowerFlex version below 4.x
@@ -107,7 +107,7 @@
   register: powerflex_remove_sdr_output
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
   changed_when: powerflex_remove_sdr_output.rc == 0
-  when: check_sdr_exists.rc == 0 and powerflex_sdr_array_version == "3"
+  when: powerflex_sdr_check_sdr_exists.rc == 0 and powerflex_sdr_array_version == "3"
 
 - name: Removing SDR for PowerFlex version 4.x
   ansible.builtin.command: >
@@ -116,7 +116,7 @@
   register: powerflex_remove_sdr_output
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
   changed_when: powerflex_remove_sdr_output.rc == 0
-  when: check_sdr_exists.rc == 0 and powerflex_sdr_array_version != "3"
+  when: powerflex_sdr_check_sdr_exists.rc == 0 and powerflex_sdr_array_version != "3"
 
 - name: Uninstall package
   register: powerflex_sdr_uninstall_output
@@ -139,7 +139,7 @@
 
 - name: Logging out of the mdm
   ansible.builtin.command: scli --logout
-  register: powerflex_mdm_logout
+  register: powerflex_sdr_mdm_logout
   run_once: true
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_mdm_logout.rc == 0
+  changed_when: powerflex_sdr_mdm_logout.rc == 0

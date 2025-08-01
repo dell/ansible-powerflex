@@ -61,7 +61,7 @@
 
 - name: Set discovery request payload
   ansible.builtin.set_fact:
-    discovery_request_payload:
+    powerflex_tb_discovery_request_payload:
       discoveryRequestList:
         DiscoverIPRangeDeviceRequest:
           - deviceManagementSystemCredRef: "{{ powerflex_tb_lia_credential_id }}"
@@ -84,7 +84,7 @@
     headers:
       Authorization: "Bearer {{ powerflex_tb_login_token_response.json }}"
       Content-Type: "application/json"
-    body: "{{ discovery_request_payload | to_json }}"
+    body: "{{ powerflex_tb_discovery_request_payload | to_json }}"
     status_code: 202
   when: powerflex_tb_lia_credentials is defined
   delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"

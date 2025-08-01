@@ -75,9 +75,9 @@
     --storage_port {{ powerflex_sdt_storage_port }}
     --nvme_port {{ powerflex_sdt_nvme_port }} --discovery_port {{ powerflex_sdt_discovery_port }}
     --sdt_name {{ inventory_hostname }} --protection_domain_name {{ powerflex_sdt_protection_domain }}
-  register: powerflex_add_sdt_result
-  changed_when: powerflex_add_sdt_result.rc == 0
-  failed_when: ('already in use' not in powerflex_add_sdt_result.stderr) and
-    (powerflex_add_sdt_result.rc != 0)
+  register: powerflex_sdt_add_sdt_result
+  changed_when: powerflex_sdt_add_sdt_result.rc == 0
+  failed_when: ('already in use' not in powerflex_sdt_add_sdt_result.stderr) and
+    (powerflex_sdt_add_sdt_result.rc != 0)
   delegate_to: "{{ powerflex_sdt_primary_mdm_hostname }}"
   when: powerflex_sdt_array_version != "3"
