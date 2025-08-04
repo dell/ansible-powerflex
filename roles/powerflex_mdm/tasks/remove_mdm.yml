@@ -10,7 +10,7 @@
 
 - name: Extract file versions
   ansible.builtin.set_fact:
-    version: "{{ powerflex_mdm_package_file_version.files[0].path | regex_search('mdm-(\\d+)', '\\1') }}"
+    powerflex_mdm_package_version: "{{ powerflex_mdm_package_file_version.files[0].path | regex_search('mdm-(\\d+)', '\\1') }}"
   when: powerflex_mdm_package_file_version.files | length > 0
 
 - name: MDM Cluster login below PowerFlex 4.x
@@ -22,7 +22,7 @@
   register: powerflex_mdm_cluster_login
   changed_when: powerflex_mdm_cluster_login.rc == 0
   delegate_to: "{{ powerflex_mdm_primary_hostname }}"
-  when: version[0] < "4"
+  when: powerflex_mdm_package_version[0] < "4"
 
 - name: Login to primary MDM node for PowerFlex 4.x
   register: powerflex_mdm_primary_login
@@ -32,7 +32,7 @@
   run_once: true
   ignore_errors: true
   changed_when: powerflex_mdm_primary_login.rc == 0
-  when: version[0] >= "4"
+  when: powerflex_mdm_package_version[0] >= "4"
 
 - name: Remove secondary MDM
   ansible.builtin.command: >

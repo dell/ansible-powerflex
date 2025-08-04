@@ -10,13 +10,13 @@
 
 - name: Set the priority of keepalived
   ansible.builtin.set_fact:
-    keepalived_priority: 100
+    powerflex_gateway_keepalived_priority: 100
   run_once: true
 
 - name: Set the priority of keepalived if not defined
   ansible.builtin.set_fact:
-    keepalived_priority: 101
-  when: keepalived_priority is not defined
+    powerflex_gateway_keepalived_priority: 101
+  when: powerflex_gateway_keepalived_priority is not defined
 
 - name: Configure keepalived
   ansible.builtin.template:
