@@ -104,18 +104,18 @@
   ansible.builtin.command: >
     scli --remove_sdr --mdm_ip {{ powerflex_sdr_mdm_primary_ip }}
     --sdr_name "{{ powerflex_sdr_hostname }}"
-  register: powerflex_remove_sdr_output
+  register: powerflex_sdr_remove_output
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_remove_sdr_output.rc == 0
+  changed_when: powerflex_sdr_remove_output.rc == 0
   when: powerflex_sdr_check_sdr_exists.rc == 0 and powerflex_sdr_array_version == "3"
 
 - name: Removing SDR for PowerFlex version 4.x
   ansible.builtin.command: >
     scli --remove_sdr --management_system_ip {{ hostname }}
     --sdr_name "{{ powerflex_sdr_hostname }}"
-  register: powerflex_remove_sdr_output
+  register: powerflex_sdr_remove_output
   delegate_to: "{{ powerflex_sdr_mdm_primary_hostname }}"
-  changed_when: powerflex_remove_sdr_output.rc == 0
+  changed_when: powerflex_sdr_remove_output.rc == 0
   when: powerflex_sdr_check_sdr_exists.rc == 0 and powerflex_sdr_array_version != "3"
 
 - name: Uninstall package
