@@ -32,10 +32,10 @@
     - name: Verifying remove the sdr in normal mode
       ansible.builtin.assert:
         that:
-          - powerflex_remove_sdr_output.sdr_details is None
+          - powerflex_sdr_remove_output.sdr_details is None
       when:
         - not ansible_check_mode
-        - powerflex_remove_sdr_output.changed
+        - powerflex_sdr_remove_output.changed
         - ansible_distribution == "Ubuntu"
 
     - name: Verifying uninstall package in Idempotency
@@ -51,16 +51,16 @@
     - name: Verifying remove the sdr in check mode
       ansible.builtin.assert:
         that:
-          - powerflex_remove_sdr_output.msg == "Check mode: No changes made"
-          - powerflex_remove_sdr_output.changed
+          - powerflex_sdr_remove_output.msg == "Check mode: No changes made"
+          - powerflex_sdr_remove_output.changed
           - ansible_distribution == "Ubuntu"
       when: ansible_check_mode
 
     - name: Verifying remove the sdr in Idempotency
       ansible.builtin.assert:
         that:
-          - powerflex_remove_sdr_output.sdr_details is None
+          - powerflex_sdr_remove_output.sdr_details is None
       when:
         - not ansible_check_mode
-        - not powerflex_remove_sdr_output.changed
+        - not powerflex_sdr_remove_output.changed
         - ansible_distribution == "Ubuntu"
