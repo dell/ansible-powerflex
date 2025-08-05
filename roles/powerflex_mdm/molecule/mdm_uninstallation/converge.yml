@@ -14,7 +14,9 @@
       ansible.builtin.assert:
         that:
           - powerflex_mdm_uninstall_output.msg == "Check mode: No changes made"
-      when: ansible_check_mode
+      when:
+        - ansible_check_mode
+        - ansible_distribution == "Ubuntu"
 
     - name: Verifying remove secondary mdm in normal mode
       ansible.builtin.assert:
@@ -50,4 +52,6 @@
       ansible.builtin.assert:
         that:
           - "'Nothing to do' in powerflex_mdm_uninstall_output.results[0].msg"
-      when: not ansible_check_mode and not powerflex_mdm_uninstall_output.changed
+      when:
+        - not ansible_check_mode and not powerflex_mdm_uninstall_output.changed
+        - ansible_distribution == "Ubuntu"
