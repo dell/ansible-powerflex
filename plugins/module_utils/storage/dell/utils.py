@@ -20,7 +20,7 @@ import string
 """import PyPowerFlex lib"""
 try:
     from PyPowerFlex import PowerFlexClient
-    from PyPowerFlex.objects.system import SnapshotDef  # pylint: disable=unused-import
+    from PyPowerFlex.objects.common.system import SnapshotDef  # pylint: disable=unused-import
     from PyPowerFlex.utils import filter_response  # pylint: disable=unused-import
     HAS_POWERFLEX_SDK, POWERFLEX_SDK_IMP_ERR = True, None
 except ImportError:
@@ -157,18 +157,24 @@ def get_size_in_gb(size, cap_units):
     return size_in_gb
 
 
-def is_version_less_than_3_6(version):
-    """Verifies if powerflex version is less than 3.6"""
-    version = re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
-    return \
-        LooseVersion(version) < LooseVersion('3.6')
+def parse_version(version):
+    """Parse PowerFlex version e.g. R4_5.4000.0 to 4.5.4000.0."""
+    return re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
 
 
-def is_version_less_than_4_6(version):
-    """Verifies if powerflex version is less than 3.6"""
-    version = re.search(r'R\s*([\d.]+)', version.replace('_', '.')).group(1)
-    return \
-        LooseVersion(version) < LooseVersion('4.6')
+def is_version_ge(version, target="5.0"):
+    """Check if the PowerFlex version is greater than the target version."""
+    return LooseVersion(version) > LooseVersion(target)
+
+
+def is_version_less(version, target="5.0"):
+    """Check if the PowerFlex version is less than the target version."""
+    return LooseVersion(version) < LooseVersion(target)
+
+
+def is_version_ge_or_eq(version, target="5.0"):
+    """Check if the PowerFlex version is greater than or equal to the target version."""
+    return LooseVersion(version) >= LooseVersion(target)
 
 
 def is_invalid_name(name):

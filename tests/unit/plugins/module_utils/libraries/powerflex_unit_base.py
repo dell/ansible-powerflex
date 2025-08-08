@@ -6,6 +6,8 @@ from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
 import pytest
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
+    import utils
 # pylint: disable=unused-import
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.libraries import initial_mock
 from mock.mock import MagicMock
@@ -19,6 +21,8 @@ class PowerFlexUnitBase:
 
     @pytest.fixture
     def powerflex_module_mock(self, mocker, module_object):
+        utils.is_version_less = MagicMock(return_value=False)
+        utils.is_version_ge_or_eq = MagicMock(return_value=False)
         powerflex_module_mock = module_object()
         powerflex_module_mock.module = MagicMock()
         powerflex_module_mock.module.fail_json = fail_json
