@@ -34,7 +34,9 @@ class TestPowerflexSnapshotPolicy():
     @pytest.fixture
     def snapshot_policy_module_mock(self, mocker):
         snapshot_policy_module_mock = PowerFlexSnapshotPolicy()
+        utils.parse_version = MagicMock(return_value="4.5")
         snapshot_policy_module_mock.module.check_mode = False
+        snapshot_policy_module_mock.module._diff = True
         snapshot_policy_module_mock.module.fail_json = fail_json
         return snapshot_policy_module_mock
 
@@ -500,3 +502,39 @@ class TestPowerflexSnapshotPolicy():
         )
         self.capture_fail_json_call(MockSnapshotPolicyApi.get_snapshot_policy_exception_response('get_vol_details_exception'),
                                     snapshot_policy_module_mock)
+
+    def test_create_snapshot_policy_in_check_and_diff_mode(self, snapshot_policy_module_mock):
+        self.get_module_args.update({
+            "snapshot_policy_name": "testing",
+            "access_mode": "ReadOnly",
+            "secure_snapshots": True,
+            "auto_snapshot_creation_cadence": {
+                "time": 1,
+                "unit": "Hour"},
+            "num_of_retained_snapshots_per_level": [20],
+            "state": "present"
+        })
+        snapshot_policy_module_mock.module.params = self.get_module_args
+        snapshot_policy_module_mock.module.check_mode = True
+        snapshot_policy_module_mock.module._diff = True
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
+            return_value=None
+        )
+        SnapshotPolicyHandler().handle(snapshot_policy_module_mock, snapshot_policy_module_mock.module.params)
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.create.assert_not_called()
+
+    def test_get_snapshot_policy_metrics(self, snapshot_policy_module_mock):
+        self.get_module_args.update({
+            "snapshot_policy_name": "testing",
+            "new_name": "testing_new",
+            "state": "present"
+        })
+        snapshot_policy_module_mock.module.check_mode = False
+        snapshot_policy_module_mock.module._diff = False
+        snapshot_policy_module_mock.module.params = self.get_module_args
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
+            return_value=MockSnapshotPolicyApi.SNAPSHOT_POLICY_GET_LIST)
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.query_snapshot_policy_metrics = MagicMock()
+        utils.parse_version = MagicMock(return_value="5.0")
+        SnapshotPolicyHandler().handle(snapshot_policy_module_mock, snapshot_policy_module_mock.module.params)
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.query_snapshot_policy_metrics.assert_called()
