@@ -114,8 +114,14 @@ options:
     choices: ['present', 'absent']
     default: 'present'
     type: str
-notes:
-  - The I(check_mode) is supported.
+attributes:
+  check_mode:
+    description: Runs task to validate without performing action on the target
+                 machine.
+    support: full
+  diff_mode:
+    description: Runs the task to report the changes made or to be made.
+    support: full
 '''
 
 EXAMPLES = r'''
@@ -298,7 +304,7 @@ snapshot_policy_details:
             description: Time of the failure of the last auto snapshot creation.
             type: str
         statistics:
-            description: Statistics details of the snapshot policy.
+            description: Statistics details of the snapshot policy.todo TTHE add metrics.
             type: dict
             contains:
                 autoSnapshotVolIds:
@@ -369,6 +375,9 @@ snapshot_policy_details:
             "numOfSrcVols": 0,
             "srcVolIds": []
         },
+        "metrics": {
+            "TODO": "TODO TTHE add metrics",
+        },
         "systemId": "0e7a082862fedf0f",
         "timeOfLastAutoSnapshot": 0,
         "timeOfLastAutoSnapshotCreationFailure": 0
@@ -376,42 +385,35 @@ snapshot_policy_details:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
+import copy
 
 LOG = utils.get_logger('snapshot_policy')
 
 
-class PowerFlexSnapshotPolicy(object):
+class PowerFlexSnapshotPolicy(PowerFlexBase):
     """Class with snapshot policies operations"""
 
     def __init__(self):
         """ Define all parameters required by this module"""
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_snapshot_policy_parameters())
 
-        mut_ex_args = [['snapshot_policy_name', 'snapshot_policy_id']]
+        mutually_exclusive = [['snapshot_policy_name', 'snapshot_policy_id']]
 
-        # initialize the Ansible module
-        self.module = AnsibleModule(
-            argument_spec=self.module_params,
-            supports_check_mode=True,
-            mutually_exclusive=mut_ex_args)
-
-        utils.ensure_required_libs(self.module)
+        ansible_module_params = {
+            'argument_spec': get_powerflex_snapshot_policy_parameters(),
+            'supports_check_mode': True,
+            'mutually_exclusive': mutually_exclusive
+        }
+        super().__init__(AnsibleModule, ansible_module_params)
 
         self.result = dict(
             changed=False,
-            snapshot_policy_details={}
+            snapshot_policy_details={},
+            diff={}
         )
-
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info("Got the PowerFlex system connection object instance")
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
 
     def get_snapshot_policy(self, snap_pol_id=None, snap_pol_name=None):
         """Get snapshot policy details
@@ -434,15 +436,39 @@ class PowerFlexSnapshotPolicy(object):
                 LOG.info(msg)
                 return None
 
-            # Append statistics
-            statistics = self.powerflex_conn.snapshot_policy.get_statistics(snap_pol_details[0]['id'])
-            snap_pol_details[0]['statistics'] = statistics if statistics else {}
+            if self._is_gen1_api_version():
+                # Append statistics
+                statistics = \
+                    self.powerflex_conn.snapshot_policy.get_statistics(snap_pol_details[0]['id'])
+                snap_pol_details[0]['statistics'] = statistics if statistics else {}
+            else:
+                # Append metrics
+                snap_pol_details[0]['metrics'] = {}
+                if hasattr(self.powerflex_conn.snapshot_policy, 'query_snapshot_policy_metrics'):
+                    metrics = \
+                        self.powerflex_conn.snapshot_policy.query_snapshot_policy_metrics(snap_pol_details[0]['id'])
+                    snap_pol_details[0]['metrics'] = metrics if metrics else {}
+                else:
+                    msg = "Unable to find the query_snapshot_policy_metrics."
+                    LOG.info(msg)
+
             return snap_pol_details[0]
 
         except Exception as e:
             errormsg = f'Failed to get the snapshot policy with error {str(e)}'
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
+
+    def _is_gen1_api_version(self):
+        """
+        Get the API version and check if it is less than version 5.0.
+
+        Returns:
+            bool: True if the API version is less than version 5.0, False otherwise.
+        """
+        api_version = self.powerflex_conn.system.get()[0]['mdmCluster']['master']['versionInfo']
+        version_check = utils.is_version_less(utils.parse_version(api_version), '5.0')
+        return version_check
 
     def create_snapshot_policy(self, auto_snapshot_creation_cadence_in_min, num_of_retained_snapshots_per_level,
                                access_mode, secure_snapshots, snapshot_policy_name=None):
@@ -549,6 +575,7 @@ class PowerFlexSnapshotPolicy(object):
                         detach_locked_auto_snaps=self.module.params['source_volume'][source_volume_element]['detach_locked_auto_snapshots'])
                     LOG.info("Source volume successfully removed")
                 return True
+            return False
 
         except Exception as e:
             error_msg = f"Failed to manage the source volume {vol_details['id']} with error {str(e)}"
@@ -576,6 +603,7 @@ class PowerFlexSnapshotPolicy(object):
                         snapshot_policy_id=snap_pol_details['id'])
                     LOG.info("Snapshot policy successfully resumed.")
                 return True
+            return False
 
         except Exception as e:
             error_msg = f"Failed to pause/resume {snap_pol_details['id']} with error {str(e)}"
@@ -593,7 +621,7 @@ class PowerFlexSnapshotPolicy(object):
         """
         modify_dict = {}
 
-        if self.module_params['auto_snapshot_creation_cadence'] is not None and \
+        if auto_snapshot_creation_cadence_in_min is not None and \
                 snap_pol_details['autoSnapshotCreationCadenceInMin'] != auto_snapshot_creation_cadence_in_min:
             modify_dict['auto_snapshot_creation_cadence_in_min'] = auto_snapshot_creation_cadence_in_min
 
@@ -709,7 +737,15 @@ class SnapshotPolicyCreateHandler():
                                                 "policy is allowed "
                                                 "using snapshot_policy_name only, "
                                                 "snapshot_policy_id given.")
-
+            if con_object.module._diff:
+                con_object.result.update(
+                    {"diff": {"before": {},
+                              "after": {
+                                  "snapshot_policy_name": con_params['snapshot_policy_name'],
+                                  "access_mode": access_mode,
+                                  "secure_snapshots": con_params['secure_snapshots'],
+                                  "auto_snapshot_creation_cadence": con_params['auto_snapshot_creation_cadence'],
+                                  "num_of_retained_snapshots_per_level": con_params['num_of_retained_snapshots_per_level']}}})
             snap_pol_id = con_object.create_snapshot_policy(snapshot_policy_name=con_params['snapshot_policy_name'],
                                                             access_mode=access_mode,
                                                             secure_snapshots=con_params['secure_snapshots'],
@@ -740,8 +776,18 @@ class SnapshotPolicyModifyHandler():
                    f" follows: {str(modify_dict)}")
             LOG.info(msg)
         if modify_dict and con_params['state'] == 'present':
-            con_object.result['changed'] = con_object.modify_snapshot_policy(snap_pol_details=snapshot_policy_details,
-                                                                             modify_dict=modify_dict)
+            if con_object.module._diff:
+                if 'num_of_retained_snapshots_per_level' in modify_dict:
+                    con_object.result["diff"]["after"]["num_of_retained_snapshots_per_level"] =\
+                        con_params['num_of_retained_snapshots_per_level']
+                if 'auto_snapshot_creation_cadence_in_min' in modify_dict:
+                    con_object.result["diff"]["after"]["auto_snapshot_creation_cadence"] =\
+                        con_params['auto_snapshot_creation_cadence']
+                if 'new_name' in modify_dict:
+                    con_object.result["diff"]["after"]["new_name"] = con_params['new_name']
+            changed = con_object.modify_snapshot_policy(snap_pol_details=snapshot_policy_details,
+                                                        modify_dict=modify_dict)
+            con_object.result['changed'] |= changed
             snapshot_policy_details = con_object.get_snapshot_policy(snap_pol_id=snapshot_policy_details.get("id"))
         SnapshotPolicySourceVolumeHandler().handle(con_object, con_params, snapshot_policy_details)
 
@@ -749,6 +795,7 @@ class SnapshotPolicyModifyHandler():
 class SnapshotPolicySourceVolumeHandler():
     def handle(self, con_object, con_params, snapshot_policy_details):
         if snapshot_policy_details and con_params['state'] == 'present' and con_params['source_volume'] is not None:
+            changed = False
             for source_volume_element in range(len(con_params['source_volume'])):
                 if not (con_params['source_volume'][source_volume_element]['id'] or
                         con_params['source_volume'][source_volume_element]['name']):
@@ -765,20 +812,26 @@ class SnapshotPolicySourceVolumeHandler():
                         con_params['source_volume'][source_volume_element]['name']:
                     volume_details = con_object.get_volume(vol_id=con_params['source_volume'][source_volume_element]['id'],
                                                            vol_name=con_params['source_volume'][source_volume_element]['name'])
-                    con_object.result['changed'] = con_object.manage_source_volume(snap_pol_details=snapshot_policy_details,
-                                                                                   vol_details=volume_details,
-                                                                                   source_volume_element=source_volume_element)
-                    snapshot_policy_details = con_object.get_snapshot_policy(snap_pol_name=con_params['snapshot_policy_name'],
-                                                                             snap_pol_id=con_params['snapshot_policy_id'])
-
+                    changed |= con_object.manage_source_volume(snap_pol_details=snapshot_policy_details,
+                                                               vol_details=volume_details,
+                                                               source_volume_element=source_volume_element)
+            if con_object.module._diff and changed:
+                con_object.result["diff"]["after"]["source_volume"] = copy.deepcopy(con_params['source_volume'])
+            con_object.result['changed'] |= changed
+            snapshot_policy_details = con_object.get_snapshot_policy(snap_pol_name=con_params['snapshot_policy_name'],
+                                                                     snap_pol_id=con_params['snapshot_policy_id'])
         SnapshotPolicyPauseHandler().handle(con_object, con_params, snapshot_policy_details)
 
 
 class SnapshotPolicyPauseHandler():
     def handle(self, con_object, con_params, snapshot_policy_details):
         if con_params["state"] == "present" and con_params["pause"] is not None:
-            con_object.result['changed'] = \
+            changed = \
                 con_object.pause_snapshot_policy(snap_pol_details=snapshot_policy_details)
+            con_object.result['changed'] |= changed
+            if con_object.module._diff and changed:
+                con_object.result["diff"]["after"]["pause"] =\
+                    con_params["pause"] if con_params["pause"] is not None else False
             snapshot_policy_details = \
                 con_object.get_snapshot_policy(snap_pol_name=con_params['snapshot_policy_name'],
                                                snap_pol_id=con_params['snapshot_policy_id'])
@@ -806,13 +859,17 @@ class SnapshotPolicyHandler():
         snapshot_policy_details = con_object.get_snapshot_policy(snap_pol_name=con_params['snapshot_policy_name'],
                                                                  snap_pol_id=con_params['snapshot_policy_id'])
         auto_snapshot_creation_cadence_in_min = None
-        if snapshot_policy_details:
-            auto_snapshot_creation_cadence_in_min = snapshot_policy_details['autoSnapshotCreationCadenceInMin']
-        msg = f"Fetched the snapshot policy details {str(snapshot_policy_details)}"
-        LOG.info(msg)
         if con_params['auto_snapshot_creation_cadence'] is not None:
             auto_snapshot_creation_cadence_in_min = utils.get_time_minutes(time=con_params['auto_snapshot_creation_cadence']['time'],
                                                                            time_unit=con_params['auto_snapshot_creation_cadence']['unit'])
+        if con_object.module._diff:
+            before_dict = {}
+            if snapshot_policy_details:
+                before_dict = copy.deepcopy(snapshot_policy_details)
+                for key in ["links", "metrics", "statistics"]:
+                    if key in before_dict:
+                        del before_dict[key]
+            con_object.result["diff"] = dict(before=before_dict, after={})
         SnapshotPolicyCreateHandler().handle(con_object, con_params, snapshot_policy_details,
                                              access_mode, auto_snapshot_creation_cadence_in_min)
 
