@@ -33,15 +33,15 @@ Parameters
 
     It is unique across the PowerFlex array.
 
-    Mutually exclusive with \ :emphasis:`snapshot\_policy\_id`\ .
+    Mutually exclusive with :emphasis:`snapshot\_policy\_id`.
 
 
   snapshot_policy_id (optional, str, None)
     The unique identifier of the snapshot policy.
 
-    Except create operation, all other operations can be performed using \ :emphasis:`snapshot\_policy\_id`\ .
+    Except create operation, all other operations can be performed using :emphasis:`snapshot\_policy\_id`.
 
-    Mutually exclusive with \ :emphasis:`snapshot\_policy\_name`\ .
+    Mutually exclusive with :emphasis:`snapshot\_policy\_name`.
 
 
   auto_snapshot_creation_cadence (optional, dict, None)
@@ -82,19 +82,19 @@ Parameters
     id (optional, str, None)
       The unique identifier of the source volume to be added or removed.
 
-      Mutually exclusive with \ :emphasis:`name`\ .
+      Mutually exclusive with :emphasis:`name`.
 
 
     name (optional, str, None)
       The name of the source volume to be added or removed.
 
-      Mutually exclusive with \ :emphasis:`id`\ .
+      Mutually exclusive with :emphasis:`id`.
 
 
     auto_snap_removal_action (optional, str, None)
       Ways to handle the snapshots created by the policy (auto snapshots).
 
-      Must be provided when \ :emphasis:`state`\  is set to \ :literal:`'absent'`\ .
+      Must be provided when :emphasis:`state` is set to :literal:`'absent'`.
 
 
     detach_locked_auto_snapshots (optional, bool, None)
@@ -104,9 +104,9 @@ Parameters
     state (optional, str, present)
       The state of the source volume.
 
-      When \ :literal:`present`\ , source volume will be added to the snapshot policy.
+      When :literal:`present`\ , source volume will be added to the snapshot policy.
 
-      When \ :literal:`absent`\ , source volume will be removed from the snapshot policy.
+      When :literal:`absent`\ , source volume will be removed from the snapshot policy.
 
 
 
@@ -133,9 +133,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
+    :literal:`true` - Indicates that the SSL certificate should be verified.
 
-    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
+    :literal:`false` - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -155,7 +155,6 @@ Notes
 -----
 
 .. note::
-   - The \ :emphasis:`check\_mode`\  is supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
