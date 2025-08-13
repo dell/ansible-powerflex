@@ -369,6 +369,8 @@ snapshot_details:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import utils
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import powerflex_compatibility
 from datetime import datetime, timedelta
 import time
 import copy
@@ -376,6 +378,7 @@ import copy
 LOG = utils.get_logger('snapshot')
 
 
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0', successor='snapshot_v2')
 class PowerFlexSnapshot(object):
     """Class with Snapshot operations"""
 
