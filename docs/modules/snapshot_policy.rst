@@ -155,6 +155,7 @@ Notes
 -----
 
 .. note::
+   - The :emphasis:`check\_mode` and :emphasis:`diff\_mode` are supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
