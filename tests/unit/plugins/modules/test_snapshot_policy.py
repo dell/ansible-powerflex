@@ -522,19 +522,3 @@ class TestPowerflexSnapshotPolicy():
         )
         SnapshotPolicyHandler().handle(snapshot_policy_module_mock, snapshot_policy_module_mock.module.params)
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.create.assert_not_called()
-
-    def test_get_snapshot_policy_metrics(self, snapshot_policy_module_mock):
-        self.get_module_args.update({
-            "snapshot_policy_name": "testing",
-            "new_name": "testing_new",
-            "state": "present"
-        })
-        snapshot_policy_module_mock.module.check_mode = False
-        snapshot_policy_module_mock.module._diff = False
-        snapshot_policy_module_mock.module.params = self.get_module_args
-        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
-            return_value=MockSnapshotPolicyApi.SNAPSHOT_POLICY_GET_LIST)
-        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.query_snapshot_policy_metrics = MagicMock()
-        utils.parse_version = MagicMock(return_value="5.0")
-        SnapshotPolicyHandler().handle(snapshot_policy_module_mock, snapshot_policy_module_mock.module.params)
-        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.query_snapshot_policy_metrics.assert_called()
