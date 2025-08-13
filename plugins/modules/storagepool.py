@@ -752,7 +752,7 @@ storage_pool_details:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
-    import PowerFlexBase
+    import PowerFlexBase, powerflex_compatibility
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
     import Configuration
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
@@ -761,6 +761,7 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
 LOG = utils.get_logger('storagepool')
 
 
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0', successor='storagepool_v2')
 class PowerFlexStoragePool(PowerFlexBase):
     """Class with StoragePool operations"""
 
@@ -781,8 +782,9 @@ class PowerFlexStoragePool(PowerFlexBase):
             'required_one_of': required_one_of
         }
         super().__init__(AnsibleModule, ansible_module_params)
+        super().check_module_compatibility()
 
-        utils.ensure_required_libs(self.module)
+        # utils.ensure_required_libs(self.module)
         self.result = dict(
             changed=False,
             storage_pool_details={}
@@ -827,7 +829,8 @@ class PowerFlexStoragePool(PowerFlexBase):
                     self.module.fail_json(msg=err_msg)
                 elif len(pool_details) == 1:
                     pool_details = pool_details[0]
-                    statistics = self.powerflex_conn.storage_pool.get_statistics(pool_details['id'])
+                    statistics = self.powerflex_conn.storage_pool.get_statistics(
+                        pool_details['id'])
                     pool_details['statistics'] = statistics if statistics else {}
                     pd_id = pool_details['protectionDomainId']
                     pd_name = self.get_protection_domain(
@@ -926,7 +929,8 @@ class PowerFlexStoragePool(PowerFlexBase):
                         validate=pool_params['persistent_checksum']['validate_on_read'],
                         builder_limit=pool_params['persistent_checksum']['builder_limit'])
 
-            pool_details = self.get_storage_pool(storage_pool_id=pool_details['id'])
+            pool_details = self.get_storage_pool(
+                storage_pool_id=pool_details['id'])
             return pool_details
 
         except Exception as e:
@@ -968,11 +972,13 @@ class PowerFlexStoragePool(PowerFlexBase):
 
         if pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'] is not None and \
                 pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'] != pool_details['rebalanceIoPriorityNumOfConcurrentIosPerDevice']:
-            policy_dict['concurrent_ios'] = str(pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'])
+            policy_dict['concurrent_ios'] = str(
+                pool_params['rebalance_io_priority_policy']['concurrent_ios_per_device'])
 
         if pool_params['rebalance_io_priority_policy']['bw_limit_per_device'] is not None and \
                 pool_params['rebalance_io_priority_policy']['bw_limit_per_device'] != pool_details['rebalanceIoPriorityBwLimitPerDeviceInKbps']:
-            policy_dict['bw_limit'] = str(pool_params['rebalance_io_priority_policy']['bw_limit_per_device'])
+            policy_dict['bw_limit'] = str(
+                pool_params['rebalance_io_priority_policy']['bw_limit_per_device'])
 
         if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
             policy_dict['policy'] = pool_details['rebalanceIoPriorityPolicy']
@@ -998,12 +1004,14 @@ class PowerFlexStoragePool(PowerFlexBase):
         if pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'] is not None and \
                 pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'] != \
                 pool_details['vtreeMigrationIoPriorityNumOfConcurrentIosPerDevice']:
-            policy_dict['concurrent_ios'] = str(pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'])
+            policy_dict['concurrent_ios'] = str(
+                pool_params['vtree_migration_io_priority_policy']['concurrent_ios_per_device'])
 
         if pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'] is not None and \
                 pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'] != \
                 pool_details['vtreeMigrationIoPriorityBwLimitPerDeviceInKbps']:
-            policy_dict['bw_limit'] = str(pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'])
+            policy_dict['bw_limit'] = str(
+                pool_params['vtree_migration_io_priority_policy']['bw_limit_per_device'])
 
         if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
             policy_dict['policy'] = pool_details['vtreeMigrationIoPriorityPolicy']
@@ -1030,12 +1038,14 @@ class PowerFlexStoragePool(PowerFlexBase):
         if pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'] is not None and \
                 pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'] != \
                 pool_details['protectedMaintenanceModeIoPriorityNumOfConcurrentIosPerDevice']:
-            policy_dict['concurrent_ios'] = str(pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'])
+            policy_dict['concurrent_ios'] = str(
+                pool_params['protected_maintenance_mode_io_priority_policy']['concurrent_ios_per_device'])
 
         if pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'] is not None and \
                 pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'] != \
                 pool_details['protectedMaintenanceModeIoPriorityBwLimitPerDeviceInKbps']:
-            policy_dict['bw_limit'] = str(pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'])
+            policy_dict['bw_limit'] = str(
+                pool_params['protected_maintenance_mode_io_priority_policy']['bw_limit_per_device'])
 
         if policy_dict['policy'] is None and (policy_dict['concurrent_ios'] is not None or policy_dict['bw_limit'] is not None):
             policy_dict['policy'] = pool_details['protectedMaintenanceModeIoPriorityPolicy']
@@ -1051,18 +1061,22 @@ class PowerFlexStoragePool(PowerFlexBase):
         threshold = dict()
         if pool_params['cap_alert_thresholds']['high_threshold'] is not None and pool_params['cap_alert_thresholds'][
                 'high_threshold'] != pool_details['capacityAlertHighThreshold']:
-            threshold['high'] = str(pool_params['cap_alert_thresholds']['high_threshold'])
+            threshold['high'] = str(
+                pool_params['cap_alert_thresholds']['high_threshold'])
             modify = True
         if pool_params['cap_alert_thresholds']['critical_threshold'] is not None and \
                 pool_params['cap_alert_thresholds']['critical_threshold'] != pool_details[
                 'capacityAlertCriticalThreshold']:
-            threshold['critical'] = str(pool_params['cap_alert_thresholds']['critical_threshold'])
+            threshold['critical'] = str(
+                pool_params['cap_alert_thresholds']['critical_threshold'])
             modify = True
         if modify is True:
             if 'high' not in threshold:
-                threshold['high'] = str(pool_details['capacityAlertHighThreshold'])
+                threshold['high'] = str(
+                    pool_details['capacityAlertHighThreshold'])
             if 'critical' not in threshold:
-                threshold['critical'] = str(pool_details['capacityAlertCriticalThreshold'])
+                threshold['critical'] = str(
+                    pool_details['capacityAlertCriticalThreshold'])
 
         return threshold
 
@@ -1081,7 +1095,8 @@ def get_powerflex_storagepool_parameters():
         use_rmcache=dict(required=False, type='bool'),
         enable_zero_padding=dict(type='bool'),
         rep_cap_max_ratio=dict(type='int'),
-        rmcache_write_handling_mode=dict(choices=['Cached', 'Passthrough'], default='Cached'),
+        rmcache_write_handling_mode=dict(
+            choices=['Cached', 'Passthrough'], default='Cached'),
         spare_percentage=dict(type='int'),
         enable_rebalance=dict(type='bool'),
         enable_fragmentation=dict(type='bool'),
@@ -1092,11 +1107,13 @@ def get_powerflex_storagepool_parameters():
             high_threshold=dict(type='int'),
             critical_threshold=dict(type='int'))),
         protected_maintenance_mode_io_priority_policy=dict(type='dict', options=dict(
-            policy=dict(choices=['unlimited', 'limitNumOfConcurrentIos', 'favorAppIos'], default='limitNumOfConcurrentIos'),
+            policy=dict(choices=['unlimited', 'limitNumOfConcurrentIos',
+                        'favorAppIos'], default='limitNumOfConcurrentIos'),
             concurrent_ios_per_device=dict(type='int'),
             bw_limit_per_device=dict(type='int'))),
         rebalance_io_priority_policy=dict(type='dict', options=dict(
-            policy=dict(choices=['unlimited', 'limitNumOfConcurrentIos', 'favorAppIos'], default='favorAppIos'),
+            policy=dict(choices=[
+                        'unlimited', 'limitNumOfConcurrentIos', 'favorAppIos'], default='favorAppIos'),
             concurrent_ios_per_device=dict(type='int'),
             bw_limit_per_device=dict(type='int'))),
         vtree_migration_io_priority_policy=dict(type='dict', options=dict(
@@ -1113,7 +1130,8 @@ def get_powerflex_storagepool_parameters():
 class StoragePoolExitHandler():
     def handle(self, pool_obj, pool_details):
         if pool_details:
-            pool_details = pool_obj.get_storage_pool(storage_pool_id=pool_details['id'])
+            pool_details = pool_obj.get_storage_pool(
+                storage_pool_id=pool_details['id'])
         pool_obj.result['storage_pool_details'] = pool_details
 
         pool_obj.module.exit_json(**pool_obj.result)
@@ -1172,7 +1190,8 @@ class StoragePoolModifyRebalanceIOPriorityPolicyHandler():
                                 bw_limit_per_device=policy_dict['bw_limit'])
                         pool_obj.result['changed'] = True
 
-            StoragePoolModifyPersistentChecksumHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolModifyPersistentChecksumHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Modify rebalance IO Priority Policy failed "
@@ -1199,7 +1218,8 @@ class StoragePoolSetVtreeMigrationIOPriorityPolicyHandler():
                                 bw_limit_per_device=policy_dict['bw_limit'])
                         pool_obj.result['changed'] = True
 
-            StoragePoolModifyRebalanceIOPriorityPolicyHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolModifyRebalanceIOPriorityPolicyHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Set Vtree Migration I/O Priority Policy operation failed "
@@ -1226,7 +1246,8 @@ class StoragePoolSetProtectedMaintenanceModeIOPriorityPolicyHandler():
                                 bw_limit_per_device=policy_dict['bw_limit'])
                         pool_obj.result['changed'] = True
 
-            StoragePoolSetVtreeMigrationIOPriorityPolicyHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolSetVtreeMigrationIOPriorityPolicyHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Set Protected Maintenance Mode IO Priority Policy operation failed "
@@ -1252,7 +1273,8 @@ class StoragePoolModifyCapacityAlertThresholdsHandler():
                                 cap_alert_critical_threshold=threshold['critical'])
                         pool_obj.result['changed'] = True
 
-            StoragePoolSetProtectedMaintenanceModeIOPriorityPolicyHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolSetProtectedMaintenanceModeIOPriorityPolicyHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Modify Capacity Alert Thresholds operation failed "
@@ -1272,7 +1294,8 @@ class StoragePoolModifyRebuildRebalanceParallelismLimitHandler():
                             pool_details['id'], str(pool_params['parallel_rebuild_rebalance_limit']))
                     pool_obj.result['changed'] = True
 
-            StoragePoolModifyCapacityAlertThresholdsHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolModifyCapacityAlertThresholdsHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Modify Rebuild/Rebalance Parallelism Limit operation failed "
@@ -1292,7 +1315,8 @@ class StoragePoolModifyRMCacheWriteHandlingModeHandler():
                             pool_details['id'], pool_params['rmcache_write_handling_mode'])
                     pool_obj.result['changed'] = True
 
-            StoragePoolModifyRebuildRebalanceParallelismLimitHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolModifyRebuildRebalanceParallelismLimitHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Modify RMCache Write Handling Mode failed "
@@ -1311,7 +1335,8 @@ class StoragePoolModifySparePercentageHandler():
                             pool_details['id'], str(pool_params['spare_percentage']))
                     pool_obj.result['changed'] = True
 
-            StoragePoolModifyRMCacheWriteHandlingModeHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolModifyRMCacheWriteHandlingModeHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Modify Spare Percentage operation failed "
@@ -1330,7 +1355,8 @@ class StoragePoolEnableFragmentationHandler():
                             pool_details['id'], pool_params['enable_fragmentation'])
                     pool_obj.result['changed'] = True
 
-            StoragePoolModifySparePercentageHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolModifySparePercentageHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
 
@@ -1350,7 +1376,8 @@ class StoragePoolEnableRebuildHandler():
                             pool_details['id'], pool_params['enable_rebuild'])
                     pool_obj.result['changed'] = True
 
-            StoragePoolEnableFragmentationHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolEnableFragmentationHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Enable/Disable Rebuild operation failed "
@@ -1407,7 +1434,8 @@ class StoragePoolEnableZeroPaddingHandler():
                             pool_details['id'], pool_params['enable_zero_padding'])
                     pool_obj.result['changed'] = True
 
-            StoragePoolModifyRepCapMaxRatioHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolModifyRepCapMaxRatioHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Enable/Disable zero padding operation failed "
@@ -1426,7 +1454,8 @@ class StoragePoolUseRFCacheHandler():
                             pool_details['id'], pool_params['use_rfcache'])
                     pool_obj.result['changed'] = True
 
-            StoragePoolEnableZeroPaddingHandler().handle(pool_obj, pool_params, pool_details)
+            StoragePoolEnableZeroPaddingHandler().handle(
+                pool_obj, pool_params, pool_details)
 
         except Exception as e:
             error_msg = (f"Modify RF cache operation failed "
@@ -1460,7 +1489,8 @@ class StoragePoolRenameHandler():
             if pool_params['state'] == 'present' and pool_details:
                 if pool_params['storage_pool_new_name'] is not None and pool_params['storage_pool_new_name'] != pool_details['name']:
                     if not pool_obj.module.check_mode:
-                        pool_obj.powerflex_conn.storage_pool.rename(pool_details['id'], pool_params['storage_pool_new_name'])
+                        pool_obj.powerflex_conn.storage_pool.rename(
+                            pool_details['id'], pool_params['storage_pool_new_name'])
                     pool_obj.result['changed'] = True
 
             StoragePoolUseRMCacheHandler().handle(pool_obj, pool_params, pool_details)
@@ -1511,7 +1541,8 @@ class StoragePoolCreateHandler():
 
             pool_obj.result['changed'] = True
 
-        StoragePoolModifyMediaTypeHandler().handle(pool_obj, pool_params, pool_details, media_type)
+        StoragePoolModifyMediaTypeHandler().handle(
+            pool_obj, pool_params, pool_details, media_type)
 
 
 class StoragePoolHandler():
@@ -1529,7 +1560,8 @@ class StoragePoolHandler():
                                                  storage_pool_name=pool_params['storage_pool_name'],
                                                  pd_id=pd_id)
         pool_obj.verify_protection_domain(pool_details=pool_details)
-        StoragePoolCreateHandler().handle(pool_obj, pool_params, pool_details, pd_id, media_type)
+        StoragePoolCreateHandler().handle(pool_obj, pool_params,
+                                          pool_details, pd_id, media_type)
 
 
 def main():

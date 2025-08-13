@@ -2449,7 +2449,8 @@ class PowerFlexInfo(object):
             if rcgs:
                 api_version = self.powerflex_conn.system.get()[0]['mdmCluster']['master']['versionInfo']
                 statistics_map = \
-                    self.powerflex_conn.replication_consistency_group.get_all_statistics(utils.is_version_less_than_3_6(api_version))
+                    self.powerflex_conn.replication_consistency_group.get_all_statistics(
+                        utils.is_version_less(utils.parse_version(api_version), '3.6'))
                 list_of_rcg_ids_in_statistics = statistics_map.keys()
                 for rcg in rcgs:
                     rcg.pop('links', None)

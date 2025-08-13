@@ -1,1 +1,1 @@
-PyPowerFlex==1.14.1
+PyPowerFlex==2.0.0

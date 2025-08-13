@@ -14,7 +14,7 @@ name: powerflex
 
 # The version of the collection.
 # Must be compatible with semantic versioning
-version: 2.6.1
+version: 3.0.0
 
 # The path to the Markdown (.md) readme file.
 # This path is relative to the root of the collection.
@@ -32,6 +32,12 @@ authors:
   - Ananthu S Kuttattu <ansible.team@dell.com>
   - Trisha Datta <ansible.team@dell.com>
   - Pavan Mudunuri <ansible.team@dell.com>
+  - Yiming Bao <ansible.team@dell.com>
+  - Luis Liu <ansible.team@dell.com>
+  - Peter Cao <ansible.team@dell.com>
+  - Ray Liu <ansible.team@dell.com>
+  - Tao he <ansible.team@dell.com>
+  - Haiming Tan <ansible.team@dell.com>
 
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
