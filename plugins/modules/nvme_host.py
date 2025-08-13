@@ -491,7 +491,7 @@ class PowerFlexNVMeHost(PowerFlexBase):
             bool: True if the API version is less than version 4.6, False otherwise.
         """
         api_version = self.powerflex_conn.system.get()[0]['mdmCluster']['master']['versionInfo']
-        version_check = utils.is_version_less_than_4_6(api_version)
+        version_check = utils.is_version_less(utils.parse_version(api_version), '4.6')
         return version_check
 
 
