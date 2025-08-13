@@ -304,7 +304,7 @@ snapshot_policy_details:
             description: Time of the failure of the last auto snapshot creation.
             type: str
         statistics:
-            description: Statistics details of the snapshot policy.todo TTHE add metrics.
+            description: Statistics details of the snapshot policy.
             type: dict
             contains:
                 autoSnapshotVolIds:
@@ -375,9 +375,6 @@ snapshot_policy_details:
             "numOfSrcVols": 0,
             "srcVolIds": []
         },
-        "metrics": {
-            "TODO": "TODO TTHE add metrics",
-        },
         "systemId": "0e7a082862fedf0f",
         "timeOfLastAutoSnapshot": 0,
         "timeOfLastAutoSnapshotCreationFailure": 0
@@ -441,16 +438,6 @@ class PowerFlexSnapshotPolicy(PowerFlexBase):
                 statistics = \
                     self.powerflex_conn.snapshot_policy.get_statistics(snap_pol_details[0]['id'])
                 snap_pol_details[0]['statistics'] = statistics if statistics else {}
-            else:
-                # Append metrics
-                snap_pol_details[0]['metrics'] = {}
-                if hasattr(self.powerflex_conn.snapshot_policy, 'query_snapshot_policy_metrics'):
-                    metrics = \
-                        self.powerflex_conn.snapshot_policy.query_snapshot_policy_metrics(snap_pol_details[0]['id'])
-                    snap_pol_details[0]['metrics'] = metrics if metrics else {}
-                else:
-                    msg = "Unable to find the query_snapshot_policy_metrics."
-                    LOG.info(msg)
 
             return snap_pol_details[0]
 
@@ -866,9 +853,8 @@ class SnapshotPolicyHandler():
             before_dict = {}
             if snapshot_policy_details:
                 before_dict = copy.deepcopy(snapshot_policy_details)
-                for key in ["links", "metrics", "statistics"]:
-                    if key in before_dict:
-                        del before_dict[key]
+                before_dict.pop("links", None)
+                before_dict.pop("statistics", None)
             con_object.result["diff"] = dict(before=before_dict, after={})
         SnapshotPolicyCreateHandler().handle(con_object, con_params, snapshot_policy_details,
                                              access_mode, auto_snapshot_creation_cadence_in_min)
