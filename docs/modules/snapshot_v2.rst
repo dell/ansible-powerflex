@@ -20,8 +20,8 @@ Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.1.
+- A Dell PowerFlex storage system version 5.0 or later.
+- PyPowerFlex 2.0.0.
 
 
 
@@ -126,7 +126,7 @@ Examples
 
     
     - name: Create snapshot
-      dellemc.powerflex.snapshot:
+      dellemc.powerflex.snapshot_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -137,7 +137,7 @@ Examples
         state: "present"
 
     - name: Get snapshot details using snapshot id
-      dellemc.powerflex.snapshot:
+      dellemc.powerflex.snapshot_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -146,7 +146,7 @@ Examples
         state: "present"
 
     - name: Rename snapshot
-      dellemc.powerflex.snapshot:
+      dellemc.powerflex.snapshot_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -156,7 +156,7 @@ Examples
         state: "present"
 
     - name: Delete snapshot
-      dellemc.powerflex.snapshot:
+      dellemc.powerflex.snapshot_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"

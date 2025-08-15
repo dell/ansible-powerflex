@@ -4,9 +4,9 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'pie106064.pie.lab.emc.com'
+    hostname: 'x.x.x.x'
     username: 'admin'
-    password: 'Notuse4per!'
+    password: 'Password'
     validate_certs: false
 
   tasks:
@@ -46,8 +46,6 @@
         state: "present"
 
     - name: Modify the retention
-      check_mode: false
-      diff: true
       dellemc.powerflex.snapshot_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -59,8 +57,6 @@
         state: "present"
 
     - name: Rename snapshot
-      check_mode: false
-      diff: true
       dellemc.powerflex.snapshot_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -71,8 +67,6 @@
         state: "present"
 
     - name: Delete snapshot
-      check_mode: false
-      diff: true
       dellemc.powerflex.snapshot_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
