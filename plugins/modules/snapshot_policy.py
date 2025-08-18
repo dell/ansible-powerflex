@@ -825,6 +825,9 @@ class SnapshotPolicyDeleteHandler():
             snapshot_policy_details = con_object.delete_snapshot_policy(
                 snap_pol_id=snapshot_policy_details.get("id"))
             con_object.result['changed'] = True
+
+            if con_object.module._diff:
+                con_object.result["diff"]["after"] = {}
         SnapshotPolicyExitHandler().handle(con_object, snapshot_policy_details)
 
 
