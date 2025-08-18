@@ -460,7 +460,7 @@ class TestPowerflexSnapshotPolicy():
         SnapshotPolicyHandler().handle(snapshot_policy_module_mock, snapshot_policy_module_mock.module.params)
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.resume.assert_called()
 
-    def test_pause_snapshot_policy_exception(self, snapshot_policy_module_mock):
+    def test_pause_paused_snapshot_policy(self, snapshot_policy_module_mock):
         self.get_module_args.update({
             "snapshot_policy_name": "testing_2",
             "pause": True,
@@ -473,8 +473,21 @@ class TestPowerflexSnapshotPolicy():
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get_statistics = MagicMock(
             return_value=MockSnapshotPolicyApi.SNAPSHOT_POLICY_STATISTICS
         )
-        snapshot_policy_module_mock.powerflex_conn.volume.get = MagicMock(
-            return_value=MockSnapshotPolicyApi.VOLUME_GET_LIST
+        SnapshotPolicyHandler().handle(snapshot_policy_module_mock, snapshot_policy_module_mock.module.params)
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.pause.assert_not_called()
+
+    def test_pause_snapshot_policy_exception(self, snapshot_policy_module_mock):
+        self.get_module_args.update({
+            "snapshot_policy_name": "testing_2",
+            "pause": True,
+            "state": "present"
+        })
+        snapshot_policy_module_mock.module.params = self.get_module_args
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
+            return_value=MockSnapshotPolicyApi.SNAPSHOT_POLICY_GET_LIST
+        )
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get_statistics = MagicMock(
+            return_value=MockSnapshotPolicyApi.SNAPSHOT_POLICY_STATISTICS
         )
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.pause = MagicMock(
             side_effect=MockApiException
@@ -506,7 +519,7 @@ class TestPowerflexSnapshotPolicy():
         self.capture_fail_json_call(MockSnapshotPolicyApi.get_snapshot_policy_exception_response('get_vol_details_exception'),
                                     snapshot_policy_module_mock)
 
-    def test_add_duplicated_source_volume(self, snapshot_policy_module_mock):
+    def test_add_duplicated_source_volume_on_gen2(self, snapshot_policy_module_mock):
         self.get_module_args.update({
             "snapshot_policy_name": "testing",
             "source_volume": [{
@@ -518,6 +531,8 @@ class TestPowerflexSnapshotPolicy():
             "state": "present"
         })
         snapshot_policy_module_mock.module.params = self.get_module_args
+        snapshot_policy_module_mock.module._diff = False
+        utils.parse_version = MagicMock(return_value="5.0")
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
             return_value=MockSnapshotPolicyApi.SNAPSHOT_POLICY_GET_LIST
         )
@@ -529,6 +544,7 @@ class TestPowerflexSnapshotPolicy():
         snapshot_policy_module_mock.powerflex_conn.volume.get = MagicMock(return_value=volume_detail)
         SnapshotPolicyHandler().handle(snapshot_policy_module_mock, snapshot_policy_module_mock.module.params)
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.add_source_volume.assert_not_called()
+        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get_statistics.assert_not_called()
 
     def test_create_snapshot_policy_in_check_mode(self, snapshot_policy_module_mock):
         self.get_module_args.update({
@@ -543,9 +559,6 @@ class TestPowerflexSnapshotPolicy():
         })
         snapshot_policy_module_mock.module.params = self.get_module_args
         snapshot_policy_module_mock.module.check_mode = True
-        snapshot_policy_module_mock.module._diff = False
-        utils.parse_version = MagicMock(return_value="5.0")
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(return_value=None)
         SnapshotPolicyHandler().handle(snapshot_policy_module_mock, snapshot_policy_module_mock.module.params)
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.create.assert_not_called()
-        snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get_statistics.assert_not_called()

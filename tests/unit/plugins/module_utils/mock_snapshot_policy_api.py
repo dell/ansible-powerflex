@@ -183,4 +183,4 @@ class MockSnapshotPolicyApi:
         elif response_type == 'add_non_existing_source_volume':
             return "Failed to get the volume non_existing_source_volume_name with error Volume with identifier non_existing_source_volume_name not found"
         elif response_type == 'pause_exception':
-            return "Failed to pause/resume 15ae842500000004 with error"
+            return "Failed to pause/resume 15ae842500000004 with error "
