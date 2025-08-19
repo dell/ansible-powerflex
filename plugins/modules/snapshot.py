@@ -369,6 +369,10 @@ snapshot_details:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import utils
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import powerflex_compatibility
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
 from datetime import datetime, timedelta
 import time
 import copy
@@ -376,13 +380,13 @@ import copy
 LOG = utils.get_logger('snapshot')
 
 
-class PowerFlexSnapshot(object):
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0', successor='snapshot_v2')
+class PowerFlexSnapshot(PowerFlexBase):
     """Class with Snapshot operations"""
 
     def __init__(self):
         """ Define all parameters required by this module"""
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_snapshot_parameters())
+        argument_spec = get_powerflex_snapshot_parameters()
 
         mutually_exclusive = [['snapshot_name', 'snapshot_id'],
                               ['vol_name', 'vol_id'],
@@ -393,23 +397,16 @@ class PowerFlexSnapshot(object):
 
         required_one_of = [['snapshot_name', 'snapshot_id']]
 
-        # initialize the Ansible module
-        self.module = AnsibleModule(
-            argument_spec=self.module_params,
-            supports_check_mode=False,
-            mutually_exclusive=mutually_exclusive,
-            required_together=required_together,
-            required_one_of=required_one_of)
+        module_params = {
+            'argument_spec': argument_spec,
+            'supports_check_mode': False,
+            'mutually_exclusive': mutually_exclusive,
+            'required_one_of': required_one_of,
+            'required_together': required_together
+        }
 
-        utils.ensure_required_libs(self.module)
-
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info("Got the PowerFlex system connection object instance")
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
+        super().__init__(AnsibleModule, module_params)
+        super().check_module_compatibility()
 
     def get_storage_pool(self, storage_pool_id):
         """Get storage pool details

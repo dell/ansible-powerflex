@@ -1,0 +1,77 @@
+---
+- name: Snapshot V2 Operations
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    hostname: 'x.x.x.x'
+    username: 'admin'
+    password: 'Password'
+    validate_certs: false
+
+  tasks:
+    - name: Create snapshot
+      dellemc.powerflex.snapshot_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        snapshot_name: "ansible_snapshot_1"
+        vol_name: "ansible_volume_1"
+        state: "present"
+
+    - name: Create snapshot with retention
+      register: result
+      dellemc.powerflex.snapshot_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        snapshot_name: "ansible_snapshot_2"
+        vol_name: "ansible_volume_1"
+        desired_retention: 2
+        state: "present"
+
+    - name: Set snapshot id
+      ansible.builtin.set_fact:
+        snapshot_id: "{{ result.snapshot_details.id }}"
+
+    - name: Get snapshot details using snapshot id
+      dellemc.powerflex.snapshot_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        snapshot_id: "{{ snapshot_id }}"
+        state: "present"
+
+    - name: Modify the retention
+      dellemc.powerflex.snapshot_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        snapshot_name: "ansible_snapshot_2"
+        desired_retention: 3
+        retention_unit: "hours"
+        state: "present"
+
+    - name: Rename snapshot
+      dellemc.powerflex.snapshot_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        snapshot_id: "{{ snapshot_id }}"
+        snapshot_new_name: "ansible_renamed_snapshot"
+        state: "present"
+
+    - name: Delete snapshot
+      dellemc.powerflex.snapshot_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        snapshot_id: "{{ snapshot_id }}"
+        remove_mode: "ONLY_ME"
+        state: "absent"
