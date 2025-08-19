@@ -21,7 +21,7 @@ author:
 - Yuhao Liu (@RayLiu7) <ansible.team@dell.com>
 
 extends_documentation_fragment:
-  - dellemc.powerflex.powerflex
+  - dellemc.powerflex.powerflex_v2
 
 options:
   snapshot_name:
@@ -599,7 +599,7 @@ class PowerFlexSnapshotV2(PowerFlexBase):
     def get_diff_after(self, snapshot_params, snapshot_details, modify_dict):
         """Get diff between playbook input and snapshot details
         :param snapshot_params: Dictionary of parameters input from playbook
-        :param snapshot_params: Dictionary of snapshot details
+        :param snapshot_details: Dictionary of snapshot details
         :return: Dictionary of parameters of differences"""
 
         if snapshot_params["state"] == "absent":

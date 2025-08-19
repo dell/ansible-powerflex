@@ -1,0 +1,110 @@
+---
+- name: StoragePool V2 Operations
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    hostname: "x.x.x.x"
+    username: "admin"
+    password: "Password"
+    validate_certs: false
+
+  tasks:
+    - name: Create storagepool
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_name: "{{ sp_name }}"
+        protection_domain_name: "{{ domain1 }}"
+        device_group_name: "{{ dg_name }}"
+        protection_scheme: "TwoPlusTwo"
+        compression_method: "Normal"
+        use_all_available_capacity: true
+        state: "present"
+
+    - name: Create storagepool with specific capacity
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_name: "{{ sp_name }}"
+        protection_domain_name: "{{ domain1 }}"
+        device_group_name: "{{ dg_name }}"
+        protection_scheme: "TwoPlusTwo"
+        compression_method: "Normal"
+        physical_size_gb: 4096
+        state: "present"
+
+    - name: Create storagepool with cap_alert_threshold
+      register: result
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_name: "{{ storage_pool_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
+        device_group_name: "{{ device_group_name }}"
+        protection_scheme: "TwoPlusTwo"
+        compression_method: "Normal"
+        use_all_available_capacity: true
+        cap_alert_thresholds:
+          high_threshold: 80
+          critical_threshold: 90
+        over_provisioning_factor: 100
+        state: "present"
+
+    - name: Get storagepool details using storagepool id
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_id: "{{ storage_pool_id }}"
+        state: "present"
+
+    - name: Modify the physical_size_gb
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_name: "{{ storage_pool_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
+        physical_size_gb: 6144
+        state: "present"
+
+    - name: Modify the cap_alert_thresholds
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_name: "{{ storage_pool_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
+        cap_alert_thresholds:
+          high_threshold: 85
+          critical_threshold: 95
+        state: "present"
+
+    - name: Rename storagepool
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_id: "{{ storage_pool_id }}"
+        storage_pool_new_name: "{{ storage_pool_new_name }}"
+        state: "present"
+
+    - name: Delete storagepool
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_id: "{{ storage_pool_id }}"
+        state: "absent"
