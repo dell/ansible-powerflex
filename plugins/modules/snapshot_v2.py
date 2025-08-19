@@ -604,25 +604,24 @@ class PowerFlexSnapshotV2(PowerFlexBase):
 
         if snapshot_params["state"] == "absent":
             return {}
+        diff_dict = {}
+        if snapshot_details is None:
+            diff_dict = {"snapshot_name": snapshot_params["snapshot_name"]}
+            if snapshot_params["vol_name"]:
+                diff_dict["ancestorVolumeName"] = snapshot_params["vol_name"]
+            if snapshot_params["vol_id"]:
+                diff_dict["ancestorVolumeId"] = snapshot_params["vol_id"]
+            if snapshot_params["desired_retention"]:
+                diff_dict["retentionInHours"] = (
+                    snapshot_params["desired_retention"]
+                    if snapshot_params["retention_unit"] != "days"
+                    else snapshot_params["desired_retention"] * 24
+                )
         else:
-            diff_dict = {}
-            if snapshot_details is None:
-                diff_dict = {"snapshot_name": snapshot_params["snapshot_name"]}
-                if snapshot_params["vol_name"]:
-                    diff_dict["ancestorVolumeName"] = snapshot_params["vol_name"]
-                if snapshot_params["vol_id"]:
-                    diff_dict["ancestorVolumeId"] = snapshot_params["vol_id"]
-                if snapshot_params["desired_retention"]:
-                    diff_dict["retentionInHours"] = (
-                        snapshot_params["desired_retention"]
-                        if snapshot_params["retention_unit"] != "days"
-                        else snapshot_params["desired_retention"] * 24
-                    )
-            else:
-                diff_dict = copy.deepcopy(snapshot_details)
-                for key in modify_dict.keys():
-                    diff_dict[key] = modify_dict[key]
-            return diff_dict
+            diff_dict = copy.deepcopy(snapshot_details)
+            for key in modify_dict.keys():
+                diff_dict[key] = modify_dict[key]
+        return diff_dict
 
     def perform_module_operation(self):
         """
@@ -657,13 +656,9 @@ class PowerFlexSnapshotV2(PowerFlexBase):
                 snapshot_details, snapshot_new_name, desired_retention, retention_unit
             )
 
-        before_dict = {}
+        before_dict = snapshot_details if snapshot_details is not None else {}
         diff_dict = {}
         diff_dict = self.get_diff_after(self.module.params, snapshot_details, modify_dict)
-        if snapshot_details is None:
-            before_dict = {}
-        else:
-            before_dict = snapshot_details
         if self.module._diff:
             result["diff"] = dict(before=before_dict, after=diff_dict)
 
