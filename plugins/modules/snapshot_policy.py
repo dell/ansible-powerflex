@@ -830,14 +830,16 @@ class SnapshotPolicyDeleteHandler():
             snapshot_policy_details = con_object.delete_snapshot_policy(
                 snap_pol_id=snapshot_policy_details.get("id"))
             con_object.result['changed'] = True
-
-            if con_object.module._diff:
-                con_object.result["diff"]["after"] = {}
         SnapshotPolicyExitHandler().handle(con_object, snapshot_policy_details)
 
 
 class SnapshotPolicyExitHandler():
     def handle(self, con_object, snapshot_policy_details):
+        if con_object.module._diff:
+            after_dict = copy.deepcopy(snapshot_policy_details) if snapshot_policy_details else {}
+            after_dict.pop("links", None)
+            after_dict.pop("statistics", None)
+            con_object.result["diff"]["after"].update(after_dict)
         con_object.result['snapshot_policy_details'] = snapshot_policy_details
         con_object.module.exit_json(**con_object.result)
 
