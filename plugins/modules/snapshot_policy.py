@@ -492,7 +492,7 @@ class PowerFlexSnapshotPolicy(PowerFlexBase):
         try:
             if not self.module.check_mode:
                 self.powerflex_conn.snapshot_policy.delete(snap_pol_id)
-            return None
+            return self.get_snapshot_policy(snap_pol_id=snap_pol_id)
 
         except Exception as e:
             errormsg = (f'Deletion of snapshot policy {snap_pol_id} '
