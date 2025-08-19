@@ -154,7 +154,7 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell imp
     utils,
 )
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
-    import PowerFlexBase
+    import PowerFlexBase, powerflex_compatibility
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
     import Configuration
 from ansible.module_utils.basic import AnsibleModule
@@ -163,6 +163,7 @@ from ansible.module_utils.basic import AnsibleModule
 LOG = utils.get_logger("fault_set")
 
 
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0')
 class PowerFlexFaultSet(PowerFlexBase):
     """Class with FaultSet operations"""
 
@@ -182,6 +183,7 @@ class PowerFlexFaultSet(PowerFlexBase):
             'required_one_of': required_one_of
         }
         super().__init__(AnsibleModule, ansible_module_params)
+        super().check_module_compatibility()
 
         self.result = dict(
             changed=False,
