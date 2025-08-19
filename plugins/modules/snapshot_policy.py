@@ -447,8 +447,8 @@ class PowerFlexSnapshotPolicy(PowerFlexBase):
         Returns:
             bool: True if the API version is less than version 5.0, False otherwise.
         """
-        api_version = self.powerflex_conn.system.get()[0]['mdmCluster']['master']['versionInfo']
-        version_check = utils.is_version_less(utils.parse_version(api_version), '5.0')
+        api_version = self.powerflex_conn.system.api_version(cached=True)
+        version_check = utils.is_version_less(api_version, '5.0')
         return version_check
 
     def create_snapshot_policy(self, auto_snapshot_creation_cadence_in_min, num_of_retained_snapshots_per_level,

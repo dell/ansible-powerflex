@@ -34,10 +34,11 @@ class TestPowerflexSnapshotPolicy():
     @pytest.fixture
     def snapshot_policy_module_mock(self, mocker):
         snapshot_policy_module_mock = PowerFlexSnapshotPolicy()
-        utils.parse_version = MagicMock(return_value="4.5")
         snapshot_policy_module_mock.module.check_mode = False
         snapshot_policy_module_mock.module._diff = True
         snapshot_policy_module_mock.module.fail_json = fail_json
+        snapshot_policy_module_mock.powerflex_conn.system.api_version =\
+            MagicMock(return_value="4.5")
         return snapshot_policy_module_mock
 
     def capture_fail_json_call(self, error_msg, snapshot_policy_module_mock):
@@ -532,7 +533,8 @@ class TestPowerflexSnapshotPolicy():
         })
         snapshot_policy_module_mock.module.params = self.get_module_args
         snapshot_policy_module_mock.module._diff = False
-        utils.parse_version = MagicMock(return_value="5.0")
+        snapshot_policy_module_mock.powerflex_conn.system.api_version =\
+            MagicMock(return_value="5.0")
         snapshot_policy_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
             return_value=MockSnapshotPolicyApi.SNAPSHOT_POLICY_GET_LIST
         )
