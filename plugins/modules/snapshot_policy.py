@@ -114,8 +114,13 @@ options:
     choices: ['present', 'absent']
     default: 'present'
     type: str
-notes:
-  - The I(check_mode) and I(diff_mode) are supported.
+attributes:
+  check_mode:
+    description: Runs task to validate without performing action on the target machine.
+    support: full
+  diff_mode:
+    description: Runs the task to report the changes made or to be made.
+    support: full
 '''
 
 EXAMPLES = r'''
@@ -298,7 +303,7 @@ snapshot_policy_details:
             description: Time of the failure of the last auto snapshot creation.
             type: str
         statistics:
-            description: Statistics details of the snapshot policy.
+            description: Statistics details of the snapshot policy. Deprecated since PowerFlex 5.0.
             type: dict
             contains:
                 autoSnapshotVolIds:
