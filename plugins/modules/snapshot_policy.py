@@ -62,6 +62,7 @@ options:
   access_mode:
     description:
     - Access mode of the snapshot policy.
+    - READ_ONLY access_mode is allowed only since PowerFlex 5.0.
     choices: ['READ_WRITE', 'READ_ONLY']
     type: str
   secure_snapshots:
@@ -121,6 +122,9 @@ attributes:
   diff_mode:
     description: Runs the task to report the changes made or to be made.
     support: full
+notes:
+  - Deprecate statistics since PowerFlex 5.0.
+  - Only READ_ONLY access_mode is allowed since PowerFlex 5.0.
 '''
 
 EXAMPLES = r'''
@@ -432,7 +436,7 @@ class PowerFlexSnapshotPolicy(PowerFlexBase):
                 LOG.info(msg)
                 return None
 
-            if self._is_gen1_api_version():
+            if self.is_gen1_api_version():
                 # Append statistics
                 statistics = \
                     self.powerflex_conn.snapshot_policy.get_statistics(snap_pol_details[0]['id'])
@@ -445,7 +449,7 @@ class PowerFlexSnapshotPolicy(PowerFlexBase):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def _is_gen1_api_version(self):
+    def is_gen1_api_version(self):
         """
         Get the API version and check if it is less than version 5.0.
 
@@ -488,7 +492,7 @@ class PowerFlexSnapshotPolicy(PowerFlexBase):
         try:
             if not self.module.check_mode:
                 self.powerflex_conn.snapshot_policy.delete(snap_pol_id)
-            return self.get_snapshot_policy(snap_pol_id=snap_pol_id)
+            return None
 
         except Exception as e:
             errormsg = (f'Deletion of snapshot policy {snap_pol_id} '
@@ -723,6 +727,10 @@ class SnapshotPolicyCreateHandler():
                                                 "policy is allowed "
                                                 "using snapshot_policy_name only, "
                                                 "snapshot_policy_id given.")
+            if con_params['access_mode'] == "READ_WRITE" and not con_object.is_gen1_api_version():
+                con_object.module.fail_json(msg="READ_ONLY access_mode is allowed only since PowerFlex 5.0, "
+                                                "`READ_WRITE` given.")
+
             if con_object.module._diff:
                 con_object.result.update(
                     {"diff": {"before": {},

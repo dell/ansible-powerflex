@@ -68,6 +68,8 @@ Parameters
   access_mode (optional, str, None)
     Access mode of the snapshot policy.
 
+    READ\_ONLY access\_mode is allowed only since PowerFlex 5.0.
+
 
   secure_snapshots (optional, bool, None)
     Whether to secure snapshots or not.
@@ -155,6 +157,8 @@ Notes
 -----
 
 .. note::
+   - Deprecate statistics since PowerFlex 5.0.
+   - Only READ\_ONLY access\_mode is allowed since PowerFlex 5.0.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 
