@@ -82,7 +82,7 @@ class MockDeviceV2Api:
         "create_device_without_path": "Provide current_pathname for creation of device.",
         "create_device_without_media_type": "Provide media_type for creation of device.",
         "rename_device_with_empty_name": "Provide valid name.",
-        "rename_exception": f"Failed to update the device {DEVICE_ID_1}  with error ",
+        "rename_exception": f"Failed to update the device {DEVICE_ID_1} with error ",
         "delete_exception": f"Deletion of device {DEVICE_ID_1} failed with error ",
     }
 
