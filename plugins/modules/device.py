@@ -482,7 +482,7 @@ class PowerFlexDevice(PowerFlexBase):
             'argument_spec': argument_spec,
             'supports_check_mode': False,
             'mutually_exclusive': mut_ex_args
-            }
+        }
 
         super().__init__(AnsibleModule, module_params)
         super().check_module_compatibility()

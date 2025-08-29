@@ -37,7 +37,7 @@ class MockDeviceV2Api:
         "force": None,
         "clear_error": None,
         "state": None
-     }
+    }
 
     DEVICE_GET_LIST = [
         {
@@ -63,7 +63,6 @@ class MockDeviceV2Api:
             "id": DG_ID_1
         }
     ]
-
 
     RESPONSE_EXEC_DICT = {
         "get_device_exception": "Failed to get the device with error ",

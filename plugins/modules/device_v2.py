@@ -15,7 +15,7 @@ version_added: '3.0.0'
 short_description: Manage Device on Dell PowerFlex
 description:
 - Managing device on PowerFlex storage system includes
-  adding new device, getting details of device, 
+  adding new device, getting details of device,
   modifying attributes of device, and removing device.
 - Support only for Powerflex 5.0 versions and above.
 
@@ -429,7 +429,7 @@ class PowerFlexDeviceV2(PowerFlexBase):
     """Class with device operations"""
 
     def __init__(self):
-        """ Define all parameters required by this module"""        
+        """ Define all parameters required by this module"""
         mutually_exclusive = [["storage_node_name", "storage_node_id"],
                               ['device_group_name', 'device_group_id'],
                               ['device_name', 'device_id']]
@@ -604,7 +604,7 @@ class PowerFlexDeviceV2(PowerFlexBase):
             :rtype: dict
         """
 
-        try:            
+        try:
             device_id = None
             if not self.module.check_mode:
                 device_id = self.powerflex_conn.device.create(
@@ -614,7 +614,7 @@ class PowerFlexDeviceV2(PowerFlexBase):
                     node_id=storage_node_id,
                     force=force,
                     name=device_name)['id']
-            return self.get_device(device_id=device_id) 
+            return self.get_device(device_id=device_id)
 
         except Exception as e:
             errormsg = f'Creation of device failed with error {str(e)}'
@@ -651,8 +651,8 @@ class PowerFlexDeviceV2(PowerFlexBase):
                 "media_type": device_params['media_type'],
                 "device_group_id": device_params['device_group_id'],
                 "storage_node_id": device_params['storage_node_id'],
-                "current_pathname": device_params['current_pathname']                
-                }
+                "current_pathname": device_params['current_pathname']
+            }
             if device_params["device_name"]:
                 diff_dict["device_name"] = device_params["device_name"]
             if device_params["force"]:
@@ -728,7 +728,7 @@ class PowerFlexDeviceV2(PowerFlexBase):
 
 def get_powerflex_device_parameters():
     """This method provide parameter required for the device_v2 module on PowerFlex"""
-    return dict(        
+    return dict(
         device_name=dict(type='str'),
         device_id=dict(type='str'),
         new_device_name=dict(type='str'),
