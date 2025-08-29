@@ -183,8 +183,9 @@ class TestPowerFlexDeviceV2():
     def test_create_device_force(self, device_module_mock):
         self.get_module_args.update({
             "current_pathname": MockDeviceV2Api.PATH_1,
-            "storage_node_id": MockDeviceV2Api.NODE_ID_1,
-            "device_group_id": MockDeviceV2Api.DG_ID_1,
+            "device_name": MockDeviceV2Api.DEVICE_NAME_1,
+            "storage_node_name": MockDeviceV2Api.NODE_NAME_1,
+            "device_group_name": MockDeviceV2Api.DG_NAME_1,
             "media_type": "SSD",
             "force": True,
             "state": "present"
@@ -386,7 +387,7 @@ class TestPowerFlexDeviceV2():
         device_module_mock.powerflex_conn.device.get = MagicMock(
             return_value=MockDeviceV2Api.DEVICE_GET_LIST)
         device_module_mock.powerflex_conn.device.rename = MagicMock(
-            return_value=MockApiException)
+            side_effect=MockApiException)
         device_module_mock.powerflex_conn.storage_node.get = MagicMock(
             return_value=MockDeviceV2Api.NODE_DETAILS_1)
         device_module_mock.powerflex_conn.device_group.get = MagicMock(
