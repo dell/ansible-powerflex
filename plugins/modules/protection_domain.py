@@ -487,41 +487,34 @@ protection_domain_details:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase, powerflex_compatibility
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
 
 LOG = utils.get_logger('protection_domain')
 
 
-class PowerFlexProtectionDomain(object):
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0', successor='protection_domain_v2')
+class PowerFlexProtectionDomain(PowerFlexBase):
     """Class with protection domain operations"""
 
     def __init__(self):
         """ Define all parameters required by this module"""
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_protection_domain_parameters())
-
+        argument_spec = get_powerflex_protection_domain_parameters()
         mut_ex_args = [['protection_domain_name', 'protection_domain_id']]
-
         required_one_of_args = [['protection_domain_name',
                                  'protection_domain_id']]
 
-        # initialize the Ansible module
-        self.module = AnsibleModule(
-            argument_spec=self.module_params,
-            supports_check_mode=False,
-            mutually_exclusive=mut_ex_args,
-            required_one_of=required_one_of_args)
+        module_params = {
+            'argument_spec': argument_spec,
+            'supports_check_mode': False,
+            'mutually_exclusive': mut_ex_args,
+            'required_one_of': required_one_of_args,
+        }
 
-        utils.ensure_required_libs(self.module)
-
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info("Got the PowerFlex system connection object instance")
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
+        super().__init__(AnsibleModule, module_params)
+        super().check_module_compatibility()
 
     def validate_input_params(self):
         """Validate the input parameters"""
@@ -532,7 +525,7 @@ class PowerFlexProtectionDomain(object):
 
         for n_item in name_params:
             if self.module.params[n_item] is not None and (len(
-                    self.module.params[n_item].strip()) or self.
+                self.module.params[n_item].strip()) or self.
                     module.params[n_item].count(" ") > 0) == 0:
                 err_msg = msg.format(n_item)
                 self.module.fail_json(msg=err_msg)
@@ -578,7 +571,8 @@ class PowerFlexProtectionDomain(object):
 
         except Exception as e:
             errmsg = "Failed to get the storage pools present in protection" \
-                     " domain %s with error %s" % (protection_domain_id, str(e))
+                     " domain %s with error %s" % (
+                         protection_domain_id, str(e))
             LOG.error(errmsg)
             self.module.fail_json(msg=errmsg)
 
@@ -632,7 +626,7 @@ class PowerFlexProtectionDomain(object):
         try:
             LOG.info("Creating protection domain with name: %s ",
                      protection_domain_name)
-            self.powerflex_conn.protection_domain.\
+            self.powerflex_conn.protection_domain. \
                 create(name=protection_domain_name)
             return True
 
@@ -648,7 +642,7 @@ class PowerFlexProtectionDomain(object):
 
         if state == 'present' and not pd_details:
             self.is_id_or_new_name_in_create()
-            create_change = self.\
+            create_change = self. \
                 create_protection_domain(protection_domain_name)
             if create_change:
                 pd_details = self. \
@@ -686,7 +680,7 @@ class PowerFlexProtectionDomain(object):
         :return: Boolean indicating if the operation is successful
         """
         try:
-            msg = "Dict containing network modify params {0}".\
+            msg = "Dict containing network modify params {0}". \
                 format(str(nw_modify_dict))
             LOG.info(msg)
             if 'rebuild_limit' in nw_modify_dict or 'rebalance_limit' in \
@@ -715,7 +709,7 @@ class PowerFlexProtectionDomain(object):
                                                        str(e))
             else:
                 err_msg = "Failed to update the network limits of " \
-                          "protection domain {0} with error {1}".\
+                          "protection domain {0} with error {1}". \
                     format(protection_domain_id, str(e))
             LOG.error(err_msg)
             self.module.fail_json(msg=err_msg)
@@ -887,7 +881,7 @@ class PowerFlexProtectionDomain(object):
 
         # create operation
         create_changed = False
-        create_changed, pd_details = self.\
+        create_changed, pd_details = self. \
             perform_create_operation(state, pd_details,
                                      protection_domain_name)
 
@@ -935,7 +929,7 @@ class PowerFlexProtectionDomain(object):
         # delete operation
         delete_changed = False
         if state == 'absent' and pd_details:
-            delete_changed = self.\
+            delete_changed = self. \
                 delete_protection_domain(pd_details['id'])
 
         if create_changed or modify_changed or delete_changed:
