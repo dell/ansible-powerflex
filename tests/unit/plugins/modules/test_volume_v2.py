@@ -874,6 +874,24 @@ class TestPowerflexVolume(PowerFlexUnitBase):
             powerflex_module_mock.perform_module_operation,
         )
 
+    def test_refresh_vol_with_invalid_name(self, powerflex_module_mock):
+        self.get_module_args.update(
+            {
+                "refresh_src_vol_name": "invalid_name",
+                "vol_name": "vol_name",
+                "state": "present",
+            }
+        )
+        powerflex_module_mock.module.params = self.get_module_args
+        powerflex_module_mock.get_volume = MagicMock(
+            side_effect=[MockVolumeApi.VOLUME_GET_LIST[0], None]
+        )
+        self.capture_fail_json_call(
+            MockVolumeApi.get_exception_response("refresh_invalid_vol_name_exception"),
+            powerflex_module_mock,
+            powerflex_module_mock.perform_module_operation,
+        )
+
     def test_restore_vol(self, powerflex_module_mock):
         self.get_module_args.update(
             {
@@ -907,6 +925,24 @@ class TestPowerflexVolume(PowerFlexUnitBase):
         )
         self.capture_fail_json_call(
             MockVolumeApi.get_exception_response("restore_exception"),
+            powerflex_module_mock,
+            powerflex_module_mock.perform_module_operation,
+        )
+
+    def test_restore_vol_with_invalid_name(self, powerflex_module_mock):
+        self.get_module_args.update(
+            {
+                "restore_src_vol_name": "invalid_name",
+                "vol_name": "vol_name",
+                "state": "present",
+            }
+        )
+        powerflex_module_mock.module.params = self.get_module_args
+        powerflex_module_mock.get_volume = MagicMock(
+            side_effect=[MockVolumeApi.VOLUME_GET_LIST[0], None]
+        )
+        self.capture_fail_json_call(
+            MockVolumeApi.get_exception_response("restore_invalid_vol_name_exception"),
             powerflex_module_mock,
             powerflex_module_mock.perform_module_operation,
         )

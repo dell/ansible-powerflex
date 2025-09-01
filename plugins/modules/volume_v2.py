@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2021, Dell Technologies
+# Copyright: (c) 2025, Dell Technologies
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """Ansible module for managing volumes on Dell Technologies (Dell) PowerFlex"""
@@ -218,7 +218,7 @@ notes:
 
 EXAMPLES = r"""
 - name: Create a volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -227,12 +227,12 @@ EXAMPLES = r"""
     vol_name: "sample_volume"
     storage_pool_name: "pool_1"
     protection_domain_name: "pd_1"
-    vol_type: "THICK_PROVISIONED"
+    vol_type: "THIN_PROVISIONED"
     size: 16
     state: "present"
 
 - name: Map a SDC to volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -247,7 +247,7 @@ EXAMPLES = r"""
     state: "present"
 
 - name: Unmap a SDC to volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -260,7 +260,7 @@ EXAMPLES = r"""
     state: "present"
 
 - name: Map multiple SDCs to a volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -280,7 +280,7 @@ EXAMPLES = r"""
     state: "present"
 
 - name: Get the details of the volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -290,7 +290,7 @@ EXAMPLES = r"""
     state: "present"
 
 - name: Restore volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -300,7 +300,7 @@ EXAMPLES = r"""
     state: "present"
 
 - name: Refresh volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -310,7 +310,7 @@ EXAMPLES = r"""
     state: "present"
 
 - name: Modify the details of the Volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -318,12 +318,12 @@ EXAMPLES = r"""
     port: "{{port}}"
     vol_name: "sample_volume"
     storage_pool_name: "pool_1"
-    new_vol_name: "new_sample_volume"
+    vol_new_name: "new_sample_volume"
     size: 64
     state: "present"
 
 - name: Delete the Volume
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -334,7 +334,7 @@ EXAMPLES = r"""
     state: "absent"
 
 - name: Delete the Volume and all its dependent snapshots
-  dellemc.powerflex.volume:
+  dellemc.powerflex.volume_v2:
     hostname: "{{hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -1717,13 +1717,21 @@ class PowerFlexVolumeV2(PowerFlexBase):
         refresh_src_vol_id_updated = refresh_src_vol_id
         if refresh_src_vol_name:
             _, refresh_src_vol_id_updated = self.get_vol(  # pylint: disable=disallowed-name
-                refresh_src_vol_name, ""
+                refresh_src_vol_name, None
             )
+            if refresh_src_vol_id_updated is None:
+                self.module.fail_json(
+                    msg="Invalid refresh src vol name"
+                )
         restore_src_vol_id_updated = restore_src_vol_id
         if restore_src_vol_name:
             _, restore_src_vol_id_updated = self.get_vol(  # pylint: disable=disallowed-name
-                restore_src_vol_name, ""
+                restore_src_vol_name, None
             )
+            if restore_src_vol_id_updated is None:
+                self.module.fail_json(
+                    msg="Invalid restore src vol name"
+                )
         return refresh_src_vol_id_updated, restore_src_vol_id_updated
 
     def create_new_volume(

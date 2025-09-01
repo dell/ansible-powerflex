@@ -176,7 +176,9 @@ class MockVolumeApi:
         "unmap": "Unmap SDC sdc_id from volume vol_id failed with error",
         "perform_error1": "vol_new_name parameter is not supported during creation of a volume",
         "refresh_exception": "Failed to refresh volume",
-        "restore_exception": "Failed to restore volume"
+        "restore_exception": "Failed to restore volume",
+        "refresh_invalid_vol_name_exception": "Invalid refresh src vol name",
+        "restore_invalid_vol_name_exception": "Invalid restore src vol name",
     }
 
     @staticmethod

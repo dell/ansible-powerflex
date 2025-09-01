@@ -22,7 +22,7 @@ Requirements
 ------------
 The below requirements are needed on the host that executes this module.
 
-- A Dell PowerFlex storage system version 6.0 or later.
+- A Dell PowerFlex storage system version 5.0 or later.
 - PyPowerFlex 2.0.0.
 
 
@@ -274,7 +274,7 @@ Examples
 
     
     - name: Create a volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -283,12 +283,12 @@ Examples
         vol_name: "sample_volume"
         storage_pool_name: "pool_1"
         protection_domain_name: "pd_1"
-        vol_type: "THICK_PROVISIONED"
+        vol_type: "THIN_PROVISIONED"
         size: 16
         state: "present"
 
     - name: Map a SDC to volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -303,7 +303,7 @@ Examples
         state: "present"
 
     - name: Unmap a SDC to volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -316,7 +316,7 @@ Examples
         state: "present"
 
     - name: Map multiple SDCs to a volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -336,7 +336,7 @@ Examples
         state: "present"
 
     - name: Get the details of the volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -346,7 +346,7 @@ Examples
         state: "present"
 
     - name: Restore volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -356,7 +356,7 @@ Examples
         state: "present"
 
     - name: Refresh volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -366,7 +366,7 @@ Examples
         state: "present"
 
     - name: Modify the details of the Volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -374,12 +374,12 @@ Examples
         port: "{{port}}"
         vol_name: "sample_volume"
         storage_pool_name: "pool_1"
-        new_vol_name: "new_sample_volume"
+        vol_new_name: "new_sample_volume"
         size: 64
         state: "present"
 
     - name: Delete the Volume
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
@@ -390,7 +390,7 @@ Examples
         state: "absent"
 
     - name: Delete the Volume and all its dependent snapshots
-      dellemc.powerflex.volume:
+      dellemc.powerflex.volume_v2:
         hostname: "{{hostname}}"
         username: "{{username}}"
         password: "{{password}}"
