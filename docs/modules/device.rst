@@ -37,13 +37,13 @@ Parameters
   device_name (optional, str, None)
     Device name.
 
-    Mutually exclusive with \ :emphasis:`device\_id`\ .
+    Mutually exclusive with :emphasis:`device\_id`.
 
 
   device_id (optional, str, None)
     Device ID.
 
-    Mutually exclusive with \ :emphasis:`device\_name`\ .
+    Mutually exclusive with :emphasis:`device\_name`.
 
 
   sds_name (optional, str, None)
@@ -51,7 +51,7 @@ Parameters
 
     Required while adding a device.
 
-    Mutually exclusive with \ :emphasis:`sds\_id`\ .
+    Mutually exclusive with :emphasis:`sds\_id`.
 
 
   sds_id (optional, str, None)
@@ -59,7 +59,7 @@ Parameters
 
     Required while adding a device.
 
-    Mutually exclusive with \ :emphasis:`sds\_name`\ .
+    Mutually exclusive with :emphasis:`sds\_name`.
 
 
   storage_pool_name (optional, str, None)
@@ -67,7 +67,7 @@ Parameters
 
     Used while adding a storage device.
 
-    Mutually exclusive with \ :emphasis:`storage\_pool\_id`\ , \ :emphasis:`acceleration\_pool\_id`\  and \ :emphasis:`acceleration\_pool\_name`\ .
+    Mutually exclusive with :emphasis:`storage\_pool\_id`\ , :emphasis:`acceleration\_pool\_id` and :emphasis:`acceleration\_pool\_name`.
 
 
   storage_pool_id (optional, str, None)
@@ -75,9 +75,9 @@ Parameters
 
     Used while adding a storage device.
 
-    Media type supported are \ :literal:`SSD`\  and \ :literal:`HDD`\ .
+    Media type supported are :literal:`SSD` and :literal:`HDD`.
 
-    Mutually exclusive with \ :emphasis:`storage\_pool\_name`\ , \ :emphasis:`acceleration\_pool\_id`\  and \ :emphasis:`acceleration\_pool\_name`\ .
+    Mutually exclusive with :emphasis:`storage\_pool\_name`\ , :emphasis:`acceleration\_pool\_id` and :emphasis:`acceleration\_pool\_name`.
 
 
   acceleration_pool_name (optional, str, None)
@@ -85,9 +85,9 @@ Parameters
 
     Used while adding an acceleration device.
 
-    Media type supported are \ :literal:`SSD`\  and \ :literal:`NVDIMM`\ .
+    Media type supported are :literal:`SSD` and :literal:`NVDIMM`.
 
-    Mutually exclusive with \ :emphasis:`storage\_pool\_id`\ , \ :emphasis:`storage\_pool\_name`\  and \ :emphasis:`acceleration\_pool\_name`\ .
+    Mutually exclusive with :emphasis:`storage\_pool\_id`\ , :emphasis:`storage\_pool\_name` and :emphasis:`acceleration\_pool\_name`.
 
 
   acceleration_pool_id (optional, str, None)
@@ -95,25 +95,25 @@ Parameters
 
     Used while adding an acceleration device.
 
-    Media type supported are \ :literal:`SSD`\  and \ :literal:`NVDIMM`\ .
+    Media type supported are :literal:`SSD` and :literal:`NVDIMM`.
 
-    Mutually exclusive with \ :emphasis:`acceleration\_pool\_name`\ , \ :emphasis:`storage\_pool\_name`\  and \ :emphasis:`storage\_pool\_id`\ .
+    Mutually exclusive with :emphasis:`acceleration\_pool\_name`\ , :emphasis:`storage\_pool\_name` and :emphasis:`storage\_pool\_id`.
 
 
   protection_domain_name (optional, str, None)
     Protection domain name.
 
-    Used while identifying a storage pool along with \ :emphasis:`storage\_pool\_name`\ .
+    Used while identifying a storage pool along with :emphasis:`storage\_pool\_name`.
 
-    Mutually exclusive with \ :emphasis:`protection\_domain\_id`\ .
+    Mutually exclusive with :emphasis:`protection\_domain\_id`.
 
 
   protection_domain_id (optional, str, None)
     Protection domain ID.
 
-    Used while identifying a storage pool along with \ :emphasis:`storage\_pool\_name`\ .
+    Used while identifying a storage pool along with :emphasis:`storage\_pool\_name`.
 
-    Mutually exclusive with \ :emphasis:`protection\_domain\_name`\ .
+    Mutually exclusive with :emphasis:`protection\_domain\_name`.
 
 
   external_acceleration_type (optional, str, None)
@@ -155,9 +155,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
+    :literal:`true` - Indicates that the SSL certificate should be verified.
 
-    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
+    :literal:`false` - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -178,9 +178,9 @@ Notes
 
 .. note::
    - The value for device\_id is generated only after successful addition of the device.
-   - To uniquely identify a device, either \ :emphasis:`device\_id`\  can be passed or one of \ :emphasis:`current\_pathname`\  or \ :emphasis:`device\_name`\  must be passed with \ :emphasis:`sds\_id`\  or \ :emphasis:`sds\_name`\ .
+   - To uniquely identify a device, either :emphasis:`device\_id` can be passed or one of :emphasis:`current\_pathname` or :emphasis:`device\_name` must be passed with :emphasis:`sds\_id` or :emphasis:`sds\_name`.
    - It is recommended to install Rfcache driver for SSD device on SDS in order to add it to an acceleration pool.
-   - The \ :emphasis:`check\_mode`\  is not supported.
+   - The :emphasis:`check\_mode` is not supported.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

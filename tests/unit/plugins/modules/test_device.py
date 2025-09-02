@@ -36,6 +36,8 @@ class TestPowerflexDevice():
         mocker.patch(
             MockDeviceApi.MODULE_UTILS_PATH + '.PowerFlexClient',
             new=MockApiException)
+        utils.is_version_less = MagicMock(return_value=True)
+        utils.is_version_ge_or_eq = MagicMock(return_value=False)
         device_module_mock = PowerFlexDevice()
         device_module_mock.module.fail_json = fail_json
         return device_module_mock
