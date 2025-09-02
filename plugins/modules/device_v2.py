@@ -677,7 +677,7 @@ class PowerFlexDeviceV2(PowerFlexBase):
         if new_name is not None:
             if len(new_name.strip()) == 0:
                 self.module.fail_json(msg="Provide valid name.")
-            if device_details["name"] and new_name != device_details['name']:
+            if device_details["name"] is None or new_name != device_details['name']:
                 modify_dict['new_device_name'] = new_name
 
         if device_params["capacity_limit_gb"] is not None and\
