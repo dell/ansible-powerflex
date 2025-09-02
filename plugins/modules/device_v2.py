@@ -680,8 +680,9 @@ class PowerFlexDeviceV2(PowerFlexBase):
             if device_details["name"] and new_name != device_details['name']:
                 modify_dict['new_device_name'] = new_name
 
-        if device_params["capacity_limit_gb"] is not None:
-            modify_dict["capacity_limit_gb"] = device_params["capacity_limit_gb"]
+        if device_params["capacity_limit_gb"] is not None and\
+            device_params["capacity_limit_gb"] * 1024 * 1024 < device_details['capacityLimitInKb']:
+                modify_dict["capacity_limit_gb"] = device_params["capacity_limit_gb"]
 
         if device_params["clear_error"] is not None and device_params["clear_error"]:
             modify_dict["clear_error"] = True
