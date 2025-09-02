@@ -782,6 +782,7 @@ class DeviceModifyHandler():
 
 class DeviceDeleteHandler():
     def handle(self, device_object, device_params, device_details):
+        deleteFlag = False
         if device_params['state'] == 'absent' and device_details:
             device_details = device_object.delete_device(device_details['id'])
             device_object.result['changed'] = True
