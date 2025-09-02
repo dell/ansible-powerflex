@@ -678,7 +678,7 @@ class PowerFlexDeviceV2(PowerFlexBase):
             if len(new_name.strip()) == 0:
                 self.module.fail_json(msg="Provide valid name.")
             if device_details["name"] and new_name != device_details['name']:
-                modify_dict['name'] = new_name
+                modify_dict['new_device_name'] = new_name
 
         if device_params["capacity_limit_gb"] is not None:
             modify_dict["capacity_limit_gb"] = device_params["capacity_limit_gb"]
@@ -703,9 +703,9 @@ class PowerFlexDeviceV2(PowerFlexBase):
             LOG.info(msg)
 
             if not self.module.check_mode:
-                if "name" in modify_dict:
-                    self.powerflex_conn.device.rename(device_id, modify_dict["name"])
-                    msg = f"The name of the Device is updated to {modify_dict['name']} successfully."
+                if "new_device_name" in modify_dict:
+                    self.powerflex_conn.device.rename(device_id, modify_dict["new_device_name"])
+                    msg = f"The name of the Device is updated to {modify_dict['new_device_name']} successfully."
                     LOG.info(msg)
 
                 if "capacity_limit_gb" in modify_dict:
@@ -784,6 +784,8 @@ class DeviceDeleteHandler():
         if device_params['state'] == 'absent' and device_details:
             device_details = device_object.delete_device(device_details['id'])
             device_object.result['changed'] = True
+            if device_object.module.check_mode:
+                device_details = None
         DeviceExitHandler().handle(device_object, device_details)
 
 
