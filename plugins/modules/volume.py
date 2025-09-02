@@ -545,18 +545,21 @@ volume_details:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import utils
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import powerflex_compatibility
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
 import copy
 
 LOG = utils.get_logger('volume')
 
 
-class PowerFlexVolume(object):
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0', successor='volume_v2')
+class PowerFlexVolume(PowerFlexBase):
     """Class with volume operations"""
 
     def __init__(self):
-        """ Define all parameters required by this module"""
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_volume_parameters())
+        argument_spec = get_powerflex_volume_parameters()
 
         mut_ex_args = [['vol_name', 'vol_id'],
                        ['storage_pool_name', 'storage_pool_id'],
@@ -571,23 +574,16 @@ class PowerFlexVolume(object):
 
         required_one_of_args = [['vol_name', 'vol_id']]
 
-        # initialize the Ansible module
-        self.module = AnsibleModule(
-            argument_spec=self.module_params,
-            supports_check_mode=False,
-            mutually_exclusive=mut_ex_args,
-            required_together=required_together_args,
-            required_one_of=required_one_of_args)
+        module_params = {
+            'argument_spec': argument_spec,
+            'supports_check_mode': False,
+            'mutually_exclusive': mut_ex_args,
+            "required_together": required_together_args,
+            'required_one_of': required_one_of_args,
+        }
 
-        utils.ensure_required_libs(self.module)
-
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info("Got the PowerFlex system connection object instance")
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
+        super().__init__(AnsibleModule, module_params)
+        super().check_module_compatibility()
 
     def get_protection_domain(self, protection_domain_name=None,
                               protection_domain_id=None):
