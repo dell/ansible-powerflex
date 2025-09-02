@@ -681,8 +681,8 @@ class PowerFlexDeviceV2(PowerFlexBase):
                 modify_dict['new_device_name'] = new_name
 
         if device_params["capacity_limit_gb"] is not None and\
-            device_params["capacity_limit_gb"] * 1024 * 1024 < device_details['capacityLimitInKb']:
-                modify_dict["capacity_limit_gb"] = device_params["capacity_limit_gb"]
+                device_params["capacity_limit_gb"] * 1024 * 1024 < device_details['capacityLimitInKb']:
+            modify_dict["capacity_limit_gb"] = device_params["capacity_limit_gb"]
 
         if device_params["clear_error"] is not None and device_params["clear_error"]:
             modify_dict["clear_error"] = True
@@ -785,18 +785,17 @@ class DeviceDeleteHandler():
         if device_params['state'] == 'absent' and device_details:
             device_details = device_object.delete_device(device_details['id'])
             device_object.result['changed'] = True
-            if device_object.module.check_mode:
-                device_details = None
-        DeviceExitHandler().handle(device_object, device_details)
+            deleteFlag = True
+        DeviceExitHandler().handle(device_object, device_details, deleteFlag)
 
 
 class DeviceExitHandler():
-    def handle(self, device_object, device_details):
+    def handle(self, device_object, device_details, deleteFlag=False):
         if device_object.module._diff:
             after_dict = copy.deepcopy(device_details) if device_details else {}
+            after_dict = {} if deleteFlag else after_dict
             after_dict.pop("links", None)
             device_object.result["diff"]["after"].update(after_dict)
-
         device_object.result['device_details'] = device_details
         device_object.module.exit_json(**device_object.result)
 
