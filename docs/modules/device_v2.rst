@@ -23,7 +23,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 5.0 or later.
-- PyPowerFlex 2.0.0.
+- PyPowerFlex 2.0.0
 
 
 
@@ -160,122 +160,122 @@ Examples
 .. code-block:: yaml+jinja
 
     
-        - name: Create device
-          register: device1_result
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            current_pathname: "/dev/sdc"
-            device_group_name: "DG1"
-            media_type: "SSD"
-            storage_node_name: "Node1"
+    - name: Create device
+      register: device1_result
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        current_pathname: "/dev/sdc"
+        device_group_name: "DG1"
+        media_type: "SSD"
+        storage_node_name: "Node1"
 
-        - name: Create device using name with force flag
-          register: device2_result
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            current_pathname: "/dev/sdd"
-            device_group_id: "39a898be00000000"
-            storage_node_id: "03b589bf00000003"
-            media_type: "SSD"
-            device_name: "node1-d2"
-            force: true
-            state: "present"
+    - name: Create device using name with force flag
+      register: device2_result
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        current_pathname: "/dev/sdd"
+        device_group_id: "39a898be00000000"
+        storage_node_id: "03b589bf00000003"
+        media_type: "SSD"
+        device_name: "node1-d2"
+        force: true
+        state: "present"
 
-        - name: Get device details using device_id
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            device_id: "{{ device1_result.device_details.id }}"
-            state: "present"
+    - name: Get device details using device_id
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_id: "{{ device1_result.device_details.id }}"
+        state: "present"
 
-        - name: Get device details using (current_pathname, storage_node_name)
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            current_pathname: "/dev/sdd"
-            storage_node_name: "Node1"
-            state: "present"
+    - name: Get device details using (current_pathname, storage_node_name)
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        current_pathname: "/dev/sdd"
+        storage_node_name: "Node1"
+        state: "present"
 
-        - name: Get device details using (current_pathname, storage_node_id)
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            current_pathname: "/dev/sdd"
-            storage_node_id: "03b589bf00000003"
-            state: "present"
+    - name: Get device details using (current_pathname, storage_node_id)
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        current_pathname: "/dev/sdd"
+        storage_node_id: "03b589bf00000003"
+        state: "present"
 
-        - name: Rename device
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            device_id: "{{ device1_result.device_details.id }}"
-            new_device_name: "node1-d3"
-            state: "present"
+    - name: Rename device
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_id: "{{ device1_result.device_details.id }}"
+        new_device_name: "node1-d3"
+        state: "present"
 
-        - name: Clear device error
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            device_id: "{{ device1_result.device_details.id }}"
-            clear_error: true
-            force: true
-            state: "present"
+    - name: Clear device error
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_id: "{{ device1_result.device_details.id }}"
+        clear_error: true
+        force: true
+        state: "present"
 
-        - name: Clear device error with force flag
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            device_name: "{{ device2_result.device_details.name }}"
-            clear_error: true
-            force: true
-            state: "present"
+    - name: Clear device error with force flag
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_name: "{{ device2_result.device_details.name }}"
+        clear_error: true
+        force: true
+        state: "present"
 
-        - name: Modify device capacity limit
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            device_name: "{{ device2_result.device_details.name }}"
-            capacity_limit_gb: 500
-            state: "present"
+    - name: Modify device capacity limit
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_name: "{{ device2_result.device_details.name }}"
+        capacity_limit_gb: 500
+        state: "present"
 
-        - name: Remove device using device_id
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            device_id: "{{ device1_result.device_details.id }}"
-            state: "absent"
+    - name: Remove device using device_id
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        device_id: "{{ device1_result.device_details.id }}"
+        state: "absent"
 
-        - name: Remove device using (current_pathname, storage_node_name)
-          dellemc.powerflex.device_v2:
-            hostname: "{{ hostname }}"
-            username: "{{ username }}"
-            password: "{{ password }}"
-            validate_certs: "{{ validate_certs }}"
-            current_pathname: "/dev/sdd"
-            storage_node_name: "Node1"
-            state: "absent"
+    - name: Remove device using (current_pathname, storage_node_name)
+      dellemc.powerflex.device_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        current_pathname: "/dev/sdd"
+        storage_node_name: "Node1"
+        state: "absent"
 
 
 

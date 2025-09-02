@@ -23,7 +23,7 @@ author:
 - Tao He (@taohe1012) <ansible.team@dell.com>
 
 extends_documentation_fragment:
-  - dellemc.powerflex.powerflex
+  - dellemc.powerflex.powerflex_v2
 
 options:
   current_pathname:
