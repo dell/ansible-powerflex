@@ -24,7 +24,7 @@ author:
 - Yuhao Liu (@RayLiu7) <ansible.team@dell.com>
 
 extends_documentation_fragment:
-  - dellemc.powerflex.powerflex
+  - dellemc.powerflex.powerflex_v2
 options:
   vol_name:
     description:
