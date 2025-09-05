@@ -1,4 +1,7 @@
 ---
+- name: Install java
+  ansible.builtin.include_tasks: "../../powerflex_common/tasks/install_java_{{ ansible_distribution }}.yml"
+
 - name: Set facts for MDM counts
   ansible.builtin.set_fact:
     powerflex_activemq_mdm_count: "{{ groups['mdm'] | length }}"

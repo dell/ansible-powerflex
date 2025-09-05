@@ -7,7 +7,7 @@
     name: "{{ item }}"
     state: "absent"
   with_items:
-    - EMC-ScaleIO-activemq
+  - EMC-ScaleIO-activemq
   when: ansible_distribution in ("RedHat", "CentOS", "SLES", "Rocky")
 
 - name: Uninstall deb package
@@ -16,5 +16,5 @@
     name: "{{ item }}"
     state: absent
   with_items:
-    - emc-scaleio-activemq
+  - emc-scaleio-activemq
   when: ansible_distribution == "Ubuntu"

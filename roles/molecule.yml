@@ -4,11 +4,11 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: centos
-    image: quay.io/centos/centos:stream8
-    pre_build_image: true
-    volumes:
-      - /tmp:/tmp
+- name: centos
+  image: quay.io/centos/centos:stream8
+  pre_build_image: true
+  volumes:
+  - /tmp:/tmp
 provisioner:
   name: ansible
   inventory:
@@ -20,6 +20,6 @@ verifier:
   name: ansible
 scenario:
   test_sequence:
-    - check
-    - converge
-    - idempotence
+  - check
+  - converge
+  - idempotence

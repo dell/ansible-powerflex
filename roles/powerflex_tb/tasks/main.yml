@@ -6,9 +6,11 @@
   ansible.builtin.command: >
     scli --query_cluster
   register: powerflex_tb_scli_cluster_details
-  tags: register
-  changed_when: powerflex_tb_scli_cluster_details.rc == 0
+  tags:
+  - register
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  check_mode: no
+  changed_when: false
 
 - name: Extract the scli version
   ansible.builtin.set_fact:

@@ -31,49 +31,49 @@
 - name: Create LIA credentials if not exists
   when: powerflex_tb_lia_credentials.json.credentialList | length == 0
   block:
-    - name: Create LIA credentials payload
-      ansible.builtin.set_fact:
-        powerflex_tb_lia_credential:
-          credential:
-            type: "ManagementSystemCredential"
-            label: "DELL_POWERFLEX_LIA"
-            password: "{{ powerflex_lia_token }}"
-            liaPassword: "{{ powerflex_lia_token }}"
+  - name: Create LIA credentials payload
+    ansible.builtin.set_fact:
+      powerflex_tb_lia_credential:
+        credential:
+          type: "ManagementSystemCredential"
+          label: "DELL_POWERFLEX_LIA"
+          password: "{{ powerflex_lia_token }}"
+          liaPassword: "{{ powerflex_lia_token }}"
 
-    - name: Create LIA credentials
-      ansible.builtin.uri:
-        url: "https://{{ hostname }}:{{ port }}/api/V1/Credential"
-        validate_certs: "{{ validate_certs }}"
-        method: POST
-        headers:
-          Authorization: "Bearer {{ powerflex_tb_login_token_response.json }}"
-          Content-Type: "application/json"
-        body: "{{ powerflex_tb_lia_credential | to_json }}"
-      register: powerflex_tb_lia_create_credentials
-      delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
-      run_once: true
-      changed_when: powerflex_tb_lia_create_credentials.status == 200
+  - name: Create LIA credentials
+    ansible.builtin.uri:
+      url: "https://{{ hostname }}:{{ port }}/api/V1/Credential"
+      validate_certs: "{{ validate_certs }}"
+      method: POST
+      headers:
+        Authorization: "Bearer {{ powerflex_tb_login_token_response.json }}"
+        Content-Type: "application/json"
+      body: "{{ powerflex_tb_lia_credential | to_json }}"
+    register: powerflex_tb_lia_create_credentials
+    delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+    run_once: true
+    changed_when: powerflex_tb_lia_create_credentials.status == 200
 
-    - name: Set credential ID
-      ansible.builtin.set_fact:
-        powerflex_tb_lia_credential_id: "{{ powerflex_tb_lia_create_credentials.json.credential.id }}"
-      when: powerflex_tb_lia_create_credentials is defined
+  - name: Set credential ID
+    ansible.builtin.set_fact:
+      powerflex_tb_lia_credential_id: "{{ powerflex_tb_lia_create_credentials.json.credential.id }}"
+    when: powerflex_tb_lia_create_credentials is defined
 
 - name: Set discovery request payload
   ansible.builtin.set_fact:
     powerflex_tb_discovery_request_payload:
       discoveryRequestList:
         DiscoverIPRangeDeviceRequest:
-          - deviceManagementSystemCredRef: "{{ powerflex_tb_lia_credential_id }}"
-            deviceManagementSystemIPAddress: "{{ powerflex_tb_device_management_system_ip_address }}"
-            deviceManagementSystemId: "{{ powerflex_tb_system_id }}"
-            deviceType: "powerflex_management_system"
-            hostName: "block-legacy-gateway"
-            unmanaged: false
-            reserved: false
-            serverPoolId: ""
-            autoConfigureAlerts: true
-            snmpConfigure: true
+        - deviceManagementSystemCredRef: "{{ powerflex_tb_lia_credential_id }}"
+          deviceManagementSystemIPAddress: "{{ powerflex_tb_device_management_system_ip_address }}"
+          deviceManagementSystemId: "{{ powerflex_tb_system_id }}"
+          deviceType: "powerflex_management_system"
+          hostName: "block-legacy-gateway"
+          unmanaged: false
+          reserved: false
+          serverPoolId: ""
+          autoConfigureAlerts: true
+          snmpConfigure: true
   when: powerflex_tb_lia_credentials is defined
 
 - name: Create connect mdm cluster payload
