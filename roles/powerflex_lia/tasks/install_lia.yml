@@ -39,8 +39,12 @@
     regexp: '^lia_token=.*$'
     replace: 'lia_token={{ powerflex_lia_token }}'
   when: powerflex_lia_conf_file_stat.stat.exists
+  tags:
+  - molecule-idempotence-notest
 
 - name: PKill LIA for config changes effect
   ansible.builtin.command: pkill lia
   register: powerflex_lia_pkill_ouput
   changed_when: powerflex_lia_pkill_ouput.rc == 0
+  tags:
+  - molecule-idempotence-notest

@@ -19,8 +19,8 @@
     mode: "0644"
   register: powerflex_common_file
   with_fileglob:
-    - "{{ powerflex_common_file_install_location }}/*{{ file_glob_name }}*"
-    - "{{ powerflex_common_file_install_location }}/{{ file_gpg_name }}*"
+  - "{{ powerflex_common_file_install_location }}/*{{ file_glob_name }}*"
+  - "{{ powerflex_common_file_install_location }}/{{ file_gpg_name }}*"
 
 - name: List the zip file
   register: powerflex_common_package_file
