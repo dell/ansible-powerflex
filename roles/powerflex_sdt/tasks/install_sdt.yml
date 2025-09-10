@@ -19,13 +19,17 @@
   ansible.builtin.set_fact:
     powerflex_sdt_array_version: "{{ powerflex_sdt_mdm_ip_result.mdm_cluster_details.master.versionInfo[1] }}"
 
-- name: Set fact - powerflex_sdt_mdm_ips
+- name: Determine correct primary MDM based on master IPs
   ansible.builtin.set_fact:
     powerflex_sdt_mdm_ips: "{{ powerflex_sdt_mdm_ip_result.mdm_cluster_details.mdmAddresses | join(',') }}"
-    powerflex_sdt_primary_mdm_hostname:
-      "{{ hostvars[groups['mdm'][0]]['inventory_hostname'] }}"
-    powerflex_sdt_primary_mdm_ip:
-      "{{ hostvars[groups['mdm'][0]]['ansible_host'] }}"
+    powerflex_sdt_primary_mdm_hostname: >-
+      {{ (hostvars[groups['mdm'][0]]['ansible_host'] in powerflex_sdt_mdm_ip_result.mdm_cluster_details.master.ips) |
+         ternary(hostvars[groups['mdm'][0]]['inventory_hostname'],
+                 hostvars[groups['mdm'][1]]['inventory_hostname']) }}
+    powerflex_sdt_primary_mdm_ip: >-
+      {{ (hostvars[groups['mdm'][0]]['ansible_host'] in powerflex_sdt_mdm_ip_result.mdm_cluster_details.master.ips) |
+         ternary(hostvars[groups['mdm'][0]]['ansible_host'],
+                 hostvars[groups['mdm'][1]]['ansible_host']) }}
 
 - name: Include install_powerflex.yml
   ansible.builtin.include_tasks: ../../powerflex_common/tasks/install_powerflex.yml
