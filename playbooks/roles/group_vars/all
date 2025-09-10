@@ -54,5 +54,5 @@ powerflex_storage_pool_name: pool1
 powerflex_sdt_storage_port: 12200
 powerflex_sdt_nvme_port: 4420
 powerflex_sdt_discovery_port: 8009
-powerflex_sdt_protection_domain: PD1
+powerflex_sdt_protection_domain: PD_EC
 powerflex_sdt_state: present
