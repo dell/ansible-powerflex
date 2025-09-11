@@ -1131,9 +1131,6 @@ SDCs (always, list, [{'hostOsFullType': None, 'hostType': 'SdcHost', 'id': 'fdc0
     List of all IP addresses associated with the SDC.
 
 
-    type (, any, )
-
-
   sdcType (, str, )
     Type of the SDC (e.g., AppSdc).
 
@@ -1358,7 +1355,7 @@ Storage_Pools (always, list, [{'addressSpaceUsage': 'Normal', 'addressSpaceUsage
 
 
   externalAccelerationType (, str, )
-    Type of external acceleration used, if any.
+    Type of external acceleration used.
 
 
   fglAccpId (, str, )
@@ -2804,7 +2801,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
 
 
         ipAddress (, str, )
-          Specific IP assigned (if any).
+          Specific IP assigned.
 
 
         ipRange (, list, )

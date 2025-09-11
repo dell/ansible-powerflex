@@ -140,10 +140,6 @@ options:
     - Applicable when I(gather_subset) is C(firmware_repository).
     type: bool
     default: false
-attributes:
-  check_mode:
-    description: Runs task to validate without performing action on the target machine.
-    support: full
 notes:
   - The supported filter keys for the I(gather_subset) can be referred from PowerFlex Manager API documentation in U(https://developer.dell.com).
   - The I(filter), I(sort), I(limit) and I(offset) options will be ignored when more than one I(gather_subset) is specified along with
@@ -1140,8 +1136,7 @@ SDCs:
         sdcIps:
             description: List of all IP addresses associated with the SDC.
             type: list
-            contains:
-                type: str
+            elements: str
         sdcType:
             description: Type of the SDC (e.g., AppSdc).
             type: str
@@ -1390,7 +1385,7 @@ Storage_Pools:
             description: ID of the device group associated with the storage pool.
             type: str
         externalAccelerationType:
-            description: Type of external acceleration used, if any.
+            description: Type of external acceleration used.
             type: str
         fglAccpId:
             description: Acceleration policy ID for FlashGuard Log (FGL) if applicable.
@@ -2832,7 +2827,7 @@ Deployments:
                                     description: Default gateway IP.
                                     type: str
                                 ipAddress:
-                                    description: Specific IP assigned (if any).
+                                    description: Specific IP assigned.
                                     type: str
                                 ipRange:
                                     description: Range of IPs available for allocation.
@@ -4012,8 +4007,6 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.lib
     import powerflex_compatibility
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
     import PowerFlexBase
-from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
-    import Configuration
 import re
 
 LOG = utils.get_logger('info_v2')
