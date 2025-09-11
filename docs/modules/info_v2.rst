@@ -2360,15 +2360,15 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Timestamp when the deployment was created.
 
 
-  currentBatchCount (when applicable, int, )
+  currentBatchCount (, int, )
     Current batch number being processed in the deployment workflow.
 
 
-  currentStepCount (when applicable, int, )
+  currentStepCount (, int, )
     Current step number within the current batch of the deployment.
 
 
-  currentStepMessage (when applicable, str, )
+  currentStepMessage (, str, )
     Message or status detail for the current step in deployment.
 
 
@@ -2376,7 +2376,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Name of the custom image used for deployment.
 
 
-  deploymentDescription (when available, str, )
+  deploymentDescription (, str, )
     Description of the deployment.
 
 
@@ -2400,7 +2400,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
       Compliance state of the device (e.g., COMPLIANT, NON\_COMPLIANT).
 
 
-    componentId (when available, str, )
+    componentId (, str, )
       Component ID associated with the device.
 
 
@@ -2436,7 +2436,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
       IP address configured for the device.
 
 
-    logDump (when available, str, )
+    logDump (, str, )
       Log dump information from the device.
 
 
@@ -2452,7 +2452,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
       Reference ID of the device in the system.
 
 
-    refType (when available, str, )
+    refType (, str, )
       Type of reference for the device.
 
 
@@ -2460,24 +2460,24 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
       Service tag identifier of the physical device.
 
 
-    status (when available, str, )
+    status (, str, )
       Current operational status of the device.
 
 
-    statusEndTime (when available, str, )
+    statusEndTime (, str, )
       Timestamp when the current status ended.
 
 
-    statusMessage (when available, str, )
+    statusMessage (, str, )
       Additional message explaining the current status.
 
 
-    statusStartTime (when available, str, )
+    statusStartTime (, str, )
       Timestamp when the current status began.
 
 
 
-  deploymentFinishedDate (when deployment is finished, str, )
+  deploymentFinishedDate (, str, )
     Timestamp when the deployment was completed.
 
 
@@ -2485,7 +2485,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Aggregated health status of the deployment (e.g., green, yellow, red).
 
 
-  deploymentScheduledDate (when scheduled, str, )
+  deploymentScheduledDate (, str, )
     Scheduled start time for the deployment.
 
 
@@ -2493,11 +2493,11 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Timestamp when the deployment actually started.
 
 
-  deploymentValid (when available, bool, )
+  deploymentValid (, bool, )
     Indicates if the deployment configuration is valid.
 
 
-  deploymentValidationResponse (when available, str, )
+  deploymentValidationResponse (, str, )
     Detailed response from the validation process.
 
 
@@ -2517,19 +2517,19 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Indicates if individual components can be torn down separately.
 
 
-  jobDetails (when available, str, )
+  jobDetails (, str, )
     Details about the background job handling the deployment.
 
 
-  jobId (when available, str, )
+  jobId (, str, )
     ID of the associated background job.
 
 
-  licenseRepository (when available, str, )
+  licenseRepository (, str, )
     License repository configuration used in deployment.
 
 
-  licenseRepositoryId (when available, str, )
+  licenseRepositoryId (, str, )
     ID of the license repository used.
 
 
@@ -2549,11 +2549,11 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Number of deployments associated with this record.
 
 
-  operationData (when available, str, )
+  operationData (, str, )
     Additional data related to the current operation.
 
 
-  operationStatus (when available, str, )
+  operationStatus (, str, )
     Status of the current operation (e.g., running, failed).
 
 
@@ -2561,7 +2561,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Type of operation being performed (e.g., RETRY, CREATE).
 
 
-  originalDeploymentId (when applicable, str, )
+  originalDeploymentId (, str, )
     ID of the original deployment if this is a retry or clone.
 
 
@@ -2569,7 +2569,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Owner of the deployment.
 
 
-  precalculatedDeviceHealth (when available, str, )
+  precalculatedDeviceHealth (, str, )
     Pre-calculated health status of devices.
 
 
@@ -2593,7 +2593,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Indicates if this is a scale-up deployment.
 
 
-  scheduleDate (when scheduled, str, )
+  scheduleDate (, str, )
     Date when the deployment is scheduled to run.
 
 
@@ -2637,11 +2637,11 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
         Indicates if the component was cloned from another.
 
 
-      clonedFromAsmGuid (when cloned, str, )
+      clonedFromAsmGuid (, str, )
         ASM GUID of the source component if cloned.
 
 
-      clonedFromId (when cloned, str, )
+      clonedFromId (, str, )
         ID of the source component if cloned.
 
 
@@ -2662,11 +2662,11 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
 
 
 
-      configFile (when available, str, )
+      configFile (, str, )
         Path or name of the configuration file.
 
 
-      helpText (when available, str, )
+      helpText (, str, )
         Help text describing the component.
 
 
@@ -2674,7 +2674,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
         Unique identifier for the component.
 
 
-      identifier (when available, str, )
+      identifier (, str, )
         External identifier for the component.
 
 
@@ -2682,7 +2682,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
         Number of instances of this component.
 
 
-      ip (when available, str, )
+      ip (, str, )
         Static IP assigned to the component.
 
 
@@ -2690,7 +2690,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
         Indicates if firmware management is enabled for this component.
 
 
-      managementIpAddress (when available, str, )
+      managementIpAddress (, str, )
         IP address used for managing the component.
 
 
@@ -2698,7 +2698,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
         Name of the component.
 
 
-      osPuppetCertName (when available, str, )
+      osPuppetCertName (, str, )
         Puppet certificate name for the OS layer.
 
 
@@ -2706,7 +2706,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
         Puppet certificate name for the component.
 
 
-      refId (when available, str, )
+      refId (, str, )
         Reference ID in external systems.
 
 
@@ -2714,7 +2714,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
         List of resources allocated to the component.
 
 
-      serialNumber (when available, str, )
+      serialNumber (, str, )
         Serial number of the hardware component.
 
 
@@ -2755,11 +2755,11 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
       Indicates if the template is currently in use.
 
 
-    lastDeployedDate (when deployed, str, )
+    lastDeployedDate (, str, )
       Timestamp of the last deployment using this template.
 
 
-    licenseRepository (when available, str, )
+    licenseRepository (, str, )
       License repository associated with the template.
 
 
@@ -2803,7 +2803,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
           Default gateway IP.
 
 
-        ipAddress (when available, str, )
+        ipAddress (, str, )
           Specific IP assigned (if any).
 
 
@@ -2819,7 +2819,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
             ID of the IP range.
 
 
-          role (when available, str, )
+          role (, str, )
             Role of IPs in this range.
 
 
@@ -2836,7 +2836,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
           Secondary DNS server IP.
 
 
-        staticRoute (when available, str, )
+        staticRoute (, str, )
           Static route configuration.
 
 
@@ -2911,7 +2911,7 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
       Version of the template.
 
 
-    updatedDate (when available, str, )
+    updatedDate (, str, )
       Timestamp when the template was last updated.
 
 
@@ -2940,11 +2940,11 @@ Deployments (when I(gather_subset) is I(deployment), list, [{'allUsersAllowed': 
     Indicates if the associated service template is valid.
 
 
-  totalBatchCount (when applicable, int, )
+  totalBatchCount (, int, )
     Total number of batches in the deployment workflow.
 
 
-  totalNumOfSteps (when applicable, int, )
+  totalNumOfSteps (, int, )
     Total number of steps across all batches.
 
 
