@@ -6,7 +6,7 @@
     mode: "0644"
   register: powerflex_common_ubuntu_tar_file
   with_fileglob:
-  - "{{ powerflex_common_file_install_location }}/*{{ file_glob_name }}*.tar"
+    - "{{ powerflex_common_file_install_location }}/*{{ file_glob_name }}*.tar"
 
 - name: Get powerflex_common_siob_file # noqa: no-handler
   ansible.builtin.find:
@@ -35,7 +35,7 @@
     dest: "/var/tmp"
     mode: "0644"
   with_fileglob:
-  - "{{ powerflex_common_file_install_location }}/*{{ file_glob_name }}*.deb"
+    - "{{ powerflex_common_file_install_location }}/*{{ file_glob_name }}*.deb"
   when: powerflex_common_ubuntu_tar_file.skipped
 
 - name: List the deb file

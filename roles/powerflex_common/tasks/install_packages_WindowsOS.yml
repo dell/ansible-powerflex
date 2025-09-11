@@ -5,7 +5,7 @@
     dest: "{{ powerflex_common_win_package_location }}"
   register: powerflex_common_file
   with_fileglob:
-  - "{{ powerflex_common_file_install_location }}/*{{ file_glob_name }}*.msi"
+    - "{{ powerflex_common_file_install_location }}/*{{ file_glob_name }}*.msi"
 
 - name: List the msi file
   ansible.windows.win_find:

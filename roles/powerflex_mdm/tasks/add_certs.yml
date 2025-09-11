@@ -40,9 +40,9 @@
     flat: true
   delegate_to: "{{ powerflex_mdm_primary_hostname }}"
   with_items:
-  - sec_mdm_certificate.pem
-  - cli_certificate.p12
-  - mgmt_ca.pem
+    - sec_mdm_certificate.pem
+    - cli_certificate.p12
+    - mgmt_ca.pem
 
 - name: Copy MDM certificates to Secondary manager MDM node
   register: powerflex_mdm_copy_additional_certs_to_secondary
@@ -162,7 +162,7 @@
     path: /tmp/{{ item }}
     state: absent
   with_items:
-  - sec_mdm_certificate.pem
-  - cli_certificate.p12
-  - mgmt_ca.pem
+    - sec_mdm_certificate.pem
+    - cli_certificate.p12
+    - mgmt_ca.pem
   delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"

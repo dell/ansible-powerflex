@@ -7,7 +7,7 @@
     scli --query_cluster
   register: powerflex_tb_scli_cluster_details
   tags:
-  - register
+    - register
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
   check_mode: no
   changed_when: false

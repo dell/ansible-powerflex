@@ -29,22 +29,22 @@
 - name: Update lia_mtls_only
   ansible.builtin.lineinfile:
     path: /opt/emc/scaleio/lia/cfg/conf.txt
-    regexp: '^lia_mtls_only=1$'
+    regexp: "^lia_mtls_only=1$"
     state: absent
   when: powerflex_lia_conf_file_stat.stat.exists
 
 - name: Replace lia_token value
   ansible.builtin.replace:
     path: /opt/emc/scaleio/lia/cfg/conf.txt
-    regexp: '^lia_token=.*$'
-    replace: 'lia_token={{ powerflex_lia_token }}'
+    regexp: "^lia_token=.*$"
+    replace: "lia_token={{ powerflex_lia_token }}"
   when: powerflex_lia_conf_file_stat.stat.exists
   tags:
-  - molecule-idempotence-notest
+    - molecule-idempotence-notest
 
 - name: PKill LIA for config changes effect
   ansible.builtin.command: pkill lia
   register: powerflex_lia_pkill_ouput
   changed_when: powerflex_lia_pkill_ouput.rc == 0
   tags:
-  - molecule-idempotence-notest
+    - molecule-idempotence-notest

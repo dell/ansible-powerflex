@@ -7,7 +7,7 @@
     name: "{{ item }}"
     state: "absent"
   with_items:
-  - EMC-ScaleIO-lia
+    - EMC-ScaleIO-lia
   when: ansible_distribution in ("RedHat", "CentOS", "SLES")
 
 - name: Uninstall deb package
@@ -15,5 +15,5 @@
     name: "{{ item }}"
     state: absent
   with_items:
-  - emc-scaleio-lia
+    - emc-scaleio-lia
   when: ansible_distribution == "Ubuntu"

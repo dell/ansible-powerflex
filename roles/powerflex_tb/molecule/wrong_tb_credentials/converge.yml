@@ -3,29 +3,29 @@
   hosts: tb
   gather_facts: false
   tasks:
-  - name: "Set new SSH password for TB nodes"
-    set_fact:
-      ansible_ssh_pass: "NewPassword123"
+    - name: "Set new SSH password for TB nodes"
+      set_fact:
+        ansible_ssh_pass: "NewPassword123"
 
-  - name: "Reset SSH connection to use new password"
-    meta: reset_connection
+    - name: "Reset SSH connection to use new password"
+      meta: reset_connection
 
 - name: Providing incorrect credentials for TB node
   hosts: tb
   vars_files:
-  - ../../../../playbooks/roles/vars_files/connection.yml
+    - ../../../../playbooks/roles/vars_files/connection.yml
   gather_facts: false
   tasks:
-  - name: "Install and configure powerflex tb with wrong credentials"
-    ansible.builtin.import_role:
-      name: "powerflex_tb"
-    vars:
-      powerflex_tb_state: present
-    ignore_unreachable: true
-    ignore_errors: true
-    register: powerflex_tb_wrong_credentials_output
+    - name: "Install and configure powerflex tb with wrong credentials"
+      ansible.builtin.import_role:
+        name: "powerflex_tb"
+      vars:
+        powerflex_tb_state: present
+      ignore_unreachable: true
+      ignore_errors: true
+      register: powerflex_tb_wrong_credentials_output
 
-  - name: "Verifying failure of install package with wrong credentials"
-    ansible.builtin.assert:
-      that:
-      - powerflex_tb_primary_output.rc != 0
+    - name: "Verifying failure of install package with wrong credentials"
+      ansible.builtin.assert:
+        that:
+          - powerflex_tb_primary_output.rc != 0
