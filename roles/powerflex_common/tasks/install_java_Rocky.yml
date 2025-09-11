@@ -1,5 +1,5 @@
 ---
 - name: Install pre-requisite java
   ansible.builtin.package:
-    name: "java-1.8.0-openjdk-devel"
+    name: "java-17-openjdk-devel"
     state: "present"

@@ -10,7 +10,7 @@
       ansible.builtin.import_role:
         name: "powerflex_tb"
       vars:
-        powerflex_tb_state: 'absent'
+        powerflex_tb_state: "absent"
 
     - name: "Verifying remove the TB"
       ansible.builtin.assert:

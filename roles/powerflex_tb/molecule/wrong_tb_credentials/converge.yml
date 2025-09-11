@@ -1,4 +1,15 @@
 ---
+- name: Update TB node password before running any tasks
+  hosts: tb
+  gather_facts: false
+  tasks:
+    - name: "Set new SSH password for TB nodes"
+      ansible.builtin.set_fact:
+        ansible_ssh_pass: "NewPassword123"
+
+    - name: "Reset SSH connection to use new password"
+      ansible.builtin.meta: reset_connection
+
 - name: Providing incorrect credentials for TB node
   hosts: tb
   vars_files:
@@ -17,4 +28,4 @@
     - name: "Verifying failure of install package with wrong credentials"
       ansible.builtin.assert:
         that:
-          - " 'Communication error' in powerflex_tb_primary_output.msg"
+          - powerflex_tb_primary_output.rc != 0

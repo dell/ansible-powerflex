@@ -30,7 +30,7 @@ powerflex_tb_state: present
 powerflex_tb_cert_password: "{{ powerflex_mdm_cert_password }}"
 # powerflex sds params
 powerflex_sds_number: 1
-powerflex_sds_disks: { ansible_available_disks: ['/dev/sdb'] }
+powerflex_sds_disks: { ansible_available_disks: [ '/dev/sdb' ] }
 powerflex_sds_disks_type: HDD
 powerflex_sds_protection_domain: domain1
 powerflex_sds_storage_pool: pool1

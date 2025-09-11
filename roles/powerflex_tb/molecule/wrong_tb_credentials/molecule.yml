@@ -3,7 +3,7 @@ provisioner:
   name: ansible
   inventory:
     links:
-      hosts: inventory
+      hosts: ../../../../playbooks/roles/inventory
       group_vars: ../../../../playbooks/roles/group_vars/
       host_vars: ../../../../playbooks/roles/host_vars/
 scenario:
