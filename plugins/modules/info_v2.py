@@ -2495,22 +2495,18 @@ Deployments:
         currentBatchCount:
             description: Current batch number being processed in the deployment workflow.
             type: int
-            returned: when applicable
         currentStepCount:
             description: Current step number within the current batch of the deployment.
             type: int
-            returned: when applicable
         currentStepMessage:
             description: Message or status detail for the current step in deployment.
             type: str
-            returned: when applicable
         customImage:
             description: Name of the custom image used for deployment.
             type: str
         deploymentDescription:
             description: Description of the deployment.
             type: str
-            returned: when available
         deploymentDevice:
             description: List of devices involved in the deployment.
             type: list
@@ -2530,7 +2526,6 @@ Deployments:
                 componentId:
                     description: Component ID associated with the device.
                     type: str
-                    returned: when available
                 currentIpAddress:
                     description: Current IP address assigned to the device.
                     type: str
@@ -2558,7 +2553,6 @@ Deployments:
                 logDump:
                     description: Log dump information from the device.
                     type: str
-                    returned: when available
                 model:
                     description: Hardware model of the device.
                     type: str
@@ -2571,48 +2565,39 @@ Deployments:
                 refType:
                     description: Type of reference for the device.
                     type: str
-                    returned: when available
                 serviceTag:
                     description: Service tag identifier of the physical device.
                     type: str
                 status:
                     description: Current operational status of the device.
                     type: str
-                    returned: when available
                 statusEndTime:
                     description: Timestamp when the current status ended.
                     type: str
-                    returned: when available
                 statusMessage:
                     description: Additional message explaining the current status.
                     type: str
-                    returned: when available
                 statusStartTime:
                     description: Timestamp when the current status began.
                     type: str
-                    returned: when available
         deploymentFinishedDate:
             description: Timestamp when the deployment was completed.
             type: str
-            returned: when deployment is finished
         deploymentHealthStatusType:
             description: Aggregated health status of the deployment (e.g., green, yellow, red).
             type: str
         deploymentScheduledDate:
             description: Scheduled start time for the deployment.
             type: str
-            returned: when scheduled
         deploymentStartedDate:
             description: Timestamp when the deployment actually started.
             type: str
         deploymentValid:
             description: Indicates if the deployment configuration is valid.
             type: bool
-            returned: when available
         deploymentValidationResponse:
             description: Detailed response from the validation process.
             type: str
-            returned: when available
         disruptiveFirmware:
             description: Indicates if firmware update is disruptive (requires reboot).
             type: bool
@@ -2628,19 +2613,15 @@ Deployments:
         jobDetails:
             description: Details about the background job handling the deployment.
             type: str
-            returned: when available
         jobId:
             description: ID of the associated background job.
             type: str
-            returned: when available
         licenseRepository:
             description: License repository configuration used in deployment.
             type: str
-            returned: when available
         licenseRepositoryId:
             description: ID of the license repository used.
             type: str
-            returned: when available
         lifecycleMode:
             description: Indicates if the deployment is in lifecycle management mode.
             type: bool
@@ -2657,25 +2638,21 @@ Deployments:
         operationData:
             description: Additional data related to the current operation.
             type: str
-            returned: when available
         operationStatus:
             description: Status of the current operation (e.g., running, failed).
             type: str
-            returned: when available
         operationType:
             description: Type of operation being performed (e.g., RETRY, CREATE).
             type: str
         originalDeploymentId:
             description: ID of the original deployment if this is a retry or clone.
             type: str
-            returned: when applicable
         owner:
             description: Owner of the deployment.
             type: str
         precalculatedDeviceHealth:
             description: Pre-calculated health status of devices.
             type: str
-            returned: when available
         preconfigureSVM:
             description: Indicates if SVM (ScaleIO Volume Manager) should be preconfigured.
             type: bool
@@ -2694,7 +2671,6 @@ Deployments:
         scheduleDate:
             description: Date when the deployment is scheduled to run.
             type: str
-            returned: when scheduled
         serviceTemplate:
             description: Template used to define the structure and components of the service.
             type: dict
@@ -2731,11 +2707,9 @@ Deployments:
                         clonedFromAsmGuid:
                             description: ASM GUID of the source component if cloned.
                             type: str
-                            returned: when cloned
                         clonedFromId:
                             description: ID of the source component if cloned.
                             type: str
-                            returned: when cloned
                         componentID:
                             description: Internal ID of the component.
                             type: str
@@ -2753,53 +2727,45 @@ Deployments:
                         configFile:
                             description: Path or name of the configuration file.
                             type: str
-                            returned: when available
                         helpText:
                             description: Help text describing the component.
                             type: str
-                            returned: when available
                         id:
                             description: Unique identifier for the component.
                             type: str
                         identifier:
                             description: External identifier for the component.
                             type: str
-                            returned: when available
                         instances:
                             description: Number of instances of this component.
                             type: int
                         ip:
                             description: Static IP assigned to the component.
                             type: str
-                            returned: when available
                         manageFirmware:
                             description: Indicates if firmware management is enabled for this component.
                             type: bool
                         managementIpAddress:
                             description: IP address used for managing the component.
                             type: str
-                            returned: when available
                         name:
                             description: Name of the component.
                             type: str
                         osPuppetCertName:
                             description: Puppet certificate name for the OS layer.
                             type: str
-                            returned: when available
                         puppetCertName:
                             description: Puppet certificate name for the component.
                             type: str
                         refId:
                             description: Reference ID in external systems.
                             type: str
-                            returned: when available
                         resources:
                             description: List of resources allocated to the component.
                             type: list
                         serialNumber:
                             description: Serial number of the hardware component.
                             type: str
-                            returned: when available
                         subType:
                             description: Sub-type of the component (e.g., STORAGEONLY).
                             type: str
@@ -2830,11 +2796,9 @@ Deployments:
                 lastDeployedDate:
                     description: Timestamp of the last deployment using this template.
                     type: str
-                    returned: when deployed
                 licenseRepository:
                     description: License repository associated with the template.
                     type: str
-                    returned: when available
                 manageFirmware:
                     description: Indicates if firmware updates are managed for this template.
                     type: bool
@@ -2870,7 +2834,6 @@ Deployments:
                                 ipAddress:
                                     description: Specific IP assigned (if any).
                                     type: str
-                                    returned: when available
                                 ipRange:
                                     description: Range of IPs available for allocation.
                                     type: list
@@ -2884,7 +2847,6 @@ Deployments:
                                         role:
                                             description: Role of IPs in this range.
                                             type: str
-                                            returned: when available
                                         startingIp:
                                             description: First IP in the range.
                                             type: str
@@ -2897,7 +2859,6 @@ Deployments:
                                 staticRoute:
                                     description: Static route configuration.
                                     type: str
-                                    returned: when available
                                 subnet:
                                     description: Subnet mask in dotted decimal format.
                                     type: str
@@ -2954,7 +2915,6 @@ Deployments:
                 updatedDate:
                     description: Timestamp when the template was last updated.
                     type: str
-                    returned: when available
                 useDefaultCatalog:
                     description: Indicates if the default firmware catalog is used.
                     type: bool
@@ -2976,11 +2936,9 @@ Deployments:
         totalBatchCount:
             description: Total number of batches in the deployment workflow.
             type: int
-            returned: when applicable
         totalNumOfSteps:
             description: Total number of steps across all batches.
             type: int
-            returned: when applicable
         updateServerFirmware:
             description: Indicates if server firmware should be updated during deployment.
             type: bool
@@ -4452,7 +4410,7 @@ class PowerFlexInfo(PowerFlexBase):
         filter_dict = {}
         if filters:
             filter_dict = self.get_filters(filters)
-            LOG.info(f'filters: {filter_dict}')
+            LOG.info('filters: %s', filter_dict)
 
         api_version = self.get_api_details()
         array_details = self.get_array_details()
