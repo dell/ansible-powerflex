@@ -4,11 +4,11 @@
   gather_facts: false
   tasks:
     - name: "Set new SSH password for TB nodes"
-      set_fact:
+      ansible.builtin.set_fact:
         ansible_ssh_pass: "NewPassword123"
 
     - name: "Reset SSH connection to use new password"
-      meta: reset_connection
+      ansible.builtin.meta: reset_connection
 
 - name: Providing incorrect credentials for TB node
   hosts: tb

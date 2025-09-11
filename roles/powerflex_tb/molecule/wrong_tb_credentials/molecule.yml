@@ -8,4 +8,4 @@ provisioner:
       host_vars: ../../../../playbooks/roles/host_vars/
 scenario:
   test_sequence:
-  - converge
+    - converge

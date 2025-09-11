@@ -60,7 +60,8 @@
     - name: Verifying uninstall package in Idempotency for ubuntu
       ansible.builtin.assert:
         that: >
-          "'Nothing to do' in powerflex_activemq_uninstall_deb_output.results[0].msg" or "'is not installed' in powerflex_activemq_uninstall_deb_output.results[0].results[0]"
+          "'Nothing to do' in powerflex_activemq_uninstall_deb_output.results[0].msg" or
+          "'is not installed' in powerflex_activemq_uninstall_deb_output.results[0].results[0]"
       when:
         - not ansible_check_mode
         - not powerflex_activemq_uninstall_deb_output.changed

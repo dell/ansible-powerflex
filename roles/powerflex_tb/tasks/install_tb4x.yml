@@ -19,14 +19,14 @@
   register: powerflex_tb_login_output
   changed_when: false
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
-  check_mode: no
+  check_mode: false
   tags:
     - molecule-idempotence-notest
 
 - name: Extract System ID
   ansible.builtin.set_fact:
     powerflex_tb_system_id: "{{ powerflex_tb_login_output.stdout | regex_search('System ID is (\\w+)', '\\1') | first }}"
-  check_mode: no
+  check_mode: false
   tags:
     - molecule-idempotence-notest
 

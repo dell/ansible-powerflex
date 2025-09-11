@@ -9,7 +9,7 @@
   tags:
     - register
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
-  check_mode: no
+  check_mode: false
   changed_when: false
 
 - name: Extract the scli version
