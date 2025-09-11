@@ -6,5 +6,5 @@
 
 - name: Install pre-requisite java
   ansible.builtin.package:
-    name: "openjdk-8-jdk"
+    name: "openjdk-17-jdk"
     state: "present"

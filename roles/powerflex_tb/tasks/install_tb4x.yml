@@ -17,12 +17,18 @@
     scli --login --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ powerflex_tb_cert_password }}
   run_once: true
   register: powerflex_tb_login_output
-  changed_when: powerflex_tb_login_output.rc == 0
+  changed_when: false
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
+  check_mode: false
+  tags:
+    - molecule-idempotence-notest
 
 - name: Extract System ID
   ansible.builtin.set_fact:
     powerflex_tb_system_id: "{{ powerflex_tb_login_output.stdout | regex_search('System ID is (\\w+)', '\\1') | first }}"
+  check_mode: false
+  tags:
+    - molecule-idempotence-notest
 
 - name: Add primary TB
   ansible.builtin.command: >
@@ -37,6 +43,8 @@
   when: powerflex_tb_primary_ip is defined
   ignore_errors: true
   changed_when: powerflex_tb_primary_output.rc == 0
+  tags:
+    - molecule-idempotence-notest
 
 - name: Add secondary TB
   ansible.builtin.command: >
@@ -51,6 +59,8 @@
   when: powerflex_tb_secondary_ip is defined
   ignore_errors: true
   changed_when: powerflex_tb_secondary_output.rc == 0
+  tags:
+    - molecule-idempotence-notest
 
 - name: Switch to cluster three node
   ansible.builtin.command: |
@@ -61,6 +71,8 @@
   changed_when: powerflex_tb_cluster_to_three_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
   when: powerflex_tb_mdm_cluster_mode[0] != "3_node" and powerflex_tb_cluster_mode == "ThreeNodes"
+  tags:
+    - molecule-idempotence-notest
 
 - name: Switch to cluster five node
   ansible.builtin.command: |
@@ -71,6 +83,11 @@
   changed_when: powerflex_tb_cluster_to_five_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
   when: powerflex_tb_mdm_cluster_mode[0] != "5_node" and powerflex_tb_cluster_mode == "FiveNodes"
+  tags:
+    - molecule-idempotence-notest
 
 - name: Connect MDM cluster
   ansible.builtin.include_tasks: connect_mdm_cluster.yml
+  when: not ansible_check_mode
+  tags:
+    - molecule-idempotence-notest

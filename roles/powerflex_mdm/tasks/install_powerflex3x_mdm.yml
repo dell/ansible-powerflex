@@ -21,7 +21,7 @@
   run_once: true
   register: powerflex_mdm_add_primary_output
   delegate_to: "{{ powerflex_mdm_primary_hostname }}"
-  until: ("{{ powerflex_mdm_add_primary_output.rc }} == 0") or ("{{ powerflex_mdm_add_primary_output.rc }} == 7")
+  until: powerflex_mdm_add_primary_output.rc == 0 or powerflex_mdm_add_primary_output.rc == 7
   ignore_errors: true
   when:
     - powerflex_mdm_virtual_ip is defined
@@ -38,7 +38,7 @@
     --accept_license --approve_certificate
   run_once: true
   delegate_to: "{{ powerflex_mdm_primary_hostname }}"
-  until: ("{{ powerflex_mdm_add_primary_output.rc }} == 0") or ("{{ powerflex_mdm_add_primary_output.rc }} == 7")
+  until: powerflex_mdm_add_primary_output.rc == 0 or powerflex_mdm_add_primary_output.rc == 7
   register: powerflex_mdm_add_primary_output
   ignore_errors: true
   when:

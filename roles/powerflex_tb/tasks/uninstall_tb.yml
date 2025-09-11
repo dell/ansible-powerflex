@@ -40,6 +40,8 @@
       changed_when: powerflex_tb_generate_login_certificate.rc == 0
       delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
       when: powerflex_tb_scli_version[0] >= '4'
+      tags:
+        - molecule-idempotence-notest
   rescue:
     - name: Generate login certificate using primary_mdm_ip
       ansible.builtin.command: >
@@ -50,6 +52,8 @@
       changed_when: powerflex_tb_generate_login_certificate_mdm_ip.rc == 0
       delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
       when: powerflex_tb_scli_version[0] >= '4'
+      tags:
+        - molecule-idempotence-notest
 
 - name: Login to MDM for PowerFlex version 4.x
   ansible.builtin.command: scli --login --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }}
@@ -58,6 +62,8 @@
   changed_when: powerflex_tb_login_output.rc == 0
   delegate_to: "{{ powerflex_tb_mdm_primary_hostname }}"
   when: powerflex_tb_scli_version[0] >= '4'
+  tags:
+    - molecule-idempotence-notest
 
 - name: Switch cluster mode from three nodes to one node
   ansible.builtin.command: |

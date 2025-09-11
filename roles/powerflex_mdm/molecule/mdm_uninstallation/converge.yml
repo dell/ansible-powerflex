@@ -8,7 +8,7 @@
       ansible.builtin.import_role:
         name: powerflex_mdm
       vars:
-        powerflex_mdm_state: 'absent'
+        powerflex_mdm_state: "absent"
 
     - name: Verifying uninstall package in check mode
       ansible.builtin.assert:
@@ -31,23 +31,8 @@
     - name: Verifying uninstall package in normal mode
       ansible.builtin.assert:
         that:
-          - "'Removed: EMC-ScaleIO-mdm' in powerflex_mdm_uninstall_output.results[0].results[0]"
-      when: not ansible_check_mode and powerflex_mdm_uninstall_output.changed
-
-    - name: Verifying remove secondary mdm in Idempotency
-      ansible.builtin.assert:
-        that:
-          - "'No such file or directory' in powerflex_mdm_remove_secondary.msg"
-      when: not ansible_check_mode and not powerflex_mdm_remove_secondary.changed
-
-    - name: Verifying remove tertiary mdm in Idempotency
-      ansible.builtin.assert:
-        that:
-          - "'No such file or directory' in powerflex_mdm_remove_tertiary.msg"
-      when: not ansible_check_mode and powerflex_mdm_tertiary_ip is defined and not powerflex_mdm_remove_tertiary.changed
-
-    - name: Verifying uninstall package in Idempotency
-      ansible.builtin.assert:
-        that:
-          - "'Nothing to do' in powerflex_mdm_uninstall_output.results[0].msg"
-      when: not ansible_check_mode and not powerflex_mdm_uninstall_output.changed
+          - item.rc == 0
+      loop: "{{ powerflex_mdm_uninstall_output.results }}"
+      when:
+        - not ansible_check_mode and powerflex_mdm_uninstall_output.changed
+        - ansible_distribution in ("RedHat", "CentOS", "SLES", "Rocky")

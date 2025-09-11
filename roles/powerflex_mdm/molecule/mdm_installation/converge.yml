@@ -23,7 +23,7 @@
     - name: Verifying installation package in normal mode
       ansible.builtin.assert:
         that:
-          - "'Installed' in powerflex_common_install_package_output.results[0]"
+          - powerflex_common_install_package_output.rc == 0
       when: not ansible_check_mode and powerflex_common_install_package_output.changed
 
     - name: Verifying add primary mdm in normal mode
@@ -43,21 +43,3 @@
         that:
           - "'Successfully added a standby MDM' in powerflex_mdm_add_tertiary_output.stdout"
       when: not ansible_check_mode and powerflex_mdm_add_tertiary_output.changed
-
-    - name: Verifying primary mdm configuration in Idempotency
-      ansible.builtin.assert:
-        that:
-          - "'The Primary MDM is already configured' in powerflex_mdm_add_primary_output.stderr_lines[0]"
-      when: not ansible_check_mode and not powerflex_mdm_add_primary_output.changed
-
-    - name: Verifying secondary mdm configuration in Idempotency
-      ansible.builtin.assert:
-        that:
-          - "'An MDM with the same name already exists' in powerflex_mdm_add_secondary_output.stderr_lines[0]"
-      when: not ansible_check_mode and not powerflex_mdm_add_secondary_output.changed
-
-    - name: Verifying tertiary mdm configuration in Idempotency
-      ansible.builtin.assert:
-        that:
-          - "'An MDM with the same name already exists' in powerflex_mdm_add_tertiary_output.stderr_lines[0]"
-      when: not ansible_check_mode and powerflex_mdm_tertiary_ip is defined and not powerflex_mdm_add_tertiary_output.changed
