@@ -1,8 +1,8 @@
-# Copyright: (c) 2024, Dell Technologies
+# Copyright: (c) 2025, Dell Technologies
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-"""Unit Tests for info module on PowerFlex"""
+"""Unit Tests for Info V2 module on PowerFlex"""
 
 from __future__ import (absolute_import, division, print_function)
 
@@ -12,8 +12,7 @@ import pytest
 # pylint: disable=unused-import
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.libraries import initial_mock
 from mock.mock import MagicMock
-from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_info_api import MockInfoApi
-from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_fault_set_api import MockFaultSetApi
+from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_info_api_v2 import MockInfoApi
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_api_exception \
     import MockApiException
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
@@ -28,7 +27,7 @@ utils.filter_response = MagicMock()
 
 from ansible.module_utils import basic
 basic.AnsibleModule = MagicMock()
-from ansible_collections.dellemc.powerflex.plugins.modules.info import PowerFlexInfo, get_powerflex_info_parameters
+from ansible_collections.dellemc.powerflex.plugins.modules.info_v2 import PowerFlexInfo, get_powerflex_info_parameters
 INVALID_SORT_MSG = 'messageCode=PARSE002 displayMessage=An invalid column name: invalid is entered in the sort list'
 
 
@@ -41,8 +40,8 @@ class TestPowerflexInfo():
         mocker.patch(
             MockInfoApi.MODULE_UTILS_PATH + '.PowerFlexClient',
             new=MockApiException)
-        utils.is_version_less = MagicMock(return_value=True)
-        utils.is_version_ge_or_eq = MagicMock(return_value=False)
+        utils.is_version_less = MagicMock(return_value=False)
+        utils.is_version_ge_or_eq = MagicMock(return_value=True)
         info_module_mock = PowerFlexInfo()
         info_module_mock.module.argument_spec = get_powerflex_info_parameters()
         info_module_mock.module.check_mode = False
@@ -56,7 +55,7 @@ class TestPowerflexInfo():
         try:
             info_module_mock.perform_module_operation()
         except FailJsonException as fj_object:
-            assert error_msg in fj_object.message
+            assert len(error_msg) > 0 and error_msg in fj_object.message
 
     def test_get_volume_details(self, info_module_mock):
         self.get_module_args.update({
@@ -68,12 +67,12 @@ class TestPowerflexInfo():
             return_value=volume_resp
         )
         volume_stat_resp = MockInfoApi.INFO_VOLUME_STATISTICS
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_volumes = MagicMock(
+        info_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
             return_value=volume_stat_resp
         )
         info_module_mock.perform_module_operation()
         info_module_mock.powerflex_conn.volume.get.assert_called()
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_volumes.assert_called()
+        info_module_mock.powerflex_conn.utility.query_metrics.assert_called()
 
     def test_get_volume_details_filter(self, info_module_mock):
         self.get_module_args.update({
@@ -101,7 +100,7 @@ class TestPowerflexInfo():
         info_module_mock.powerflex_conn.volume.get = MagicMock(
             return_value=volume_resp
         )
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_volumes = MagicMock(
+        info_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
             side_effect=MockApiException
         )
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
@@ -117,12 +116,12 @@ class TestPowerflexInfo():
             return_value=sp_resp
         )
         sp_stat_resp = MockInfoApi.INFO_STORAGE_POOL_STATISTICS
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_storagepools = MagicMock(
+        info_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
             return_value=sp_stat_resp
         )
         info_module_mock.perform_module_operation()
         info_module_mock.powerflex_conn.storage_pool.get.assert_called()
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_storagepools.assert_called()
+        info_module_mock.powerflex_conn.utility.query_metrics.assert_called()
 
     def test_get_sp_details_filter(self, info_module_mock):
         self.get_module_args.update({
@@ -150,70 +149,11 @@ class TestPowerflexInfo():
         info_module_mock.powerflex_conn.storage_pool.get = MagicMock(
             return_value=sp_resp
         )
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_storagepools = MagicMock(
+        info_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
             side_effect=MockApiException
         )
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'sp_get_details'), info_module_mock)
-
-    def test_get_rcg_details(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['rcg']
-        })
-        info_module_mock.module.params = self.get_module_args
-        rcg_resp = MockInfoApi.RCG_LIST
-        info_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
-            return_value=rcg_resp)
-        info_module_mock.perform_module_operation()
-        info_module_mock.powerflex_conn.replication_consistency_group.get.assert_called()
-
-    def test_get_rcg_filter_details(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['rcg'],
-            "filters": [{
-                "filter_key": "id",
-                "filter_operator": "equal",
-                "filter_value": "aadc17d500000000"
-            }]
-        })
-        info_module_mock.module.params = self.get_module_args
-        rcg_resp = MockInfoApi.RCG_LIST
-        info_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
-            return_value=rcg_resp)
-        info_module_mock.perform_module_operation()
-        info_module_mock.powerflex_conn.replication_consistency_group.get.assert_called()
-
-    def test_get_rcg_details_throws_exception(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['rcg']
-        })
-        info_module_mock.module.params = self.get_module_args
-        info_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
-            side_effect=MockApiException
-        )
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'rcg_get_details'), info_module_mock)
-
-    def test_get_replication_pair_details(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['replication_pair']
-        })
-        info_module_mock.module.params = self.get_module_args
-        info_module_mock.powerflex_conn.replication_pair.get = MagicMock(
-            return_value=MockInfoApi.PAIR_LIST)
-        info_module_mock.perform_module_operation()
-        info_module_mock.powerflex_conn.replication_pair.get.assert_called()
-
-    def test_get_replication_pair_details_throws_exception(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['replication_pair']
-        })
-        info_module_mock.module.params = self.get_module_args
-        info_module_mock.powerflex_conn.replication_pair.get = MagicMock(
-            side_effect=MockApiException
-        )
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'replication_pair_get_details'), info_module_mock)
 
     def test_get_snapshot_policy_details(self, info_module_mock):
         self.get_module_args.update({
@@ -224,28 +164,8 @@ class TestPowerflexInfo():
         info_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
             return_value=snapshot_policy_resp
         )
-        snapshot_policy_stat_resp = MockInfoApi.INFO_SNAPSHOT_POLICY_STATISTICS
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_snapshot_policies = MagicMock(
-            return_value=snapshot_policy_stat_resp
-        )
         info_module_mock.perform_module_operation()
         info_module_mock.powerflex_conn.snapshot_policy.get.assert_called()
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_snapshot_policies.assert_called()
-
-    def test_get_snapshot_policy_details_with_exception(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['snapshot_policy']
-        })
-        info_module_mock.module.params = self.get_module_args
-        snapshot_policy_resp = MockInfoApi.INFO_SNAPSHOT_POLICY_GET_LIST
-        info_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
-            return_value=snapshot_policy_resp
-        )
-        info_module_mock.powerflex_conn.utility.get_statistics_for_all_snapshot_policies = MagicMock(
-            side_effect=MockApiException
-        )
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'snapshot_policy_get_details'), info_module_mock)
 
     def test_get_sdc_details(self, info_module_mock):
         self.get_module_args.update({
@@ -286,84 +206,6 @@ class TestPowerflexInfo():
         )
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'sdc_get_details'), info_module_mock)
-
-    def test_get_sds_details(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['sds']
-        })
-        info_module_mock.module.params = self.get_module_args
-        sds_resp = MockInfoApi.INFO_SDS_GET_LIST
-        info_module_mock.powerflex_conn.sds.get = MagicMock(
-            return_value=sds_resp
-        )
-        info_module_mock.perform_module_operation()
-        info_module_mock.powerflex_conn.sds.get.assert_called()
-
-    def test_get_sds_filter_details(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['sds'],
-            "filters": [
-                {
-                    "filter_key": "name",
-                    "filter_operator": "equal",
-                    "filter_value": "node0",
-                },
-                {
-                    "filter_key": "name",
-                    "filter_operator": "equal",
-                    "filter_value": "node1",
-                },
-                {
-                    "filter_key": "id",
-                    "filter_operator": "equal",
-                    "filter_value": "8f3bb15300000001",
-                }
-            ]
-        })
-        info_module_mock.module.params = self.get_module_args
-        sds_resp = MockInfoApi.INFO_SDS_GET_LIST
-        info_module_mock.powerflex_conn.sds.get = MagicMock(
-            return_value=sds_resp
-        )
-        info_module_mock.perform_module_operation()
-        info_module_mock.powerflex_conn.sds.get.assert_called()
-
-    def test_get_sds_details_filter_invalid(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['sds'],
-            "filters": [{
-                "filter_key": "name",
-                "filter_op": "equal",
-                "filter_value": "LGLAP203",
-            }]
-        })
-        info_module_mock.module.params = self.get_module_args
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'get_sds_details_filter_invalid'), info_module_mock)
-
-    def test_get_sds_details_filter_empty(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['sds'],
-            "filters": [{
-                "filter_key": "name",
-                "filter_operator": None,
-                "filter_value": "LGLAP203",
-            }]
-        })
-        info_module_mock.module.params = self.get_module_args
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'get_sds_details_filter_empty'), info_module_mock)
-
-    def test_get_sds_details_exception(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['sds']
-        })
-        info_module_mock.module.params = self.get_module_args
-        info_module_mock.powerflex_conn.sds.get = MagicMock(
-            side_effect=MockApiException
-        )
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'sds_get_details'), info_module_mock)
 
     def test_get_pd_details(self, info_module_mock):
         self.get_module_args.update({
@@ -444,67 +286,6 @@ class TestPowerflexInfo():
         )
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'device_get_details'), info_module_mock)
-
-    def test_get_fault_set_details(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['fault_set']
-        })
-        info_module_mock.module.params = self.get_module_args
-        pd_resp = MockFaultSetApi.PROTECTION_DOMAIN
-        info_module_mock.powerflex_conn.protection_domain.get = MagicMock(
-            return_value=pd_resp['protectiondomain'])
-        fault_set_resp = MockInfoApi.INFO_GET_FAULT_SET_LIST
-        info_module_mock.powerflex_conn.fault_set.get = MagicMock(
-            return_value=fault_set_resp
-        )
-        info_module_mock.perform_module_operation()
-        info_module_mock.powerflex_conn.fault_set.get.assert_called()
-
-    def test_get_fault_set_details_exception(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['fault_set']
-        })
-        info_module_mock.module.params = self.get_module_args
-        info_module_mock.powerflex_conn.fault_set.get = MagicMock(
-            side_effect=MockApiException
-        )
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'fault_set_get_details'), info_module_mock)
-
-    def test_get_fault_set_details_invalid_filter_operator_exception(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['fault_set'],
-            "filters": [{
-                "filter_key": "name",
-                "filter_operator": "does_not_contain",
-                "filter_value": "LGLAP203",
-            }]
-        })
-        info_module_mock.module.params = self.get_module_args
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'invalid_filter_operator_exception'), info_module_mock)
-
-    def test_get_fault_set_details_api_exception(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['fault_set']
-        })
-        info_module_mock.module.params = self.get_module_args
-        info_module_mock.powerflex_conn.system.api_version = MagicMock(
-            side_effect=MockApiException
-        )
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'api_exception'), info_module_mock)
-
-    def test_get_fault_set_details_system_exception(self, info_module_mock):
-        self.get_module_args.update({
-            "gather_subset": ['fault_set']
-        })
-        info_module_mock.module.params = self.get_module_args
-        info_module_mock.powerflex_conn.system.get = MagicMock(
-            side_effect=MockApiException
-        )
-        self.capture_fail_json_call(MockInfoApi.get_exception_response(
-            'system_exception'), info_module_mock)
 
     def test_get_managed_device_details(self, info_module_mock):
         self.get_module_args.update({
@@ -713,3 +494,30 @@ class TestPowerflexInfo():
         )
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'sdt_get_error'), info_module_mock)
+
+    def test_get_snapshot_policy_details_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['snapshot_policy']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.snapshot_policy.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'snapshot_policy_get_error'), info_module_mock)
+
+    def test_get_array_details_exception(self, info_module_mock):
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.system.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'array_get_error'), info_module_mock)
+
+    def test_get_version_exception(self, info_module_mock):
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.system.api_version = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'version_get_error'), info_module_mock)

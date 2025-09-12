@@ -2243,6 +2243,10 @@ sdt:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import powerflex_compatibility
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
     import Configuration
 import re
@@ -2255,36 +2259,24 @@ MIN_SUPPORTED_POWERFLEX_MANAGER_VERSION = 4.0
 ERROR_CODES = r'PARSE002|FILTER002|FILTER003'
 
 
-class PowerFlexInfo(object):
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0', successor='info_v2')
+class PowerFlexInfo(PowerFlexBase):
     """Class with Info operations"""
 
     filter_mapping = {'equal': 'eq', 'contains': 'co'}
 
     def __init__(self):
         """ Define all parameters required by this module"""
-
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_info_parameters())
-
+        argument_spec = get_powerflex_info_parameters()
+        module_params = {
+            'argument_spec': argument_spec,
+            'supports_check_mode': False,
+        }
         self.filter_keys = sorted(
-            [k for k in self.module_params['filters']['options'].keys()
+            [k for k in argument_spec['filters']['options'].keys()
              if 'filter' in k])
-
-        """ initialize the ansible module """
-        self.module = AnsibleModule(argument_spec=self.module_params,
-                                    supports_check_mode=True)
-
-        utils.ensure_required_libs(self.module)
-
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info('Got the PowerFlex system connection object instance')
-            LOG.info('The check_mode flag %s', self.module.check_mode)
-
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
+        super().__init__(AnsibleModule, module_params)
+        super().check_module_compatibility()
 
     def get_api_details(self):
         """ Get api details of the array """
@@ -2709,8 +2701,7 @@ class PowerFlexInfo(object):
         """
         if param in ('sort', 'offset', 'limit') and len(self.module.params.get('gather_subset')) > 1:
             return None
-
-        default_value = self.module_params.get(param).get('default')
+        default_value = self.module.argument_spec.get(param).get('default')
         param_value = self.module.params.get(param)
         if (default_value != param_value) and (param_value >= 0 if isinstance(param_value, int) else True):
             return param_value
