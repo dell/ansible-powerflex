@@ -55,7 +55,7 @@ class TestPowerflexInfo():
         try:
             info_module_mock.perform_module_operation()
         except FailJsonException as fj_object:
-            assert error_msg in fj_object.message
+            assert len(error_msg) > 0 and error_msg in fj_object.message
 
     def test_get_volume_details(self, info_module_mock):
         self.get_module_args.update({

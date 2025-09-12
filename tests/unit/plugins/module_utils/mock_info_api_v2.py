@@ -349,7 +349,10 @@ class MockInfoApi:
         'deployment_get_error': "Get deployments from PowerFlex Manager failed with error",
         'firmware_repository_get_error': "Get firmware repository from PowerFlex Manager failed with error",
         'nvme_host_get_details': "Get NVMe host list from powerflex array failed with error",
-        "sdt_get_error": "Get sdt from PowerFlex Manager failed with error"
+        "sdt_get_error": "Get sdt from PowerFlex Manager failed with error",
+        "snapshot_policy_get_error": "Get snapshot policies list from powerflex array failed with error ",
+        "array_get_error": "Get array details from Powerflex array failed with error ",
+        "version_get_error": "Get API details from Powerflex array failed with error "
     }
 
     @staticmethod
