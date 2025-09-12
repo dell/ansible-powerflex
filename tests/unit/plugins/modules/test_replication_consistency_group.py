@@ -31,6 +31,8 @@ class TestPowerflexReplicationConsistencyGroup():
 
     @pytest.fixture
     def replication_consistency_group_module_mock(self):
+        utils.is_version_less = MagicMock(return_value=True)
+        utils.is_version_ge_or_eq = MagicMock(return_value=False)
         replication_consistency_group_module_mock = PowerFlexReplicationConsistencyGroup()
         replication_consistency_group_module_mock.module.check_mode = False
         return replication_consistency_group_module_mock
