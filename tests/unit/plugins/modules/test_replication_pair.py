@@ -33,6 +33,8 @@ class TestPowerflexReplicationPair:
 
     @pytest.fixture
     def replication_pair_module_mock(self):
+        utils.is_version_less = MagicMock(return_value=True)
+        utils.is_version_ge_or_eq = MagicMock(return_value=False)
         replication_pair_module_mock = PowerFlexReplicationPair()
         replication_pair_module_mock.get_rcg = MagicMock(return_value={"id": 123})
         replication_pair_module_mock.module.check_mode = False
@@ -40,6 +42,8 @@ class TestPowerflexReplicationPair:
 
     @pytest.fixture
     def replication_pair_mock(self):
+        utils.is_version_less = MagicMock(return_value=True)
+        utils.is_version_ge_or_eq = MagicMock(return_value=False)
         replication_pair_mock = PowerFlexReplicationPair()
         replication_pair_mock.module.check_mode = False
         replication_pair_mock.module.fail_json = fail_json
