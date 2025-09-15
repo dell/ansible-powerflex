@@ -122,21 +122,9 @@ options:
     - Applicable when I(gather_subset) is C(service_template).
     type: bool
     default: true
-  include_related:
-    description:
-    - Include related entities.
-    - Applicable when I(gather_subset) is C(firmware_repository).
-    type: bool
-    default: false
   include_bundles:
     description:
     - Include software bundle entities.
-    - Applicable when I(gather_subset) is C(firmware_repository).
-    type: bool
-    default: false
-  include_components:
-    description:
-    - Include software component entities.
     - Applicable when I(gather_subset) is C(firmware_repository).
     type: bool
     default: false
@@ -163,7 +151,7 @@ EXAMPLES = r'''
       - nvme_host
       - sdt
 
-- name: Get a subset list of PowerFlex volumes
+- name: Get specific volume details
   dellemc.powerflex.info_v2:
     hostname: "{{ hostname }}"
     username: "{{ username }}"
@@ -171,6 +159,19 @@ EXAMPLES = r'''
     validate_certs: "{{ validate_certs }}"
     gather_subset:
       - vol
+    filters:
+      - filter_key: "name"
+        filter_operator: "equal"
+        filter_value: "ansible_test"
+
+- name: Get specific NVMe hosts details
+  dellemc.powerflex.info_v2:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    gather_subset:
+      - nvme_host
     filters:
       - filter_key: "name"
         filter_operator: "equal"
@@ -222,9 +223,7 @@ EXAMPLES = r'''
     validate_certs: "{{ validate_certs }}"
     gather_subset:
       - firmware_repository
-    include_related: true
     include_bundles: true
-    include_components: true
 
 - name: Get the list of firmware repository with filter
   dellemc.powerflex.info_v2:
@@ -240,9 +239,7 @@ EXAMPLES = r'''
         filter_value: "admin"
     sort: createdDate
     limit: 10
-    include_related: true
     include_bundles: true
-    include_components: true
   register: result_repository_out
 
 - name: Get the list of available firmware repository
@@ -258,28 +255,6 @@ EXAMPLES = r'''
   ansible.builtin.debug:
     msg: "{{ result_repository_out.FirmwareRepository |
         selectattr('id', 'equalto', '8aaa80788b7') | map(attribute='softwareBundles') | flatten }}"
-
-- name: Get the list of NVMe hosts
-  dellemc.powerflex.info_v2:
-    hostname: "{{ hostname }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: "{{ validate_certs }}"
-    gather_subset:
-      - nvme_host
-    filters:
-      - filter_key: "name"
-        filter_operator: "equal"
-        filter_value: "ansible_test"
-
-- name: Get the list of NVMe Storage Data Target
-  dellemc.powerflex.info_v2:
-    hostname: "{{ hostname }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: "{{ validate_certs }}"
-    gather_subset:
-      - sdt
 '''
 
 RETURN = r'''
@@ -4293,9 +4268,7 @@ class PowerFlexInfo(PowerFlexBase):
             LOG.info('Getting firmware repository list ')
             firmware_repository = self.powerflex_conn.firmware_repository.get(
                 **self.get_pagination_params(),
-                related=self.get_param_value('include_related'),
-                bundles=self.get_param_value('include_bundles'),
-                components=self.get_param_value('include_components'))
+                bundles=self.get_param_value('include_bundles'))
             return firmware_repository
         except Exception as e:
             msg = f'Get firmware repository from PowerFlex Manager failed with error {str(e)}'
@@ -4493,9 +4466,7 @@ def get_powerflex_info_parameters():
         include_template=dict(type='bool', default=True),
         full=dict(type='bool', default=False),
         include_attachments=dict(type='bool', default=True),
-        include_related=dict(type='bool', default=False),
         include_bundles=dict(type='bool', default=False),
-        include_components=dict(type='bool', default=False),
     )
 
 
