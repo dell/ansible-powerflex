@@ -475,6 +475,7 @@ from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.lib
 
 LOG = utils.get_logger('replication_consistency_group')
 
+
 @powerflex_compatibility(min_ver='3.6', max_ver='5.0')
 class PowerFlexReplicationConsistencyGroup(PowerFlexBase):
     """Class with replication consistency group operations"""
