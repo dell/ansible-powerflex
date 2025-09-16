@@ -492,6 +492,8 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell\
     import utils
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import powerflex_compatibility
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
     import PowerFlexBase
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.configuration \
     import Configuration
@@ -500,6 +502,7 @@ import copy
 LOG = utils.get_logger('sds')
 
 
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0')
 class PowerFlexSDS(PowerFlexBase):
     """Class with SDS operations"""
 
@@ -525,6 +528,7 @@ class PowerFlexSDS(PowerFlexBase):
             'required_together': required_together_args
         }
         super().__init__(AnsibleModule, ansible_module_params)
+        super().check_module_compatibility()
 
         self.result = dict(
             changed=False,
