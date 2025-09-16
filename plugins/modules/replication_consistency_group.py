@@ -468,38 +468,32 @@ replication_consistency_group_details:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell \
     import utils
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import powerflex_compatibility
+from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
+    import PowerFlexBase
 
 LOG = utils.get_logger('replication_consistency_group')
 
 
-class PowerFlexReplicationConsistencyGroup(object):
+@powerflex_compatibility(min_ver='3.6', max_ver='5.0')
+class PowerFlexReplicationConsistencyGroup(PowerFlexBase):
     """Class with replication consistency group operations"""
 
     def __init__(self):
         """ Define all parameters required by this module"""
-        self.module_params = utils.get_powerflex_gateway_host_parameters()
-        self.module_params.update(get_powerflex_replication_consistency_group_parameters())
-
+        argument_spec = get_powerflex_replication_consistency_group_parameters()
         mut_ex_args = [['rcg_name', 'rcg_id'], ['protection_domain_id', 'protection_domain_name']]
-
         required_one_of_args = [['rcg_name', 'rcg_id']]
 
-        # initialize the Ansible module
-        self.module = AnsibleModule(
-            argument_spec=self.module_params,
-            supports_check_mode=True,
-            mutually_exclusive=mut_ex_args,
-            required_one_of=required_one_of_args)
-
-        utils.ensure_required_libs(self.module)
-
-        try:
-            self.powerflex_conn = utils.get_powerflex_gateway_host_connection(
-                self.module.params)
-            LOG.info("Got the PowerFlex system connection object instance")
-        except Exception as e:
-            LOG.error(str(e))
-            self.module.fail_json(msg=str(e))
+        ansible_module_params = {
+            'argument_spec': argument_spec,
+            'supports_check_mode': True,
+            'mutually_exclusive': mut_ex_args,
+            'required_one_of': required_one_of_args
+        }
+        super().__init__(AnsibleModule, ansible_module_params)
+        super().check_module_compatibility()
 
     def get_rcg(self, rcg_name=None, rcg_id=None):
         """Get rcg details
