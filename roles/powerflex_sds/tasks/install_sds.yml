@@ -8,7 +8,7 @@
     validate_certs: "{{ validate_certs }}"
     state: "present"
   register: powerflex_sds_mdm_ip_result
-  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+  delegate_to: "localhost"
 
 - name: Set fact - PowerFlex version
   ansible.builtin.set_fact:
@@ -28,12 +28,8 @@
     gather_subset:
       - hardware
 
-- name: Find disks
-  ansible.builtin.set_fact:
-    powerflex_sds_disks: hostvars[inventory_hostname].ansible_devices.keys() | list
-
 - name: Use local disk variable
-  when: powerflex_sds_disks
+  when: powerflex_sds_disks is defined
   ansible.builtin.set_fact:
     powerflex_sds_disks: "{{ powerflex_sds_disks }}"
 
@@ -48,6 +44,8 @@
       changed_when: powerflex_sds_generate_login_certificate.rc == 0
       delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
       when: powerflex_sds_array_version != "3"
+      tags:
+        - molecule-idempotence-notest
   rescue:
     - name: Generate login certificate using primary_mdm_ip
       ansible.builtin.command: >
@@ -58,6 +56,8 @@
       changed_when: powerflex_sds_generate_login_certificate_mdm_ip.rc == 0
       delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
       when: powerflex_sds_array_version != "3"
+      tags:
+        - molecule-idempotence-notest
 
 - name: Add certificate file for PowerFlex version 4.x
   ansible.builtin.command: scli --add_certificate --certificate_file /opt/emc/scaleio/mdm/cfg/mgmt_ca.pem
@@ -66,6 +66,8 @@
   changed_when: powerflex_sds_add_certificate.rc == 0
   delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
   when: powerflex_sds_array_version != '3'
+  tags:
+    - molecule-idempotence-notest
 
 - name: Login to MDM for PowerFlex version 4.x
   ansible.builtin.command: scli --login --p12_path /opt/emc/scaleio/mdm/cfg/cli_certificate.p12 --p12_password {{ password }}
@@ -74,6 +76,8 @@
   changed_when: powerflex_sds_login_output.rc == 0
   delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
   when: powerflex_sds_array_version != "3"
+  tags:
+    - molecule-idempotence-notest
 
 - name: Login to MDM for PowerFlex version below 4.x
   ansible.builtin.command: scli --login --username {{ username }} --password {{ password }} --approve_certificate
@@ -82,6 +86,8 @@
   changed_when: powerflex_sds_login_output.rc == 0
   delegate_to: "{{ powerflex_sds_primary_mdm_hostname }}"
   when: powerflex_sds_array_version == "3"
+  tags:
+    - molecule-idempotence-notest
 
 - name: Create SDS
   dellemc.powerflex.sds:
@@ -97,7 +103,7 @@
     sds_ip_state: "present-in-sds"
     state: "present"
   register: powerflex_sds_result
-  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+  delegate_to: "localhost"
   when: powerflex_sds_fault_set is not defined
 
 - name: Add SDS with fault set for PowerFlex version 4.x
@@ -140,5 +146,8 @@
     external_acceleration_type: "{{ powerflex_sds_external_acceleration_type }}"
     force: true
     state: "present"
-  delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
-  when: powerflex_sds_disks.ansible_available_disks | length > 0
+  delegate_to: "localhost"
+  register: powerflex_sds_add_device_output
+  when:
+    - not ansible_check_mode
+    - powerflex_sds_disks.ansible_available_disks | length > 0

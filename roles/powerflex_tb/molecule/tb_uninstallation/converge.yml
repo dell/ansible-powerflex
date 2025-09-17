@@ -15,5 +15,5 @@
     - name: "Verifying remove the TB"
       ansible.builtin.assert:
         that:
-          - powerflex_tb_remove_primary_tb_output.stdout == "Successfully removed the standby MDM."
+          - 'powerflex_tb_remove_primary_tb_output.stdout == "Successfully removed the standby MDM."'
       when: not ansible_check_mode and powerflex_tb_remove_primary_tb_output.changed

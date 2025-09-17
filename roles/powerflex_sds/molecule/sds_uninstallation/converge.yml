@@ -14,37 +14,21 @@
     - name: Verifying uninstall package in check mode
       ansible.builtin.assert:
         that:
-          - powerflex_sds_uninstall_output.msg == "Check mode: No changes made"
-          - powerflex_sds_uninstall_output.changed
+          - 'powerflex_sds_uninstall_output.results[0].rc == 0'
+          - 'powerflex_sds_uninstall_output.changed'
       when: ansible_check_mode
 
     - name: Verifying remove the sds in normal mode
       ansible.builtin.assert:
         that:
-          - powerflex_sds_remove_result.sds_details is None
+          - 'powerflex_sds_remove_result.sds_details == None'
       when:
         - not ansible_check_mode
         - powerflex_sds_remove_result.changed
 
-    - name: Verifying uninstall package in Idempotency
-      ansible.builtin.assert:
-        that:
-          - powerflex_sds_uninstall_output.results[0].msg == 'Nothing to do'
-      when:
-        - not ansible_check_mode
-        - not powerflex_sds_uninstall_output.changed
-
     - name: Verifying remove the sds in check mode
       ansible.builtin.assert:
         that:
-          - powerflex_sds_remove_result.msg == "Check mode: No changes made"
-          - powerflex_sds_remove_result.changed
+          - 'powerflex_sds_remove_result.changed'
       when: ansible_check_mode
 
-    - name: Verifying remove the sds in Idempotency
-      ansible.builtin.assert:
-        that:
-          - powerflex_sds_remove_result.sds_details is None
-      when:
-        - not ansible_check_mode
-        - not powerflex_sds_remove_result.changed

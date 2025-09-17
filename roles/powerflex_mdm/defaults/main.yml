@@ -7,3 +7,4 @@ powerflex_role_environment:
   MDM_IP: "{{ powerflex_mdm_ips }}"
   MDM_ROLE_IS_MANAGER: 1
 file_glob_name: mdm
+i_am_sure: 1
