@@ -32,4 +32,3 @@
       ansible.builtin.assert:
         that:
           - 'powerflex_common_package_file.files | length == 0'
-

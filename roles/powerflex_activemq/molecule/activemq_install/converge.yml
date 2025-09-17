@@ -24,4 +24,3 @@
       when:
         - not ansible_check_mode and powerflex_common_install_package_output.changed
         - ansible_distribution in ("RedHat", "CentOS", "SLES", "Rocky")
-

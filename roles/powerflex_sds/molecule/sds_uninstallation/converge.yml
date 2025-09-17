@@ -31,4 +31,3 @@
         that:
           - 'powerflex_sds_remove_result.changed'
       when: ansible_check_mode
-
