@@ -77,7 +77,7 @@
     src: /tmp/sec_mdm_certificate.pem
     dest: /opt/emc/scaleio/mdm/cfg/mdm_certificate.pem
     mode: preserve
-  delegate_to: "{{ powerflex_mdm_tertiary_hostname }}"
+  delegate_to: "{{ powerflex_mdm_tertiary_hostname | default(omit) }}"
   when: powerflex_mdm_tertiary_ip is defined
 
 - name: Copy CLI certificates to Tertiary manager MDM node
@@ -86,7 +86,7 @@
     src: /tmp/cli_certificate.p12
     dest: /opt/emc/scaleio/mdm/cfg/cli_certificate.p12
     mode: preserve
-  delegate_to: "{{ powerflex_mdm_tertiary_hostname }}"
+  delegate_to: "{{ powerflex_mdm_tertiary_hostname | default(omit) }}"
   when: powerflex_mdm_tertiary_ip is defined
 
 - name: Copy mgmt_ca.pem certificates to Tertiary manager MDM node
@@ -95,7 +95,7 @@
     src: /tmp/mgmt_ca.pem
     dest: /opt/emc/scaleio/mdm/cfg/mgmt_ca.pem
     mode: preserve
-  delegate_to: "{{ powerflex_mdm_tertiary_hostname }}"
+  delegate_to: "{{ powerflex_mdm_tertiary_hostname | default(omit) }}"
   when: powerflex_mdm_tertiary_ip is defined
 
 - name: Add CA certificate on primary MDM
@@ -118,7 +118,7 @@
 - name: Add CA certificate on tertiary MDM
   register: powerflex_mdm_add_mgmt_cert_to_ca_tertiary
   ansible.builtin.command: scli --add_certificate --certificate_file mgmt_ca.pem
-  delegate_to: "{{ powerflex_mdm_tertiary_hostname }}"
+  delegate_to: "{{ powerflex_mdm_tertiary_hostname | default(omit) }}"
   when: powerflex_mdm_tertiary_ip is defined
   args:
     chdir: /opt/emc/scaleio/mdm/cfg
@@ -147,7 +147,7 @@
     name: "mdm.service"
     state: "restarted"
     enabled: true
-  delegate_to: "{{ powerflex_mdm_tertiary_hostname }}"
+  delegate_to: "{{ powerflex_mdm_tertiary_hostname | default(omit) }}"
   when: powerflex_mdm_tertiary_ip is defined
 
 - name: Check MDM service status

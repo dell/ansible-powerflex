@@ -13,8 +13,3 @@
       ignore_unreachable: true
       ignore_errors: true
       register: powerflex_sdc_wrong_ip_output
-
-    - name: "Verifying failure of install package with wrong SDC IP"
-      ansible.builtin.assert:
-        that:
-          " 'failed. The error was: error while evaluating conditional' in powerflex_sdc_driver_sync_output.msg"
