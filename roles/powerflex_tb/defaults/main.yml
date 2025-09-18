@@ -6,3 +6,4 @@ powerflex_tb_cluster_mode: "ThreeNodes"
 file_glob_name: mdm
 powerflex_role_environment:
   MDM_IP: "{{ powerflex_tb_mdm_ips }}"
+i_am_sure: 1

@@ -1,5 +1,5 @@
 ---
 - name: Install pre-requisite java
   ansible.builtin.package:
-    name: "java-17-openjdk-headless"
-    state: "present"
+    name: 'java-{{ powerflex_common_java_versoin }}-openjdk-headless'
+    state: present

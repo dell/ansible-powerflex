@@ -13,7 +13,7 @@
 - name: Providing incorrect credentials for TB node
   hosts: tb
   vars_files:
-    - ../../../../playbooks/roles/vars_files/connection.yml
+    - ../connection.yml
   gather_facts: false
   tasks:
     - name: "Install and configure powerflex tb with wrong credentials"
@@ -28,4 +28,4 @@
     - name: "Verifying failure of install package with wrong credentials"
       ansible.builtin.assert:
         that:
-          - powerflex_tb_primary_output.rc != 0
+          - 'powerflex_tb_primary_output.rc != 0'

@@ -17,7 +17,7 @@
     - name: Verifying failure of install package with respect to no rpm file in normal mode
       ansible.builtin.assert:
         that:
-          - powerflex_common_package_file.files | length | int == 0
+          - 'powerflex_common_package_file.files | length | int == 0'
 
     - name: Install and configure powerflex lia with wrong file path
       ansible.builtin.import_role:
@@ -31,4 +31,4 @@
     - name: Verifying failure of install package with wrong file path in normal mode
       ansible.builtin.assert:
         that:
-          - powerflex_common_package_file.files | length | int == 0
+          - 'powerflex_common_package_file.files | length | int == 0'

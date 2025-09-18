@@ -1,0 +1,8 @@
+---
+# common params
+hostname: unknown.host.powerflex.com
+username: admin
+password: wrong_password
+validate_certs: false
+port: 443
+timeout: 120

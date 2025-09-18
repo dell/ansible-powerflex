@@ -1,10 +1,10 @@
 ---
 - name: Install pre-requisite binutils
   ansible.builtin.package:
-    name: "binutils"
-    state: "present"
+    name: 'binutils'
+    state: 'present'
 
 - name: Install pre-requisite java
   ansible.builtin.package:
-    name: "openjdk-17-jdk"
-    state: "present"
+    name: 'java-{{ powerflex_common_java_versoin }}-openjdk-headless'
+    state: present

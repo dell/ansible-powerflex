@@ -7,6 +7,7 @@
     port: "{{ port }}"
     validate_certs: "{{ validate_certs }}"
     state: "present"
+  run_once: true
   register: powerflex_sdc_mdm_ip_result
   delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
 

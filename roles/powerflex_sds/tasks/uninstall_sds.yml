@@ -10,6 +10,7 @@
     state: "absent"
   register: powerflex_sds_remove_result
   delegate_to: "{{ lookup('ansible.builtin.env', 'RUNON', default='localhost') }}"
+  ignore_errors: true
 
 - name: Uninstall package
   register: powerflex_sds_uninstall_output
