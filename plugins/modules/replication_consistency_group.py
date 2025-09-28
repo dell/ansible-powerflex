@@ -162,6 +162,7 @@ notes:
 - There is a delay in reflection of final state of RCG after few update operations on RCG.
 - In 3.6 and above, the replication consistency group will return back to consistent mode on changing to inconsistent mode
   if consistence barrier arrives. Hence idempotency on setting to inconsistent mode will return changed as true.
+- The pause and freeze parameters are removed in 3.0.0 version. Use 'rcg_state' param instead.
 '''
 
 EXAMPLES = r'''
