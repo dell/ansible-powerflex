@@ -21,7 +21,7 @@ Requirements
 The below requirements are needed on the host that executes this module.
 
 - A Dell PowerFlex storage system version 3.6 or later.
-- PyPowerFlex 1.14.1.
+- PyPowerFlex 2.0.0.
 
 
 
@@ -33,13 +33,13 @@ Parameters
 
     It is unique across the PowerFlex array.
 
-    Mutually exclusive with \ :emphasis:`rcg\_id`\ .
+    Mutually exclusive with :emphasis:`rcg\_id`.
 
 
   rcg_id (optional, str, None)
     The ID of the replication consistency group.
 
-    Mutually exclusive with \ :emphasis:`rcg\_name`\ .
+    Mutually exclusive with :emphasis:`rcg\_name`.
 
 
   create_snapshot (optional, bool, None)
@@ -53,25 +53,19 @@ Parameters
   protection_domain_id (optional, str, None)
     Protection domain id.
 
-    Mutually exclusive with \ :emphasis:`protection\_domain\_name`\ .
+    Mutually exclusive with :emphasis:`protection\_domain\_name`.
 
 
   protection_domain_name (optional, str, None)
     Protection domain name.
 
-    Mutually exclusive with \ :emphasis:`protection\_domain\_id`\ .
+    Mutually exclusive with :emphasis:`protection\_domain\_id`.
 
 
   activity_mode (optional, str, None)
     Activity mode of RCG.
 
     This parameter is supported for version 3.6 and above.
-
-
-  pause (optional, bool, None)
-    Pause or resume the RCG.
-
-    This parameter is deprecated. Use rcg\_state instead.
 
 
   rcg_state (optional, str, None)
@@ -94,12 +88,6 @@ Parameters
 
   force (optional, bool, None)
     Force switchover the RCG.
-
-
-  freeze (optional, bool, None)
-    Freeze or unfreeze the RCG.
-
-    This parameter is deprecated. Use rcg\_state instead.
 
 
   pause_mode (optional, str, None)
@@ -139,9 +127,9 @@ Parameters
     validate_certs (optional, bool, True)
       Boolean variable to specify whether or not to validate SSL certificate.
 
-      \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
+      :literal:`true` - Indicates that the SSL certificate should be verified.
 
-      \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
+      :literal:`false` - Indicates that the SSL certificate should not be verified.
 
 
     port (optional, int, 443)
@@ -157,13 +145,13 @@ Parameters
     protection_domain_id (optional, str, None)
       Remote protection domain id.
 
-      Mutually exclusive with \ :emphasis:`protection\_domain\_name`\ .
+      Mutually exclusive with :emphasis:`protection\_domain\_name`.
 
 
     protection_domain_name (optional, str, None)
       Remote protection domain name.
 
-      Mutually exclusive with \ :emphasis:`protection\_domain\_id`\ .
+      Mutually exclusive with :emphasis:`protection\_domain\_id`.
 
 
 
@@ -186,9 +174,9 @@ Parameters
   validate_certs (optional, bool, True)
     Boolean variable to specify whether or not to validate SSL certificate.
 
-    \ :literal:`true`\  - Indicates that the SSL certificate should be verified.
+    :literal:`true` - Indicates that the SSL certificate should be verified.
 
-    \ :literal:`false`\  - Indicates that the SSL certificate should not be verified.
+    :literal:`false` - Indicates that the SSL certificate should not be verified.
 
 
   port (optional, int, 443)
@@ -208,10 +196,11 @@ Notes
 -----
 
 .. note::
-   - The \ :emphasis:`check\_mode`\  is supported.
+   - The :emphasis:`check\_mode` is supported.
    - Idempotency is not supported for create snapshot operation.
    - There is a delay in reflection of final state of RCG after few update operations on RCG.
    - In 3.6 and above, the replication consistency group will return back to consistent mode on changing to inconsistent mode if consistence barrier arrives. Hence idempotency on setting to inconsistent mode will return changed as true.
+   - The pause and freeze parameters are removed in 3.0.0 version. Use 'rcg\_state' param instead.
    - The modules present in the collection named as 'dellemc.powerflex' are built to support the Dell PowerFlex storage platform.
 
 

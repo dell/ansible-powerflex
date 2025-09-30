@@ -194,3 +194,37 @@ releases:
       release_summary: This release brings several bug fixes and minor changes to
         the PowerFlex Ansible Modules.
     release_date: '2025-06-26'
+
+  3.0.0:
+    changes:
+      minor_changes:
+        - Added support for executing mdm_cluster, nvme_host, sdc, sdt and snapshot_policy modules
+          on PowerFlex Gen2.
+        - Added support for executing activemq, lia, mdm and tb roles on PowerFlex Gen2.
+      deprecated_features:
+        - The fault_set, replication_consistency_group, replication_pair, resource_group and sds
+          modules are not supported on PowerFlex Gen2.
+        - The device, info, protection_domain, snapshot, storagepool and volume modules are supported
+          only on PowerFlex Gen1. They are replaced by v2 modules on PowerFlex Gen2.
+      release_summary: This release extends support for existing modules and roles
+        from PowerFlex Gen1 to PowerFlex Gen2.
+    modules:
+      - description: Manage device on Dell PowerFlex Gen2
+        name: device_v2
+        namespace: ''
+      - description: Gathering information about Dell PowerFlex Gen2
+        name: info_v2
+        namespace: ''
+      - description: Manage Protection Domain on Dell PowerFlex Gen2
+        name: protection_domain_v2
+        namespace: ''
+      - description: Manage Snapshots on Dell PowerFlex Gen2
+        name: snapshot_v2
+        namespace: ''
+      - description: Managing Dell PowerFlex storage pool Gen2
+        name: storagepool_v2
+        namespace: ''
+      - description: Manage volumes on Dell PowerFlex Gen2
+        name: volume_v2
+        namespace: ''
+    release_date: '2025-09-30'

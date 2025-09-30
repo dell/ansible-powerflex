@@ -12,20 +12,30 @@ plugins:
   lookup: {}
   module:
     device:
-      description: Manage device on Dell PowerFlex
+      description: Manage device on Dell PowerFlex Gen1
       name: device
       namespace: ''
       version_added: 1.1.0
+    device_v2:
+      description: Manage device on Dell PowerFlex Gen2
+      name: device_v2
+      namespace: ''
+      version_added: 3.0.0
     fault_set:
-      description: Manage Fault Sets on Dell PowerFlex
+      description: Manage Fault Sets on Dell PowerFlex Gen1
       name: fault_set
       namespace: ''
       version_added: 2.2.0
     info:
-      description: Gathering information about Dell PowerFlex
+      description: Gathering information about Dell PowerFlex Gen1
       name: info
       namespace: ''
       version_added: 1.0.0
+    info_v2:
+      description: Gathering information about Dell PowerFlex Gen2
+      name: info_v2
+      namespace: ''
+      version_added: 3.0.0
     mdm_cluster:
       description: Manage MDM cluster on Dell PowerFlex
       name: mdm_cluster
@@ -37,22 +47,27 @@ plugins:
       namespace: ''
       version_added: 2.6.0
     protection_domain:
-      description: Manage Protection Domain on Dell PowerFlex
+      description: Manage Protection Domain on Dell PowerFlex Gen1
       name: protection_domain
       namespace: ''
       version_added: 1.2.0
+    protection_domain_v2:
+      description: Manage Protection Domain on Dell PowerFlex Gen2
+      name: protection_domain_v2
+      namespace: ''
+      version_added: 3.0.0
     replication_consistency_group:
-      description: Manage replication consistency groups on Dell PowerFlex
+      description: Manage replication consistency groups on Dell PowerFlex Gen1
       name: replication_consistency_group
       namespace: ''
       version_added: 1.5.0
     replication_pair:
-      description: Manage replication pairs on Dell PowerFlex
+      description: Manage replication pairs on Dell PowerFlex Gen1
       name: replication_pair
       namespace: ''
       version_added: 1.6.0
     resource_group:
-      description: Manage resource group deployments on Dell PowerFlex.
+      description: Manage resource group deployments on Dell PowerFlex Gen1
       name: resource_group
       namespace: ''
       version_added: 2.3.0
@@ -62,7 +77,7 @@ plugins:
       namespace: ''
       version_added: 1.0.0
     sds:
-      description: Manage SDS on Dell PowerFlex
+      description: Manage SDS on Dell PowerFlex Gen1
       name: sds
       namespace: ''
       version_added: 1.1.0
@@ -72,28 +87,43 @@ plugins:
       namespace: ''
       version_added: 2.6.0
     snapshot:
-      description: Manage Snapshots on Dell PowerFlex
+      description: Manage Snapshots on Dell PowerFlex Gen1
       name: snapshot
       namespace: ''
       version_added: 1.0.0
+    snapshot_v2:
+      description: Manage Snapshots on Dell PowerFlex Gen2
+      name: snapshot_v2
+      namespace: ''
+      version_added: 3.0.0
     snapshot_policy:
       description: Manage snapshot policies on Dell PowerFlex
       name: snapshot_policy
       namespace: ''
       version_added: 1.7.0
     storagepool:
-      description: Managing Dell PowerFlex storage pool
+      description: Managing Dell PowerFlex storage pool Gen1
       name: storagepool
       namespace: ''
       version_added: 1.0.0
+    storagepool_v2:
+      description: Managing Dell PowerFlex storage pool Gen2
+      name: storagepool_v2
+      namespace: ''
+      version_added: 3.0.0
     volume:
-      description: Manage volumes on Dell PowerFlex
+      description: Manage volumes on Dell PowerFlex Gen1
       name: volume
       namespace: ''
       version_added: 1.0.0
+    volume_v2:
+      description: Manage volumes on Dell PowerFlex Gen2
+      name: volume_v2
+      namespace: ''
+      version_added: 3.0.0
   netconf: {}
   shell: {}
   strategy: {}
   test: {}
   vars: {}
-version: 2.6.1
+version: 3.0.0

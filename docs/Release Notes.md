@@ -1,6 +1,6 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 2.6.1
+### Release notes 3.0.0
 
 >   © 2025 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
@@ -28,7 +28,8 @@ Table 1. Revision history
 
 | Revision | Date            | Description                                                 |
 |----------|-----------------|-------------------------------------------------------------|
-| 02       | June 2025        | Current release of Ansible Modules for Dell PowerFlex 2.6.1 |
+| 03       | Sep 2025        | Current release of Ansible Modules for Dell PowerFlex 3.0.0 |
+| 02       | June 2025       | Current release of Ansible Modules for Dell PowerFlex 2.6.1 |
 | 01       | Dec 2024        | Current release of Ansible Modules for Dell PowerFlex 2.6.0 |
 
 Product description
@@ -44,11 +45,19 @@ each of the entities.
 
 New features and enhancements
 -----------------------------
-Along with the previous release deliverables, this release supports following features - 
- - snapshot_policy - Reanmed snapshotAccessMode and secureSnapshots to
-   snapshot_access_mode and secure_snapshots respectively.
- - Updated minimum SDK version to 2.6.1.
- - Added none check for mdm cluster id in mdm_cluster module.
+Note: In this context, PowerFlex Gen1 refers to PowerFlex versions < 5.0.0, and PowerFlex Gen2
+refers to PowerFlex versions ≥ 5.0.0.
+
+This release introduces extended support for Dell PowerFlex Gen2 by adding compatibility for
+modules including mdm_cluster, nvme_host, sdc, sdt, and snapshot_policy, as well as
+roles such as activemq, lia, mdm, and tb.
+
+This release also includes new Gen2-specific modules — device_v2, info_v2, protection_domain_v2,
+snapshot_v2, storagepool_v2, and volume_v2 — which replace their original Gen1 counterparts for Gen2 environments.
+
+Additionally, the modules fault_set, replication_consistency_group, replication_pair, resource_group,
+and sds are not supported on PowerFlex Gen2 and are deprecated for Gen2 use. However, all deprecated
+modules continue to be fully supported on PowerFlex Gen1.
 
 Known issues
 ------------
