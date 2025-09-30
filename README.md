@@ -35,7 +35,7 @@ The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, s
 
 | **Ansible Modules** | **PowerFlex/VxFlex OS Version** | **SDK version** | **Python version** | **Ansible**              |
 |---------------------|-----------------------|-------|--------------------|--------------------------|
-| v2.6.1 |3.6 <br> 4.5 <br> 4.6 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 1.14.1 | 3.11.x <br> 3.12.x <br> 3.13.x | <br> 2.17 <br> 2.18 <br> 2.19 |
+| v3.0.0 |4.5 <br> 4.6 <br> 5.0 <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 2.0.0 | 3.11.x <br> 3.12.x <br> 3.13.x | <br> 2.17 <br> 2.18 <br> 2.19 |
 
   * Please follow PyPowerFlex installation instructions on [PyPowerFlex Documentation](https://github.com/dell/python-powerflex)
 
@@ -71,15 +71,21 @@ The modules are written in such a way that all requests are idempotent and hence
 
 ### List of Ansible modules for Dell PowerFlex
   * [Info module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/info.rst)
+  * [Info V2 module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/info_v2.rst)
   * [Snapshot module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/snapshot.rst)
+  * [Snapshot V2 module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/snapshot_v2.rst)
   * [SDC module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/sdc.rst)
   * [Storage pool module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/storagepool.rst)
+  * [Storage pool V2 module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/storagepool_v2.rst)
   * [Volume module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/volume.rst)
+  * [Voume V2 module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/volume_v2.rst)
   * [SDS module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/sds.rst)
   * [SDT module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/sdt.rst)
   * [NVMe Host module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/nvme_host.rst)
   * [Device Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/device.rst)
+  * [Device V2 Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/device_v2.rst)
   * [Protection Domain Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/protection_domain.rst)
+  * [Protection Domain V2 Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/protection_domain_v2.rst)
   * [MDM Cluster Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/mdm_cluster.rst)
   * [Replication Consistency Group Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/replication_consistency_group.rst)
   * [Replication Pair Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/replication_pair.rst)

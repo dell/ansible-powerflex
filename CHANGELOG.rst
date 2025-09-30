@@ -4,6 +4,36 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
+v3.0.0
+======
+
+Release Summary
+---------------
+
+This release extends support for existing modules and roles from PowerFlex Gen1 to PowerFlex Gen2.
+
+Minor Changes
+-------------
+
+- Added support for executing mdm_cluster, nvme_host, sdc, sdt and snapshot_policy modules on PowerFlex Gen2.
+- Added support for executing activemq, lia, mdm and tb roles on PowerFlex Gen2.
+
+Deprecated Features
+--------
+
+- The fault_set, replication_consistency_group, replication_pair, resource_group and sds modules are not supported on PowerFlex Gen2.
+- The device, info, protection_domain, snapshot, storagepool and volume modules are supported only on PowerFlex Gen1. They are replaced by v2 modules on PowerFlex Gen2.
+
+New Modules
+-----------
+
+- dellemc.powerflex.device_v2 - Manage device on Dell PowerFlex Gen2
+- dellemc.powerflex.info_v2 - Gathering information about Dell PowerFlex Gen2
+- dellemc.powerflex.protection_domain_v2 - Manage Protection Domain on Dell PowerFlex Gen2
+- dellemc.powerflex.snapshot_v2 - Manage Snapshots on Dell PowerFlex Gen2
+- dellemc.powerflex.storagepool_v2 - Managing Dell PowerFlex storage pool Gen2
+- dellemc.powerflex.volume_v2 - Manage volumes on Dell PowerFlex Gen2
+
 v2.6.1
 ======
 
