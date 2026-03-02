@@ -27,3 +27,4 @@ roles/powerflex_sdr/molecule/sdr_installation_invalid_path_rpm/converge.yml var-
 roles/powerflex_sds/molecule/sds_installation/converge.yml var-naming[no-role-prefix]
 roles/powerflex_sdt/molecule/sdt_installation/converge.yml var-naming[no-role-prefix]
 roles/powerflex_webui/molecule/webui_installation_invalid_path_rpm/converge.yml var-naming[no-role-prefix]
+roles/powerflex_tb/molecule/wrong_tb_credentials/converge.yml var-naming[no-role-prefix]

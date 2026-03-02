@@ -17,7 +17,7 @@
         protection_domain_name: "{{ protection_domain_name }}"
         size: "{{ vol_size }}"
         state: "present"
-      register: volume_output
+      register: powerflex_sdc_volume_output
 
 - name: Install SDC
   hosts: sdc

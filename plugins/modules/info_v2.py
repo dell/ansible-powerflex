@@ -1542,7 +1542,7 @@ Storage_Pools:
                 name:
                     description: Name of the statistic (e.g., avg_host_read_latency).
                     type: str
-                values:
+                stat_values:
                     description: Values for the statistic.
                     type: list
     sample: [
@@ -1581,56 +1581,56 @@ Storage_Pools:
                 }
             ],
             "statistics": [
-                {"name": "avg_host_read_latency", "values": [0]},
-                {"name": "raw_used", "values": [13190918307840]},
-                {"name": "logical_used", "values": [0]},
-                {"name": "host_write_bandwidth", "values": [0]},
-                {"name": "host_write_iops", "values": [0]},
-                {"name": "storage_fe_write_bandwidth", "values": [0]},
-                {"name": "storage_fe_write_iops", "values": [0]},
-                {"name": "avg_fe_write_io_size", "values": [0]},
-                {"name": "storage_fe_read_bandwidth", "values": [0]},
-                {"name": "storage_fe_read_iops", "values": [0]},
-                {"name": "avg_fe_read_io_size", "values": [0]},
-                {"name": "utilization_ratio", "values": [0.008140671]},
-                {"name": "compression_reducible_ratio", "values": [0.0]},
-                {"name": "host_read_bandwidth", "values": [0]},
-                {"name": "host_read_iops", "values": [0]},
-                {"name": "data_reduction_ratio", "values": [0.0]},
-                {"name": "thin_provisioning_ratio", "values": ["0.8"]},
-                {"name": "avg_wrc_write_latency", "values": [0]},
-                {"name": "unreducible_data", "values": [0]},
-                {"name": "avg_wrc_read_latency", "values": [0]},
-                {"name": "storage_fe_read_latency", "values": [0]},
-                {"name": "over_provisioning_limit", "values": [4611686017353646080]},
-                {"name": "patterns_saving_ratio", "values": [0.0]},
-                {"name": "avg_host_write_latency", "values": [0]},
-                {"name": "storage_fe_write_latency", "values": [0]},
-                {"name": "logical_provisioned", "values": [42949672960]},
-                {"name": "efficiency_ratio", "values": ["0.8"]},
-                {"name": "storage_fe_trim_latency", "values": [0]},
-                {"name": "physical_system", "values": [53687091200]},
-                {"name": "data_reduction_reducible_ratio", "values": [0.0]},
-                {"name": "storage_fe_trim_bandwidth", "values": [0]},
-                {"name": "storage_fe_trim_iops", "values": [0]},
-                {"name": "avg_fe_trim_io_size", "values": [0]},
-                {"name": "compression_ratio", "values": [0.0]},
-                {"name": "reducible_ratio", "values": [1.0]},
-                {"name": "physical_used", "values": [0]},
-                {"name": "snapshot_saving_ratio", "values": [0.0]},
-                {"name": "physical_free", "values": [6541235191808]},
-                {"name": "host_trim_bandwidth", "values": [0]},
-                {"name": "host_trim_iops", "values": [0]},
-                {"name": "total_wrc_write_bandwidth", "values": [0]},
-                {"name": "total_wrc_write_iops", "values": [0]},
-                {"name": "avg_wrc_write_io_size", "values": [0]},
-                {"name": "total_wrc_read_bandwidth", "values": [0]},
-                {"name": "total_wrc_read_iops", "values": [0]},
-                {"name": "avg_wrc_read_io_size", "values": [0]},
-                {"name": "physical_total", "values": [6594922283008]},
-                {"name": "logical_owned", "values": [0]},
-                {"name": "patterns_saving_reducible_ratio", "values": [0.0]},
-                {"name": "avg_host_trim_latency", "values": [0]}
+                {"name": "avg_host_read_latency", "stat_values": [0]},
+                {"name": "raw_used", "stat_values": [13190918307840]},
+                {"name": "logical_used", "stat_values": [0]},
+                {"name": "host_write_bandwidth", "stat_values": [0]},
+                {"name": "host_write_iops", "stat_values": [0]},
+                {"name": "storage_fe_write_bandwidth", "stat_values": [0]},
+                {"name": "storage_fe_write_iops", "stat_values": [0]},
+                {"name": "avg_fe_write_io_size", "stat_values": [0]},
+                {"name": "storage_fe_read_bandwidth", "stat_values": [0]},
+                {"name": "storage_fe_read_iops", "stat_values": [0]},
+                {"name": "avg_fe_read_io_size", "stat_values": [0]},
+                {"name": "utilization_ratio", "stat_values": [0.008140671]},
+                {"name": "compression_reducible_ratio", "stat_values": [0.0]},
+                {"name": "host_read_bandwidth", "stat_values": [0]},
+                {"name": "host_read_iops", "stat_values": [0]},
+                {"name": "data_reduction_ratio", "stat_values": [0.0]},
+                {"name": "thin_provisioning_ratio", "stat_values": ["0.8"]},
+                {"name": "avg_wrc_write_latency", "stat_values": [0]},
+                {"name": "unreducible_data", "stat_values": [0]},
+                {"name": "avg_wrc_read_latency", "stat_values": [0]},
+                {"name": "storage_fe_read_latency", "stat_values": [0]},
+                {"name": "over_provisioning_limit", "stat_values": [4611686017353646080]},
+                {"name": "patterns_saving_ratio", "stat_values": [0.0]},
+                {"name": "avg_host_write_latency", "stat_values": [0]},
+                {"name": "storage_fe_write_latency", "stat_values": [0]},
+                {"name": "logical_provisioned", "stat_values": [42949672960]},
+                {"name": "efficiency_ratio", "stat_values": ["0.8"]},
+                {"name": "storage_fe_trim_latency", "stat_values": [0]},
+                {"name": "physical_system", "stat_values": [53687091200]},
+                {"name": "data_reduction_reducible_ratio", "stat_values": [0.0]},
+                {"name": "storage_fe_trim_bandwidth", "stat_values": [0]},
+                {"name": "storage_fe_trim_iops", "stat_values": [0]},
+                {"name": "avg_fe_trim_io_size", "stat_values": [0]},
+                {"name": "compression_ratio", "stat_values": [0.0]},
+                {"name": "reducible_ratio", "stat_values": [1.0]},
+                {"name": "physical_used", "stat_values": [0]},
+                {"name": "snapshot_saving_ratio", "stat_values": [0.0]},
+                {"name": "physical_free", "stat_values": [6541235191808]},
+                {"name": "host_trim_bandwidth", "stat_values": [0]},
+                {"name": "host_trim_iops", "stat_values": [0]},
+                {"name": "total_wrc_write_bandwidth", "stat_values": [0]},
+                {"name": "total_wrc_write_iops", "stat_values": [0]},
+                {"name": "avg_wrc_write_io_size", "stat_values": [0]},
+                {"name": "total_wrc_read_bandwidth", "stat_values": [0]},
+                {"name": "total_wrc_read_iops", "stat_values": [0]},
+                {"name": "avg_wrc_read_io_size", "stat_values": [0]},
+                {"name": "physical_total", "stat_values": [6594922283008]},
+                {"name": "logical_owned", "stat_values": [0]},
+                {"name": "patterns_saving_reducible_ratio", "stat_values": [0.0]},
+                {"name": "avg_host_trim_latency", "stat_values": [0]}
             ],
             "mediaType": null,
             "name": "SP_EC",
@@ -1827,7 +1827,7 @@ Volumes:
                 name:
                     description: Name of the statistic (e.g., avg_host_read_latency).
                     type: str
-                values:
+                stat_values:
                     description: Values for the statistic.
                     type: list
     sample: [
@@ -1848,17 +1848,17 @@ Volumes:
                 }
             ],
             "statistics": [
-                {"name": "host_trim_bandwidth", "values": [0]},
-                {"name": "host_trim_iops", "values": [0]},
-                {"name": "avg_host_write_latency", "values": [0]},
-                {"name": "avg_host_read_latency", "values": [0]},
-                {"name": "logical_provisioned", "values": [10737418240]},
-                {"name": "host_read_bandwidth", "values": [0]},
-                {"name": "host_read_iops", "values": [0]},
-                {"name": "logical_used", "values": [0]},
-                {"name": "host_write_bandwidth", "values": [0]},
-                {"name": "host_write_iops", "values": [0]},
-                {"name": "avg_host_trim_latency", "values": [0]}
+                {"name": "host_trim_bandwidth", "stat_values": [0]},
+                {"name": "host_trim_iops", "stat_values": [0]},
+                {"name": "avg_host_write_latency", "stat_values": [0]},
+                {"name": "avg_host_read_latency", "stat_values": [0]},
+                {"name": "logical_provisioned", "stat_values": [10737418240]},
+                {"name": "host_read_bandwidth", "stat_values": [0]},
+                {"name": "host_read_iops", "stat_values": [0]},
+                {"name": "logical_used", "stat_values": [0]},
+                {"name": "host_write_bandwidth", "stat_values": [0]},
+                {"name": "host_write_iops", "stat_values": [0]},
+                {"name": "avg_host_trim_latency", "stat_values": [0]}
             ],
             "lockedAutoSnapshot": false,
             "lockedAutoSnapshotMarkedForRemoval": false,
@@ -4130,7 +4130,10 @@ class PowerFlexInfo(PowerFlexBase):
                 resources = self.powerflex_conn.utility.query_metrics('storage_pool', [], []).get("resources", [])
                 resource_map = {res["id"]: res["metrics"] for res in resources}
                 for item in pool:
-                    item['statistics'] = resource_map[item['id']] if item['id'] in resource_map else {}
+                    metrics = resource_map.get(item['id'], {})
+                    if isinstance(metrics, list):
+                        metrics = [{'name': m['name'], 'stat_values': m.pop('values')} if 'values' in m else m for m in metrics]
+                    item['statistics'] = metrics
             return result_list(pool)
 
         except Exception as e:
@@ -4153,7 +4156,10 @@ class PowerFlexInfo(PowerFlexBase):
                 resources = self.powerflex_conn.utility.query_metrics('volume', [], []).get("resources", [])
                 resource_map = {res["id"]: res["metrics"] for res in resources}
                 for item in volumes:
-                    item['statistics'] = resource_map[item['id']] if item['id'] in resource_map else {}
+                    metrics = resource_map.get(item['id'], {})
+                    if isinstance(metrics, list):
+                        metrics = [{'name': m['name'], 'stat_values': m.pop('values')} if 'values' in m else m for m in metrics]
+                    item['statistics'] = metrics
             return result_list(volumes)
 
         except Exception as e:
