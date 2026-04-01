@@ -50,8 +50,6 @@ The following tests are done on ansible-powerflex collection
 - Unit tests
 - Integration tests.
 
-## Support
-Refer [Support](https://github.com/dell/ansible-powerflex/blob/main/docs/SUPPORT.md) documenetation for more information on the support from Dell Technologies.
 
 ## Release Notes, Maintenance and Deprecation
 Ansible Modules for Dell Technologies PowerFlex follows [Semantic Versioning](https://semver.org/).
