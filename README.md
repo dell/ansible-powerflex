@@ -21,7 +21,7 @@ The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, s
 * [Branching strategy](https://github.com/dell/ansible-powerflex/blob/main/docs/BRANCHING.md)
 * [List of adopters](https://github.com/dell/ansible-powerflex/blob/main/docs/ADOPTERS.md)
 * [Maintainers](https://github.com/dell/ansible-powerflex/blob/main/docs/MAINTAINERS.md)
-* [Support](https://github.com/dell/ansible-powerflex/blob/main/docs/SUPPORT.md)
+* [Support](#Support)
 * [License](#license)
 * [Security](https://github.com/dell/ansible-powerflex/blob/main/docs/SECURITY.md)
 * [Prerequisites](#prerequisites)
