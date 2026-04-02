@@ -21,7 +21,7 @@ The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, s
 * [Branching strategy](https://github.com/dell/ansible-powerflex/blob/main/docs/BRANCHING.md)
 * [List of adopters](https://github.com/dell/ansible-powerflex/blob/main/docs/ADOPTERS.md)
 * [Maintainers](https://github.com/dell/ansible-powerflex/blob/main/docs/MAINTAINERS.md)
-* [Support](https://github.com/dell/ansible-powerflex/blob/main/docs/SUPPORT.md)
+* [Support](#Support)
 * [License](#license)
 * [Security](https://github.com/dell/ansible-powerflex/blob/main/docs/SECURITY.md)
 * [Prerequisites](#prerequisites)
@@ -50,8 +50,6 @@ The following tests are done on ansible-powerflex collection
 - Unit tests
 - Integration tests.
 
-## Support
-Refer [Support](https://github.com/dell/ansible-powerflex/blob/main/docs/SUPPORT.md) documenetation for more information on the support from Dell Technologies.
 
 ## Release Notes, Maintenance and Deprecation
 Ansible Modules for Dell Technologies PowerFlex follows [Semantic Versioning](https://semver.org/).
@@ -91,6 +89,13 @@ The modules are written in such a way that all requests are idempotent and hence
   * [Replication Pair Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/replication_pair.rst)
   * [Snapshot Policy Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/snapshot_policy.rst)
   * [Fault Sets Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/fault_set.rst)
+
+
+## Support
+
+The support is available through [GitHub Issues](https://github.com/dell/ansible-powerflex/issues) or at [Dell Community forum](https://www.dell.com/community/Automation/bd-p/Automation).
+
+As Red Hat Ansible Certified Content, this collection is entitled to support through the Ansible Automation Platform (AAP) using the **Create issue** button on the top right corner. If a support case cannot be opened with Red Hat, and the collection was obtained from Ansible Galaxy or GitHub, you can seek community support through the [Ansible Forum](https://forum.ansible.com/).
 
 
 ## License
