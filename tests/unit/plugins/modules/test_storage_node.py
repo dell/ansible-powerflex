@@ -304,8 +304,8 @@ class TestPowerFlexStorageNode(PowerFlexUnitBase):
         powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames = MagicMock(
             return_value=MockStorageNodeApi.STORAGE_NODE)
         powerflex_module_mock.perform_module_operation()
-        _, kwargs = powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames.call_args
-        assert kwargs.get('force') is True
+        call = powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames.call_args
+        assert call.kwargs.get('force') is True
 
     def test_update_pathnames_exception(self, powerflex_module_mock):
         """Update pathnames exception."""
