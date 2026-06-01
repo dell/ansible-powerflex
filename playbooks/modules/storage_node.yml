@@ -1,0 +1,93 @@
+---
+- name: Storage Node Operations on PowerFlex 5.x
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    hostname: "<your_powerflex_host>"
+    username: "<your_username>"
+    password: "<your_password>"
+    validate_certs: false
+    port: 443
+    node_name: "node1"
+    node_id: "abc12300000000"
+  module_defaults:
+    dellemc.powerflex.storage_node:
+      hostname: "{{ hostname }}"
+      username: "{{ username }}"
+      password: "{{ password }}"  # placeholder; supply at runtime via --extra-vars
+      validate_certs: "{{ validate_certs }}"
+      port: "{{ port }}"
+
+  tasks:
+    - name: Get storage node details by name
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        state: "present"
+
+    - name: Get storage node details by ID
+      dellemc.powerflex.storage_node:
+        storage_node_id: "{{ node_id }}"
+        state: "present"
+
+    - name: Rename storage node
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        new_storage_node_name: "node1_renamed"
+        state: "present"
+
+    - name: Add a single IP address to storage node
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        ip_address: "10.0.0.5"
+        ip_role: "Storage"
+        ip_state: "present-in-node"
+        state: "present"
+
+    - name: Set IP role on storage node
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        ip_address: "10.0.0.5"
+        ip_role: "App"
+        ip_state: "present-in-node"
+        state: "present"
+
+    - name: Remove a single IP address from storage node
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        ip_address: "10.0.0.5"
+        ip_state: "absent-in-node"
+        state: "present"
+
+    - name: Manage multiple IP addresses in a single task (bulk)
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        node_ips:
+          - ip: "10.0.0.6"
+            role: "Storage"
+            ip_state: "present-in-node"
+          - ip: "10.0.0.7"
+            role: "App"
+            ip_state: "present-in-node"
+          - ip: "10.0.0.2"
+            ip_state: "absent-in-node"
+        state: "present"
+
+    - name: Update original pathnames for storage node devices
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        update_original_pathnames: true
+        force_failed_devices: true
+        state: "present"
+
+    - name: Query PDS details through storage node
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        query_pds: true
+        state: "present"
+
+    - name: Query DGWT details through storage node
+      dellemc.powerflex.storage_node:
+        storage_node_name: "{{ node_name }}"
+        query_dgwt: true
+        state: "present"

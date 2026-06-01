@@ -1,0 +1,8 @@
+---
+minor_changes:
+  - Added the ``storage_node`` module to manage existing Dell PowerFlex 5.x storage nodes,
+    including getting details, renaming, single and bulk IP address management
+    (add, remove, set role via ``ip_address`` or the ``node_ips`` list), updating
+    original device pathnames, and querying related PDS and DGWT objects.
+    The module manages existing nodes only; storage node creation and deletion
+    are not supported.
