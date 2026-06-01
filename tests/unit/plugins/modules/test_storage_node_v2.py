@@ -637,5 +637,106 @@ class TestPowerFlexStorageNodeV2(PowerFlexUnitBase):
         powerflex_module_mock.powerflex_conn.storage_node.set_ip_role.assert_called_once_with(
             MockStorageNodeV2Api.SN_ID, '10.0.0.1', 'Storage')
         powerflex_module_mock.powerflex_conn.storage_node.add_ip.assert_not_called()
+
+    # TC-036: Create storage node in check mode
+    def test_check_mode_create_storage_node(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                'storage_node_name': 'new_node',
+                'protection_domain_name': MockStorageNodeV2Api.PD_NAME,
+                'node_ips': [{'ip': '10.0.0.1', 'role': 'Storage'}],
+                'state': 'present',
+            })
+        powerflex_module_mock.module.check_mode = True
+        powerflex_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=[])
+        powerflex_module_mock.perform_module_operation()
         call_args = powerflex_module_mock.module.exit_json.call_args
         assert call_args[1].get('changed') is True
+
+    # TC-037: Get protection domain by ID
+    def test_get_protection_domain_by_id(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                'storage_node_name': 'new_node',
+                'protection_domain_id': MockStorageNodeV2Api.PD_ID,
+                'node_ips': [{'ip': '10.0.0.1', 'role': 'Storage'}],
+                'state': 'present',
+            })
+        powerflex_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=[])
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=MockStorageNodeV2Api.PROTECTION_DOMAIN)
+        powerflex_module_mock.powerflex_conn.storage_node.create = MagicMock(
+            return_value=MockStorageNodeV2Api.STORAGE_NODE)
+        powerflex_module_mock.perform_module_operation()
+        powerflex_module_mock.powerflex_conn.protection_domain.get.assert_called_once_with(
+            entity_id=MockStorageNodeV2Api.PD_ID)
+
+    # TC-038: Protection domain get exception
+    def test_protection_domain_get_exception(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                'storage_node_name': 'new_node',
+                'protection_domain_name': MockStorageNodeV2Api.PD_NAME,
+                'node_ips': [{'ip': '10.0.0.1', 'role': 'Storage'}],
+                'state': 'present',
+            })
+        powerflex_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=[])
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            side_effect=MockApiException('Protection domain error'))
+        self.capture_fail_json_call(
+            'Failed to get protection domain with error',
+            powerflex_module_mock, invoke_perform_module=True)
+
+    # TC-039: Protection domain not found during creation
+    def test_protection_domain_not_found_creation(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                'storage_node_name': 'new_node',
+                'protection_domain_name': 'nonexistent_pd',
+                'node_ips': [{'ip': '10.0.0.1', 'role': 'Storage'}],
+                'state': 'present',
+            })
+        powerflex_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=[])
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=None)
+        self.capture_fail_json_call(
+            'Protection domain',
+            powerflex_module_mock, invoke_perform_module=True)
+
+    # TC-040: Storage node not found during delete
+    def test_storage_node_not_found_delete(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                'storage_node_name': 'nonexistent_node',
+                'state': 'absent',
+            })
+        powerflex_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=[])
+        self.capture_fail_json_call(
+            'Storage node',
+            powerflex_module_mock, invoke_perform_module=True)
+
+    # TC-041: Test main() function
+    def test_main_function(self):
+        from ansible_collections.dellemc.powerflex.plugins.modules.storage_node_v2 import main
+        with patch('ansible_collections.dellemc.powerflex.plugins.modules.storage_node_v2.AnsibleModule') as mock_module:
+            with patch('ansible_collections.dellemc.powerflex.plugins.modules.storage_node_v2.PowerFlexStorageNodeV2') as mock_sn:
+                mock_instance = MagicMock()
+                mock_sn.return_value = mock_instance
+                main()
+                mock_sn.assert_called_once()
+                mock_instance.perform_module_operation.assert_called_once()

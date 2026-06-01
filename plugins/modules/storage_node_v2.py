@@ -692,7 +692,6 @@ class PowerFlexStorageNodeV2(PowerFlexBase):
                         msg="new_storage_node_name is not supported during "
                             "creation of storage node. Please try with "
                             "storage_node_name.")
-                    return
 
                 # Get protection domain
                 pd = self.get_protection_domain(
@@ -702,7 +701,6 @@ class PowerFlexStorageNodeV2(PowerFlexBase):
                         msg=f"Protection domain "
                             f"'{protection_domain_name or protection_domain_id}'"
                             f" not found.")
-                    return
 
                 # Format IPs for SDK
                 sdk_ips = [{"ip": ip_conf["ip"], "role": ip_conf["role"]}
@@ -716,7 +714,6 @@ class PowerFlexStorageNodeV2(PowerFlexBase):
                     msg=f"Storage node "
                         f"'{storage_node_name or storage_node_id}' "
                         f"not found.")
-                return
         else:
             # Node exists — handle modifications
             node_id = sn_details['id']
