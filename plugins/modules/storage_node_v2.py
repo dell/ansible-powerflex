@@ -239,7 +239,7 @@ storage_node_details:
         protectionDomainId:
             description: Protection domain ID.
             type: str
-        ips:
+        ipsList:
             description: List of IP addresses and roles.
             type: list
             elements: dict
@@ -256,15 +256,16 @@ storage_node_details:
             description: Related resource links.
             type: list
     sample: {
-        "id": "abc12300000000",
-        "name": "node1",
-        "protectionDomainId": "7bd6457000000000",
-        "ips": [
+        "id": "9aa2541300000000",
+        "name": "SN_node1.lab.emc.com",
+        "protectionDomainId": "d39bff0700000000",
+        "ipsList": [
             {"ip": "10.0.0.1", "role": "StorageAndApp"}
         ],
-        "port": 7072,
-        "softwareVersionInfo": "R4_5.2100.0",
-        "authenticationError": "None"
+        "pdsPort": 9022,
+        "dgwtPort": 9033,
+        "pdsId": "ac0ab38100000000",
+        "dgwtId": "24f2e97a00000000"
     }
 pds_details:
     description: PDS details queried through storage node.
@@ -617,7 +618,7 @@ class PowerFlexStorageNodeV2(PowerFlexBase):
         :return: IP dict if found, else None
         :rtype: dict or None
         """
-        ips = sn_details.get('ips', [])
+        ips = sn_details.get('ipsList', sn_details.get('ips', []))
         for ip_entry in ips:
             if ip_entry.get('ip') == ip_address:
                 return ip_entry

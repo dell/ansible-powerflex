@@ -43,20 +43,21 @@ class MockStorageNodeV2Api:
         "id": "abc12300000000",
         "name": "test_node",
         "protectionDomainId": "7bd6457000000000",
-        "ips": [
+        "ipsList": [
             {"ip": "10.0.0.1", "role": "StorageAndApp"},
         ],
-        "port": 7072,
-        "softwareVersionInfo": "R4_5.2100.0",
-        "authenticationError": "None",
+        "pdsPort": 9022,
+        "dgwtPort": 9033,
+        "pdsId": "pds00100000000",
+        "dgwtId": "dgwt00100000000",
         "links": [
             {
-                "rel": "/api/Node/relationship/Pds",
-                "href": "/api/instances/Node::abc12300000000/relationships/Pds"
+                "rel": "/api/StorageNode/relationship/Pds",
+                "href": "/api/instances/StorageNode::abc12300000000/relationships/Pds"
             },
             {
-                "rel": "/api/Node/relationship/Dgwt",
-                "href": "/api/instances/Node::abc12300000000/relationships/Dgwt"
+                "rel": "/api/StorageNode/relationship/Dgwt",
+                "href": "/api/instances/StorageNode::abc12300000000/relationships/Dgwt"
             },
             {
                 "rel": "/api/parent/relationship/protectionDomainId",
@@ -69,13 +70,12 @@ class MockStorageNodeV2Api:
         "id": "abc12300000000",
         "name": "test_node",
         "protectionDomainId": "7bd6457000000000",
-        "ips": [
+        "ipsList": [
             {"ip": "10.0.0.1", "role": "StorageAndApp"},
             {"ip": "10.0.0.2", "role": "Storage"},
         ],
-        "port": 7072,
-        "softwareVersionInfo": "R4_5.2100.0",
-        "authenticationError": "None",
+        "pdsPort": 9022,
+        "dgwtPort": 9033,
         "links": []
     }
 

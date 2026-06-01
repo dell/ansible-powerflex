@@ -4,11 +4,13 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: "x.x.x.x"
-    username: "admin"
-    password: "Password"
+    hostname: '10.225.106.54'
+    username: 'admin'
+    password: 'Password123!'
     validate_certs: false
     host_port: 443
+    sn_name: "SN_pie104074.pie.lab.emc.com"
+    sn_id: "9aa2541300000000"
 
   tasks:
     - name: Get Storage Node by name
@@ -18,8 +20,13 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        storage_node_name: "node_1"
+        storage_node_name: "{{ sn_name }}"
         state: "present"
+      register: sn_by_name
+
+    - name: Display Storage Node details by name
+      ansible.builtin.debug:
+        var: sn_by_name.storage_node_details
 
     - name: Get Storage Node by ID
       dellemc.powerflex.storage_node_v2:
@@ -30,72 +37,83 @@
         port: "{{ host_port }}"
         storage_node_id: "{{ sn_id }}"
         state: "present"
+      register: sn_by_id
 
-    - name: Rename Storage Node
-      register: result
+    - name: Display Storage Node details by ID
+      ansible.builtin.debug:
+        var: sn_by_id.storage_node_details
+
+    - name: Rename Storage Node - Check Mode
       dellemc.powerflex.storage_node_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        storage_node_name: "node_1"
-        new_storage_node_name: "node_1_renamed"
+        storage_node_name: "{{ sn_name }}"
+        new_storage_node_name: "{{ sn_name }}_renamed"
         state: "present"
+      check_mode: true
+      diff: true
+      register: rename_check
 
-    - name: Add IP Address to Storage Node
-      register: result
+    - name: Display Rename Check Mode result
+      ansible.builtin.debug:
+        var: rename_check
+
+    - name: Add IP Address - Check Mode
       dellemc.powerflex.storage_node_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        storage_node_name: "node_1"
-        ip_address: "10.0.0.5"
+        storage_node_name: "{{ sn_name }}"
+        ip_address: "192.168.99.99"
         ip_role: "Storage"
         ip_state: "present-in-node"
         state: "present"
+      check_mode: true
+      register: add_ip_check
 
-    - name: Set IP Role on Storage Node
-      register: result
+    - name: Display Add IP Check Mode result
+      ansible.builtin.debug:
+        var: add_ip_check
+
+    - name: Set IP Role - idempotent (existing IP, same role)
       dellemc.powerflex.storage_node_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        storage_node_name: "node_1"
-        ip_address: "10.0.0.5"
+        storage_node_name: "{{ sn_name }}"
+        ip_address: "10.230.44.181"
         ip_role: "StorageAndApp"
         ip_state: "present-in-node"
         state: "present"
+      register: set_role_idempotent
 
-    - name: Remove IP Address from Storage Node
-      register: result
+    - name: Display Set IP Role idempotent result (changed should be false)
+      ansible.builtin.debug:
+        var: set_role_idempotent
+
+    - name: Remove IP - idempotent (IP not on node)
       dellemc.powerflex.storage_node_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        storage_node_name: "node_1"
-        ip_address: "10.0.0.5"
+        storage_node_name: "{{ sn_name }}"
+        ip_address: "192.168.99.99"
         ip_state: "absent-in-node"
         state: "present"
+      register: remove_ip_idempotent
 
-    - name: Update Original Pathnames
-      register: result
-      dellemc.powerflex.storage_node_v2:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        storage_node_name: "node_1"
-        update_original_pathnames: true
-        force_failed_devices: true
-        state: "present"
+    - name: Display Remove IP idempotent result (changed should be false)
+      ansible.builtin.debug:
+        var: remove_ip_idempotent
 
     - name: Query PDS Details through Storage Node
       dellemc.powerflex.storage_node_v2:
@@ -104,9 +122,14 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        storage_node_name: "node_1"
+        storage_node_name: "{{ sn_name }}"
         query_pds: true
         state: "present"
+      register: pds_result
+
+    - name: Display PDS Details
+      ansible.builtin.debug:
+        var: pds_result.pds_details
 
     - name: Query DGWT Details through Storage Node
       dellemc.powerflex.storage_node_v2:
@@ -115,29 +138,43 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        storage_node_name: "node_1"
+        storage_node_name: "{{ sn_name }}"
         query_dgwt: true
         state: "present"
+      register: dgwt_result
+
+    - name: Display DGWT Details
+      ansible.builtin.debug:
+        var: dgwt_result.dgwt_details
+
+    - name: Delete non-existent Storage Node - idempotent
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "nonexistent_node_for_idempotent_test"
+        state: "absent"
+      register: delete_idempotent
+
+    - name: Display Delete idempotent result (changed should be false)
+      ansible.builtin.debug:
+        var: delete_idempotent
 
     - name: Delete Storage Node - Check Mode
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "{{ sn_name }}"
+        state: "absent"
       check_mode: true
-      register: result
-      dellemc.powerflex.storage_node_v2:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        storage_node_name: "node_1"
-        state: "absent"
+      diff: true
+      register: delete_check
 
-    - name: Delete Storage Node
-      register: result
-      dellemc.powerflex.storage_node_v2:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        storage_node_name: "node_1"
-        state: "absent"
+    - name: Display Delete Check Mode result
+      ansible.builtin.debug:
+        var: delete_check
