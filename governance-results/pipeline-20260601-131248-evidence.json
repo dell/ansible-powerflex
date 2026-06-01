@@ -1,0 +1,509 @@
+{
+  "pipeline_id": "pipeline-20260601-131248",
+  "pipeline_start": "2026-06-01T13:12:48.286093+00:00",
+  "run_id": null,
+  "gates": [
+    {
+      "gate_id": "final",
+      "decision": "PASS",
+      "score": 92.4,
+      "retry_count": 0,
+      "timestamp": "2026-06-01T13:12:48.885887+00:00",
+      "collectors": [
+        {
+          "collector": "security_scanner",
+          "score": 97,
+          "issues": [
+            {
+              "type": "security",
+              "sub_type": "ip_address",
+              "severity": "low",
+              "description": "Internal IP address detected",
+              "line": 361,
+              "code": "{\"ip\": \"****REDACTED****\", \"role\": \"****REDACTED****\"}"
+            }
+          ],
+          "data": {
+            "secrets_detection": {
+              "status": "1 secrets found",
+              "findings": [
+                {
+                  "type": "ip_address",
+                  "severity": "low",
+                  "description": "Internal IP address detected",
+                  "line": 361,
+                  "code": "{\"ip\": \"****REDACTED****\", \"role\": \"****REDACTED****\"}"
+                }
+              ],
+              "finding_count": 1
+            },
+            "code_security": {
+              "status": "clean",
+              "findings": [],
+              "finding_count": 0
+            },
+            "dependency_security": {
+              "status": "clean",
+              "findings": [],
+              "finding_count": 0
+            },
+            "overall_score": 97,
+            "issues": [
+              {
+                "type": "security",
+                "sub_type": "ip_address",
+                "severity": "low",
+                "description": "Internal IP address detected",
+                "line": 361,
+                "code": "{\"ip\": \"****REDACTED****\", \"role\": \"****REDACTED****\"}"
+              }
+            ],
+            "status": "passed"
+          }
+        },
+        {
+          "collector": "static_analysis",
+          "score": 95,
+          "issues": [],
+          "data": {
+            "tools_run": [],
+            "findings": [],
+            "finding_count": 0,
+            "build_compiled": true,
+            "overall_score": 95,
+            "issues": [],
+            "status": "passed"
+          }
+        },
+        {
+          "collector": "impact_assessment",
+          "score": 91.0,
+          "issues": [],
+          "data": {
+            "blast_radius": {
+              "radius": "single_service",
+              "affected_files": 1,
+              "affected_services": [],
+              "affected_components": [],
+              "service_count": 0,
+              "component_count": 0,
+              "downstream_services": []
+            },
+            "breaking_changes": {
+              "has_breaking_changes": false,
+              "changes": [],
+              "change_count": 0,
+              "severity": "low"
+            },
+            "customer_impact": {
+              "level": "low",
+              "customer_facing_files": [],
+              "customer_facing_count": 0,
+              "impact_indicators": {
+                "api_changes": false,
+                "ui_changes": false,
+                "feature_changes": false,
+                "auth_changes": false,
+                "csi_rpc_changes": false,
+                "storage_class_changes": false
+              },
+              "active_indicator_count": 0
+            },
+            "api_governance": {
+              "has_api_changes": false,
+              "api_files": [],
+              "violations": [],
+              "violation_count": 0,
+              "severity": "none",
+              "endpoints_catalog_loaded": true
+            },
+            "design_completeness": {
+              "has_plan": false,
+              "planned_files": [],
+              "changed_files": [],
+              "missing_files": [],
+              "coverage_complete": true
+            },
+            "overall_score": 91.0,
+            "risk_level": "low"
+          }
+        },
+        {
+          "collector": "code_review",
+          "score": 90,
+          "issues": [],
+          "data": {
+            "review_available": true,
+            "verdict": "approve",
+            "overall_score": 90,
+            "findings": [
+              {
+                "severity": "low",
+                "file": "plugins/modules/storage_node.py",
+                "line": 642,
+                "description": "update_original_pathnames sets changed=True unconditionally whenever update_original_pathnames=true, without a prior-state comparison. This is an imperative device-maintenance action with no declarative state to compare against, so non-idempotent reporting is acceptable and matches the design (DataFlow #4 / SequenceDiagram #7). Documented here for transparency.",
+                "suggestion": "Optional: document in the module notes that update_original_pathnames is an action trigger and will always report changed=true when requested."
+              },
+              {
+                "severity": "low",
+                "file": "plugins/modules/storage_node.py",
+                "line": 558,
+                "description": "When adding a new IP via node_ips (or ip_address) with ip_state=present-in-node and no role provided, the role defaults to 'StorageAndApp'. This is a reasonable default but is implicit; a user expecting an error on missing role would instead get a StorageAndApp IP.",
+                "suggestion": "Optional: surface the default role choice in the node_ips suboption documentation, or require role when adding a new IP."
+              }
+            ],
+            "critical_count": 0,
+            "high_count": 0,
+            "medium_count": 0,
+            "low_count": 2,
+            "overall_confidence": "high",
+            "human_review_recommendation": "none",
+            "human_review_reason": "",
+            "spec_coverage": {
+              "requirements_total": 12,
+              "requirements_covered": 12,
+              "coverage_percent": 100,
+              "notes": "All in-scope FRs covered: get by name/id, rename, add/remove IP, set IP role, bulk node_ips, update pathnames, query PDS, query DGWT, check mode, idempotency, example playbook. Create/delete are correctly excluded per the revised modify-only scope."
+            },
+            "hallucination_check": {
+              "apis_total": 7,
+              "apis_verified": 7,
+              "apis_unverified": 0,
+              "details": [
+                {
+                  "api": "powerflex_conn.storage_node.get",
+                  "verified": true,
+                  "source": "PyPowerFlex base_client.EntityRequest.get (line 479)"
+                },
+                {
+                  "api": "powerflex_conn.storage_node.get_related",
+                  "verified": true,
+                  "source": "PyPowerFlex base_client.EntityRequest.get_related (line 516)"
+                },
+                {
+                  "api": "powerflex_conn.storage_node.rename",
+                  "verified": true,
+                  "source": "PyPowerFlex objects/gen2/storage_node.py:122"
+                },
+                {
+                  "api": "powerflex_conn.storage_node.add_ip",
+                  "verified": true,
+                  "source": "PyPowerFlex objects/gen2/storage_node.py:67"
+                },
+                {
+                  "api": "powerflex_conn.storage_node.remove_ip",
+                  "verified": true,
+                  "source": "PyPowerFlex objects/gen2/storage_node.py:136"
+                },
+                {
+                  "api": "powerflex_conn.storage_node.set_ip_role",
+                  "verified": true,
+                  "source": "PyPowerFlex objects/gen2/storage_node.py:161"
+                },
+                {
+                  "api": "powerflex_conn.storage_node.update_original_pathnames",
+                  "verified": true,
+                  "source": "PyPowerFlex objects/gen2/storage_node.py:194"
+                }
+              ]
+            },
+            "issues": [],
+            "status": "approved",
+            "source": "code-review.json"
+          }
+        },
+        {
+          "collector": "test_execution",
+          "score": 95,
+          "issues": [],
+          "data": {
+            "execution_verified": true,
+            "test_status": "passed",
+            "total_tests": 156,
+            "passed_tests": 156,
+            "failed_tests": 0,
+            "skipped_tests": 0,
+            "overall_score": 95,
+            "issues": [],
+            "status": "passing",
+            "source": "test-results.json"
+          }
+        },
+        {
+          "collector": "context_validation",
+          "score": 100,
+          "issues": [],
+          "data": {
+            "architecture_compliance": {
+              "status": "passed",
+              "violations": [],
+              "rules_checked": 3
+            },
+            "terminology": {
+              "status": "consistent",
+              "violations": [],
+              "glossary_terms_checked": 0,
+              "deprecated_terms_checked": 0
+            },
+            "patterns": {
+              "status": "compliant",
+              "violations": [],
+              "required_checked": 2,
+              "prohibited_checked": 1
+            },
+            "documentation": {
+              "status": "adequate",
+              "violations": [],
+              "public_functions": 47,
+              "public_classes": 3,
+              "documented_items": 50,
+              "documentation_percentage": 100.0
+            },
+            "cross_file_consistency": {
+              "violations": [],
+              "rules_loaded": 0,
+              "status": "no_rules"
+            },
+            "overall_score": 100,
+            "violations": [],
+            "status": "passed"
+          }
+        },
+        {
+          "collector": "code_quality",
+          "score": 89.0,
+          "issues": [
+            {
+              "type": "complexity",
+              "severity": "medium",
+              "description": "High complexity: max 11",
+              "complex_functions": [
+                "perform_module_operation"
+              ]
+            },
+            {
+              "type": "error_handling",
+              "severity": "medium",
+              "description": "Limited error handling: 8 handlers for 50 functions"
+            }
+          ],
+          "data": {
+            "security_scan": {
+              "status": "passed",
+              "issues": [],
+              "severity": "low",
+              "by_type": {}
+            },
+            "test_coverage": {
+              "percentage": 82,
+              "status": "adequate",
+              "test_files": 0,
+              "source_files": 1,
+              "assertion_count": 23,
+              "test_func_count": 34,
+              "source_func_count": 16
+            },
+            "complexity": {
+              "total_complexity": 60,
+              "max_complexity": 11,
+              "avg_complexity": 2.0,
+              "max_nesting_depth": 7,
+              "function_complexities": {
+                "__init__": 1,
+                "get": 10,
+                "rename": 1,
+                "add_ip": 2,
+                "remove_ip": 1,
+                "set_ip_role": 3,
+                "update_pathnames": 4,
+                "query_pds": 3,
+                "query_dgwt": 3,
+                "_find_ip_in_node": 5,
+                "_reconcile_ip": 8,
+                "validate_input_params": 6,
+                "perform_module_operation": 11,
+                "main": 3,
+                "get_failed_msgs": 3,
+                "module_object": 1,
+                "test_get_storage_node_by_name": 1,
+                "test_get_storage_node_by_id": 1,
+                "test_node_not_found": 1,
+                "test_get_storage_node_exception": 1,
+                "test_rename_storage_node": 1,
+                "test_rename_idempotent": 1,
+                "test_rename_exception": 1,
+                "test_add_ip_to_node": 1,
+                "test_add_ip_already_exists": 1,
+                "test_add_ip_exception": 1,
+                "test_remove_ip_from_node": 1,
+                "test_remove_ip_not_exists": 1,
+                "test_remove_ip_exception": 1,
+                "test_set_ip_role": 1,
+                "test_set_ip_role_idempotent": 1,
+                "test_set_ip_role_exception": 1,
+                "test_existing_ip_different_role_sets_role": 1,
+                "test_update_original_pathnames": 1,
+                "test_update_pathnames_with_force": 1,
+                "test_update_pathnames_exception": 1,
+                "test_node_ips_bulk_add": 1,
+                "test_node_ips_mixed_states": 1,
+                "test_node_ips_idempotent": 1,
+                "test_query_pds": 1,
+                "test_query_pds_exception": 1,
+                "test_query_dgwt": 1,
+                "test_query_dgwt_exception": 1,
+                "test_check_mode_rename": 1,
+                "test_check_mode_add_ip": 1,
+                "test_validate_empty_name": 1,
+                "test_validate_whitespace_name": 1,
+                "test_ip_state_without_ip_address": 1,
+                "test_node_ips_and_ip_address_mutually_exclusive": 1,
+                "test_example_playbook_syntax_validation": 1
+              },
+              "complex_functions": [
+                "perform_module_operation"
+              ],
+              "status": "moderate"
+            },
+            "patterns": {
+              "violations": [],
+              "violation_count": 0,
+              "by_severity": {},
+              "status": "passed"
+            },
+            "error_handling": {
+              "issues": [
+                "Limited error handling: 8 handlers for 50 functions"
+              ],
+              "status": "acceptable",
+              "metrics": {
+                "try_count": 8,
+                "except_count": 8,
+                "raise_count": 0,
+                "if_err_count": 0,
+                "catch_count": 0,
+                "function_count": 50,
+                "swallowed_exceptions": 0
+              }
+            },
+            "todo_stubs": {
+              "findings": [],
+              "finding_count": 0,
+              "status": "clean"
+            },
+            "overall_score": 89.0,
+            "issues": [
+              {
+                "type": "complexity",
+                "severity": "medium",
+                "description": "High complexity: max 11",
+                "complex_functions": [
+                  "perform_module_operation"
+                ]
+              },
+              {
+                "type": "error_handling",
+                "severity": "medium",
+                "description": "Limited error handling: 8 handlers for 50 functions"
+              }
+            ],
+            "status": "passed"
+          }
+        },
+        {
+          "collector": "test_quality",
+          "score": 82.0,
+          "issues": [
+            {
+              "type": "test_quality",
+              "severity": "medium",
+              "description": "Test quality weak: 0.7 assertions per test"
+            }
+          ],
+          "data": {
+            "coverage_analysis": {
+              "test_files": 0,
+              "source_files": 1,
+              "new_source_functions": 16,
+              "new_test_functions": 34,
+              "test_to_source_ratio": 2.12,
+              "status": "excellent"
+            },
+            "test_quality": {
+              "assertion_count": 23,
+              "test_function_count": 34,
+              "mock_usage_count": 65,
+              "assertions_per_test": 0.7,
+              "assertion_quality": "weak",
+              "test_isolation": "well_isolated",
+              "status": "weak"
+            },
+            "integration_tests": {
+              "has_integration_tests": true,
+              "integration_indicators": 1,
+              "integration_files": 0,
+              "needs_integration_tests": false,
+              "status": "adequate"
+            },
+            "edge_case_coverage": {
+              "edge_case_patterns": {
+                "null_checks": 12,
+                "empty_checks": 83,
+                "boundary_checks": 1,
+                "error_cases": 42,
+                "negative_tests": 50
+              },
+              "categories_covered": 5,
+              "total_categories": 5,
+              "status": "excellent"
+            },
+            "written_test_ids": [],
+            "planned_test_ids": [],
+            "acceptance_criteria": [],
+            "ac_traceability": {},
+            "ac_assertion_focus": {},
+            "mandatory_test_scenarios": {
+              "violations": [],
+              "rules_loaded": 0,
+              "status": "no_rules"
+            },
+            "overall_score": 82.0,
+            "issues": [
+              {
+                "type": "test_quality",
+                "severity": "medium",
+                "description": "Test quality weak: 0.7 assertions per test"
+              }
+            ],
+            "status": "passed"
+          }
+        }
+      ],
+      "blocking_violations": [],
+      "warnings": [
+        {
+          "source": "security_scanner",
+          "severity": "low",
+          "description": "Internal IP address detected"
+        },
+        {
+          "source": "code_quality",
+          "severity": "medium",
+          "description": "High complexity: max 11"
+        },
+        {
+          "source": "code_quality",
+          "severity": "medium",
+          "description": "Limited error handling: 8 handlers for 50 functions"
+        },
+        {
+          "source": "test_quality",
+          "severity": "medium",
+          "description": "Test quality weak: 0.7 assertions per test"
+        }
+      ],
+      "retry_feedback": null,
+      "retry_history": []
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "pipeline_id": "pipeline-20260601-131124",
+  "gate_id": "final",
+  "reason": "Gate 'final' escalated after 0 retries",
+  "urgency": "high",
+  "unresolved_issues": [
+    {
+      "check": "undocumented_public_api",
+      "severity": "medium",
+      "description": "Only 18/50 new public functions/classes are documented (36%)",
+      "source": "context_validation"
+    }
+  ],
+  "warnings": [
+    {
+      "source": "security_scanner",
+      "severity": "low",
+      "description": "Internal IP address detected"
+    },
+    {
+      "source": "test_quality",
+      "severity": "medium",
+      "description": "Test quality weak: 0.7 assertions per test"
+    },
+    {
+      "source": "code_quality",
+      "severity": "medium",
+      "description": "High complexity: max 11"
+    },
+    {
+      "source": "code_quality",
+      "severity": "medium",
+      "description": "Limited error handling: 8 handlers for 50 functions"
+    }
+  ],
+  "score": 91.2,
+  "accumulated_evidence": {
+    "final": {
+      "decision": "ESCALATE",
+      "score": 91.2,
+      "blocking_count": 1
+    }
+  },
+  "human_action_needed": "Review unresolved issues and either fix manually or approve the risk.",
+  "resume_instruction": "After resolving, re-run gate 'final' with updated artifacts."
+}

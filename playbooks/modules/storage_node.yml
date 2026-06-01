@@ -8,7 +8,7 @@
     username: "<your_username>"
     password: "<your_password>"
     validate_certs: false
-    port: 443
+    gateway_port: 443
     node_name: "node1"
     node_id: "abc12300000000"
   module_defaults:
@@ -17,7 +17,7 @@
       username: "{{ username }}"
       password: "{{ password }}"  # placeholder; supply at runtime via --extra-vars
       validate_certs: "{{ validate_certs }}"
-      port: "{{ port }}"
+      port: "{{ gateway_port }}"
 
   tasks:
     - name: Get storage node details by name
