@@ -1,0 +1,143 @@
+---
+- name: Storage Node V2 Operations
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    hostname: "x.x.x.x"
+    username: "admin"
+    password: "Password"
+    validate_certs: false
+    host_port: 443
+
+  tasks:
+    - name: Get Storage Node by name
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        state: "present"
+
+    - name: Get Storage Node by ID
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_id: "{{ sn_id }}"
+        state: "present"
+
+    - name: Rename Storage Node
+      register: result
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        new_storage_node_name: "node_1_renamed"
+        state: "present"
+
+    - name: Add IP Address to Storage Node
+      register: result
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        ip_address: "10.0.0.5"
+        ip_role: "Storage"
+        ip_state: "present-in-node"
+        state: "present"
+
+    - name: Set IP Role on Storage Node
+      register: result
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        ip_address: "10.0.0.5"
+        ip_role: "StorageAndApp"
+        ip_state: "present-in-node"
+        state: "present"
+
+    - name: Remove IP Address from Storage Node
+      register: result
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        ip_address: "10.0.0.5"
+        ip_state: "absent-in-node"
+        state: "present"
+
+    - name: Update Original Pathnames
+      register: result
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        update_original_pathnames: true
+        force_failed_devices: true
+        state: "present"
+
+    - name: Query PDS Details through Storage Node
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        query_pds: true
+        state: "present"
+
+    - name: Query DGWT Details through Storage Node
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        query_dgwt: true
+        state: "present"
+
+    - name: Delete Storage Node - Check Mode
+      check_mode: true
+      register: result
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        state: "absent"
+
+    - name: Delete Storage Node
+      register: result
+      dellemc.powerflex.storage_node_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        storage_node_name: "node_1"
+        state: "absent"
