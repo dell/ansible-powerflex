@@ -4,13 +4,13 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: '10.225.106.54'
-    username: 'admin'
-    password: 'Password123!'
+    hostname: 10.225.106.54
+    username: admin
+    password: Password123!
     validate_certs: false
     host_port: 443
-    sn_name: "SN_pie104074.pie.lab.emc.com"
-    sn_id: "9aa2541300000000"
+    sn_name: SN_pie104074.pie.lab.emc.com
+    sn_id: 9aa2541300000000
 
   tasks:
     - name: Get Storage Node by name
@@ -21,7 +21,7 @@
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
         storage_node_name: "{{ sn_name }}"
-        state: "present"
+        state: present
       register: sn_by_name
 
     - name: Display Storage Node details by name
@@ -36,7 +36,7 @@
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
         storage_node_id: "{{ sn_id }}"
-        state: "present"
+        state: present
       register: sn_by_id
 
     - name: Display Storage Node details by ID
@@ -52,7 +52,7 @@
         port: "{{ host_port }}"
         storage_node_name: "{{ sn_name }}"
         new_storage_node_name: "{{ sn_name }}_renamed"
-        state: "present"
+        state: present
       check_mode: true
       diff: true
       register: rename_check
@@ -69,10 +69,10 @@
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
         storage_node_name: "{{ sn_name }}"
-        ip_address: "192.168.99.99"
-        ip_role: "Storage"
-        ip_state: "present-in-node"
-        state: "present"
+        ip_address: 192.168.99.99
+        ip_role: Storage
+        ip_state: present-in-node
+        state: present
       check_mode: true
       register: add_ip_check
 
@@ -88,10 +88,10 @@
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
         storage_node_name: "{{ sn_name }}"
-        ip_address: "10.230.44.181"
-        ip_role: "StorageAndApp"
-        ip_state: "present-in-node"
-        state: "present"
+        ip_address: 10.230.44.181
+        ip_role: StorageAndApp
+        ip_state: present-in-node
+        state: present
       register: set_role_idempotent
 
     - name: Display Set IP Role idempotent result (changed should be false)
@@ -106,9 +106,9 @@
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
         storage_node_name: "{{ sn_name }}"
-        ip_address: "192.168.99.99"
-        ip_state: "absent-in-node"
-        state: "present"
+        ip_address: 192.168.99.99
+        ip_state: absent-in-node
+        state: present
       register: remove_ip_idempotent
 
     - name: Display Remove IP idempotent result (changed should be false)
@@ -124,7 +124,7 @@
         port: "{{ host_port }}"
         storage_node_name: "{{ sn_name }}"
         query_pds: true
-        state: "present"
+        state: present
       register: pds_result
 
     - name: Display PDS Details
@@ -140,7 +140,7 @@
         port: "{{ host_port }}"
         storage_node_name: "{{ sn_name }}"
         query_dgwt: true
-        state: "present"
+        state: present
       register: dgwt_result
 
     - name: Display DGWT Details
@@ -154,8 +154,8 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        storage_node_name: "nonexistent_node_for_idempotent_test"
-        state: "absent"
+        storage_node_name: nonexistent_node_for_idempotent_test
+        state: absent
       register: delete_idempotent
 
     - name: Display Delete idempotent result (changed should be false)
@@ -170,7 +170,7 @@
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
         storage_node_name: "{{ sn_name }}"
-        state: "absent"
+        state: absent
       check_mode: true
       diff: true
       register: delete_check

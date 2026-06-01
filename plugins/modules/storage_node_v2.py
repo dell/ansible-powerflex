@@ -25,7 +25,7 @@ extends_documentation_fragment:
   - dellemc.powerflex.powerflex_v2
 
 author:
-- Ansible Team <ansible.team@dell.com>
+- Tao He (@taohe1012) <ansible.team@dell.com>
 
 options:
   storage_node_name:
@@ -283,7 +283,6 @@ dgwt_details:
     ]
 '''
 
-import copy
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.dellemc.powerflex.plugins.module_utils.storage.dell.libraries.powerflex_base \
     import PowerFlexBase, powerflex_compatibility
