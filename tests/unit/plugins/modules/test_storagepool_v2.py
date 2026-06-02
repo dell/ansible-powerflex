@@ -679,3 +679,59 @@ class TestPowerflexStoragePoolV2(PowerFlexUnitBase):
             powerflex_module_mock.perform_module_operation()
             assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
             powerflex_module_mock.powerflex_conn.storage_pool.create.assert_not_called()
+
+    def test_update_validation_use_all_capacity_with_physical_size(self, powerflex_module_mock):
+        """M-007: update fails when use_all_available_capacity=True and physical_size_gb is specified."""
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "test_pool",
+                "protection_domain_name": "test_pd_1",
+                "device_group_name": "test_dg_1",
+                "use_all_available_capacity": True,
+                "physical_size_gb": 4096,
+                "state": "present"
+            })
+        powerflex_module_mock.powerflex_conn.storage_pool.get_by_name = MagicMock(
+            return_value=MockStoragePoolV2Api.STORAGE_POOL_GET_DETAIL)
+        powerflex_module_mock.powerflex_conn.storage_pool.update = MagicMock(
+            return_value=(False, MockStoragePoolV2Api.STORAGE_POOL_GET_DETAIL))
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=MockStoragePoolV2Api.PROTECTION_DOMAIN['protection_domain'])
+        powerflex_module_mock.powerflex_conn.device_group.get = MagicMock(
+            return_value=MockStoragePoolV2Api.DEVICE_GROUP['device_group'])
+        powerflex_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
+            return_value=MockStoragePoolV2Api.STORAGE_POOL_STATISTICS
+        )
+        with pytest.raises(FailJsonException) as exc:
+            powerflex_module_mock.perform_module_operation()
+        assert "physical_size_gb must not be specified" in exc.value.message
+
+    def test_check_mode_update_with_storage_pool_new_name(self, powerflex_module_mock):
+        """M-008: check mode update with storage_pool_new_name handles the name change correctly."""
+        powerflex_module_mock.powerflex_conn.storage_pool.get_by_name = MagicMock(
+            return_value=MockStoragePoolV2Api.STORAGE_POOL_GET_DETAIL)
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=MockStoragePoolV2Api.PROTECTION_DOMAIN['protection_domain'])
+        powerflex_module_mock.powerflex_conn.device_group.get = MagicMock(
+            return_value=MockStoragePoolV2Api.DEVICE_GROUP['device_group'])
+        powerflex_module_mock.powerflex_conn.storage_pool.need_update = MagicMock(
+            return_value=(True, {"name": "new_pool_name"})
+        )
+        powerflex_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
+            return_value=MockStoragePoolV2Api.STORAGE_POOL_STATISTICS
+        )
+        with patch.object(powerflex_module_mock.module, 'check_mode', True):
+            self.set_module_params(
+                powerflex_module_mock,
+                self.get_module_args,
+                {
+                    "storage_pool_name": "test_pool",
+                    "storage_pool_new_name": "new_pool_name",
+                    "protection_domain_name": "test_pd_1",
+                    "state": "present"
+                })
+            powerflex_module_mock.perform_module_operation()
+            assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
+            powerflex_module_mock.powerflex_conn.storage_pool.update.assert_not_called()
