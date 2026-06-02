@@ -4,9 +4,14 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: "x.x.x.x"
-    username: "admin"
-    password: "Password"
+    # Non-secret placeholders kept in version control. Supply real values at
+    # runtime via --extra-vars, e.g.:
+    #   ansible-playbook storagepool_v2.yml --extra-vars \
+    #     '{"hostname":"...","port":443,"validate_certs":false,"username":"...","password":"..."}'
+    hostname: "<your_powerflex_host>"
+    port: 443
+    username: "<your_powerflex_username>"
+    password: "<your_powerflex_password>"
     validate_certs: false
 
   tasks:
@@ -20,6 +25,20 @@
         protection_domain_name: "{{ domain1 }}"
         device_group_name: "{{ dg_name }}"
         protection_scheme: "TwoPlusTwo"
+        compression_method: "Normal"
+        use_all_available_capacity: true
+        state: "present"
+
+    - name: Create storagepool with a custom number of data slices (e.g. 4+2)
+      dellemc.powerflex.storagepool_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        storage_pool_name: "{{ sp_name }}"
+        protection_domain_name: "{{ domain1 }}"
+        device_group_name: "{{ dg_name }}"
+        num_data_slices: 4
         compression_method: "Normal"
         use_all_available_capacity: true
         state: "present"

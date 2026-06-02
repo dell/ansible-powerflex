@@ -117,6 +117,16 @@ options:
     required: false
     type: str
     choices: ['TwoPlusTwo', 'EightPlusTwo']
+  num_data_slices:
+    description:
+      - The number of data slices for erasure coding on a Gen2 storage pool.
+      - When specified, this value is used directly and overrides the data-slice
+        count that would otherwise be derived from I(protection_scheme).
+      - Must be a positive integer. Applies only during storage pool creation.
+      - Enables custom protection schemes (for example 4+2) beyond the fixed
+        TwoPlusTwo and EightPlusTwo presets.
+    required: false
+    type: int
   state:
     description:
       - The state of the storage pool. Can be 'present' or 'absent'.
@@ -164,6 +174,20 @@ EXAMPLES = r'''
     over_provisioning_factor: 2
     physical_size_gb: 100
     protection_scheme: TwoPlusTwo
+    state: "present"
+
+- name: Create a new Storage pool with a custom 4+2 protection scheme
+  dellemc.powerflex.storagepool_v2:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    storage_pool_name: "{{ pool_name }}"
+    protection_domain_name: "{{ protection_domain_name }}"
+    device_group_name: "{{ device_group_name }}"
+    num_data_slices: 4
+    compression_method: Normal
+    use_all_available_capacity: true
     state: "present"
 
 - name: Modify a Storage pool by name
@@ -497,6 +521,7 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
             use_all_available_capacity=dict(type='bool'),
             protection_scheme=dict(type='str', choices=[
                 'TwoPlusTwo', 'EightPlusTwo']),
+            num_data_slices=dict(type='int'),
             state=dict(required=True, type='str',
                        choices=['present', 'absent']),
         )
@@ -611,7 +636,9 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
 
             self.powerflex_conn.storage_pool.check_update_params(storage_pool, current_storage_pool)
             if self.module.check_mode:
-                storage_pool["name"] = storage_pool.get("storage_pool_new_name", storage_pool["name"])
+                new_name = storage_pool.get("storage_pool_new_name")
+                if new_name:
+                    storage_pool["name"] = new_name
                 storage_pool.pop("storage_pool_new_name", None)
                 need_update, changes = self.powerflex_conn.storage_pool.need_update(storage_pool, current_storage_pool)
                 if storage_pool.get("useAllAvailableCapacity"):
@@ -692,12 +719,17 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
         use_all_available_capacity = self.module.params['use_all_available_capacity']
         protection_scheme = self.module.params['protection_scheme']
         compression_method = self.module.params['compression_method']
+        num_data_slices = self.module.params.get('num_data_slices')
         state = self.module.params['state']
 
         result = dict(
             changed=False,
             storage_pool_details=None
         )
+
+        if num_data_slices is not None and num_data_slices <= 0:
+            self.module.fail_json(
+                msg="num_data_slices must be a positive integer.")
 
         if storage_pool_name and not (protection_domain_id or protection_domain_name):
             self.module.fail_json(
@@ -740,6 +772,7 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
             'useAllAvailableCapacity': use_all_available_capacity,
             'protectionScheme': protection_scheme,
             'compressionMethod': compression_method,
+            'numDataSlices': num_data_slices,
         }
         storage_pool = {k: v for k, v in storage_pool.items() if v is not None}
 

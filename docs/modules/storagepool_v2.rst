@@ -107,6 +107,16 @@ Parameters
     The protection scheme.
 
 
+  num_data_slices (False, int, None)
+    The number of data slices for erasure coding on a Gen2 storage pool.
+
+    When specified, this value is used directly and overrides the data-slice count that would otherwise be derived from :emphasis:`protection\_scheme`.
+
+    Must be a positive integer. Applies only during storage pool creation.
+
+    Enables custom protection schemes (for example 4+2) beyond the fixed TwoPlusTwo and EightPlusTwo presets.
+
+
   state (True, str, None)
     The state of the storage pool. Can be 'present' or 'absent'.
 

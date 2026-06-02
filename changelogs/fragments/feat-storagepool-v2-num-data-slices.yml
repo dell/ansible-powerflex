@@ -1,0 +1,7 @@
+---
+minor_changes:
+  - storagepool_v2 - added the I(num_data_slices) parameter to support flexible
+    erasure-coding data-slice configurations (for example 4+2) on Gen2 storage
+    pools, beyond the fixed TwoPlusTwo and EightPlusTwo presets. When omitted,
+    the data-slice count continues to be derived from I(protection_scheme),
+    preserving backward compatibility.

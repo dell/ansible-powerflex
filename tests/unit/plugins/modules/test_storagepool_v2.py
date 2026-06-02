@@ -15,8 +15,11 @@ from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_
     import MockApiException
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.libraries.powerflex_unit_base \
     import PowerFlexUnitBase
+from ansible_collections.dellemc.powerflex.plugins.modules import storagepool_v2 as storagepool_v2_module
 from ansible_collections.dellemc.powerflex.plugins.modules.storagepool_v2 \
     import PowerFlexStoragePoolV2
+from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.libraries.fail_json \
+    import FailJsonException
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_storagepool_api_v2 import \
     MockStoragePoolV2Api
 
@@ -560,3 +563,119 @@ class TestPowerflexStoragePoolV2(PowerFlexUnitBase):
                     'delete_storage_pool'),
                 module_mock=powerflex_module_mock,
                 invoke_perform_module=True)
+
+    # ------------------------------------------------------------------
+    # Flexible data slices (FEAT-23070) — added by TDD Writer (Stage 07)
+    # ------------------------------------------------------------------
+
+    def _set_create_mocks(self, powerflex_module_mock, existing=None):
+        powerflex_module_mock.powerflex_conn.storage_pool.get_by_name = MagicMock(
+            return_value=existing)
+        powerflex_module_mock.powerflex_conn.storage_pool.create = MagicMock(
+            return_value=MockStoragePoolV2Api.STORAGE_POOL_GET_DETAIL)
+        powerflex_module_mock.powerflex_conn.storage_pool.update = MagicMock(
+            return_value=(False, MockStoragePoolV2Api.STORAGE_POOL_GET_DETAIL))
+        powerflex_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=MockStoragePoolV2Api.PROTECTION_DOMAIN['protection_domain'])
+        powerflex_module_mock.powerflex_conn.device_group.get = MagicMock(
+            return_value=MockStoragePoolV2Api.DEVICE_GROUP['device_group'])
+        powerflex_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
+            return_value=MockStoragePoolV2Api.STORAGE_POOL_STATISTICS)
+
+    def test_num_data_slices_documented(self, powerflex_module_mock):
+        """M-001: the num_data_slices parameter is documented on the module."""
+        assert "num_data_slices" in storagepool_v2_module.DOCUMENTATION
+
+    def test_create_with_num_data_slices(self, powerflex_module_mock):
+        """M-002: num_data_slices is forwarded to the SDK create payload."""
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "test_pool",
+                "protection_domain_name": "test_pd_1",
+                "device_group_name": "test_dg_1",
+                "num_data_slices": 4,
+                "compression_method": "Normal",
+                "use_all_available_capacity": True,
+                "state": "present"
+            })
+        self._set_create_mocks(powerflex_module_mock, existing=None)
+        powerflex_module_mock.perform_module_operation()
+        called_sp = powerflex_module_mock.powerflex_conn.storage_pool.create.call_args[0][0]
+        assert called_sp.get("numDataSlices") == 4
+
+    def test_create_protection_scheme_backward_compat(self, powerflex_module_mock):
+        """M-003: protection_scheme-only create does not inject numDataSlices."""
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "test_pool",
+                "protection_domain_name": "test_pd_1",
+                "device_group_name": "test_dg_1",
+                "protection_scheme": "EightPlusTwo",
+                "use_all_available_capacity": True,
+                "state": "present"
+            })
+        self._set_create_mocks(powerflex_module_mock, existing=None)
+        powerflex_module_mock.perform_module_operation()
+        called_sp = powerflex_module_mock.powerflex_conn.storage_pool.create.call_args[0][0]
+        assert "numDataSlices" not in called_sp
+        assert called_sp.get("protectionScheme") == "EightPlusTwo"
+
+    def test_create_invalid_num_data_slices(self, powerflex_module_mock):
+        """M-004: a non-positive num_data_slices fails with an actionable error."""
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "test_pool",
+                "protection_domain_name": "test_pd_1",
+                "device_group_name": "test_dg_1",
+                "num_data_slices": 0,
+                "use_all_available_capacity": True,
+                "state": "present"
+            })
+        self._set_create_mocks(powerflex_module_mock, existing=None)
+        with pytest.raises(FailJsonException) as exc:
+            powerflex_module_mock.perform_module_operation()
+        assert "num_data_slices must be a positive integer" in exc.value.message
+
+    def test_num_data_slices_ignored_on_update(self, powerflex_module_mock):
+        """M-005: num_data_slices on an existing pool is ignored (non-updatable)."""
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "test_pool",
+                "protection_domain_name": "test_pd_1",
+                "device_group_name": "test_dg_1",
+                "num_data_slices": 4,
+                "state": "present"
+            })
+        self._set_create_mocks(
+            powerflex_module_mock,
+            existing=MockStoragePoolV2Api.STORAGE_POOL_GET_DETAIL)
+        powerflex_module_mock.perform_module_operation()
+        powerflex_module_mock.powerflex_conn.storage_pool.update.assert_called()
+        powerflex_module_mock.powerflex_conn.storage_pool.create.assert_not_called()
+
+    def test_check_mode_with_num_data_slices(self, powerflex_module_mock):
+        """M-006: check mode create with num_data_slices does not call SDK create."""
+        self._set_create_mocks(powerflex_module_mock, existing=None)
+        with patch.object(powerflex_module_mock.module, 'check_mode', True):
+            self.set_module_params(
+                powerflex_module_mock,
+                self.get_module_args,
+                {
+                    "storage_pool_name": "test_pool",
+                    "protection_domain_name": "test_pd_1",
+                    "device_group_name": "test_dg_1",
+                    "num_data_slices": 4,
+                    "use_all_available_capacity": True,
+                    "state": "present"
+                })
+            powerflex_module_mock.perform_module_operation()
+            assert powerflex_module_mock.module.exit_json.call_args[1]['changed'] is True
+            powerflex_module_mock.powerflex_conn.storage_pool.create.assert_not_called()

@@ -108,6 +108,8 @@ class MockStoragePoolV2Api:
         "rawSizeGB": 8192,
         "wrcDeviceGroupId": "39a898be00000000",
         "rebalanceEnabled": None,
+        "numDataSlices": 2,
+        "numProtectionSlices": 2,
         "id": "5dac1b0300000000",
     }
 
@@ -351,6 +353,7 @@ class MockStoragePoolV2Api:
         "device_group_exception": "Failed to get device group",
         "mismatch_device_group_id_exception": "Entered device group id does not match",
         "mismatch_device_group_name_exception": "Entered device group name does not match",
+        "invalid_num_data_slices": "num_data_slices must be a positive integer",
     }
 
     @staticmethod
