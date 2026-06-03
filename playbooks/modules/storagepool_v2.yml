@@ -7,9 +7,9 @@
     # Non-secret placeholders kept in version control. Supply real values at
     # runtime via --extra-vars, e.g.:
     #   ansible-playbook storagepool_v2.yml --extra-vars \
-    #     '{"hostname":"...","port":443,"validate_certs":false,"username":"...","password":"..."}'
+    #     '{"hostname":"...","gateway_port":443,"validate_certs":false,"username":"...","password":"..."}'
     hostname: "<your_powerflex_host>"
-    port: 443
+    gateway_port: 443
     username: "<your_powerflex_username>"
     password: "<your_powerflex_password>"
     validate_certs: false
