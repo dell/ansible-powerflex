@@ -704,9 +704,11 @@ class TestPowerflexStoragePoolV2(PowerFlexUnitBase):
         powerflex_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
             return_value=MockStoragePoolV2Api.STORAGE_POOL_STATISTICS
         )
-        with pytest.raises(FailJsonException) as exc:
-            powerflex_module_mock.perform_module_operation()
-        assert "physical_size_gb must not be specified" in exc.value.message
+        self.capture_fail_json_call(
+            MockStoragePoolV2Api.get_exception_response(
+                'physical_size_gb_should_not_specify'),
+            module_mock=powerflex_module_mock,
+            invoke_perform_module=True)
 
     def test_check_mode_update_with_storage_pool_new_name(self, powerflex_module_mock):
         """M-008: check mode update with storage_pool_new_name handles the name change correctly."""
@@ -722,7 +724,7 @@ class TestPowerflexStoragePoolV2(PowerFlexUnitBase):
         powerflex_module_mock.powerflex_conn.utility.query_metrics = MagicMock(
             return_value=MockStoragePoolV2Api.STORAGE_POOL_STATISTICS
         )
-        with patch.object(powerflex_module_mock.module, 'check_mode', True):
+        with patch.object(powerflex_module_mock.module, 'check_mode', return_value=True):
             self.set_module_params(
                 powerflex_module_mock,
                 self.get_module_args,
