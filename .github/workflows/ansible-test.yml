@@ -79,6 +79,10 @@ jobs:
       - name: Install ansible-core (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
+      - name: Install unit test requirements
+        run: pip install -r tests/unit/requirements.txt
+        working-directory: ansible_collections/dellemc/powerflex
+
       - name: Run unit tests
         run: >-
           ansible-test units -v --color --python ${{ matrix.python }}
