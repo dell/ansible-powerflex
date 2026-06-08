@@ -64,16 +64,30 @@ jobs:
             python: '3.11'
 
     steps:
-      - name: Perform unit testing with ansible-test
-        uses: ansible-community/ansible-test-gh-action@release/v1.16
+      - name: Check out code
+        uses: actions/checkout@v4
         with:
-          testing-type: units
-          coverage: ${{ (matrix.python == '3.13' && matrix.ansible == 'stable-2.19') && 'always' ||  'never' }}
-          ansible-core-version: ${{ matrix.ansible }}
-          origin-python-version: ${{ matrix.python }}
-          docker-image: ghcr.io/ansible/default-test-container:11.6.0
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          path: ansible_collections/dellemc/powerflex
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install ansible-core (${{ matrix.ansible }})
+        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+
+      - name: Run unit tests
+        run: >-
+          ansible-test units -v --color --python ${{ matrix.python }}
+          ${{ (matrix.python == '3.13' && matrix.ansible == 'stable-2.19') && '--coverage' || '' }}
+        working-directory: ansible_collections/dellemc/powerflex
+
+      - name: Upload coverage to Codecov
+        if: matrix.python == '3.13' && matrix.ansible == 'stable-2.19'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   ###
   # Sanity tests (REQUIRED)
