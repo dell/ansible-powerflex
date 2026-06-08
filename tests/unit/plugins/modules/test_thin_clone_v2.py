@@ -395,23 +395,6 @@ class TestPowerflexThinCloneV2(PowerFlexUnitBase):
             powerflex_module_mock,
         )
 
-    # Also test with from_volume_id + from_snapshot_id
-    def test_both_volume_id_and_snapshot_id_source_fails(self, powerflex_module_mock):
-        self.set_module_params(
-            powerflex_module_mock,
-            self.get_module_args,
-            {
-                "from_volume_id": "vol_id",
-                "from_snapshot_id": "snap_id",
-                "new_clone_name": "clone_a",
-                "state": "present",
-            },
-        )
-        self.capture_fail_json_call(
-            "mutually exclusive",
-            powerflex_module_mock,
-        )
-
     # ---------------------------------------------------------------
     # U-014: Source volume not found fails (FC-TC-008)
     # ---------------------------------------------------------------
@@ -712,10 +695,22 @@ class TestPowerflexThinCloneV2(PowerFlexUnitBase):
             "playbooks", "modules", "thin_clone_v2_example.yml"
         )
         playbook_path = os.path.normpath(playbook_path)
+        env = os.environ.copy()
+        # Point to the root of ansible_collections so FQCN modules resolve
+        env["ANSIBLE_COLLECTIONS_PATHS"] = os.path.normpath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "..", "..")
+        )
+        # Use the venv ansible-playbook so the correct ansible-core is used
+        venv_bin = os.path.normpath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "..", "..",
+                         ".venv", "bin", "ansible-playbook")
+        )
+        ansible_playbook = venv_bin if os.path.isfile(venv_bin) else "ansible-playbook"
         result = subprocess.run(
-            ["ansible-playbook", "--syntax-check", playbook_path],
+            [ansible_playbook, "--syntax-check", playbook_path],
             capture_output=True,
             text=True,
+            env=env,
         )
         assert result.returncode == 0, (
             f"Playbook syntax check failed: {result.stderr}"

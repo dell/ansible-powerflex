@@ -25,7 +25,7 @@ description:
 extends_documentation_fragment:
   - dellemc.powerflex.powerflex_v2
 author:
-- Ansible Team <ansible.team@dell.com>
+- Dell Technologies Ansible Team (@dell-ansible)
 options:
   from_volume_name:
     description:
