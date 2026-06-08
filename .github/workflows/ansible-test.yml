@@ -71,6 +71,7 @@ jobs:
           coverage: ${{ (matrix.python == '3.13' && matrix.ansible == 'stable-2.19') && 'always' ||  'never' }}
           ansible-core-version: ${{ matrix.ansible }}
           origin-python-version: ${{ matrix.python }}
+          docker-image: ghcr.io/ansible/default-test-container:11.6.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
