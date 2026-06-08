@@ -76,7 +76,7 @@ notes:
 
 EXAMPLES = r"""
 - name: Create thin clone from a source volume
-  dellemc.powerflex.thin_clone_v2:
+  dellemc.powerflex.thin_clone:
     hostname: "{{ hostname }}"
     username: "{{ username }}"
     password: "{{ password }}"
@@ -242,13 +242,8 @@ class PowerFlexThinClone(PowerFlexBase):
         if existing is None:
             return False, None
 
-        if existing.get("volumeType") != "ThinClone":
-            self.module.fail_json(
-                msg="Volume '%s' already exists and is not a thin clone "
-                    "of the requested source (FC-TC-015)" % new_clone_name
-            )
-
-        if existing.get("ancestorVolumeId") != source_id:
+        ancestor_id = existing.get("ancestorVolumeId")
+        if ancestor_id is None or ancestor_id != source_id:
             self.module.fail_json(
                 msg="Volume '%s' already exists and is not a thin clone "
                     "of the requested source (FC-TC-015)" % new_clone_name
@@ -356,7 +351,12 @@ class PowerFlexThinClone(PowerFlexBase):
             system_id, source_id, new_clone_name
         )
 
-        new_clone_id = create_response.get("id")
+        volume_id_list = create_response.get("volumeIdList", [])
+        if not volume_id_list:
+            self.module.fail_json(
+                msg="Thin clone creation returned no volume IDs"
+            )
+        new_clone_id = volume_id_list[0]
         clone_details = self.get_volume(vol_id=new_clone_id)
         if clone_details is None:
             self.module.fail_json(

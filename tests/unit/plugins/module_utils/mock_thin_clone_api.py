@@ -68,7 +68,7 @@ class MockThinCloneApi:
         ],
     }
 
-    CREATE_RESPONSE = {"id": "new_clone_id_01"}
+    CREATE_RESPONSE = {"volumeIdList": ["new_clone_id_01"]}
 
     NEW_CLONE_DETAILS = [
         {
