@@ -13,8 +13,6 @@
     username: "{{ lookup('env','POWERFLEX_USER') }}"
     password: "{{ lookup('env','POWERFLEX_PASS') }}"
     validate_certs: false
-  collections:
-    - dellemc.powerflex
 
   tasks:
     - name: 1. Create clone from source volume by name
