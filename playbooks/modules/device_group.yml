@@ -1,0 +1,69 @@
+---
+- name: Device Group operations on PowerFlex Gen2
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    hostname: "10.x.x.x"
+    username: "admin"
+    password: "<your_password>"  # placeholder; supply at runtime via --extra-vars
+    validate_certs: false
+    gateway_port: 443
+    device_group_name: "DG1"
+    device_group_id: "39a898be00000000"
+    protection_domain_name: "PD1"
+  module_defaults:
+    dellemc.powerflex.device_group:
+      hostname: "{{ hostname }}"
+      username: "{{ username }}"
+      password: "{{ password }}"  # placeholder; supply at runtime via --extra-vars
+      validate_certs: "{{ validate_certs }}"
+      port: "{{ gateway_port }}"
+  tasks:
+    - name: Get device group details by name
+      dellemc.powerflex.device_group:
+        device_group_name: "{{ device_group_name }}"
+        state: "present"
+
+    - name: Get device group details by ID
+      dellemc.powerflex.device_group:
+        device_group_id: "{{ device_group_id }}"
+        state: "present"
+
+    - name: Get device group details scoped by protection domain
+      dellemc.powerflex.device_group:
+        device_group_name: "{{ device_group_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
+        state: "present"
+
+    - name: Rename device group
+      dellemc.powerflex.device_group:
+        device_group_name: "{{ device_group_name }}"
+        new_device_group_name: "DG1_renamed"
+        state: "present"
+
+    - name: Update spare node count
+      dellemc.powerflex.device_group:
+        device_group_name: "DG1_renamed"
+        spare_node_count: 2
+        state: "present"
+
+    - name: Update spare device count
+      dellemc.powerflex.device_group:
+        device_group_name: "DG1_renamed"
+        spare_device_count: 1
+        state: "present"
+
+    - name: Rename and update spare counts together
+      dellemc.powerflex.device_group:
+        device_group_id: "{{ device_group_id }}"
+        new_device_group_name: "DG1"
+        spare_node_count: 2
+        spare_device_count: 1
+        state: "present"
+
+    - name: Query usable capacity for a device group
+      dellemc.powerflex.device_group:
+        device_group_id: "{{ device_group_id }}"
+        query_usable_capacity: true
+        state: "present"
