@@ -4,7 +4,7 @@
 
 <!-- yaml-metadata-start -->
 scope_paths: ["./"]
-capture_git_sha: "75e5618e3c5466bd5a617c7c2b580dbe20648619"
+capture_git_sha: "fb881295b1ce418e7259d0ce2e2aa90f9bd8c2aa"
 status: "current"
 auto_update: false
 preview_before_apply: true
@@ -30,7 +30,7 @@ Published to Ansible Galaxy under the `dellemc` namespace. Uses the `PyPowerFlex
 | Module utilities | `plugins/module_utils/storage/dell/` | SDK init, connection factory, logger, error helpers |
 | Domain helpers | `plugins/module_utils/storage/dell/libraries/` | `powerflex_base.py` (base class + `@powerflex_compatibility` decorator), `configuration.py` |
 | Doc fragments | `plugins/doc_fragments/powerflex.py` | Shared DOCUMENTATION fragment for connection params |
-| Runtime metadata | `meta/runtime.yml` | `requires_ansible`, action groups, tombstones |
+| Runtime metadata | `meta/runtime.yml` | `meta/runtime.yml` contains 7 tombstone entries for deprecated `dellemc_powerflex_*` prefixed module names. |
 | Execution env | `meta/execution-environment.yml` | EE definition |
 | Example playbooks | `playbooks/modules/` | One example playbook per module |
 | Unit tests | `tests/unit/plugins/modules/` | One test file per module |
@@ -100,7 +100,7 @@ Published to Ansible Galaxy under the `dellemc` namespace. Uses the `PyPowerFlex
 ## Known Constraints
 
 1. **SDK version coupling is strict** — each collection release is tested against exactly one SDK version (or tight range). Mismatch is a blocking defect.
-2. **`meta/runtime.yml` is source of truth for action groups** — every new module must be appended to the `dellemc.powerflex.all` list.
+2. **`meta/runtime.yml` is source of truth** — tombstone/redirect entries for deprecated module names must not be removed.
 3. **Tombstone entries are permanent** — deprecated `dellemc_powerflex_*` prefixed module names must not be removed.
 4. **`validate_certs: false` is lab-only** — production requires `true`.
 5. **Example playbooks are mandatory** — every module must ship a working example in `playbooks/modules/`.
