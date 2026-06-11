@@ -1,0 +1,151 @@
+---
+# ============================================================================
+# thin_clone examples
+#
+# This module CREATES thin clones. Rename / delete / resize / map are performed
+# by dellemc.powerflex.volume — demonstrated in tasks 8-10 below.
+# ============================================================================
+- name: PowerFlex thin_clone examples
+  hosts: localhost
+  gather_facts: false
+  vars:
+    hostname: "{{ lookup('env','POWERFLEX_HOST') }}"
+    username: "{{ lookup('env','POWERFLEX_USER') }}"
+    password: "{{ lookup('env','POWERFLEX_PASS') }}"
+    validate_certs: false
+
+  tasks:
+    - name: 1. Create clone from source volume by name
+      dellemc.powerflex.thin_clone:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        from_volume_name: "src_vol"
+        new_clone_name: "clone_a"
+        state: present
+      register: clone_a
+
+    - name: 2. Create clone from source volume by id
+      dellemc.powerflex.thin_clone:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        from_volume_id: "12a34b5c00000001"
+        new_clone_name: "clone_b"
+        state: present
+      register: clone_b
+
+    - name: 3. Create clone from read-only snapshot by name
+      dellemc.powerflex.thin_clone:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        from_snapshot_name: "snap_prod_nightly"
+        new_clone_name: "clone_from_snap"
+        state: present
+
+    - name: 4. Create clone from read-only snapshot by id
+      dellemc.powerflex.thin_clone:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        from_snapshot_id: "fe6cb28200000007"
+        new_clone_name: "clone_from_snap_id"
+        state: present
+
+    - name: 5. Create clone whose source is itself a thin clone (via from_volume_*)
+      dellemc.powerflex.thin_clone:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        from_volume_name: "clone_a"
+        new_clone_name: "clone_grandchild"
+        state: present
+
+    - name: 6. Idempotent re-run (identical to task 1; expected changed=false)
+      dellemc.powerflex.thin_clone:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        from_volume_name: "src_vol"
+        new_clone_name: "clone_a"
+        state: present
+
+    - name: 7. Batch create via loop
+      dellemc.powerflex.thin_clone:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        from_volume_name: "src_vol"
+        new_clone_name: "{{ item }}"
+        state: present
+      loop:
+        - clone_dev_01
+        - clone_dev_02
+        - clone_dev_03
+
+    - name: 8. Map the thin clone to an SDC via volume_v2
+      dellemc.powerflex.volume:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        volume_id: "{{ clone_a.volume_details.id }}"
+        sdc:
+          - sdc_name: "sdc_host_01"
+            access_mode: "ReadWrite"
+        sdc_state: "mapped"
+        state: present
+
+    - name: 9. Rename via volume_v2
+      dellemc.powerflex.volume:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        volume_name: "clone_a"
+        volume_new_name: "clone_a_prod"
+        state: present
+
+    - name: 10. Delete via volume_v2 (System creates, Volume manages)
+      dellemc.powerflex.volume:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        volume_id: "{{ clone_a.volume_details.id }}"
+        state: absent
+
+    - name: 11. Error-handling — bad source name
+      block:
+        - name: Attempt clone from nonexistent source
+          dellemc.powerflex.thin_clone:
+            hostname: "{{ hostname }}"
+            username: "{{ username }}"
+            password: "{{ password }}"
+            validate_certs: "{{ validate_certs }}"
+            from_volume_name: "does_not_exist"
+            new_clone_name: "clone_err"
+            state: present
+      rescue:
+        - name: Expected failure
+          ansible.builtin.debug:
+            msg: "Source volume not found — expected failure path (FC-TC-008)"
+
+    - name: 12. check_mode example
+      dellemc.powerflex.thin_clone:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        from_volume_name: "src_vol"
+        new_clone_name: "clone_check_mode"
+        state: present
+      check_mode: true
