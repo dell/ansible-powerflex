@@ -228,3 +228,28 @@ releases:
         name: volume_v2
         namespace: ''
     release_date: '2025-09-30'
+
+  3.1.0:
+    changes:
+      minor_changes:
+        - Added the ``device_group`` module to manage existing PowerFlex Gen2 device
+          groups. The module supports getting device group details by name or ID,
+          renaming a device group, updating spare node and spare device counts, and
+          querying usable capacity. Device group creation and deletion are not
+          supported.
+        - Added the ``thin_clone`` module to create thin clones from a source volume
+          or a read-only snapshot on PowerFlex 5.x Gen2 systems. This module is
+          creation-only; ongoing management of the resulting thin clone is handled
+          by the ``volume`` module.
+        - Fixed sanity and lint issues in info_v2 module.
+        - Updated GitHub Actions workflow for improved CI stability.
+      release_summary: This release adds the device_group and thin_clone modules
+        for PowerFlex Gen2, along with CI and code quality improvements.
+    modules:
+      - description: Manage Device Groups on Dell PowerFlex Gen2
+        name: device_group
+        namespace: ''
+      - description: Create Thin Clones on Dell PowerFlex 5.x (Gen2)
+        name: thin_clone
+        namespace: ''
+    release_date: '2026-06-23'
