@@ -1,6 +1,6 @@
 **Ansible Modules for Dell Technologies PowerFlex** 
 =========================================
-### Release notes 3.0.0
+### Release notes 3.1.0
 
 >   © 2025 Dell Inc. or its subsidiaries. All rights reserved. Dell
 >   and other trademarks are trademarks of Dell Inc. or its
@@ -28,6 +28,7 @@ Table 1. Revision history
 
 | Revision | Date            | Description                                                 |
 |----------|-----------------|-------------------------------------------------------------|
+| 04       | Jun 2026        | Current release of Ansible Modules for Dell PowerFlex 3.1.0 |
 | 03       | Sep 2025        | Current release of Ansible Modules for Dell PowerFlex 3.0.0 |
 | 02       | June 2025       | Current release of Ansible Modules for Dell PowerFlex 2.6.1 |
 | 01       | Dec 2024        | Current release of Ansible Modules for Dell PowerFlex 2.6.0 |
@@ -48,11 +49,20 @@ New features and enhancements
 Note: In this context, PowerFlex Gen1 refers to PowerFlex versions < 5.0.0, and PowerFlex Gen2
 refers to PowerFlex versions ≥ 5.0.0.
 
-This release introduces extended support for Dell PowerFlex Gen2 by adding compatibility for
+This release adds the following new modules for PowerFlex Gen2:
+
+- **device_group** - Manage existing PowerFlex Gen2 device groups. The module supports getting device group details by name or ID, renaming a device group, updating spare node and spare device counts, and querying usable capacity. Device group creation and deletion are not supported.
+- **thin_clone** - Create thin clones from a source volume or a read-only snapshot on PowerFlex 5.x Gen2 systems. This module is creation-only; ongoing management of the resulting thin clone is handled by the volume module.
+
+This release also includes code quality improvements:
+- Fixed sanity and lint issues in info_v2 module
+- Updated GitHub Actions workflow for improved CI stability
+
+Previous release (3.0.0) introduced extended support for Dell PowerFlex Gen2 by adding compatibility for
 modules including mdm_cluster, nvme_host, sdc, sdt, and snapshot_policy, as well as
 roles such as activemq, lia, mdm, and tb.
 
-This release also includes new Gen2-specific modules — device_v2, info_v2, protection_domain_v2,
+The 3.0.0 release also included new Gen2-specific modules — device_v2, info_v2, protection_domain_v2,
 snapshot_v2, storagepool_v2, and volume_v2 — which replace their original Gen1 counterparts for Gen2 environments.
 
 Additionally, the modules fault_set, replication_consistency_group, replication_pair, resource_group,
