@@ -4,6 +4,28 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
+v3.1.0
+======
+
+Release Summary
+---------------
+
+This release adds the device_group and thin_clone modules for PowerFlex Gen2, along with CI and code quality improvements.
+
+Minor Changes
+-------------
+
+- Added the ``device_group`` module to manage existing PowerFlex Gen2 device groups. The module supports getting device group details by name or ID, renaming a device group, updating spare node and spare device counts, and querying usable capacity. Device group creation and deletion are not supported.
+- Added the ``thin_clone`` module to create thin clones from a source volume or a read-only snapshot on PowerFlex 5.x Gen2 systems. This module is creation-only; ongoing management of the resulting thin clone is handled by the ``volume`` module.
+- Fixed sanity and lint issues in info_v2 module.
+- Updated GitHub Actions workflow for improved CI stability.
+
+New Modules
+-----------
+
+- dellemc.powerflex.device_group - Manage Device Groups on Dell PowerFlex Gen2
+- dellemc.powerflex.thin_clone - Create Thin Clones on Dell PowerFlex 5.x (Gen2)
+
 v3.0.0
 ======
 
