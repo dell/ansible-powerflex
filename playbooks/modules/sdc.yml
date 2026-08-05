@@ -8,7 +8,8 @@
     username: 'admin'
     password: 'Password'
     validate_certs: false
-    sdc_name: test_sdc
+    sdc_ip: "1.1.1.1"
+    sdc_name: ansible_example_sdc
 
   tasks:
     - name: Get sdc details using sdc ip
@@ -18,12 +19,13 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        sdc_ip: "1.1.1.1"
+        sdc_ip: "{{ sdc_ip }}"
         state: "present"
 
     - name: Set sdc id
       ansible.builtin.set_fact:
         sdc_id: "{{ result.sdc_details.id }}"
+        sdc_orig_name: "{{ result.sdc_details.name }}"
 
     - name: Rename sdc using sdc id
       dellemc.powerflex.sdc:
@@ -54,11 +56,12 @@
         performance_profile: "HighPerformance"
         state: "present"
 
-    - name: Remove sdc
+    - name: Restore original sdc name
       dellemc.powerflex.sdc:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        sdc_name: "{{ sdc_name }}"
-        state: "absent"
+        sdc_id: "{{ sdc_id }}"
+        sdc_new_name: "{{ sdc_orig_name }}"
+        state: "present"

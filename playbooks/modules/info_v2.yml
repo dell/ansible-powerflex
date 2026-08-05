@@ -5,7 +5,7 @@
   vars:
     hostname: 'x.x.x.x'
     username: 'admin'
-    password: ''
+    password: 'Password'
     validate_certs: false
     host_port: 443
   tasks:
