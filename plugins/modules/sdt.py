@@ -803,14 +803,20 @@ class PowerFlexSDT(PowerFlexBase):
         :return: dict
         """
         try:
-            if not self.module.check_mode:
-                self.powerflex_conn.sdt.delete(sdt_details["id"])
-                return None
-            return self.get_sdt_details(sdt_id=sdt_details["id"])
+            if self.module.check_mode:
+                self.result["changed"] = True
+                return self.get_sdt_details(sdt_id=sdt_details["id"])
+            self.powerflex_conn.sdt.delete(sdt_details["id"])
+            self.result["changed"] = True
+            return None
         except Exception as e:
+            error_str = str(e)
+            if "Could not find the SDT" in error_str or "'errorCode': 4000" in error_str:
+                self.result["changed"] = False
+                return None
             error_msg = "Delete SDT '%s' operation failed with error '%s'" % (
                 sdt_details["name"],
-                str(e),
+                error_str,
             )
             LOG.error(error_msg)
             self.module.fail_json(msg=error_msg)
@@ -901,7 +907,6 @@ class SDTDeleteHandler:
     def handle(self, sdt_obj, sdt_params, sdt_details):
         if sdt_params["state"] == "absent" and sdt_details:
             sdt_details = sdt_obj.delete_sdt(sdt_details)
-            sdt_obj.result["changed"] = True
 
         SDTExitHandler().handle(sdt_obj, sdt_details)
 
