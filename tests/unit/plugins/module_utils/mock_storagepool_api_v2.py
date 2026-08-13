@@ -351,6 +351,7 @@ class MockStoragePoolV2Api:
         "device_group_exception": "Failed to get device group",
         "mismatch_device_group_id_exception": "Entered device group id does not match",
         "mismatch_device_group_name_exception": "Entered device group name does not match",
+        "empty_pool_name": "Empty or white spaced string provided for storage pool name. Provide valid storage pool name",
     }
 
     @staticmethod

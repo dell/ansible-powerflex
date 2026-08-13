@@ -95,6 +95,62 @@ class TestPowerflexStoragePoolV2(PowerFlexUnitBase):
             module_mock=powerflex_module_mock,
             invoke_perform_module=True)
 
+    def test_empty_pool_name(self, powerflex_module_mock):
+        # Test empty storage_pool_name
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "",
+                "state": "present"
+            })
+        self.capture_fail_json_call(
+            MockStoragePoolV2Api.get_exception_response('empty_pool_name'),
+            module_mock=powerflex_module_mock,
+            invoke_perform_module=True)
+
+        # Test whitespace-only storage_pool_name
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "   ",
+                "state": "present"
+            })
+        self.capture_fail_json_call(
+            MockStoragePoolV2Api.get_exception_response('empty_pool_name'),
+            module_mock=powerflex_module_mock,
+            invoke_perform_module=True)
+
+    def test_empty_pool_new_name(self, powerflex_module_mock):
+        # Test empty storage_pool_new_name
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "test_pool",
+                "storage_pool_new_name": "",
+                "state": "present"
+            })
+        self.capture_fail_json_call(
+            MockStoragePoolV2Api.get_exception_response('empty_pool_name'),
+            module_mock=powerflex_module_mock,
+            invoke_perform_module=True)
+
+        # Test whitespace-only storage_pool_new_name
+        self.set_module_params(
+            powerflex_module_mock,
+            self.get_module_args,
+            {
+                "storage_pool_name": "test_pool",
+                "storage_pool_new_name": "   ",
+                "state": "present"
+            })
+        self.capture_fail_json_call(
+            MockStoragePoolV2Api.get_exception_response('empty_pool_name'),
+            module_mock=powerflex_module_mock,
+            invoke_perform_module=True)
+
     def test_get_storage_pool_with_dg(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock,
