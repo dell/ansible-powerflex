@@ -62,6 +62,11 @@ def get_powerflex_gateway_host_connection(module_params):
             password=module_params['password'],
             timeout=module_params['timeout'])
         conn.initialize()
+        # Ensure Gen1 SDK objects are also loaded so that PFMP 5.x gateways
+        # managing Gen1 (Core 4.5.x) arrays can be managed by Gen1 modules.
+        # This is safe for Gen2 arrays as it only adds additional object types.
+        if hasattr(conn, 'add_objects_gen1'):
+            conn.add_objects_gen1()
         return conn
 
 
