@@ -28,7 +28,7 @@
         state: "present"
 
     - name: Set volume id
-      set_fact:
+      ansible.builtin.set_fact:
         vol_id: "{{ vol_result.volume_details.id }}"
 
     - name: Create snapshot

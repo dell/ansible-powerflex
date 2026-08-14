@@ -49,14 +49,14 @@
         device_group_name: "{{ dg_new_name }}"
         spare_node_count: 1
         state: "present"
-      ignore_errors: true  # May fail if array capacity is too small
+      failed_when: false  # May fail if array capacity is too small
 
     - name: Update spare device count
       dellemc.powerflex.device_group:
         device_group_name: "{{ dg_new_name }}"
         spare_device_count: 1
         state: "present"
-      ignore_errors: true  # May fail if array capacity is too small
+      failed_when: false  # May fail if array capacity is too small
 
     - name: Rename and update spare counts together
       dellemc.powerflex.device_group:
