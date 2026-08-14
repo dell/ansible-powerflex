@@ -4,10 +4,14 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: "xxx"
+    hostname: "x.x.x.x"
     username: "admin"
     password: "Password"
     validate_certs: false
+    storage_node: "Node1"
+    device_group: "DG1"
+    disk_path_1: "/dev/sdd"
+    disk_path_2: "/dev/sde"
 
   tasks:
     - name: Create device - check_mode
@@ -16,10 +20,10 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        current_pathname: "/dev/sdc"
-        device_group_name: "DG1"
+        current_pathname: "{{ disk_path_1 }}"
+        device_group_name: "{{ device_group }}"
         media_type: "SSD"
-        storage_node_name: "Node1"
+        storage_node_name: "{{ storage_node }}"
       diff: true
       check_mode: true
 
@@ -30,10 +34,10 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        current_pathname: "/dev/sdc"
-        device_group_name: "DG1"
+        current_pathname: "{{ disk_path_1 }}"
+        device_group_name: "{{ device_group }}"
         media_type: "SSD"
-        storage_node_name: "Node1"
+        storage_node_name: "{{ storage_node }}"
       diff: true
 
     - name: Create device using name with force flag
@@ -43,7 +47,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        current_pathname: "/dev/sdd"
+        current_pathname: "{{ disk_path_2 }}"
         device_group_id: "{{ device1_result.device_details.deviceGroupId }}"
         storage_node_id: "{{ device1_result.device_details.storageNodeId }}"
         media_type: "SSD"
@@ -66,8 +70,8 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        current_pathname: "/dev/sdd"
-        storage_node_name: "Node1"
+        current_pathname: "{{ disk_path_2 }}"
+        storage_node_name: "{{ storage_node }}"
         state: "present"
 
     - name: Get device details using (current_pathname, storage_node_id)
@@ -76,7 +80,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        current_pathname: "/dev/sdd"
+        current_pathname: "{{ disk_path_2 }}"
         storage_node_id: "{{ device1_result.device_details.storageNodeId }}"
         state: "present"
 
@@ -160,6 +164,6 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        current_pathname: "/dev/sdd"
-        storage_node_name: "Node1"
+        current_pathname: "{{ disk_path_2 }}"
+        storage_node_name: "{{ storage_node }}"
         state: "absent"
