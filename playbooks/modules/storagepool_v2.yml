@@ -58,7 +58,7 @@
         state: "present"
 
     - name: Set storage pool ID
-      set_fact:
+      ansible.builtin.set_fact:
         sp_id: "{{ sp_result.storage_pool_details.id }}"
 
     - name: Get storagepool details using storagepool id

@@ -45,7 +45,7 @@
         state: "present"
 
     - name: Set source volume id
-      set_fact:
+      ansible.builtin.set_fact:
         vol_id: "{{ vol_result.volume_details.id }}"
         snap_id: "{{ snap_result.snapshot_details.id }}"
 
@@ -81,7 +81,7 @@
         new_clone_name: "{{ clone_from_vol }}"
         state: present
 
-    - name: check_mode example
+    - name: Check mode example
       dellemc.powerflex.thin_clone:
         hostname: "{{ hostname }}"
         username: "{{ username }}"

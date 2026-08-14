@@ -26,7 +26,7 @@
         state: "present"
 
     - name: Set protection domain ID from created domain
-      set_fact:
+      ansible.builtin.set_fact:
         pd_id: "{{ result.protection_domain_details.id }}"
 
     - name: Get Protection Domain
