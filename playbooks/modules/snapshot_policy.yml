@@ -8,12 +8,27 @@
     username: 'admin'
     password: 'Password'
     validate_certs: false
-    snapshot_policy_name: "Ansible_snap_policy_1"
-    source_volume_name1: "Ansible_volume_4"
-    source_volume_name2: "Ansible_volume_5"
-    snapshot_policy_name_new: "Ansible_snap_policy_1_new"
+    snapshot_policy_name: "ansible_snap_pol"
+    source_volume_name1: "ansible_sp_vol1"
+    source_volume_name2: "ansible_sp_vol2"
+    snapshot_policy_name_new: "ansible_snap_pol_new"
 
   tasks:
+    - name: Create source volumes for snapshot policy
+      dellemc.powerflex.volume_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        vol_name: "{{ item }}"
+        storage_pool_name: "{{ storage_pool_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
+        size: 8
+        state: "present"
+      loop:
+        - "{{ source_volume_name1 }}"
+        - "{{ source_volume_name2 }}"
+
     - name: Create a snapshot policy in check mode
       dellemc.powerflex.snapshot_policy:
         hostname: "{{ hostname }}"
@@ -21,7 +36,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         snapshot_policy_name: "{{ snapshot_policy_name }}"
-        access_mode: "READ_WRITE"
+        access_mode: "READ_ONLY"
         secure_snapshots: false
         auto_snapshot_creation_cadence:
           time: 1
@@ -39,7 +54,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         snapshot_policy_name: "{{ snapshot_policy_name }}"
-        access_mode: "READ_WRITE"
+        access_mode: "READ_ONLY"
         secure_snapshots: false
         auto_snapshot_creation_cadence:
           time: 1
@@ -213,3 +228,16 @@
         validate_certs: "{{ validate_certs }}"
         snapshot_policy_name: "{{ snapshot_policy_name_new }}"
         state: "absent"
+
+    - name: Delete source volumes
+      dellemc.powerflex.volume_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        vol_name: "{{ item }}"
+        state: "absent"
+        delete_snapshots: true
+      loop:
+        - "{{ source_volume_name1 }}"
+        - "{{ source_volume_name2 }}"

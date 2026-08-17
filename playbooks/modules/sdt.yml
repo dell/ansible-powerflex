@@ -27,13 +27,16 @@
         sdt_ip_list:
           - ip: "{{ sdt_ip1 }}"
             role: "StorageAndHost"
-          - ip: "{{ sdt_ip2 }}"
-            role: "StorageAndHost"
         protection_domain_name: "{{ protection_domain_name }}"
         storage_port: 12200
         nvme_port: 4420
         discovery_port: 8009
         state: "present"
+      register: sdt_result
+
+    - name: Set sdt original name
+      ansible.builtin.set_fact:
+        sdt_orig_name: "{{ sdt_result.sdt_details.name }}"
 
     - name: Rename SDT
       dellemc.powerflex.sdt:
@@ -41,7 +44,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_name }}"
+        sdt_name: "{{ sdt_orig_name }}"
         sdt_new_name: "{{ sdt_new_name }}"
         state: "present"
 
@@ -51,36 +54,21 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_name }}"
+        sdt_name: "{{ sdt_new_name }}"
         nvme_port: 4421
         discovery_port: 8008
         state: "present"
 
-    - name: Change maintenance mode
+    - name: Restore SDT ports and name
       dellemc.powerflex.sdt:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_name }}"
-        maintenance_mode: "active"
-        state: "present"
-
-    - name: Set IP and role to SDT
-      dellemc.powerflex.sdt:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_name }}"
-        storage_port: 12200
+        sdt_name: "{{ sdt_new_name }}"
+        sdt_new_name: "{{ sdt_orig_name }}"
         nvme_port: 4420
         discovery_port: 8009
-        sdt_ip_list:
-          - ip: "{{ sdt_ip1 }}"
-            role: "StorageAndHost"
-          - ip: "{{ sdt_ip3 }}"
-            role: "StorageAndHost"
         state: "present"
 
     - name: Remove SDT
@@ -89,5 +77,5 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_name }}"
+        sdt_name: "{{ sdt_orig_name }}"
         state: "absent"
