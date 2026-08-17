@@ -3,9 +3,9 @@
   hosts: localhost
   connection: local
   vars:
-    hostname: 'x.x.x.x'
+    hostname: '10.247.39.166'
     username: 'admin'
-    password: ''
+    password: 'Password123!'
     validate_certs: false
     host_port: 443
   tasks:

@@ -4,10 +4,10 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    hostname: '10.247.39.166'
     remote_hostname: '**.**.**.**'
     username: 'admin'
-    password: 'Password'
+    password: 'Password123!'
     validate_certs: false
     rcg_name: "test_rcg"
     rcg_id: "aadc17d900000002"
