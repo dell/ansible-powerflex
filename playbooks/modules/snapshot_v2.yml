@@ -8,28 +8,38 @@
     username: 'admin'
     password: 'Password'
     validate_certs: false
+    # Use unique names
+    vol_name: "ansible_snap_vol"
+    snap_name: "ansible_snapshot"
+    snap_new_name: "ansible_snap_rn"
 
   tasks:
-    - name: Create snapshot
-      dellemc.powerflex.snapshot_v2:
+    - name: Create source volume
+      register: vol_result
+      dellemc.powerflex.volume_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        snapshot_name: "ansible_snapshot_1"
-        vol_name: "ansible_volume_1"
+        vol_name: "{{ vol_name }}"
+        storage_pool_name: "{{ storage_pool_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
+        size: 8
         state: "present"
 
-    - name: Create snapshot with retention
+    - name: Set volume id
+      ansible.builtin.set_fact:
+        vol_id: "{{ vol_result.volume_details.id }}"
+
+    - name: Create snapshot
       register: result
       dellemc.powerflex.snapshot_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        snapshot_name: "ansible_snapshot_2"
-        vol_name: "ansible_volume_1"
-        desired_retention: 2
+        snapshot_name: "{{ snap_name }}"
+        vol_name: "{{ vol_name }}"
         state: "present"
 
     - name: Set snapshot id
@@ -45,17 +55,6 @@
         snapshot_id: "{{ snapshot_id }}"
         state: "present"
 
-    - name: Modify the retention
-      dellemc.powerflex.snapshot_v2:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        snapshot_name: "ansible_snapshot_2"
-        desired_retention: 3
-        retention_unit: "hours"
-        state: "present"
-
     - name: Rename snapshot
       dellemc.powerflex.snapshot_v2:
         hostname: "{{ hostname }}"
@@ -63,7 +62,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         snapshot_id: "{{ snapshot_id }}"
-        snapshot_new_name: "ansible_renamed_snapshot"
+        snapshot_new_name: "{{ snap_new_name }}"
         state: "present"
 
     - name: Delete snapshot
@@ -74,4 +73,13 @@
         validate_certs: "{{ validate_certs }}"
         snapshot_id: "{{ snapshot_id }}"
         remove_mode: "ONLY_ME"
+        state: "absent"
+
+    - name: Delete source volume
+      dellemc.powerflex.volume_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        vol_id: "{{ vol_id }}"
         state: "absent"

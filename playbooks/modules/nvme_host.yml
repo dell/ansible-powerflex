@@ -8,9 +8,9 @@
     username: 'admin'
     password: 'Password'
     validate_certs: false
-    nvme_host_name: test_nvme_host
-    nvme_host_new_name: test_nvme_host_new
-    nqn: nqn
+    nvme_host_name: ansible_qual_nvme
+    nvme_host_new_name: ansible_nvme_rn
+    nqn: "nqn.2014-08.org.nvmexpress:uuid:11111111-aaaa-bbbb-cccc-999999999999"
     max_num_paths: '5'
     max_num_sys_ports: '12'
 
@@ -25,7 +25,7 @@
         nvme_host_name: "{{ nvme_host_name }}"
         state: "present"
 
-    - name: Rename nvme_host using NVMe host id
+    - name: Rename nvme_host
       dellemc.powerflex.nvme_host:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -41,7 +41,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        nvme_host_name: "{{ nvme_host_name }}"
+        nvme_host_name: "{{ nvme_host_new_name }}"
         max_num_paths: "{{ max_num_paths }}"
         max_num_sys_ports: "{{ max_num_sys_ports }}"
         state: "present"
@@ -52,5 +52,5 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        nvme_host_name: "{{ nvme_host_name }}"
+        nvme_host_name: "{{ nvme_host_new_name }}"
         state: "absent"
