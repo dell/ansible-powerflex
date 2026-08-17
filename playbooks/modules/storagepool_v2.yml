@@ -8,46 +8,46 @@
     username: "admin"
     password: "Password"
     validate_certs: false
+    # Use unique names to avoid conflicts
+    sp_name: "ansible_example_pool"
+    sp_new_name: "ansible_example_pool_renamed"
+    pd_name: "ansible_example_domain"
+    dg_name: "ansible_example_dg"
 
   tasks:
-    - name: Create storagepool
-      dellemc.powerflex.storagepool_v2:
+    - name: Create protection domain for pool
+      register: pd_result
+      dellemc.powerflex.protection_domain_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        storage_pool_name: "{{ sp_name }}"
-        protection_domain_name: "{{ domain1 }}"
-        device_group_name: "{{ dg_name }}"
-        protection_scheme: "TwoPlusTwo"
-        compression_method: "Normal"
-        use_all_available_capacity: true
+        validate_certs: false
+        protection_domain_name: "{{ pd_name }}"
+        is_active: true
         state: "present"
 
-    - name: Create storagepool with specific capacity
-      dellemc.powerflex.storagepool_v2:
+    - name: Create device group for pool
+      register: dg_result
+      dellemc.powerflex.device_group:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        storage_pool_name: "{{ sp_name }}"
-        protection_domain_name: "{{ domain1 }}"
+        validate_certs: false
         device_group_name: "{{ dg_name }}"
-        protection_scheme: "TwoPlusTwo"
-        compression_method: "Normal"
-        physical_size_gb: 4096
+        protection_domain_name: "{{ pd_name }}"
+        media_type: "SSD"
         state: "present"
 
     - name: Create storagepool with cap_alert_threshold
-      register: result
+      register: sp_result
       dellemc.powerflex.storagepool_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        storage_pool_name: "{{ storage_pool_name }}"
-        protection_domain_name: "{{ protection_domain_name }}"
-        device_group_name: "{{ device_group_name }}"
+        storage_pool_name: "{{ sp_name }}"
+        protection_domain_name: "{{ pd_name }}"
+        device_group_name: "{{ dg_name }}"
         protection_scheme: "TwoPlusTwo"
         compression_method: "Normal"
         use_all_available_capacity: true
@@ -57,24 +57,17 @@
         over_provisioning_factor: 100
         state: "present"
 
+    - name: Set storage pool ID
+      ansible.builtin.set_fact:
+        sp_id: "{{ sp_result.storage_pool_details.id }}"
+
     - name: Get storagepool details using storagepool id
       dellemc.powerflex.storagepool_v2:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        storage_pool_id: "{{ storage_pool_id }}"
-        state: "present"
-
-    - name: Modify the physical_size_gb
-      dellemc.powerflex.storagepool_v2:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        storage_pool_name: "{{ storage_pool_name }}"
-        protection_domain_name: "{{ protection_domain_name }}"
-        physical_size_gb: 6144
+        storage_pool_id: "{{ sp_id }}"
         state: "present"
 
     - name: Modify the cap_alert_thresholds
@@ -83,8 +76,8 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        storage_pool_name: "{{ storage_pool_name }}"
-        protection_domain_name: "{{ protection_domain_name }}"
+        storage_pool_name: "{{ sp_name }}"
+        protection_domain_name: "{{ pd_name }}"
         cap_alert_thresholds:
           high_threshold: 85
           critical_threshold: 95
@@ -96,8 +89,8 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        storage_pool_id: "{{ storage_pool_id }}"
-        storage_pool_new_name: "{{ storage_pool_new_name }}"
+        storage_pool_id: "{{ sp_id }}"
+        storage_pool_new_name: "{{ sp_new_name }}"
         state: "present"
 
     - name: Delete storagepool
@@ -106,5 +99,23 @@
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        storage_pool_id: "{{ storage_pool_id }}"
+        storage_pool_id: "{{ sp_id }}"
+        state: "absent"
+
+    - name: Delete device group
+      dellemc.powerflex.device_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: false
+        device_group_name: "{{ dg_name }}"
+        state: "absent"
+
+    - name: Delete protection domain
+      dellemc.powerflex.protection_domain_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: false
+        protection_domain_name: "{{ sp_new_name }}"
         state: "absent"
