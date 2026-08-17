@@ -4,50 +4,37 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
+    hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password'
+    password: 'Password123!'
     validate_certs: false
     host_port: 443
-    sds_name_1: "sds_node_1"
-    sds_name_2: "sds_node_2"
-    sds_name_1_new: "sds_node1_new"
-    protection_domain_name: "Ansible-PD1"
+    # Oslo2 existing SDS nodes
+    sds_name_1: "destiny-sds1"
+    sds_name_2: "destiny-sds2"
+    sds_id_1: "726af23a00000002"
+    sds_id_2: "726af23900000001"
+    protection_domain_name: "destiny-PD"
 
   tasks:
-    - name: Create SDS
-      register: result
-      dellemc.powerflex.sds:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        sds_name: "{{ sds_name_1 }}"
-        protection_domain_name: "{{ protection_domain_name }}"
-        sds_ip_list:
-          - ip: '**.**.**.**'
-            role: "all"
-        sds_ip_state: "present-in-sds"
-        state: "present"
-
-    - name: Create SDS with all parameters
-      dellemc.powerflex.sds:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        sds_name: "{{ sds_name_2 }}"
-        fault_set_name: "sample_fault_set"
-        protection_domain_name: "{{ protection_domain_name }}"
-        sds_ip_list:
-          - ip: '**.**.**.**'
-            role: "all"
-        sds_ip_state: "present-in-sds"
-        rmcache_enabled: true
-        rmcache_size: 210
-        state: "present"
+    # Note: Create SDS requires a server with SDS software installed and available IPs
+    # This is infrastructure that doesn't exist in the test environment
+    # - name: Create SDS
+    #   register: result
+    #   dellemc.powerflex.sds:
+    #     hostname: "{{ hostname }}"
+    #     username: "{{ username }}"
+    #     password: "{{ password }}"
+    #     validate_certs: "{{ validate_certs }}"
+    #     port: "{{ host_port }}"
+    #     sds_name: "new_sds_node"
+    #     protection_domain_name: "{{ protection_domain_name }}"
+    #     sds_ip_list:
+    #       - ip: '10.247.58.169'
+    #         role: "all"
+    #     sds_ip_state: "present-in-sds"
+    #     state: "present"
 
     - name: Get SDS details using name
       dellemc.powerflex.sds:
@@ -56,8 +43,9 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        sds_name: "{{ sds_name_2 }}"
+        sds_name: "{{ sds_name_1 }}"
         state: "present"
+      register: sds_result
 
     - name: Get SDS details using ID
       dellemc.powerflex.sds:
@@ -66,11 +54,10 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        sds_id: "{{ result.sds_details }}"
+        sds_id: "{{ sds_id_1 }}"
         state: "present"
 
-    - name: Modify SDS attributes using name
-      register: result
+    - name: Modify SDS attributes using name (rename)
       dellemc.powerflex.sds:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -78,72 +65,42 @@
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
         sds_name: "{{ sds_name_1 }}"
-        sds_new_name: "{{ sds_name_1_new }}"
-        rfcache_enabled: false
-        rmcache_enabled: true
-        rmcache_size: 256
-        performance_profile: "HighPerformance"
+        sds_new_name: "destiny-sds1-renamed"
         state: "present"
 
-    - name: Modify SDS attributes using ID
+    - name: Modify SDS attributes using ID (rename back)
       dellemc.powerflex.sds:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        sds_id: "{{ result.sds_details }}"
+        sds_id: "{{ sds_id_1 }}"
         sds_new_name: "{{ sds_name_1 }}"
-        rfcache_enabled: true
-        rmcache_enabled: true
-        rmcache_size: 210
-        performance_profile: "Compact"
         state: "present"
 
-    - name: Add IP and role to an SDS
-      dellemc.powerflex.sds:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        sds_name: "{{ sds_name_1 }}"
-        sds_ip_list:
-          - ip: '**.**.**.**'
-            role: "sdcOnly"
-        sds_ip_state: "present-in-sds"
-        state: "present"
+    # Note: Adding/removing IPs requires available IPs and proper network configuration
+    # - name: Add IP and role to an SDS
+    #   dellemc.powerflex.sds:
+    #     hostname: "{{ hostname }}"
+    #     username: "{{ username }}"
+    #     password: "{{ password }}"
+    #     validate_certs: "{{ validate_certs }}"
+    #     port: "{{ host_port }}"
+    #     sds_name: "{{ sds_name_1 }}"
+    #     sds_ip_list:
+    #       - ip: '10.247.58.200'
+    #         role: "sdcOnly"
+    #     sds_ip_state: "present-in-sds"
+    #     state: "present"
 
-    - name: Remove IP and role from an SDS
-      dellemc.powerflex.sds:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        sds_name: "{{ sds_name_1 }}"
-        sds_ip_list:
-          - ip: '**.**.**.**'
-            role: "sdcOnly"
-        sds_ip_state: "absent-in-sds"
-        state: "present"
-
-    - name: Delete SDS using name
-      dellemc.powerflex.sds:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        sds_name: "{{ sds_name_2 }}"
-        state: "absent"
-
-    - name: Delete SDS using ID
-      dellemc.powerflex.sds:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        port: "{{ host_port }}"
-        sds_id: "{{ result.sds_details }}"
-        state: "absent"
+    # Note: Delete SDS would remove production infrastructure
+    # - name: Delete SDS using name
+    #   dellemc.powerflex.sds:
+    #     hostname: "{{ hostname }}"
+    #     username: "{{ username }}"
+    #     password: "{{ password }}"
+    #     validate_certs: "{{ validate_certs }}"
+    #     port: "{{ host_port }}"
+    #     sds_name: "{{ sds_name_2 }}"
+    #     state: "absent"

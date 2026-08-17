@@ -4,11 +4,21 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
+    hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password'
+    password: 'Password123!'
     validate_certs: false
     host_port: 443
+    # Oslo2 MDM IDs
+    mdm_master_id: "4fcc727945bc9a00"
+    mdm_master_name: "destiny-mdm1"
+    mdm_slave_id: "609f150f17611301"
+    mdm_slave_name: "destiny-mdm2"
+    mdm_standby_id: "6645cc62460a1303"
+    mdm_standby_name: "destiny-mdm3"
+    mdm_tiebreaker_id: "4f88b53a36540002"
+    mdm_tiebreaker_name: "destiny-mdm4"
 
   tasks:
     - name: Get MDM cluster
@@ -27,7 +37,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        mdm_id: "1c13c3847c971201"
+        mdm_id: "{{ mdm_master_id }}"
         mdm_new_name: "node_renamed"
         state: "present"
       check_mode: true
@@ -39,7 +49,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        mdm_id: "1c13c3847c971201"
+        mdm_id: "{{ mdm_master_id }}"
         mdm_new_name: "node_renamed"
         state: "present"
 
@@ -50,7 +60,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        mdm_name: "mdm_node1"
+        mdm_name: "{{ mdm_standby_name }}"
         state: "absent"
 
     - name: Add standby MDM
@@ -60,13 +70,13 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        mdm_name: "mdm_standby_node"
+        mdm_name: "{{ mdm_standby_name }}"
         standby_mdm:
           mdm_ips:
-            - "10.x.x.x"
-          role: "TieBreaker"
+            - "10.247.58.164"
+          role: "Manager"
           management_ips:
-            - "10.x.x.x"
+            - "10.247.39.173"
           port: 9011
         state: "present"
 
@@ -88,7 +98,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        mdm_name: "mdm_manager_node"
+        mdm_name: "node_renamed"
         virtual_ip_interfaces:
           - "ens224"
           - "ens256"
@@ -101,7 +111,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
-        mdm_name: "mdm_manager_node"
+        mdm_name: "node_renamed"
         clear_interfaces: true
         state: "present"
 
@@ -124,9 +134,9 @@
         port: "{{ host_port }}"
         cluster_mode: "FiveNodes"
         mdm:
-          - mdm_name: "mdm_manger_node"
+          - mdm_name: "{{ mdm_slave_name }}"
             mdm_type: "Secondary"
-          - mdm_name: "mdm_tiebreaker_node"
+          - mdm_name: "{{ mdm_tiebreaker_name }}"
             mdm_type: "TieBreaker"
         mdm_state: "present-in-cluster"
         state: "present"
@@ -140,9 +150,9 @@
         port: "{{ host_port }}"
         cluster_mode: "ThreeNodes"
         mdm:
-          - mdm_name: "mdm_manger_node"
+          - mdm_name: "{{ mdm_slave_name }}"
             mdm_type: "Secondary"
-          - mdm_name: "mdm_tiebreaker_node"
+          - mdm_name: "{{ mdm_tiebreaker_name }}"
             mdm_type: "TieBreaker"
         mdm_state: "absent-in-cluster"
         state: "present"

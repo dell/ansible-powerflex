@@ -4,13 +4,13 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password'
+    password: 'Password123!'
     validate_certs: false
     host_port: 443
     fault_set_name: "sample_fault_set_name_1"
-    protection_domain_name: "Ansible-PD1"
+    protection_domain_name: "destiny-PD"
 
   tasks:
     - name: Create fault set

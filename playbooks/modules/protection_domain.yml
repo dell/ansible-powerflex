@@ -4,9 +4,9 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password'
+    password: 'Password123!'
     validate_certs: false
     host_port: 443
 
