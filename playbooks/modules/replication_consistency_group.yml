@@ -4,10 +4,10 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    hostname: '10.247.39.166'
     remote_hostname: '**.**.**.**'
     username: 'admin'
-    password: 'Password'
+    password: 'Password123!'
     validate_certs: false
     rcg_name: "rcg_test"
     rcg_id: "aadc17d900000002"
@@ -62,14 +62,14 @@
         validate_certs: "{{ validate_certs }}"
         rcg_name: "{{ rcg_name }}"
         rpo: 120
-        protection_domain_name: "domain1"
+        protection_domain_name: "destiny-PD"
         activity_mode: "Active"
         remote_peer:
           hostname: "{{ remote_hostname }}"
           username: "{{ username }}"
           password: "{{ password }}"
           validate_certs: "{{ validate_certs }}"
-          protection_domain_name: "domain1"
+          protection_domain_name: "destiny-PD"
 
     - name: Modify RCG rpo
       register: result

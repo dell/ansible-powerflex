@@ -4,13 +4,15 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
+    hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password'
+    password: 'Password123!'
     validate_certs: false
-    nvme_host_name: ansible_qual_nvme
-    nvme_host_new_name: ansible_nvme_rn
-    nqn: "nqn.2014-08.org.nvmexpress:uuid:11111111-aaaa-bbbb-cccc-999999999999"
+    nvme_host_name: test_nvme_host
+    nvme_host_new_name: test_nvme_host_new
+    # NQN must be in valid format: nqn.YYYY-MM.reverse_domain:unique_id
+    nqn: "nqn.2024-01.com.dell:ansible-test-host"
     max_num_paths: '5'
     max_num_sys_ports: '12'
 
@@ -35,16 +37,18 @@
         nvme_host_new_name: "{{ nvme_host_new_name }}"
         state: "present"
 
-    - name: Set maximum number of paths per volume and maximum Number of Ports Per Protection Domain of nvme_host
-      dellemc.powerflex.nvme_host:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        nvme_host_name: "{{ nvme_host_new_name }}"
-        max_num_paths: "{{ max_num_paths }}"
-        max_num_sys_ports: "{{ max_num_sys_ports }}"
-        state: "present"
+    # Note: max_num_paths is only supported in PowerFlex 4.6+
+    # Core 4.5.6 does not support this parameter - skip for Gen1 qualification
+    # - name: Set maximum number of paths per volume and maximum Number of Ports Per Protection Domain of nvme_host
+    #   dellemc.powerflex.nvme_host:
+    #     hostname: "{{ hostname }}"
+    #     username: "{{ username }}"
+    #     password: "{{ password }}"
+    #     validate_certs: "{{ validate_certs }}"
+    #     nvme_host_name: "{{ nvme_host_new_name }}"
+    #     max_num_paths: "{{ max_num_paths }}"
+    #     max_num_sys_ports: "{{ max_num_sys_ports }}"
+    #     state: "present"
 
     - name: Remove nvme_host
       dellemc.powerflex.nvme_host:
