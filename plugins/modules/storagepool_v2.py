@@ -699,6 +699,15 @@ class PowerFlexStoragePoolV2(PowerFlexBase):
             storage_pool_details=None
         )
 
+        if (storage_pool_name is not None and
+                len(storage_pool_name.strip()) == 0) or \
+                (storage_pool_new_name is not None and
+                    len(storage_pool_new_name.strip()) == 0):
+            self.module.fail_json(
+                msg="Empty or white spaced string provided for "
+                    "storage pool name. Provide valid storage"
+                    " pool name.")
+
         if storage_pool_name and not (protection_domain_id or protection_domain_name):
             self.module.fail_json(
                 msg="Either protection_domain_id or protection_domain_name"
