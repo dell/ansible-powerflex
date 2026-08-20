@@ -7,7 +7,7 @@
     # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
     hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password123!'
+    password: 'Password'
     validate_certs: false
     sdc_name: test_sdc
     # Oslo2 SDC IP: 10.247.100.48, Oslo1 SDC IP: 10.247.64.23

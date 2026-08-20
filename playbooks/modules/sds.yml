@@ -4,39 +4,24 @@
   connection: local
   gather_facts: false
   vars:
-    # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
-    hostname: '10.247.39.166'
+    # Oslo1 Infrastructure
+    hostname: 'x.x.x.x'
     username: 'admin'
-    password: 'Password123!'
+    password: 'Password'
     validate_certs: false
     host_port: 443
-    # Oslo2 existing SDS nodes
-    sds_name_1: "destiny-sds1"
-    sds_name_2: "destiny-sds2"
-    sds_id_1: "726af23a00000002"
-    sds_id_2: "726af23900000001"
-    protection_domain_name: "destiny-PD"
+    # Oslo1 existing SDS nodes
+    sds_name_1: "trinity-sds1"
+    sds_name_2: "trinity-sds2"
+    sds_id_1: "a0d9a54500000002"
+    sds_id_2: "a0d9a54400000001"
+    protection_domain_name: "trinity-PD"
 
   tasks:
-    # Note: Create SDS requires a server with SDS software installed and available IPs
-    # This is infrastructure that doesn't exist in the test environment
-    # - name: Create SDS
-    #   register: result
-    #   dellemc.powerflex.sds:
-    #     hostname: "{{ hostname }}"
-    #     username: "{{ username }}"
-    #     password: "{{ password }}"
-    #     validate_certs: "{{ validate_certs }}"
-    #     port: "{{ host_port }}"
-    #     sds_name: "new_sds_node"
-    #     protection_domain_name: "{{ protection_domain_name }}"
-    #     sds_ip_list:
-    #       - ip: '10.247.58.169'
-    #         role: "all"
-    #     sds_ip_state: "present-in-sds"
-    #     state: "present"
+    # Skip SDS creation due to communication error with 10.247.58.31
+    # This requires the SDS software to be installed and network connectivity
 
-    - name: Get SDS details using name
+    - name: Get SDS details using name (existing SDS)
       dellemc.powerflex.sds:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -47,7 +32,7 @@
         state: "present"
       register: sds_result
 
-    - name: Get SDS details using ID
+    - name: Get SDS details using ID (existing SDS)
       dellemc.powerflex.sds:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -57,7 +42,7 @@
         sds_id: "{{ sds_id_1 }}"
         state: "present"
 
-    - name: Modify SDS attributes using name (rename)
+    - name: Modify SDS attributes using name (rename existing SDS)
       dellemc.powerflex.sds:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -65,10 +50,10 @@
         validate_certs: "{{ validate_certs }}"
         port: "{{ host_port }}"
         sds_name: "{{ sds_name_1 }}"
-        sds_new_name: "destiny-sds1-renamed"
+        sds_new_name: "trinity-sds1-renamed"
         state: "present"
 
-    - name: Modify SDS attributes using ID (rename back)
+    - name: Modify SDS attributes using ID (rename back existing SDS)
       dellemc.powerflex.sds:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
@@ -78,29 +63,3 @@
         sds_id: "{{ sds_id_1 }}"
         sds_new_name: "{{ sds_name_1 }}"
         state: "present"
-
-    # Note: Adding/removing IPs requires available IPs and proper network configuration
-    # - name: Add IP and role to an SDS
-    #   dellemc.powerflex.sds:
-    #     hostname: "{{ hostname }}"
-    #     username: "{{ username }}"
-    #     password: "{{ password }}"
-    #     validate_certs: "{{ validate_certs }}"
-    #     port: "{{ host_port }}"
-    #     sds_name: "{{ sds_name_1 }}"
-    #     sds_ip_list:
-    #       - ip: '10.247.58.200'
-    #         role: "sdcOnly"
-    #     sds_ip_state: "present-in-sds"
-    #     state: "present"
-
-    # Note: Delete SDS would remove production infrastructure
-    # - name: Delete SDS using name
-    #   dellemc.powerflex.sds:
-    #     hostname: "{{ hostname }}"
-    #     username: "{{ username }}"
-    #     password: "{{ password }}"
-    #     validate_certs: "{{ validate_certs }}"
-    #     port: "{{ host_port }}"
-    #     sds_name: "{{ sds_name_2 }}"
-    #     state: "absent"

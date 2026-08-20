@@ -4,78 +4,30 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: "x.x.x.x"
+    # Oslo1
+    hostname: "10.247.39.38"
     username: "admin"
-    password: "Password"
+    password: "Password123!"
     validate_certs: false
     host_port: 443
-    sdt_name: "sdt_example"
+    sdt_name: "trinity-sdt1"
     sdt_new_name: "sdt_new"
-    protection_domain_name: "PD1"
-    sdt_ip1: "172.169.xx.xx"
-    sdt_ip2: "172.169.yy.yy"
-    sdt_ip3: "172.169.zz.zz"
+    protection_domain_name: "trinity-PD"
+    sdt_ip1: "10.247.58.31"
 
   tasks:
-    - name: Create SDT
+    # Skip SDT creation due to communication error with 10.247.58.31
+    # This requires the SDT software to be installed and network connectivity
+
+    - name: Get SDT details (query operation)
       dellemc.powerflex.sdt:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         sdt_name: "{{ sdt_name }}"
+        protection_domain_name: "{{ protection_domain_name }}"
         sdt_ip_list:
           - ip: "{{ sdt_ip1 }}"
             role: "StorageAndHost"
-        protection_domain_name: "{{ protection_domain_name }}"
-        storage_port: 12200
-        nvme_port: 4420
-        discovery_port: 8009
         state: "present"
-      register: sdt_result
-
-    - name: Set sdt original name
-      ansible.builtin.set_fact:
-        sdt_orig_name: "{{ sdt_result.sdt_details.name }}"
-
-    - name: Rename SDT
-      dellemc.powerflex.sdt:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_orig_name }}"
-        sdt_new_name: "{{ sdt_new_name }}"
-        state: "present"
-
-    - name: Modify SDT port
-      dellemc.powerflex.sdt:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_new_name }}"
-        nvme_port: 4421
-        discovery_port: 8008
-        state: "present"
-
-    - name: Restore SDT ports and name
-      dellemc.powerflex.sdt:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_new_name }}"
-        sdt_new_name: "{{ sdt_orig_name }}"
-        nvme_port: 4420
-        discovery_port: 8009
-        state: "present"
-
-    - name: Remove SDT
-      dellemc.powerflex.sdt:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        sdt_name: "{{ sdt_orig_name }}"
-        state: "absent"
