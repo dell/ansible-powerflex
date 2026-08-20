@@ -5,7 +5,7 @@
   vars:
     hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password123!'
+    password: 'Password'
     validate_certs: false
     pool_name: "ansible_test_pool_oslo2"
     protection_domain_name: "destiny-PD"

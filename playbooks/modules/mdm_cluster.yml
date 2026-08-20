@@ -7,7 +7,7 @@
     # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
     hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password123!'
+    password: 'Password'
     validate_certs: false
     host_port: 443
     # Oslo2 MDM IDs
@@ -155,4 +155,15 @@
           - mdm_name: "{{ mdm_tiebreaker_name }}"
             mdm_type: "TieBreaker"
         mdm_state: "absent-in-cluster"
+        state: "present"
+
+    - name: Rename MDM back to original name
+      dellemc.powerflex.mdm_cluster:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        port: "{{ host_port }}"
+        mdm_id: "{{ mdm_master_id }}"
+        mdm_new_name: "{{ mdm_master_name }}"
         state: "present"
