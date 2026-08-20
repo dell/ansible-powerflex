@@ -6,7 +6,7 @@
   vars:
     hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password123!'
+    password: 'Password'
     validate_certs: false
 
   tasks:
@@ -18,7 +18,7 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         snapshot_name: "ansible_snapshot_1"
-        vol_name: "ansible_test_volume_oslo2"
+        vol_name: "sample_ansible_volume_21"
         state: "present"
 
     - name: Set snapshot id
@@ -32,8 +32,8 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         snapshot_name: "ansible_snapshot_2"
-        vol_name: "ansible_test_volume_oslo2"
-        desired_retention: 2
+        vol_name: "sample_ansible_volume_21"
+        desired_retention: 10
         state: "present"
 
     - name: Get snapshot details using snapshot id

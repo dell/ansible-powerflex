@@ -6,7 +6,7 @@
   vars:
     hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password123!'
+    password: 'Password'
     validate_certs: false
     host_port: 443
 

@@ -7,7 +7,7 @@
     # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
     hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password123!'
+    password: 'Password'
     validate_certs: false
     nvme_host_name: test_nvme_host
     nvme_host_new_name: test_nvme_host_new

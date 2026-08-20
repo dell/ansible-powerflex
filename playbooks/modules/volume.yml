@@ -6,11 +6,11 @@
   vars:
     hostname: '10.247.39.166'
     username: 'admin'
-    password: 'Password123!'
+    password: 'Password'
     validate_certs: false
     protection_domain_name: "destiny-PD"
     storage_pool_name: "destiny-SP1"
-    vol_name: "sample_ansible_volume_20"
+    vol_name: "sample_ansible_volume_21"
 
   tasks:
     - name: Create a volume
@@ -83,3 +83,4 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         vol_id: "{{ vol_id }}"
+        state: "present"
