@@ -2416,10 +2416,16 @@ class PowerFlexInfo(PowerFlexBase):
                 pool = self.powerflex_conn.storage_pool.get()
 
             if pool:
-                statistics_map = self.powerflex_conn.utility.get_statistics_for_all_storagepools()
-                list_of_pool_ids_in_statistics = statistics_map.keys()
-                for item in pool:
-                    item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_pool_ids_in_statistics else {}
+                try:
+                    statistics_map = self.powerflex_conn.utility.get_statistics_for_all_storagepools()
+                    list_of_pool_ids_in_statistics = statistics_map.keys()
+                    for item in pool:
+                        item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_pool_ids_in_statistics else {}
+                except Exception as stat_e:
+                    # Statistics query may fail on Gen1 arrays with GenType MIRRORING
+                    LOG.warning('Failed to get storage pool statistics: %s', str(stat_e))
+                    for item in pool:
+                        item['statistics'] = {}
             return result_list(pool)
 
         except Exception as e:
@@ -2494,10 +2500,16 @@ class PowerFlexInfo(PowerFlexBase):
                 volumes = self.powerflex_conn.volume.get()
 
             if volumes:
-                statistics_map = self.powerflex_conn.utility.get_statistics_for_all_volumes()
-                list_of_vol_ids_in_statistics = statistics_map.keys()
-                for item in volumes:
-                    item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_vol_ids_in_statistics else {}
+                try:
+                    statistics_map = self.powerflex_conn.utility.get_statistics_for_all_volumes()
+                    list_of_vol_ids_in_statistics = statistics_map.keys()
+                    for item in volumes:
+                        item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_vol_ids_in_statistics else {}
+                except Exception as stat_e:
+                    # Statistics query may fail on Gen1 arrays with GenType MIRRORING
+                    LOG.warning('Failed to get volume statistics: %s', str(stat_e))
+                    for item in volumes:
+                        item['statistics'] = {}
             return result_list(volumes)
 
         except Exception as e:
@@ -2521,10 +2533,16 @@ class PowerFlexInfo(PowerFlexBase):
                     self.powerflex_conn.snapshot_policy.get()
 
             if snapshot_policies:
-                statistics_map = self.powerflex_conn.utility.get_statistics_for_all_snapshot_policies()
-                list_of_snap_pol_ids_in_statistics = statistics_map.keys()
-                for item in snapshot_policies:
-                    item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_snap_pol_ids_in_statistics else {}
+                try:
+                    statistics_map = self.powerflex_conn.utility.get_statistics_for_all_snapshot_policies()
+                    list_of_snap_pol_ids_in_statistics = statistics_map.keys()
+                    for item in snapshot_policies:
+                        item['statistics'] = statistics_map[item['id']] if item['id'] in list_of_snap_pol_ids_in_statistics else {}
+                except Exception as stat_e:
+                    # Statistics query may fail on Gen1 arrays
+                    LOG.warning('Failed to get snapshot policy statistics: %s', str(stat_e))
+                    for item in snapshot_policies:
+                        item['statistics'] = {}
             return result_list(snapshot_policies)
 
         except Exception as e:

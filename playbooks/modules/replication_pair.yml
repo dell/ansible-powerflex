@@ -5,22 +5,27 @@
   gather_facts: false
   vars:
     hostname: 'x.x.x.x'
-    remote_hostname: '**.**.**.**'
+    remote_hostname: 'x.x.x.x'
     username: 'admin'
     password: 'Password'
+    remote_username: 'admin'
+    remote_password: 'Password'
     validate_certs: false
-    rcg_name: "test_rcg"
-    rcg_id: "aadc17d900000002"
+    rcg_name: "rcg_test"
+    pair_name: "test_pair"
+    source_volume_name: "testvol"
+    target_volume_name: "testvol_target"
 
   tasks:
-    - name: Get replication pair details by name
-      register: result
+    - name: Delete existing replication pair if present
       dellemc.powerflex.replication_pair:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        pair_name: "test_pair"
+        pair_name: "{{ pair_name }}"
+        state: "absent"
+      failed_when: false
 
     - name: Add replication pair to RCG
       register: result
@@ -30,53 +35,109 @@
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         pairs:
-          - source_volume_name: "ans_test_vol"
-            target_volume_name: "ans_env8_vol"
+          - source_volume_name: "{{ source_volume_name }}"
+            target_volume_name: "{{ target_volume_name }}"
             copy_type: "OnlineCopy"
-            name: "test_pair"
-        rcg_name: "test_rcg"
+            name: "{{ pair_name }}"
+        rcg_name: "{{ rcg_name }}"
         remote_peer:
           hostname: "{{ remote_hostname }}"
-          username: "{{ username }}"
-          password: "{{ password }}"
+          username: "{{ remote_username }}"
+          password: "{{ remote_password }}"
           validate_certs: "{{ validate_certs }}"
 
-    - name: Pause Replication pair
+    - name: Display replication pair creation result
+      debug:
+        var: result
+
+    - name: Get replication pair details by name
       register: result
       dellemc.powerflex.replication_pair:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        pair_name: "test_pair"
+        pair_name: "{{ pair_name }}"
+
+    - name: Display replication pair details
+      debug:
+        var: result
+
+    - name: Get replication pair details by id
+      register: result
+      dellemc.powerflex.replication_pair:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        pair_id: "{{ result.replication_pair_details.id }}"
+        state: "present"
+
+    - name: Display replication pair details by id
+      debug:
+        var: result
+
+    - name: Pause replication pair
+      register: result
+      dellemc.powerflex.replication_pair:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        pair_name: "{{ pair_name }}"
         pause: true
 
-    - name: Resume Replication pair
+    - name: Display pause result
+      debug:
+        var: result
+
+    - name: Resume replication pair
       register: result
       dellemc.powerflex.replication_pair:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        pair_name: "test_pair"
+        pair_name: "{{ pair_name }}"
         pause: false
 
+    - name: Display resume result
+      debug:
+        var: result
+
     - name: Delete replication pair
-      register: result
+      register: delete_result
       dellemc.powerflex.replication_pair:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        pair_name: "test_pair"
+        pair_name: "{{ pair_name }}"
         state: "absent"
 
-    - name: Delete replication pair - Idemotency
+    - name: Display deletion result
+      debug:
+        var: delete_result
+
+    - name: Recreate replication pair for future use
       register: result
       dellemc.powerflex.replication_pair:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
-        pair_name: "test_pair"
-        state: "absent"
+        pairs:
+          - source_volume_name: "{{ source_volume_name }}"
+            target_volume_name: "{{ target_volume_name }}"
+            copy_type: "OnlineCopy"
+            name: "{{ pair_name }}"
+        rcg_name: "{{ rcg_name }}"
+        remote_peer:
+          hostname: "{{ remote_hostname }}"
+          username: "{{ remote_username }}"
+          password: "{{ remote_password }}"
+          validate_certs: "{{ validate_certs }}"
+
+    - name: Display recreate result
+      debug:
+        var: result

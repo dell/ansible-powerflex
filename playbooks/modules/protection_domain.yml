@@ -4,7 +4,7 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    hostname: '10.247.39.166'
     username: 'admin'
     password: 'Password'
     validate_certs: false

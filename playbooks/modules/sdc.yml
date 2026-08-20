@@ -4,12 +4,14 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
+    # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
+    hostname: '10.247.39.166'
     username: 'admin'
     password: 'Password'
     validate_certs: false
-    sdc_ip: "1.1.1.1"
-    sdc_name: ansible_example_sdc
+    sdc_name: test_sdc
+    # Oslo2 SDC IP: 10.247.100.48, Oslo1 SDC IP: 10.247.64.23
+    sdc_ip: "10.247.100.48"
 
   tasks:
     - name: Get sdc details using sdc ip
