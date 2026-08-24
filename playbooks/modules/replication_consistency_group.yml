@@ -272,7 +272,7 @@
     # Correct state transition sequence:
     # None -> Failover -> Restore -> None -> Switchover -> Reverse -> None
 
-    - name: Failover RCG with force
+    - name: Failover RCG
       register: failover_result
       dellemc.powerflex.replication_consistency_group:
         hostname: "{{ hostname }}"
@@ -281,7 +281,18 @@
         validate_certs: "{{ validate_certs }}"
         rcg_name: "{{ rcg_name }}"
         rcg_state: "failover"
-        force: true
+        force: false
+
+    # - name: Failover RCG with force
+    #   register: failover_result
+    #   dellemc.powerflex.replication_consistency_group:
+    #     hostname: "{{ hostname }}"
+    #     username: "{{ username }}"
+    #     password: "{{ password }}"
+    #     validate_certs: "{{ validate_certs }}"
+    #     rcg_name: "{{ rcg_name }}"
+    #     rcg_state: "failover"
+    #     force: true
 
     # - name: Wait 5 minutes after failover operation
     #   ansible.builtin.pause:
