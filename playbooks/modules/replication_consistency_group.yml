@@ -265,8 +265,15 @@
         rcg_name: "{{ rcg_renamed_name }}"
         new_rcg_name: "rcg_test"
 
+    # - name: Wait 5 minutes after rename operation
+    #   ansible.builtin.pause:
+    #     minutes: 5
+
     # DR Operations - Enabled for comprehensive testing
-    - name: Failover RCG
+    # Correct state transition sequence:
+    # None -> Failover -> Restore -> None -> Switchover -> Reverse -> None
+
+    - name: Failover RCG with force
       register: failover_result
       dellemc.powerflex.replication_consistency_group:
         hostname: "{{ hostname }}"
@@ -275,8 +282,13 @@
         validate_certs: "{{ validate_certs }}"
         rcg_name: "{{ rcg_name }}"
         rcg_state: "failover"
+        force: true
 
-    - name: Reverse RCG
+    # - name: Wait 5 minutes after failover operation
+    #   ansible.builtin.pause:
+    #     minutes: 5
+
+    - name: Reverse RCG (after failover)
       register: reverse_result
       dellemc.powerflex.replication_consistency_group:
         hostname: "{{ hostname }}"
@@ -286,15 +298,22 @@
         rcg_name: "{{ rcg_name }}"
         rcg_state: "reverse"
 
-    - name: Restore RCG
-      register: restore_result
+    # - name: Wait 5 minutes after restore operation
+    #   ansible.builtin.pause:
+    #     minutes: 5
+
+    - name: Set RCG as consistent before switchover
       dellemc.powerflex.replication_consistency_group:
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         validate_certs: "{{ validate_certs }}"
         rcg_name: "{{ rcg_name }}"
-        rcg_state: "restore"
+        is_consistent: true
+
+    - name: Wait 2 minutes for RCG to become consistent
+      ansible.builtin.pause:
+        minutes: 2
 
     - name: Switchover RCG
       register: switchover_result
@@ -307,6 +326,63 @@
         rcg_state: "switchover"
         force: true
 
+    # - name: Wait 5 minutes after switchover operation
+    #   ansible.builtin.pause:
+    #     minutes: 5
+
+    # Note: Reverse is only allowed after failover, not after switchover
+    # After switchover, use restore to return to normal operation
+    - name: Restore RCG (after switchover)
+      register: restore_result
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        rcg_name: "{{ rcg_name }}"
+        rcg_state: "restore"
+
+    # - name: Wait 5 minutes after reverse operation
+    #   ansible.builtin.pause:
+    #     minutes: 5
+
+    # Now demonstrate the switchover/restore sequence
+    - name: Set RCG as consistent before switchover
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        rcg_name: "{{ rcg_name }}"
+        is_consistent: true
+
+    - name: Wait 2 minutes for RCG to become consistent
+      ansible.builtin.pause:
+        minutes: 2
+
+    - name: Switchover RCG
+      register: switchover_result
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        rcg_name: "{{ rcg_name }}"
+        rcg_state: "switchover"
+        force: true
+
+    - name: Restore RCG (after switchover)
+      register: restore_result
+      dellemc.powerflex.replication_consistency_group:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        rcg_name: "{{ rcg_name }}"
+        rcg_state: "restore"
+
+    # Note: RCG is left in its final state for manual verification
+    # To clean up, uncomment the delete task below
     - name: Delete RCG
       register: delete_result
       dellemc.powerflex.replication_consistency_group:
@@ -316,41 +392,3 @@
         validate_certs: "{{ validate_certs }}"
         rcg_name: "{{ rcg_name }}"
         state: "absent"
-
-    - name: Recreate RCG for future use
-      register: result
-      dellemc.powerflex.replication_consistency_group:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        rcg_name: "{{ rcg_name }}"
-        rpo: 120
-        protection_domain_name: "{{ protection_domain_name }}"
-        activity_mode: "Active"
-        state: "present"
-        remote_peer:
-          hostname: "{{ remote_hostname }}"
-          username: "{{ remote_username }}"
-          password: "{{ remote_password }}"
-          validate_certs: "{{ validate_certs }}"
-          protection_domain_name: "{{ remote_protection_domain_name }}"
-
-    - name: Recreate replication pair for future use
-      register: pair_result
-      dellemc.powerflex.replication_pair:
-        hostname: "{{ hostname }}"
-        username: "{{ username }}"
-        password: "{{ password }}"
-        validate_certs: "{{ validate_certs }}"
-        pairs:
-          - source_volume_name: "testvol"
-            target_volume_name: "testvol_target"
-            copy_type: "OnlineCopy"
-            name: "test_pair"
-        rcg_name: "{{ rcg_name }}"
-        remote_peer:
-          hostname: "{{ remote_hostname }}"
-          username: "{{ remote_username }}"
-          password: "{{ remote_password }}"
-          validate_certs: "{{ validate_certs }}"
