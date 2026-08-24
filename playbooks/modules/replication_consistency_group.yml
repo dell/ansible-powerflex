@@ -1,9 +1,8 @@
 ---
 # Replication Consistency Group Operations Playbook
-# 
+#
 # Investigation Summary: The PowerFlex API, SDK, and Ansible module are functioning correctly.
 # DR operations are state-dependent and work when the RCG is in the appropriate state.
-# The SDK's failover() method doesn't support force parameter because the API doesn't require it.
 # All DR operations are now enabled for comprehensive testing.
 
 - name: Replication consistency group operations on PowerFlex array.

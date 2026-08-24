@@ -704,15 +704,14 @@ class PowerFlexReplicationConsistencyGroup(PowerFlexBase):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
-    def failover(self, rcg_id, force=False):
+    def failover(self, rcg_id):
         """Perform failover
             :param rcg_id: Unique identifier of the RCG.
-            :param force: Force failover.
             :return: Boolean indicates if RCG failover is successful
         """
         try:
             if not self.module.check_mode:
-                self.powerflex_conn.replication_consistency_group.failover(rcg_id, force)
+                self.powerflex_conn.replication_consistency_group.failover(rcg_id)
             return True
         except Exception as e:
             errormsg = f"Failover replication consistency group {rcg_id} failed with error {e}"
@@ -837,7 +836,7 @@ class PowerFlexReplicationConsistencyGroup(PowerFlexBase):
         
         # Perform the requested action
         if rcg_state == 'failover':
-            return self.failover(rcg_id, force)
+            return self.failover(rcg_id)
         elif rcg_state == 'switchover':
             return self.switchover(rcg_id, force)
         elif rcg_state == 'reverse':
