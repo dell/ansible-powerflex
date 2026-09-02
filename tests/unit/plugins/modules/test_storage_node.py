@@ -89,7 +89,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_add_ip_new(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.0.0.2', 'role': 'HostOnly'}],
+            {'node_ip_list': [{'ip': '10.0.0.2', 'role': 'App'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -103,7 +103,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_add_ip_idempotent(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.47.xxx.xxx', 'role': 'StorageOnly'}],
+            {'node_ip_list': [{'ip': '10.47.xxx.xxx', 'role': 'Storage'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -117,7 +117,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_add_ip_exception(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.0.0.2', 'role': 'HostOnly'}],
+            {'node_ip_list': [{'ip': '10.0.0.2', 'role': 'App'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -133,7 +133,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_remove_ip_existing(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.46.xxx.xxx', 'role': 'HostOnly'}],
+            {'node_ip_list': [{'ip': '10.46.xxx.xxx', 'role': 'App'}],
              'node_ip_state': 'absent-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -147,7 +147,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_remove_ip_idempotent(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.0.0.99', 'role': 'HostOnly'}],
+            {'node_ip_list': [{'ip': '10.0.0.99', 'role': 'App'}],
              'node_ip_state': 'absent-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -161,7 +161,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_remove_ip_exception(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.46.xxx.xxx', 'role': 'HostOnly'}],
+            {'node_ip_list': [{'ip': '10.46.xxx.xxx', 'role': 'App'}],
              'node_ip_state': 'absent-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -177,7 +177,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_ip_role_auto_update(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.47.xxx.xxx', 'role': 'StorageAndHost'}],
+            {'node_ip_list': [{'ip': '10.47.xxx.xxx', 'role': 'StorageAndApp'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -186,13 +186,13 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
         StorageNodeHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         powerflex_module_mock.powerflex_conn.storage_node.set_ip_role.assert_called_with(
-            MockStorageNodeApi.STORAGE_NODE_ID_1, '10.47.xxx.xxx', 'StorageAndHost')
+            MockStorageNodeApi.STORAGE_NODE_ID_1, '10.47.xxx.xxx', 'StorageAndApp')
         assert powerflex_module_mock.result['changed'] is True
 
     def test_ip_role_no_change(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.47.xxx.xxx', 'role': 'StorageOnly'}],
+            {'node_ip_list': [{'ip': '10.47.xxx.xxx', 'role': 'Storage'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -206,7 +206,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_ip_role_update_exception(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.47.xxx.xxx', 'role': 'StorageAndHost'}],
+            {'node_ip_list': [{'ip': '10.47.xxx.xxx', 'role': 'StorageAndApp'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -221,8 +221,8 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
             {'node_ip_list': [
-                {'ip': '10.47.xxx.xxx', 'role': 'StorageAndHost'},
-                {'ip': '10.0.0.2', 'role': 'HostOnly'}],
+                {'ip': '10.47.xxx.xxx', 'role': 'StorageAndApp'},
+                {'ip': '10.0.0.2', 'role': 'App'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -275,7 +275,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
             {'storage_node_new_name': 'node1_renamed',
-             'node_ip_list': [{'ip': '10.0.0.2', 'role': 'HostOnly'}],
+             'node_ip_list': [{'ip': '10.0.0.2', 'role': 'App'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
@@ -317,7 +317,7 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
     def test_check_mode_add_ip(self, powerflex_module_mock):
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'node_ip_list': [{'ip': '10.0.0.2', 'role': 'HostOnly'}],
+            {'node_ip_list': [{'ip': '10.0.0.2', 'role': 'App'}],
              'node_ip_state': 'present-in-node',
              'state': 'present'})
         powerflex_module_mock.module.check_mode = True
