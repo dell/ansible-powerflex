@@ -1,0 +1,9 @@
+---
+minor_changes:
+  - Added the ``storage_node`` module to manage PowerFlex Gen2 storage
+    nodes. The module supports querying storage node details by name or
+    ID, adding and removing IP addresses with role assignment, changing
+    IP roles, and renaming a storage node. Storage node creation and
+    deletion are not supported.
+  - Added the ``storage_node`` gather_subset to the ``info_v2`` module
+    for bulk storage node discovery.
