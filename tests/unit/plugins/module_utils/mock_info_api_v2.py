@@ -294,6 +294,17 @@ class MockInfoApi:
         }
     ]
 
+    INFO_GET_STORAGE_NODE_LIST = [
+        {
+            "id": "8f3bb0cc00000002",
+            "name": "node1"
+        },
+        {
+            "id": "8f3bb0cc00000003",
+            "name": "node2"
+        }
+    ]
+
     INFO_NVME_HOST_LIST = [
         {
             "id": "fake_host_id_1",
@@ -341,6 +352,7 @@ class MockInfoApi:
         'sdc_get_details': "Get SDC list from powerflex array failed with error",
         'pd_get_details': "Get protection domain list from powerflex array failed with error",
         'device_get_details': "Get device list from powerflex array failed with error",
+        'storage_node_get_details': "Get storage node list from powerflex array failed with error",
         'invalid_filter_operator_exception': "Given filter operator 'does_not_contain' is not supported.",
         'api_exception': "Get API details from Powerflex array failed with error",
         'system_exception': "Get array details from Powerflex array failed with error",

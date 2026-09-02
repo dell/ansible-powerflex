@@ -46,11 +46,12 @@ options:
     - SDCs - C(sdc).
     - Service templates - C(service_template).
     - Snapshot policies - C(snapshot_policy).
+    - Storage nodes - C(storage_node).
     - Storage pools - C(storage_pool).
     - Volumes - C(vol).
     choices: [deployment, device, firmware_repository, managed_device,
              nvme_host, protection_domain, sdc, sdt, service_template,
-             snapshot_policy, storage_pool, vol]
+             snapshot_policy, storage_node, storage_pool, vol]
     type: list
     elements: str
   filters:
@@ -176,6 +177,28 @@ EXAMPLES = r'''
       - filter_key: "name"
         filter_operator: "equal"
         filter_value: "ansible_test"
+
+- name: Get the list of storage nodes
+  dellemc.powerflex.info_v2:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    gather_subset:
+      - storage_node
+
+- name: Get specific storage node details
+  dellemc.powerflex.info_v2:
+    hostname: "{{ hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    validate_certs: "{{ validate_certs }}"
+    gather_subset:
+      - storage_node
+    filters:
+      - filter_key: "name"
+        filter_operator: "equal"
+        filter_value: "node1"
 
 - name: Get deployment and resource provisioning info
   dellemc.powerflex.info_v2:
@@ -3972,6 +3995,23 @@ sdt:
             "systemId": "db69bee9dc6c0d0f"
         }
     ]
+StorageNodes:
+    description: Details of all storage nodes.
+    returned: when I(gather_subset) is C(storage_node)
+    type: list
+    contains:
+        id:
+            description: The ID of the storage node.
+            type: str
+        name:
+            description: The name of the storage node.
+            type: str
+    sample: [
+        {
+            "id": "8f3bb0cc00000002",
+            "name": "node1"
+        }
+    ]
 '''
 
 
@@ -4205,6 +4245,24 @@ class PowerFlexInfo(PowerFlexBase):
             LOG.error(msg)
             self.module.fail_json(msg=msg)
 
+    def get_storage_nodes_list(self, filter_dict=None):
+        """ Get the list of storage nodes on a given PowerFlex storage
+            system """
+
+        try:
+            LOG.info('Getting storage node list ')
+            if filter_dict:
+                storage_nodes = self.powerflex_conn.storage_node.get(filter_fields=filter_dict)
+            else:
+                storage_nodes = self.powerflex_conn.storage_node.get()
+
+            return result_list(storage_nodes)
+
+        except Exception as e:
+            msg = f'Get storage node list from powerflex array failed with error {str(e)}'
+            LOG.error(msg)
+            self.module.fail_json(msg=msg)
+
     def get_managed_devices_list(self):
         """ Get the list of managed devices on a given PowerFlex Manager system """
         try:
@@ -4400,6 +4458,7 @@ class PowerFlexInfo(PowerFlexBase):
             "device": self.get_devices_list,
             "nvme_host": self.get_nvme_host_list,
             "sdt": self.get_sdt_list,
+            "storage_node": self.get_storage_nodes_list,
         }
 
         subset_wo_param = {
@@ -4431,7 +4490,8 @@ class PowerFlexInfo(PowerFlexBase):
             Deployments=subset_result_wo_param.get("deployment", []),
             FirmwareRepository=subset_result_wo_param.get(
                 "firmware_repository", []),
-            NVMeHosts=subset_result_filter.get("nvme_host", [])
+            NVMeHosts=subset_result_filter.get("nvme_host", []),
+            StorageNodes=subset_result_filter.get("storage_node", [])
         )
 
 
@@ -4457,7 +4517,8 @@ def get_powerflex_info_parameters():
         gather_subset=dict(type='list', required=False, elements='str',
                            choices=['vol', 'storage_pool', 'protection_domain', 'sdc',
                                     'sdt', 'snapshot_policy', 'device', 'nvme_host',
-                                    'service_template', 'managed_device', 'deployment', 'firmware_repository']),
+                                    'service_template', 'managed_device', 'deployment', 'firmware_repository',
+                                    'storage_node']),
         filters=dict(type='list', required=False, elements='dict',
                      options=dict(filter_key=dict(type='str', required=True, no_log=False),
                                   filter_operator=dict(
