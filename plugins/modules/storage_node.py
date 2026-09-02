@@ -538,7 +538,7 @@ class PowerFlexStorageNode(PowerFlexBase):
         try:
             if not self.module.check_mode:
                 LOG.info("Updating pathnames for storage node '%s' with "
-                        "force_failed_devices=%s", storage_node_id, force_failed_devices)
+                         "force_failed_devices=%s", storage_node_id, force_failed_devices)
                 self.powerflex_conn.storage_node.update_original_pathnames(
                     storage_node_id, force=force_failed_devices)
                 LOG.info("Storage node pathnames updated successfully.")
