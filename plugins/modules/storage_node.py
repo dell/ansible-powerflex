@@ -167,6 +167,27 @@ EXAMPLES = r'''
     storage_node_name: "node1"
     storage_node_new_name: "node1_new"
     state: "present"
+
+- name: Update device pathnames on storage node
+  dellemc.powerflex.storage_node:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    storage_node_name: "node1"
+    update_pathnames: true
+    state: "present"
+
+- name: Update device pathnames with force for failed devices
+  dellemc.powerflex.storage_node:
+    hostname: "{{hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: "{{validate_certs}}"
+    storage_node_name: "node1"
+    update_pathnames: true
+    force_failed_devices: true
+    state: "present"
 '''
 
 RETURN = r'''
