@@ -287,6 +287,72 @@ class TestPowerflexInfo():
         self.capture_fail_json_call(MockInfoApi.get_exception_response(
             'device_get_details'), info_module_mock)
 
+    def test_get_storage_node_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['storage_node']
+        })
+        info_module_mock.module.params = self.get_module_args
+        storage_node_resp = MockInfoApi.INFO_GET_STORAGE_NODE_LIST
+        info_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=storage_node_resp
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.storage_node.get.assert_called()
+
+    def test_get_storage_node_filter_details(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['storage_node'],
+            "filters": [{
+                "filter_key": "name",
+                "filter_operator": "equal",
+                "filter_value": "node1",
+            }]
+        })
+        info_module_mock.module.params = self.get_module_args
+        storage_node_resp = MockInfoApi.INFO_GET_STORAGE_NODE_LIST
+        info_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=storage_node_resp
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.storage_node.get.assert_called()
+
+    def test_get_storage_node_details_empty(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['storage_node']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=[]
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.storage_node.get.assert_called()
+
+    def test_get_storage_node_details_with_other_subset(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['storage_node', 'protection_domain']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            return_value=MockInfoApi.INFO_GET_STORAGE_NODE_LIST
+        )
+        info_module_mock.powerflex_conn.protection_domain.get = MagicMock(
+            return_value=MockInfoApi.INFO_GET_PD_LIST
+        )
+        info_module_mock.perform_module_operation()
+        info_module_mock.powerflex_conn.storage_node.get.assert_called()
+        info_module_mock.powerflex_conn.protection_domain.get.assert_called()
+
+    def test_get_storage_node_details_exception(self, info_module_mock):
+        self.get_module_args.update({
+            "gather_subset": ['storage_node']
+        })
+        info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.storage_node.get = MagicMock(
+            side_effect=MockApiException
+        )
+        self.capture_fail_json_call(MockInfoApi.get_exception_response(
+            'storage_node_get_details'), info_module_mock)
+
     def test_get_managed_device_details(self, info_module_mock):
         self.get_module_args.update({
             "gather_subset": ['managed_device']
