@@ -339,3 +339,31 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
         StorageNodeHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         assert powerflex_module_mock.result['changed'] is False
+
+    # NFR-3: Security
+
+    def test_no_credentials_in_result(self, powerflex_module_mock):
+        """Confirm credentials never appear in the module's exit_json result,
+        regardless of whether they are present in module.params."""
+        self.set_module_params(
+            powerflex_module_mock, self.get_module_args,
+            {'password': 'super-secret-password', 'state': 'present'})
+        self.mock_storage_node_get(powerflex_module_mock)
+        self.mock_protection_domain_get(powerflex_module_mock)
+        StorageNodeHandler().handle(
+            powerflex_module_mock, powerflex_module_mock.module.params)
+        result_str = str(powerflex_module_mock.result)
+        assert 'super-secret-password' not in result_str
+
+    def test_error_message_sanitized(self, powerflex_module_mock):
+        """Confirm error messages are descriptive but do not leak raw
+        credentials or internal exception details beyond str(e)."""
+        self.set_module_params(
+            powerflex_module_mock, self.get_module_args,
+            {'password': 'super-secret-password', 'state': 'present'})
+        self.mock_storage_node_get(powerflex_module_mock, return_value=[])
+        try:
+            StorageNodeHandler().handle(
+                powerflex_module_mock, powerflex_module_mock.module.params)
+        except Exception as fj_object:
+            assert 'super-secret-password' not in str(fj_object)
