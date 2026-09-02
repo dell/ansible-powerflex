@@ -61,7 +61,7 @@ options:
       role:
         description:
         - Role assigned to the storage node IP address.
-        choices: ['StorageOnly', 'HostOnly', 'StorageAndHost']
+        choices: ['Storage', 'App', 'StorageAndApp']
         type: str
         required: true
   node_ip_state:
@@ -92,7 +92,7 @@ options:
     type: str
 notes:
   - This module is supported on Dell PowerFlex 5.x and later versions.
-  - IP role values are C(StorageOnly), C(HostOnly), and C(StorageAndHost).
+  - IP role values are C(Storage), C(App), and C(StorageAndApp).
   - I(state=absent) is not supported — storage node creation and deletion
     are out of scope for this module.
   - I(update_pathnames) always reports C(changed=true) and is mutually
@@ -128,7 +128,7 @@ EXAMPLES = r'''
     storage_node_name: "node1"
     node_ip_list:
       - ip: "10.0.0.2"
-        role: "HostOnly"
+        role: "App"
     node_ip_state: "present-in-node"
     state: "present"
 
@@ -141,7 +141,7 @@ EXAMPLES = r'''
     storage_node_name: "node1"
     node_ip_list:
       - ip: "10.0.0.2"
-        role: "HostOnly"
+        role: "App"
     node_ip_state: "absent-in-node"
     state: "present"
 
@@ -154,7 +154,7 @@ EXAMPLES = r'''
     storage_node_name: "node1"
     node_ip_list:
       - ip: "10.0.0.1"
-        role: "StorageAndHost"
+        role: "StorageAndApp"
     node_ip_state: "present-in-node"
     state: "present"
 
@@ -186,7 +186,7 @@ storage_node_details:
         name:
             description: Name of the storage node.
             type: str
-        ipList:
+        ipsList:
             description: List of IPs and their roles.
             type: list
             contains:
@@ -205,10 +205,10 @@ storage_node_details:
     sample: {
         "id": "e59841fd00000002",
         "name": "node1",
-        "ipList": [
+        "ipsList": [
             {
                 "ip": "10.0.0.1",
-                "role": "StorageOnly"
+                "role": "Storage"
             }
         ],
         "protectionDomainId": "e59841fd00000001",
@@ -229,7 +229,7 @@ import copy
 
 LOG = utils.get_logger('storage_node')
 
-IP_ROLE_CHOICES = ['StorageOnly', 'HostOnly', 'StorageAndHost']
+IP_ROLE_CHOICES = ['Storage', 'App', 'StorageAndApp']
 
 
 def get_powerflex_storage_node_parameters():
@@ -384,7 +384,7 @@ class PowerFlexStorageNode(PowerFlexBase):
             :type storage_node_details: dict
             :return: Tuple of (ips_to_add, roles_to_update)
         """
-        existing_ip_role_list = storage_node_details['ipList'] or []
+        existing_ip_role_list = storage_node_details['ipsList'] or []
         ips_to_add = []
         remaining_ip_list = []
 
@@ -410,7 +410,7 @@ class PowerFlexStorageNode(PowerFlexBase):
             :type storage_node_details: dict
             :return: List of IPs to remove
         """
-        existing_ip_list = [ip['ip'] for ip in (storage_node_details['ipList'] or [])]
+        existing_ip_list = [ip['ip'] for ip in (storage_node_details['ipsList'] or [])]
         ips_to_remove = [ip for ip in node_ip_list if ip['ip'] in existing_ip_list]
         if ips_to_remove:
             LOG.info("IP(s) to remove: %s", ips_to_remove)

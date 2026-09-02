@@ -32,14 +32,14 @@ class MockStorageNodeApi:
         {
             "id": STORAGE_NODE_ID_1,
             "name": "node1",
-            "ipList": [
+            "ipsList": [
                 {
                     "ip": "10.47.xxx.xxx",
-                    "role": "StorageOnly"
+                    "role": "Storage"
                 },
                 {
                     "ip": "10.46.xxx.xxx",
-                    "role": "HostOnly"
+                    "role": "App"
                 }
             ],
             "protectionDomainId": PROTECTION_DOMAIN_ID_1,
