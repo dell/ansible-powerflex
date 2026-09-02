@@ -340,6 +340,75 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
             powerflex_module_mock, powerflex_module_mock.module.params)
         assert powerflex_module_mock.result['changed'] is False
 
+    # FR-7: Device Pathname Update (Story 2)
+
+    def test_update_pathnames_without_force(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock, self.get_module_args,
+            {'update_pathnames': True, 'force_failed_devices': False,
+             'state': 'present'})
+        self.mock_storage_node_get(powerflex_module_mock)
+        self.mock_protection_domain_get(powerflex_module_mock)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames = MagicMock()
+        StorageNodeHandler().handle(
+            powerflex_module_mock, powerflex_module_mock.module.params)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames.assert_called_with(
+            MockStorageNodeApi.STORAGE_NODE_ID_1, force=False)
+        assert powerflex_module_mock.result['changed'] is True
+
+    def test_update_pathnames_with_force(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock, self.get_module_args,
+            {'update_pathnames': True, 'force_failed_devices': True,
+             'state': 'present'})
+        self.mock_storage_node_get(powerflex_module_mock)
+        self.mock_protection_domain_get(powerflex_module_mock)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames = MagicMock()
+        StorageNodeHandler().handle(
+            powerflex_module_mock, powerflex_module_mock.module.params)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames.assert_called_with(
+            MockStorageNodeApi.STORAGE_NODE_ID_1, force=True)
+        assert powerflex_module_mock.result['changed'] is True
+
+    def test_update_pathnames_false_no_call(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock, self.get_module_args,
+            {'update_pathnames': False, 'state': 'present'})
+        self.mock_storage_node_get(powerflex_module_mock)
+        self.mock_protection_domain_get(powerflex_module_mock)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames = MagicMock()
+        StorageNodeHandler().handle(
+            powerflex_module_mock, powerflex_module_mock.module.params)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames.assert_not_called()
+        assert powerflex_module_mock.result['changed'] is False
+
+    def test_update_pathnames_exception(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock, self.get_module_args,
+            {'update_pathnames': True, 'force_failed_devices': False,
+             'state': 'present'})
+        self.mock_storage_node_get(powerflex_module_mock)
+        self.mock_protection_domain_get(powerflex_module_mock)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames = MagicMock(
+            side_effect=MockApiException)
+        self.capture_fail_json_call(
+            MockStorageNodeApi.get_exception_response('update_pathnames_exception'),
+            powerflex_module_mock, StorageNodeHandler)
+
+    def test_check_mode_update_pathnames(self, powerflex_module_mock):
+        self.set_module_params(
+            powerflex_module_mock, self.get_module_args,
+            {'update_pathnames': True, 'force_failed_devices': False,
+             'state': 'present'})
+        powerflex_module_mock.module.check_mode = True
+        self.mock_storage_node_get(powerflex_module_mock)
+        self.mock_protection_domain_get(powerflex_module_mock)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames = MagicMock()
+        StorageNodeHandler().handle(
+            powerflex_module_mock, powerflex_module_mock.module.params)
+        powerflex_module_mock.powerflex_conn.storage_node.update_original_pathnames.assert_not_called()
+        assert powerflex_module_mock.result['changed'] is True
+
     # NFR-3: Security
 
     def test_no_credentials_in_result(self, powerflex_module_mock):
