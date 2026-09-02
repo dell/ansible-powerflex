@@ -432,6 +432,8 @@ class TestPowerflexInfo():
             "sort": 'name', "filters": [{"filter_key": "name", "filter_operator": "equal", "filter_value": "rack"}],
         })
         info_module_mock.module.params = self.get_module_args
+        info_module_mock.powerflex_conn.deployment.get = MagicMock(return_value=[])
+        info_module_mock.powerflex_conn.service_template.get = MagicMock(return_value=[])
         info_module_mock.perform_module_operation()
         assert info_module_mock.populate_filter_list() == []
         assert info_module_mock.get_param_value('sort') is None
