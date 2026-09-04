@@ -1,1 +1,1 @@
-plugins/modules/storage_node.py pep8 E402
+plugins/modules/ pep8 E402
