@@ -1,0 +1,41 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Example playbook demonstrating powerflex_provisioning_v2 device provisioning
+# This playbook provisions devices and manages storage nodes
+
+- name: PowerFlex Gen2 Device and Storage Node Provisioning
+  hosts: localhost
+  gather_facts: false
+  vars:
+    powerflex_gateway_hostname: "192.168.1.100"
+    powerflex_gateway_username: "admin"
+    powerflex_gateway_password: "your_password"
+    powerflex_gateway_port: 443
+    powerflex_gateway_validate_certs: true
+    powerflex_gateway_timeout: 30
+
+    # Device parameters
+    powerflex_device_group_id: "device_group_id_here"
+    powerflex_device_node_id: "node_id_here"
+    powerflex_device_clear_error: false
+    powerflex_device_reactivate: false
+
+    # Storage node parameters
+    powerflex_storage_node_id: "node_id_here"
+    powerflex_storage_node_ips: ["192.168.1.101", "192.168.1.102"]
+    powerflex_storage_node_new_name: "renamed_node"
+
+  tasks:
+    - name: Run powerflex_common_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_common_v2
+
+    - name: Run powerflex_provisioning_v2 role for devices
+      ansible.builtin.include_role:
+        name: powerflex_provisioning_v2
+      vars:
+        powerflex_provision_volumes: false
+        powerflex_provision_snapshots: false
+        powerflex_provision_infrastructure: true
