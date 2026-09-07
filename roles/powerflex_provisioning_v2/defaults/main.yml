@@ -65,3 +65,10 @@ powerflex_device_reactivate: false
 powerflex_storage_node_id: ""
 powerflex_storage_node_ips: []
 powerflex_storage_node_new_name: ""
+
+# Gen1-only parameters (rejected with error if set)
+# These are not supported in Gen2 provisioning
+# powerflex_sds_id: ""  # Gen1-only - use device_group_id instead
+# powerflex_storage_pool_id_for_device: ""  # Gen1-only - use device_group_id instead
+# powerflex_fault_set_id: ""  # Gen1-only - not available in Gen2
+# powerflex_hdd_media_type: ""  # Gen1-only - Gen2 only supports SSD

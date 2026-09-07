@@ -4,6 +4,12 @@
 
 # Infrastructure provisioning tasks (AC4, AC5)
 
+- name: Reject unsupported Gen1-only parameters
+  ansible.builtin.fail:
+    msg: "ERROR: Gen1-only parameters are not supported in Gen2 provisioning. The following parameters are Gen1-only: sds_id, storage_pool_id (for device provisioning), fault_set_id, hdd_media_type. Use Gen2 equivalents: device_group_id, node_id, device_group_name, media_type (SSD only)."
+  when:
+    - powerflex_sds_id is defined or powerflex_storage_pool_id_for_device is defined or powerflex_fault_set_id is defined or powerflex_hdd_media_type is defined
+
 - name: Create storage pool with Erasure Coding
   dellemc.powerflex.storagepool_v2:
     storage_pool_name: "{{ powerflex_storage_pool_name }}"
