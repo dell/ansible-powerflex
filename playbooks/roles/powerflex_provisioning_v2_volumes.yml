@@ -21,7 +21,7 @@
     powerflex_volume_size_gb: 100
     powerflex_volume_storage_pool_name: "pool1"
     powerflex_volume_protection_domain_name: "domain1"
-    powerflex_volume_sdc_id: "sdc_id_here"
+    # powerflex_volume_sdc_id: "sdc_id_here"  # Set to a real SDC ID to test mapping
 
   tasks:
     - name: Run powerflex_common_v2 role

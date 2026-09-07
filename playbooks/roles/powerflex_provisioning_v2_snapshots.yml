@@ -18,13 +18,13 @@
 
     # Snapshot parameters
     powerflex_snapshot_name: "test_snapshot"
-    powerflex_snapshot_volume_id: "volume_id_here"
+    # powerflex_snapshot_volume_id: "volume_id_here"  # Set to actual volume ID
     powerflex_snapshot_retention_days: 7
 
-    # Thin clone parameters
-    powerflex_thin_clone_name: "test_thin_clone"
-    powerflex_thin_clone_source_volume_id: "volume_id_here"
-    powerflex_thin_clone_source_snapshot_id: "snapshot_id_here"
+    # Thin clone parameters (uncomment and set actual IDs)
+    # powerflex_thin_clone_name: "test_thin_clone"
+    # powerflex_thin_clone_source_volume_id: "volume_id_here"
+    # powerflex_thin_clone_source_snapshot_id: "snapshot_id_here"
 
   tasks:
     - name: Run powerflex_common_v2 role
