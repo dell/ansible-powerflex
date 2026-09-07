@@ -1,0 +1,59 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# defaults file for powerflex_system_v2
+
+# PowerFlex gateway connection parameters
+# Note: username and password must be provided at runtime (no defaults for security)
+powerflex_gateway_hostname: ""
+powerflex_gateway_port: 443
+powerflex_gateway_validate_certs: true
+powerflex_gateway_timeout: 30
+
+# Feature flags — which sections of the role to execute
+powerflex_system_query: true
+powerflex_system_validate: false
+powerflex_system_diagnostics: false
+
+# --- System Information Query parameters (AC7) ---
+
+# gather_subset choices for info_v2 module
+# Options: vol, protection_domain, storage_pool, device, storage_node,
+#          sdc, sdt, snapshot_policy, nvme_host, deployment,
+#          firmware_repository, managed_device, service_template
+powerflex_system_gather_subset: []
+
+# Entity-specific query filters (set name or ID to query a single entity)
+powerflex_query_protection_domain_name: ""
+powerflex_query_protection_domain_id: ""
+powerflex_query_storage_pool_name: ""
+powerflex_query_storage_pool_id: ""
+powerflex_query_device_group_name: ""
+powerflex_query_device_group_id: ""
+powerflex_query_volume_name: ""
+powerflex_query_volume_id: ""
+powerflex_query_snapshot_name: ""
+powerflex_query_snapshot_id: ""
+powerflex_query_storage_node_name: ""
+powerflex_query_storage_node_id: ""
+
+# --- Configuration Validation parameters (AC8) ---
+
+# Validation targets — which subsystems to validate
+powerflex_validate_mdm_cluster: false
+powerflex_validate_protection_domains: false
+powerflex_validate_storage_pools: false
+powerflex_validate_device_groups: false
+powerflex_validate_volumes: false
+
+# Validation thresholds
+powerflex_validate_capacity_warning_pct: 80
+powerflex_validate_capacity_critical_pct: 90
+
+# --- System Diagnostics parameters (AC6, AC8) ---
+
+# Diagnostics targets
+powerflex_diag_system_health: false
+powerflex_diag_capacity_report: false
+powerflex_diag_snapshot_report: false
