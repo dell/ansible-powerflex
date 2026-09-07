@@ -1,0 +1,62 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Snapshot and thin clone workflows (AC3)
+
+- name: Create snapshot with retention
+  dellemc.powerflex.snapshot_v2:
+    snapshot_name: "{{ powerflex_snapshot_name }}"
+    volume_id: "{{ powerflex_snapshot_volume_id | default('') }}"
+    retention_period_days: "{{ powerflex_snapshot_retention_days }}"
+    state: present
+  register: snapshot_create_result
+  when:
+    - powerflex_snapshot_name | default('', true) | length > 0
+    - powerflex_snapshot_volume_id | default('', true) | length > 0
+
+- name: Rename snapshot
+  dellemc.powerflex.snapshot_v2:
+    snapshot_id: "{{ snapshot_create_result.snapshot_id | default('') }}"
+    new_name: "{{ powerflex_snapshot_name }}_renamed"
+    state: present
+  when:
+    - snapshot_create_result.changed | default(false)
+    - powerflex_snapshot_rename | default(false)
+
+- name: Delete snapshot
+  dellemc.powerflex.snapshot_v2:
+    snapshot_id: "{{ snapshot_create_result.snapshot_id | default('') }}"
+    state: absent
+  when:
+    - snapshot_create_result.changed | default(false)
+    - powerflex_snapshot_delete | default(false)
+  ignore_errors: true
+  register: snapshot_delete_result
+
+- name: Warn if snapshot deletion failed (retention-locked)
+  ansible.builtin.debug:
+    msg: "WARNING: Snapshot deletion failed - likely retention-locked. {{ snapshot_delete_result.msg | default('') }}"
+  when:
+    - snapshot_delete_result.failed | default(false)
+    - snapshot_delete_result.msg is defined
+
+- name: Create thin clone from volume
+  dellemc.powerflex.thin_clone:
+    thin_clone_name: "{{ powerflex_thin_clone_name }}"
+    source_volume_id: "{{ powerflex_thin_clone_source_volume_id | default('') }}"
+    state: present
+  register: thin_clone_create_result
+  when:
+    - powerflex_thin_clone_name | default('', true) | length > 0
+    - powerflex_thin_clone_source_volume_id | default('', true) | length > 0
+
+- name: Create thin clone from snapshot
+  dellemc.powerflex.thin_clone:
+    thin_clone_name: "{{ powerflex_thin_clone_name }}"
+    source_snapshot_id: "{{ powerflex_thin_clone_source_snapshot_id | default('') }}"
+    state: present
+  register: thin_clone_from_snapshot_result
+  when:
+    - powerflex_thin_clone_name | default('', true) | length > 0
+    - powerflex_thin_clone_source_snapshot_id | default('', true) | length > 0
