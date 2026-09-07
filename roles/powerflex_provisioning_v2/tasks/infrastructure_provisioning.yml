@@ -1,0 +1,115 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Infrastructure provisioning tasks (AC4, AC5)
+
+- name: Create storage pool with Erasure Coding
+  dellemc.powerflex.storagepool_v2:
+    storage_pool_name: "{{ powerflex_storage_pool_name }}"
+    protection_domain_name: "{{ powerflex_storage_pool_protection_domain_name }}"
+    device_group_name: "{{ powerflex_storage_pool_device_group_name | default('') }}"
+    protection_scheme: "{{ powerflex_storage_pool_protection_scheme }}"
+    use_all_capacity: "{{ powerflex_storage_pool_use_all_capacity }}"
+    physical_size_gb: "{{ powerflex_storage_pool_physical_size_gb }}"
+    state: present
+  register: storage_pool_create_result
+  when:
+    - powerflex_storage_pool_name | default('', true) | length > 0
+    - powerflex_storage_pool_protection_domain_name | default('', true) | length > 0
+
+- name: Modify storage pool thresholds
+  dellemc.powerflex.storagepool_v2:
+    storage_pool_id: "{{ storage_pool_create_result.storage_pool_id | default('') }}"
+    high_watermark: "{{ powerflex_storage_pool_high_watermark | default(80) }}"
+    low_watermark: "{{ powerflex_storage_pool_low_watermark | default(70) }}"
+    state: present
+  when:
+    - storage_pool_create_result.changed | default(false)
+    - powerflex_storage_pool_modify_thresholds | default(false)
+
+- name: Rename storage pool
+  dellemc.powerflex.storagepool_v2:
+    storage_pool_id: "{{ storage_pool_create_result.storage_pool_id | default('') }}"
+    new_name: "{{ powerflex_storage_pool_name }}_renamed"
+    state: present
+  when:
+    - storage_pool_create_result.changed | default(false)
+    - powerflex_storage_pool_rename | default(false)
+
+- name: Create device group
+  dellemc.powerflex.device_group:
+    device_group_name: "{{ powerflex_device_group_name }}"
+    protection_domain_name: "{{ powerflex_device_group_protection_domain_name }}"
+    media_type: "{{ powerflex_device_group_media_type }}"
+    spare_node_count: "{{ powerflex_device_group_spare_node_count | default(1) }}"
+    spare_device_count: "{{ powerflex_device_group_spare_device_count | default(1) }}"
+    state: present
+  register: device_group_create_result
+  when:
+    - powerflex_device_group_name | default('', true) | length > 0
+    - powerflex_device_group_protection_domain_name | default('', true) | length > 0
+
+- name: Query device group capacity
+  dellemc.powerflex.device_group:
+    device_group_name: "{{ powerflex_device_group_name }}"
+    protection_domain_name: "{{ powerflex_device_group_protection_domain_name }}"
+    state: present
+  register: device_group_capacity_result
+  when:
+    - device_group_create_result.changed | default(false)
+    - powerflex_device_group_query_capacity | default(false)
+
+- name: Delete device group
+  dellemc.powerflex.device_group:
+    device_group_id: "{{ device_group_create_result.device_group_id | default('') }}"
+    state: absent
+  when:
+    - device_group_create_result.changed | default(false)
+    - powerflex_device_group_delete | default(false)
+
+- name: Provision device via device_v2
+  dellemc.powerflex.device_v2:
+    device_group_id: "{{ powerflex_device_group_id }}"
+    node_id: "{{ powerflex_device_node_id }}"
+    state: present
+  register: device_provision_result
+  when:
+    - powerflex_device_group_id | default('', true) | length > 0
+    - powerflex_device_node_id | default('', true) | length > 0
+
+- name: Clear device error (day-2 maintenance)
+  dellemc.powerflex.device_v2:
+    device_id: "{{ device_provision_result.device_id | default('') }}"
+    clear_device_error: true
+    state: present
+  when:
+    - device_provision_result.changed | default(false)
+    - powerflex_device_clear_error | default(false)
+
+- name: Reactivate device (day-2 maintenance)
+  dellemc.powerflex.device_v2:
+    device_id: "{{ device_provision_result.device_id | default('') }}"
+    activate_device: true
+    state: present
+  when:
+    - device_provision_result.changed | default(false)
+    - powerflex_device_reactivate | default(false)
+
+- name: Manage storage node IP
+  dellemc.powerflex.storage_node:
+    node_id: "{{ powerflex_storage_node_id | default('') }}"
+    node_ips: "{{ powerflex_storage_node_ips | default([]) }}"
+    state: present
+  register: storage_node_result
+  when:
+    - powerflex_storage_node_id | default('', true) | length > 0
+
+- name: Rename storage node
+  dellemc.powerflex.storage_node:
+    node_id: "{{ powerflex_storage_node_id | default('') }}"
+    new_name: "{{ powerflex_storage_node_new_name | default('') }}"
+    state: present
+  when:
+    - storage_node_result.changed | default(false)
+    - powerflex_storage_node_rename | default(false)
