@@ -1,0 +1,59 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Volume lifecycle management tasks (AC2)
+
+- name: Create volume
+  dellemc.powerflex.volume_v2:
+    volume_name: "{{ powerflex_volume_name }}"
+    size_gb: "{{ powerflex_volume_size_gb }}"
+    storage_pool_name: "{{ powerflex_volume_storage_pool_name }}"
+    protection_domain_name: "{{ powerflex_volume_protection_domain_name }}"
+    state: present
+  register: volume_create_result
+  when: powerflex_volume_name | default('', true) | length > 0
+
+- name: Modify volume (resize)
+  dellemc.powerflex.volume_v2:
+    volume_id: "{{ volume_create_result.volume_id | default('') }}"
+    size_gb: "{{ powerflex_volume_size_gb }}"
+    state: present
+  when:
+    - volume_create_result.changed | default(false)
+    - powerflex_volume_size_gb | default(0) > 0
+
+- name: Rename volume
+  dellemc.powerflex.volume_v2:
+    volume_id: "{{ volume_create_result.volume_id | default('') }}"
+    new_name: "{{ powerflex_volume_name }}_renamed"
+    state: present
+  when:
+    - volume_create_result.changed | default(false)
+    - powerflex_volume_rename | default(false)
+
+- name: Map volume to SDC
+  dellemc.powerflex.volume_v2:
+    volume_id: "{{ volume_create_result.volume_id | default('') }}"
+    sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
+    state: mapped
+  when:
+    - volume_create_result.changed | default(false)
+    - powerflex_volume_sdc_id | default('', true) | length > 0
+
+- name: Unmap volume from SDC
+  dellemc.powerflex.volume_v2:
+    volume_id: "{{ volume_create_result.volume_id | default('') }}"
+    sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
+    state: unmapped
+  when:
+    - volume_create_result.changed | default(false)
+    - powerflex_volume_unmap | default(false)
+
+- name: Delete volume
+  dellemc.powerflex.volume_v2:
+    volume_id: "{{ volume_create_result.volume_id | default('') }}"
+    state: absent
+  when:
+    - volume_create_result.changed | default(false)
+    - powerflex_volume_delete | default(false)
