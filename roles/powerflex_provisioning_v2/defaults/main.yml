@@ -1,0 +1,45 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# defaults file for powerflex_provisioning_v2
+
+# PowerFlex gateway connection parameters
+# Note: username and password must be provided at runtime (no defaults for security)
+powerflex_gateway_hostname: ""
+powerflex_gateway_port: 443
+powerflex_gateway_validate_certs: true
+powerflex_gateway_timeout: 30
+
+# Provisioning flags
+powerflex_provision_volumes: true
+powerflex_provision_snapshots: true
+powerflex_provision_infrastructure: true
+
+# Volume parameters
+powerflex_volume_name: ""
+powerflex_volume_size_gb: 100
+powerflex_volume_storage_pool_name: ""
+powerflex_volume_protection_domain_name: ""
+
+# Snapshot parameters
+powerflex_snapshot_name: ""
+powerflex_snapshot_retention_days: 7
+
+# Thin clone parameters
+powerflex_thin_clone_name: ""
+
+# Storage pool parameters
+powerflex_storage_pool_name: ""
+powerflex_storage_pool_protection_scheme: "TwoPlusTwo"
+powerflex_storage_pool_use_all_capacity: false
+powerflex_storage_pool_physical_size_gb: 1000
+
+# Device group parameters
+powerflex_device_group_name: ""
+powerflex_device_group_protection_domain_name: ""
+powerflex_device_group_media_type: "SSD"
+
+# Device parameters
+powerflex_device_group_id: ""
+powerflex_device_node_id: ""
