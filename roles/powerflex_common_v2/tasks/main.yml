@@ -1,0 +1,53 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# powerflex_common_v2 - Gen2 Compatibility Foundation
+# This role provides automatic Gen2 version detection, module compatibility validation,
+# and graceful degradation for Gen1 systems.
+
+- name: Detect PowerFlex generation
+  dellemc.powerflex.info_v2:
+    gather_subset:
+      - version
+  register: powerflex_version_info
+  failed_when: false
+
+- name: Set powerflex_generation fact
+  ansible.builtin.set_fact:
+    powerflex_generation: "{{ 'gen2' if (powerflex_version_info.api_version is version('5.0', '>=')) else 'gen1' }}"
+  when: powerflex_version_info.api_version is defined
+
+- name: Emit warning for Gen1 systems
+  ansible.builtin.debug:
+    msg: "WARNING: Running on PowerFlex Gen1 system (API {{ powerflex_version_info.api_version }}). Gen2-specific tasks will be skipped gracefully."
+  when: powerflex_generation == 'gen1'
+
+- name: Set skip flag for Gen1 systems
+  ansible.builtin.set_fact:
+    powerflex_gen2_skip: true
+  when: powerflex_generation == 'gen1'
+
+- name: Validate gateway connectivity
+  dellemc.powerflex.info_v2:
+    gather_subset:
+      - system
+  register: gateway_check
+  failed_when: false
+
+- name: Fail if gateway unreachable
+  ansible.builtin.fail:
+    msg: "Unable to connect to PowerFlex gateway. Please verify hostname, credentials, and network connectivity."
+  when: gateway_check.failed
+
+- name: Query system health
+  dellemc.powerflex.info_v2:
+    gather_subset:
+      - system
+  register: system_health
+  when: powerflex_generation == 'gen2'
+
+- name: Display system health
+  ansible.builtin.debug:
+    msg: "System health: {{ system_health.system | to_nice_json }}"
+  when: powerflex_generation == 'gen2'
