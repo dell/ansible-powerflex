@@ -1,0 +1,26 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# powerflex_provisioning_v2 - Gen2 Storage Provisioning
+# This role provides volume lifecycle management, snapshot/thin-clone workflows,
+# storage pool and device group configuration, and device/storage-node provisioning.
+
+- name: Check if Gen2 provisioning should proceed
+  ansible.builtin.assert:
+    that:
+      - not powerflex_gen2_skip | default(false)
+    fail_msg: "Gen2 provisioning skipped - running on Gen1 system or Gen2 modules unavailable"
+    quiet: true
+
+- name: Include volume lifecycle tasks
+  ansible.builtin.include_tasks: volume_lifecycle.yml
+  when: powerflex_provision_volumes | default(true)
+
+- name: Include snapshot and thin clone tasks
+  ansible.builtin.include_tasks: snapshot_thin_clone.yml
+  when: powerflex_provision_snapshots | default(true)
+
+- name: Include infrastructure provisioning tasks
+  ansible.builtin.include_tasks: infrastructure_provisioning.yml
+  when: powerflex_provision_infrastructure | default(true)
