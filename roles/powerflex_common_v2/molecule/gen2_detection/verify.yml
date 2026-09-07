@@ -1,0 +1,22 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check powerflex_generation fact is set
+      ansible.builtin.assert:
+        that:
+          - powerflex_generation is defined
+          - powerflex_generation in ['gen1', 'gen2']
+        fail_msg: "powerflex_generation fact not set correctly"
+        success_msg: "powerflex_generation fact is {{ powerflex_generation }}"
+
+    - name: Check powerflex_gen2_skip fact behavior
+      ansible.builtin.assert:
+        that:
+          - powerflex_gen2_skip is defined
+        fail_msg: "powerflex_gen2_skip fact not set"
+        success_msg: "powerflex_gen2_skip fact is {{ powerflex_gen2_skip }}"

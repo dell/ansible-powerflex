@@ -1,0 +1,15 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+- name: Converge
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Include powerflex_common_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_common_v2
+      vars:
+        powerflex_gateway_hostname: "192.168.1.100"
+        powerflex_gateway_username: "admin"
+        powerflex_gateway_password: "test_password"
