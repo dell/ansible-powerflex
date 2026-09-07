@@ -15,12 +15,12 @@
 
 - name: Include volume lifecycle tasks
   ansible.builtin.include_tasks: volume_lifecycle.yml
-  when: powerflex_provision_volumes | default(true) | bool
+  when: powerflex_provisioning_v2_provision_volumes | default(true) | bool
 
 - name: Include snapshot and thin clone tasks
   ansible.builtin.include_tasks: snapshot_thin_clone.yml
-  when: powerflex_provision_snapshots | default(true) | bool
+  when: powerflex_provisioning_v2_provision_snapshots | default(true) | bool
 
 - name: Include infrastructure provisioning tasks
   ansible.builtin.include_tasks: infrastructure_provisioning.yml
-  when: powerflex_provision_infrastructure | default(true) | bool
+  when: powerflex_provisioning_v2_provision_infrastructure | default(true) | bool

@@ -29,7 +29,7 @@
     use_all_available_capacity: "{{ powerflex_storage_pool_use_all_capacity }}"
     physical_size_gb: "{{ powerflex_storage_pool_physical_size_gb if not powerflex_storage_pool_use_all_capacity else omit }}"
     state: present
-  register: powerflex_provisioning_v2_storage_pool_create_result
+  register: powerflex_storage_pool_create_result
   when:
     - powerflex_storage_pool_name | default('', true) | length > 0
     - powerflex_storage_pool_protection_domain_name | default('', true) | length > 0
@@ -42,13 +42,13 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    storage_pool_id: "{{ powerflex_provisioning_v2_storage_pool_create_result.storage_pool_details.id | default('') }}"
+    storage_pool_id: "{{ powerflex_storage_pool_create_result.storage_pool_details.id | default('') }}"
     cap_alert_thresholds:
       high_threshold: "{{ powerflex_storage_pool_high_watermark | default(80) }}"
       critical_threshold: "{{ powerflex_storage_pool_low_watermark | default(90) }}"
     state: present
   when:
-    - powerflex_provisioning_v2_storage_pool_create_result.changed | default(false)
+    - powerflex_storage_pool_create_result.changed | default(false)
     - powerflex_storage_pool_modify_thresholds | default(false)
 
 - name: Rename storage pool
@@ -58,11 +58,11 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    storage_pool_id: "{{ powerflex_provisioning_v2_storage_pool_create_result.storage_pool_details.id | default('') }}"
+    storage_pool_id: "{{ powerflex_storage_pool_create_result.storage_pool_details.id | default('') }}"
     storage_pool_new_name: "{{ powerflex_storage_pool_name }}_renamed"
     state: present
   when:
-    - powerflex_provisioning_v2_storage_pool_create_result.changed | default(false)
+    - powerflex_storage_pool_create_result.changed | default(false)
     - powerflex_storage_pool_rename | default(false)
 
 - name: Create device group
@@ -78,7 +78,7 @@
     spare_node_count: "{{ powerflex_device_group_spare_node_count | default(1) }}"
     spare_device_count: "{{ powerflex_device_group_spare_device_count | default(1) }}"
     state: present
-  register: powerflex_provisioning_v2_device_group_create_result
+  register: powerflex_device_group_create_result
   when:
     - powerflex_device_group_name | default('', true) | length > 0
     - powerflex_device_group_protection_domain_name | default('', true) | length > 0
@@ -94,7 +94,7 @@
     device_group_id: "{{ powerflex_device_group_id | default('') }}"
     query_usable_capacity: true
     state: present
-  register: powerflex_provisioning_v2_device_group_capacity_result
+  register: powerflex_device_group_capacity_result
   when:
     - powerflex_device_group_query_capacity | default(false)
 
@@ -105,10 +105,10 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    device_group_id: "{{ powerflex_provisioning_v2_device_group_create_result.device_group_details.id | default('') }}"
+    device_group_id: "{{ powerflex_device_group_create_result.device_group_details.id | default('') }}"
     state: absent
   when:
-    - powerflex_provisioning_v2_device_group_create_result.changed | default(false)
+    - powerflex_device_group_create_result.changed | default(false)
     - powerflex_device_group_delete | default(false)
 
 - name: Provision device via device_v2
@@ -123,7 +123,7 @@
     storage_node_id: "{{ powerflex_device_node_id }}"
     media_type: "{{ powerflex_device_group_media_type | default('SSD') }}"
     state: present
-  register: powerflex_provisioning_v2_device_provision_result
+  register: powerflex_device_provision_result
   when:
     - powerflex_device_group_id | default('', true) | length > 0
     - powerflex_device_node_id | default('', true) | length > 0
@@ -137,11 +137,11 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    device_id: "{{ powerflex_provisioning_v2_device_provision_result.device_details.id | default('') }}"
+    device_id: "{{ powerflex_device_provision_result.device_details.id | default('') }}"
     clear_error: true
     state: present
   when:
-    - powerflex_provisioning_v2_device_provision_result.changed | default(false)
+    - powerflex_device_provision_result.changed | default(false)
     - powerflex_device_clear_error | default(false)
 
 - name: Reactivate device with force flag (day-2 maintenance)
@@ -151,12 +151,12 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    device_id: "{{ powerflex_provisioning_v2_device_provision_result.device_details.id | default('') }}"
+    device_id: "{{ powerflex_device_provision_result.device_details.id | default('') }}"
     clear_error: true
     force: true
     state: present
   when:
-    - powerflex_provisioning_v2_device_provision_result.changed | default(false)
+    - powerflex_device_provision_result.changed | default(false)
     - powerflex_device_reactivate | default(false)
 
 - name: Manage storage node IP
@@ -170,7 +170,7 @@
     node_ip_list: "{{ powerflex_storage_node_ips | default([]) }}"
     node_ip_state: "present-in-node"
     state: present
-  register: powerflex_provisioning_v2_storage_node_result
+  register: powerflex_storage_node_result
   when:
     - powerflex_storage_node_id | default('', true) | length > 0
     - powerflex_storage_node_ips | default([], true) | length > 0

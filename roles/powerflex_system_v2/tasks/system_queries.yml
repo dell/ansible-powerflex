@@ -11,12 +11,12 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    gather_subset: "{{ powerflex_system_gather_subset | default(omit) }}"
-  register: powerflex_system_v2_info_result
+    gather_subset: "{{ powerflex_system_v2_system_gather_subset | default(omit) }}"
+  register: powerflex_system_v2_system_v2_info_result
 
 - name: Set system array details fact
   ansible.builtin.set_fact:
-    powerflex_system_v2_array: "{{ powerflex_system_v2_info_result.Array_Details[0] | default({}) }}"
+    powerflex_system_v2_system_v2_array: "{{ powerflex_system_v2_system_v2_info_result.Array_Details[0] | default({}) }}"
     cacheable: true
 
 - name: Query protection domain by name
@@ -26,10 +26,10 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    protection_domain_name: "{{ powerflex_query_protection_domain_name }}"
+    protection_domain_name: "{{ powerflex_system_v2_query_protection_domain_name }}"
     state: present
-  register: powerflex_system_v2_pd_result
-  when: powerflex_query_protection_domain_name | default('', true) | length > 0
+  register: powerflex_system_v2_system_v2_pd_result
+  when: powerflex_system_v2_query_protection_domain_name | default('', true) | length > 0
 
 - name: Query protection domain by ID
   dellemc.powerflex.protection_domain_v2:
@@ -38,12 +38,12 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    protection_domain_id: "{{ powerflex_query_protection_domain_id }}"
+    protection_domain_id: "{{ powerflex_system_v2_query_protection_domain_id }}"
     state: present
-  register: powerflex_system_v2_pd_result
+  register: powerflex_system_v2_system_v2_pd_result
   when:
-    - powerflex_query_protection_domain_id | default('', true) | length > 0
-    - powerflex_query_protection_domain_name | default('', true) | length == 0
+    - powerflex_system_v2_query_protection_domain_id | default('', true) | length > 0
+    - powerflex_system_v2_query_protection_domain_name | default('', true) | length == 0
 
 - name: Query storage pool by name
   dellemc.powerflex.storagepool_v2:
@@ -52,11 +52,11 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    storage_pool_name: "{{ powerflex_query_storage_pool_name }}"
-    protection_domain_name: "{{ powerflex_query_protection_domain_name | default(omit) }}"
+    storage_pool_name: "{{ powerflex_system_v2_query_storage_pool_name }}"
+    protection_domain_name: "{{ powerflex_system_v2_query_protection_domain_name | default(omit) }}"
     state: present
-  register: powerflex_system_v2_sp_result
-  when: powerflex_query_storage_pool_name | default('', true) | length > 0
+  register: powerflex_system_v2_system_v2_sp_result
+  when: powerflex_system_v2_query_storage_pool_name | default('', true) | length > 0
 
 - name: Query device group by name
   dellemc.powerflex.device_group:
@@ -65,10 +65,10 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    device_group_name: "{{ powerflex_query_device_group_name }}"
+    device_group_name: "{{ powerflex_system_v2_query_device_group_name }}"
     state: present
-  register: powerflex_system_v2_dg_result
-  when: powerflex_query_device_group_name | default('', true) | length > 0
+  register: powerflex_system_v2_system_v2_dg_result
+  when: powerflex_system_v2_query_device_group_name | default('', true) | length > 0
 
 - name: Query device group by ID
   dellemc.powerflex.device_group:
@@ -77,12 +77,12 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    device_group_id: "{{ powerflex_query_device_group_id }}"
+    device_group_id: "{{ powerflex_system_v2_query_device_group_id }}"
     state: present
-  register: powerflex_system_v2_dg_result
+  register: powerflex_system_v2_system_v2_dg_result
   when:
-    - powerflex_query_device_group_id | default('', true) | length > 0
-    - powerflex_query_device_group_name | default('', true) | length == 0
+    - powerflex_system_v2_query_device_group_id | default('', true) | length > 0
+    - powerflex_system_v2_query_device_group_name | default('', true) | length == 0
 
 - name: Query volume by name
   dellemc.powerflex.volume_v2:
@@ -91,10 +91,10 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_name: "{{ powerflex_query_volume_name }}"
+    vol_name: "{{ powerflex_system_v2_query_volume_name }}"
     state: present
-  register: powerflex_system_v2_vol_result
-  when: powerflex_query_volume_name | default('', true) | length > 0
+  register: powerflex_system_v2_system_v2_vol_result
+  when: powerflex_system_v2_query_volume_name | default('', true) | length > 0
 
 - name: Query volume by ID
   dellemc.powerflex.volume_v2:
@@ -103,12 +103,12 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_query_volume_id }}"
+    vol_id: "{{ powerflex_system_v2_query_volume_id }}"
     state: present
-  register: powerflex_system_v2_vol_result
+  register: powerflex_system_v2_system_v2_vol_result
   when:
-    - powerflex_query_volume_id | default('', true) | length > 0
-    - powerflex_query_volume_name | default('', true) | length == 0
+    - powerflex_system_v2_query_volume_id | default('', true) | length > 0
+    - powerflex_system_v2_query_volume_name | default('', true) | length == 0
 
 - name: Query snapshot by name
   dellemc.powerflex.snapshot_v2:
@@ -117,10 +117,10 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    snapshot_name: "{{ powerflex_query_snapshot_name }}"
+    snapshot_name: "{{ powerflex_system_v2_query_snapshot_name }}"
     state: present
-  register: powerflex_system_v2_snap_result
-  when: powerflex_query_snapshot_name | default('', true) | length > 0
+  register: powerflex_system_v2_system_v2_snap_result
+  when: powerflex_system_v2_query_snapshot_name | default('', true) | length > 0
 
 - name: Query storage node by name
   dellemc.powerflex.storage_node:
@@ -129,10 +129,10 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    storage_node_name: "{{ powerflex_query_storage_node_name }}"
+    storage_node_name: "{{ powerflex_system_v2_query_storage_node_name }}"
     state: present
-  register: powerflex_system_v2_node_result
-  when: powerflex_query_storage_node_name | default('', true) | length > 0
+  register: powerflex_system_v2_system_v2_node_result
+  when: powerflex_system_v2_query_storage_node_name | default('', true) | length > 0
 
 - name: Query storage node by ID
   dellemc.powerflex.storage_node:
@@ -141,23 +141,23 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    storage_node_id: "{{ powerflex_query_storage_node_id }}"
+    storage_node_id: "{{ powerflex_system_v2_query_storage_node_id }}"
     state: present
-  register: powerflex_system_v2_node_result
+  register: powerflex_system_v2_system_v2_node_result
   when:
-    - powerflex_query_storage_node_id | default('', true) | length > 0
-    - powerflex_query_storage_node_name | default('', true) | length == 0
+    - powerflex_system_v2_query_storage_node_id | default('', true) | length > 0
+    - powerflex_system_v2_query_storage_node_name | default('', true) | length == 0
 
 - name: Display query results summary
   ansible.builtin.debug:
     msg:
-      system_id: "{{ powerflex_system_v2_array.id | default('N/A') }}"
-      api_version: "{{ powerflex_system_v2_info_result.API_Version | default('N/A') }}"
-      mdm_cluster_state: "{{ powerflex_system_v2_array.mdmCluster.clusterState | default('N/A') }}"
-      max_capacity_gb: "{{ powerflex_system_v2_array.maxCapacityInGb | default('N/A') }}"
-      protection_domain: "{{ powerflex_system_v2_pd_result.protection_domain_details.name | default('not queried') }}"
-      storage_pool: "{{ powerflex_system_v2_sp_result.storage_pool_details.name | default('not queried') }}"
-      device_group: "{{ powerflex_system_v2_dg_result.device_group_details.name | default('not queried') }}"
-      volume: "{{ powerflex_system_v2_vol_result.volume_details.name | default('not queried') }}"
-      snapshot: "{{ powerflex_system_v2_snap_result.snapshot_details.name | default('not queried') }}"
-      storage_node: "{{ powerflex_system_v2_node_result.storage_node_details.name | default('not queried') }}"
+      system_id: "{{ powerflex_system_v2_system_v2_array.id | default('N/A') }}"
+      api_version: "{{ powerflex_system_v2_system_v2_info_result.API_Version | default('N/A') }}"
+      mdm_cluster_state: "{{ powerflex_system_v2_system_v2_array.mdmCluster.clusterState | default('N/A') }}"
+      max_capacity_gb: "{{ powerflex_system_v2_system_v2_array.maxCapacityInGb | default('N/A') }}"
+      protection_domain: "{{ powerflex_system_v2_system_v2_pd_result.protection_domain_details.name | default('not queried') }}"
+      storage_pool: "{{ powerflex_system_v2_system_v2_sp_result.storage_pool_details.name | default('not queried') }}"
+      device_group: "{{ powerflex_system_v2_system_v2_dg_result.device_group_details.name | default('not queried') }}"
+      volume: "{{ powerflex_system_v2_system_v2_vol_result.volume_details.name | default('not queried') }}"
+      snapshot: "{{ powerflex_system_v2_system_v2_snap_result.snapshot_details.name | default('not queried') }}"
+      storage_node: "{{ powerflex_system_v2_system_v2_node_result.storage_node_details.name | default('not queried') }}"

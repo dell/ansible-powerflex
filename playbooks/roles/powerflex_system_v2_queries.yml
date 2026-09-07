@@ -2,7 +2,7 @@
 # Copyright: (c) 2026, Dell Technologies
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# Example playbook demonstrating powerflex_system_v2 system information queries
+# Example playbook demonstrating powerflex_system_v2_system_v2 system information queries
 # Queries system details, protection domains, storage pools, volumes, etc.
 
 - name: PowerFlex Gen2 System Information Queries
@@ -17,27 +17,27 @@
     powerflex_gateway_timeout: 30
 
     # Query broad system information via info_v2 gather_subset
-    powerflex_system_gather_subset:
+    powerflex_system_v2_system_gather_subset:
       - vol
       - protection_domain
       - storage_pool
       - storage_node
 
     # Optionally query specific entities by name or ID
-    # powerflex_query_protection_domain_name: "my_pd"
-    # powerflex_query_storage_pool_name: "my_pool"
-    # powerflex_query_volume_name: "my_volume"
-    # powerflex_query_device_group_id: "hex_id_here"
+    # powerflex_system_v2_query_protection_domain_name: "my_pd"
+    # powerflex_system_v2_query_storage_pool_name: "my_pool"
+    # powerflex_system_v2_query_volume_name: "my_volume"
+    # powerflex_system_v2_query_device_group_id: "hex_id_here"
 
   tasks:
     - name: Run powerflex_common_v2 role
       ansible.builtin.include_role:
         name: powerflex_common_v2
 
-    - name: Run powerflex_system_v2 role for queries
+    - name: Run powerflex_system_v2_system_v2 role for queries
       ansible.builtin.include_role:
-        name: powerflex_system_v2
+        name: powerflex_system_v2_system_v2
       vars:
-        powerflex_system_query: true
-        powerflex_system_validate: false
-        powerflex_system_diagnostics: false
+        powerflex_system_v2_system_query: true
+        powerflex_system_v2_system_validate: false
+        powerflex_system_v2_system_diagnostics: false

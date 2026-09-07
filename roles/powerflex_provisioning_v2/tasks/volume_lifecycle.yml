@@ -17,7 +17,7 @@
     storage_pool_name: "{{ powerflex_volume_storage_pool_name }}"
     protection_domain_name: "{{ powerflex_volume_protection_domain_name }}"
     state: present
-  register: powerflex_provisioning_v2_volume_create_result
+  register: powerflex_volume_create_result
   when: powerflex_volume_name | default('', true) | length > 0
 
 - name: Modify volume (resize)
@@ -27,12 +27,12 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
     size: "{{ powerflex_volume_size_gb }}"
     cap_unit: "GB"
     state: present
   when:
-    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
+    - powerflex_volume_create_result.changed | default(false)
     - (powerflex_volume_size_gb | default(0) | int) > 0
 
 - name: Rename volume
@@ -42,11 +42,11 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
     vol_new_name: "{{ powerflex_volume_name }}_renamed"
     state: present
   when:
-    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
+    - powerflex_volume_create_result.changed | default(false)
     - powerflex_volume_rename | default(false)
 
 - name: Map volume to SDC
@@ -56,13 +56,13 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
     sdc:
       - sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
     sdc_state: "mapped"
     state: present
   when:
-    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
+    - powerflex_volume_create_result.changed | default(false)
     - powerflex_volume_sdc_id | default('', true) | length > 0
 
 - name: Unmap volume from SDC
@@ -72,13 +72,13 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
     sdc:
       - sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
     sdc_state: "unmapped"
     state: present
   when:
-    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
+    - powerflex_volume_create_result.changed | default(false)
     - powerflex_volume_unmap | default(false)
 
 - name: Delete volume
@@ -88,8 +88,8 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
     state: absent
   when:
-    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
+    - powerflex_volume_create_result.changed | default(false)
     - powerflex_volume_delete | default(false)

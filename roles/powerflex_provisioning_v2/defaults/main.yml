@@ -12,9 +12,9 @@ powerflex_gateway_validate_certs: true
 powerflex_gateway_timeout: 30
 
 # Provisioning flags
-powerflex_provision_volumes: true
-powerflex_provision_snapshots: true
-powerflex_provision_infrastructure: true
+powerflex_provisioning_v2_provision_volumes: true
+powerflex_provisioning_v2_provision_snapshots: true
+powerflex_provisioning_v2_provision_infrastructure: true
 
 # Volume parameters
 powerflex_volume_name: ""

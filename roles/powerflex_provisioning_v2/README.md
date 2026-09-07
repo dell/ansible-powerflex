@@ -26,9 +26,9 @@ Gen2 compatibility detection.
 | `powerflex_gateway_port` | PowerFlex gateway port | `443` | No |
 | `powerflex_gateway_validate_certs` | Validate SSL certificates | `true` | No |
 | `powerflex_gateway_timeout` | Request timeout in seconds | `30` | No |
-| `powerflex_provision_volumes` | Enable volume provisioning | `true` | No |
-| `powerflex_provision_snapshots` | Enable snapshot/thin-clone provisioning | `true` | No |
-| `powerflex_provision_infrastructure` | Enable infrastructure provisioning | `true` | No |
+| `powerflex_provisioning_v2_provision_volumes` | Enable volume provisioning | `true` | No |
+| `powerflex_provisioning_v2_provision_snapshots` | Enable snapshot/thin-clone provisioning | `true` | No |
+| `powerflex_provisioning_v2_provision_infrastructure` | Enable infrastructure provisioning | `true` | No |
 | `powerflex_volume_name` | Volume name | `""` | Conditional |
 | `powerflex_volume_size_gb` | Volume size in GB | `100` | Conditional |
 | `powerflex_volume_storage_pool_name` | Storage pool name for volume | `""` | Conditional |
