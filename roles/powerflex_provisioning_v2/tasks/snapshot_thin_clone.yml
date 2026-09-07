@@ -16,7 +16,7 @@
     desired_retention: "{{ powerflex_snapshot_retention_days }}"
     retention_unit: "days"
     state: present
-  register: powerflex_provisioning_v2_snapshot_create_result
+  register: powerflex_snapshot_create_result
   when:
     - powerflex_snapshot_name | default('', true) | length > 0
     - powerflex_snapshot_volume_id | default('', true) | length > 0
@@ -28,11 +28,11 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    snapshot_id: "{{ powerflex_provisioning_v2_snapshot_create_result.snapshot_details.id | default('') }}"
+    snapshot_id: "{{ powerflex_snapshot_create_result.snapshot_details.id | default('') }}"
     snapshot_new_name: "{{ powerflex_snapshot_name }}_renamed"
     state: present
   when:
-    - powerflex_provisioning_v2_snapshot_create_result.changed | default(false)
+    - powerflex_snapshot_create_result.changed | default(false)
     - powerflex_snapshot_rename | default(false)
 
 - name: Delete snapshot
@@ -42,20 +42,20 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    snapshot_id: "{{ powerflex_provisioning_v2_snapshot_create_result.snapshot_details.id | default('') }}"
+    snapshot_id: "{{ powerflex_snapshot_create_result.snapshot_details.id | default('') }}"
     state: absent
   when:
-    - powerflex_provisioning_v2_snapshot_create_result.changed | default(false)
+    - powerflex_snapshot_create_result.changed | default(false)
     - powerflex_snapshot_delete | default(false)
   ignore_errors: true
-  register: powerflex_provisioning_v2_snapshot_delete_result
+  register: powerflex_snapshot_delete_result
 
 - name: Warn if snapshot deletion failed (retention-locked)
   ansible.builtin.debug:
-    msg: "WARNING: Snapshot deletion failed - likely retention-locked. {{ powerflex_provisioning_v2_snapshot_delete_result.msg | default('') }}"
+    msg: "WARNING: Snapshot deletion failed - likely retention-locked. {{ powerflex_snapshot_delete_result.msg | default('') }}"
   when:
-    - powerflex_provisioning_v2_snapshot_delete_result.failed | default(false)
-    - powerflex_provisioning_v2_snapshot_delete_result.msg is defined
+    - powerflex_snapshot_delete_result.failed | default(false)
+    - powerflex_snapshot_delete_result.msg is defined
 
 - name: Create thin clone from volume
   dellemc.powerflex.thin_clone:
@@ -67,7 +67,7 @@
     new_clone_name: "{{ powerflex_thin_clone_name }}"
     from_volume_id: "{{ powerflex_thin_clone_source_volume_id | default('') }}"
     state: present
-  register: powerflex_provisioning_v2_thin_clone_create_result
+  register: powerflex_thin_clone_create_result
   when:
     - powerflex_thin_clone_name | default('', true) | length > 0
     - powerflex_thin_clone_source_volume_id | default('', true) | length > 0
@@ -82,7 +82,7 @@
     new_clone_name: "{{ powerflex_thin_clone_name }}"
     from_snapshot_id: "{{ powerflex_thin_clone_source_snapshot_id | default('') }}"
     state: present
-  register: powerflex_provisioning_v2_thin_clone_from_snapshot_result
+  register: powerflex_thin_clone_from_snapshot_result
   when:
     - powerflex_thin_clone_name | default('', true) | length > 0
     - powerflex_thin_clone_source_snapshot_id | default('', true) | length > 0

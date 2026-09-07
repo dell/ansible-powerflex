@@ -18,9 +18,9 @@
       ansible.builtin.include_role:
         name: powerflex_provisioning_v2
       vars:
-        powerflex_provision_volumes: false
-        powerflex_provision_snapshots: false
-        powerflex_provision_infrastructure: true
+        powerflex_provisioning_v2_provision_volumes: false
+        powerflex_provisioning_v2_provision_snapshots: false
+        powerflex_provisioning_v2_provision_infrastructure: true
         powerflex_storage_pool_name: "test_pool"
         powerflex_storage_pool_protection_domain_name: "domain1"
         powerflex_storage_pool_protection_scheme: "TwoPlusTwo"

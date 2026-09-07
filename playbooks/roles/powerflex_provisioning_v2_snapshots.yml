@@ -35,6 +35,6 @@
       ansible.builtin.include_role:
         name: powerflex_provisioning_v2
       vars:
-        powerflex_provision_volumes: false
+        powerflex_provisioning_v2_provision_volumes: false
         powerflex_provision_snapshots: true
         powerflex_provision_infrastructure: false

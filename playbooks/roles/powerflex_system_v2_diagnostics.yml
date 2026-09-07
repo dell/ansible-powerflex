@@ -2,7 +2,7 @@
 # Copyright: (c) 2026, Dell Technologies
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# Example playbook demonstrating powerflex_system_v2 system diagnostics
+# Example playbook demonstrating powerflex_system_v2_system_v2 system diagnostics
 # Generates system health, capacity, and snapshot utilization reports
 
 - name: PowerFlex Gen2 System Diagnostics
@@ -21,13 +21,13 @@
       ansible.builtin.include_role:
         name: powerflex_common_v2
 
-    - name: Run powerflex_system_v2 role for diagnostics
+    - name: Run powerflex_system_v2_system_v2 role for diagnostics
       ansible.builtin.include_role:
-        name: powerflex_system_v2
+        name: powerflex_system_v2_system_v2
       vars:
-        powerflex_system_query: false
-        powerflex_system_validate: false
-        powerflex_system_diagnostics: true
-        powerflex_diag_system_health: true
-        powerflex_diag_capacity_report: true
-        powerflex_diag_snapshot_report: true
+        powerflex_system_v2_system_query: false
+        powerflex_system_v2_system_validate: false
+        powerflex_system_v2_system_diagnostics: true
+        powerflex_system_v2_diag_system_health: true
+        powerflex_system_v2_diag_capacity_report: true
+        powerflex_system_v2_diag_snapshot_report: true

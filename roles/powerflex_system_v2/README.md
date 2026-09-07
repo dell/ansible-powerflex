@@ -1,4 +1,4 @@
-# powerflex_system_v2
+# powerflex_system_v2_system_v2
 
 Gen2 system information, configuration validation, and diagnostics role for Dell PowerFlex 5.x environments.
 
@@ -26,21 +26,21 @@ See `defaults/main.yml` for the full list. Key variables:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `powerflex_system_query` | `true` | Run system information queries |
-| `powerflex_system_validate` | `false` | Run configuration validation |
-| `powerflex_system_diagnostics` | `false` | Run system diagnostics |
+| `powerflex_system_v2_system_query` | `true` | Run system information queries |
+| `powerflex_system_v2_system_validate` | `false` | Run configuration validation |
+| `powerflex_system_v2_system_diagnostics` | `false` | Run system diagnostics |
 
 ### Query Filters
 
-Set entity name or ID variables to query specific resources (e.g., `powerflex_query_volume_name`).
+Set entity name or ID variables to query specific resources (e.g., `powerflex_system_v2_query_volume_name`).
 
 ### Validation Targets
 
-Enable specific validation targets: `powerflex_validate_mdm_cluster`, `powerflex_validate_protection_domains`, `powerflex_validate_storage_pools`, `powerflex_validate_volumes`.
+Enable specific validation targets: `powerflex_system_v2_validate_mdm_cluster`, `powerflex_system_v2_validate_protection_domains`, `powerflex_system_v2_validate_storage_pools`, `powerflex_system_v2_validate_volumes`.
 
 ### Diagnostics Targets
 
-Enable specific reports: `powerflex_diag_system_health`, `powerflex_diag_capacity_report`, `powerflex_diag_snapshot_report`.
+Enable specific reports: `powerflex_system_v2_diag_system_health`, `powerflex_system_v2_diag_capacity_report`, `powerflex_system_v2_diag_snapshot_report`.
 
 ## Dependencies
 
@@ -59,10 +59,10 @@ Enable specific reports: `powerflex_diag_system_health`, `powerflex_diag_capacit
 
     - name: Run system queries
       ansible.builtin.include_role:
-        name: powerflex_system_v2
+        name: powerflex_system_v2_system_v2
       vars:
-        powerflex_system_query: true
-        powerflex_system_gather_subset:
+        powerflex_system_v2_system_query: true
+        powerflex_system_v2_system_gather_subset:
           - vol
           - protection_domain
           - storage_pool
