@@ -6,54 +6,90 @@
 
 - name: Create volume
   dellemc.powerflex.volume_v2:
-    volume_name: "{{ powerflex_volume_name }}"
-    size_gb: "{{ powerflex_volume_size_gb }}"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    vol_name: "{{ powerflex_volume_name }}"
+    size: "{{ powerflex_volume_size_gb }}"
+    cap_unit: "GB"
     storage_pool_name: "{{ powerflex_volume_storage_pool_name }}"
     protection_domain_name: "{{ powerflex_volume_protection_domain_name }}"
     state: present
-  register: volume_create_result
+  register: powerflex_provisioning_v2_volume_create_result
   when: powerflex_volume_name | default('', true) | length > 0
 
 - name: Modify volume (resize)
   dellemc.powerflex.volume_v2:
-    volume_id: "{{ volume_create_result.volume_id | default('') }}"
-    size_gb: "{{ powerflex_volume_size_gb }}"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    size: "{{ powerflex_volume_size_gb }}"
+    cap_unit: "GB"
     state: present
   when:
-    - volume_create_result.changed | default(false)
+    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
     - powerflex_volume_size_gb | default(0) > 0
 
 - name: Rename volume
   dellemc.powerflex.volume_v2:
-    volume_id: "{{ volume_create_result.volume_id | default('') }}"
-    new_name: "{{ powerflex_volume_name }}_renamed"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    vol_new_name: "{{ powerflex_volume_name }}_renamed"
     state: present
   when:
-    - volume_create_result.changed | default(false)
+    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
     - powerflex_volume_rename | default(false)
 
 - name: Map volume to SDC
   dellemc.powerflex.volume_v2:
-    volume_id: "{{ volume_create_result.volume_id | default('') }}"
-    sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
-    state: mapped
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    sdc:
+      - sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
+    sdc_state: "mapped"
+    state: present
   when:
-    - volume_create_result.changed | default(false)
+    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
     - powerflex_volume_sdc_id | default('', true) | length > 0
 
 - name: Unmap volume from SDC
   dellemc.powerflex.volume_v2:
-    volume_id: "{{ volume_create_result.volume_id | default('') }}"
-    sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
-    state: unmapped
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+    sdc:
+      - sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
+    sdc_state: "unmapped"
+    state: present
   when:
-    - volume_create_result.changed | default(false)
+    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
     - powerflex_volume_unmap | default(false)
 
 - name: Delete volume
   dellemc.powerflex.volume_v2:
-    volume_id: "{{ volume_create_result.volume_id | default('') }}"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    vol_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
     state: absent
   when:
-    - volume_create_result.changed | default(false)
+    - powerflex_provisioning_v2_volume_create_result.changed | default(false)
     - powerflex_volume_delete | default(false)

@@ -1,0 +1,46 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Tundra test playbook for powerflex_common_v2 role
+# Tests Gen2 detection and validation against Tundra (10.247.39.78)
+
+- name: Test powerflex_common_v2 on Tundra
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    powerflex_gateway_hostname: "10.247.39.78"
+    powerflex_gateway_username: "admin"
+    powerflex_gateway_password: "{{ vault_powerflex_password | default('CHANGE_ME') }}"
+    powerflex_gateway_port: 443
+    powerflex_gateway_validate_certs: false
+    powerflex_gateway_timeout: 30
+
+  tasks:
+    - name: Run powerflex_common_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_common_v2
+
+    - name: Display detected generation
+      ansible.builtin.debug:
+        msg: "Detected PowerFlex generation: {{ powerflex_generation }}"
+
+    - name: Display API version
+      ansible.builtin.debug:
+        msg: "API Version: {{ powerflex_common_v2_info_result.API_Version }}"
+
+    - name: Verify Gen2 detection
+      ansible.builtin.assert:
+        that:
+          - powerflex_generation == 'gen2'
+          - powerflex_common_v2_info_result.API_Version is version('5.0', '>=')
+        fail_msg: "Failed to detect Gen2 system"
+        success_msg: "Successfully detected Gen2 system"
+
+    - name: Verify skip flag is false
+      ansible.builtin.assert:
+        that:
+          - powerflex_gen2_skip | default(false) == false
+        fail_msg: "Gen2 skip flag incorrectly set"
+        success_msg: "Gen2 skip flag correctly set to false"

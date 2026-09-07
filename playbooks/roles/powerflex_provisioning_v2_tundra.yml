@@ -1,0 +1,110 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Tundra test playbook for powerflex_provisioning_v2 role
+# Tests volume, snapshot, and infrastructure provisioning against Tundra (10.247.39.78)
+
+- name: Test powerflex_provisioning_v2 on Tundra
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    powerflex_gateway_hostname: "10.247.39.78"
+    powerflex_gateway_username: "admin"
+    powerflex_gateway_password: "{{ vault_powerflex_password | default('CHANGE_ME') }}"
+    powerflex_gateway_port: 443
+    powerflex_gateway_validate_certs: false
+    powerflex_gateway_timeout: 30
+
+    # Volume parameters (use unique names for Tundra)
+    powerflex_volume_name: "ansible_test_vol"
+    powerflex_volume_size_gb: 8
+    powerflex_volume_storage_pool_name: "Pool1"
+    powerflex_volume_protection_domain_name: "domain1"
+
+    # Snapshot parameters
+    powerflex_snapshot_name: "ansible_test_snap"
+    powerflex_snapshot_retention_days: 7
+
+    # Storage pool parameters (use existing device group from Tundra)
+    powerflex_storage_pool_name: "ansible_test_pool"
+    powerflex_storage_pool_protection_domain_name: "domain1"
+    powerflex_storage_pool_device_group_name: "DG1"
+    powerflex_storage_pool_protection_scheme: "TwoPlusTwo"
+    powerflex_storage_pool_use_all_capacity: false
+    powerflex_storage_pool_physical_size_gb: 100
+
+    # Device group parameters (use existing protection domain from Tundra)
+    powerflex_device_group_name: "ansible_test_dg"
+    powerflex_device_group_protection_domain_name: "domain1"
+    powerflex_device_group_media_type: "SSD"
+
+  tasks:
+    - name: Run powerflex_common_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_common_v2
+
+    - name: Verify Gen2 system detected
+      ansible.builtin.assert:
+        that:
+          - powerflex_generation == 'gen2'
+        fail_msg: "Not running on Gen2 system"
+        success_msg: "Gen2 system detected"
+
+    - name: Run powerflex_provisioning_v2 role for volumes
+      ansible.builtin.include_role:
+        name: powerflex_provisioning_v2
+      vars:
+        powerflex_provision_volumes: true
+        powerflex_provision_snapshots: false
+        powerflex_provision_infrastructure: false
+
+    - name: Verify volume was created
+      ansible.builtin.assert:
+        that:
+          - powerflex_provisioning_v2_volume_create_result.changed | default(false)
+        fail_msg: "Volume creation failed"
+        success_msg: "Volume created successfully"
+
+    - name: Run powerflex_provisioning_v2 role for snapshots
+      ansible.builtin.include_role:
+        name: powerflex_provisioning_v2
+      vars:
+        powerflex_provision_volumes: false
+        powerflex_provision_snapshots: true
+        powerflex_provision_infrastructure: false
+        powerflex_snapshot_volume_id: "{{ powerflex_provisioning_v2_volume_create_result.volume_details.id | default('') }}"
+
+    - name: Verify snapshot was created
+      ansible.builtin.assert:
+        that:
+          - powerflex_provisioning_v2_snapshot_create_result.changed | default(false)
+        fail_msg: "Snapshot creation failed"
+        success_msg: "Snapshot created successfully"
+
+    - name: Run powerflex_provisioning_v2 role for infrastructure
+      ansible.builtin.include_role:
+        name: powerflex_provisioning_v2
+      vars:
+        powerflex_provision_volumes: false
+        powerflex_provision_snapshots: false
+        powerflex_provision_infrastructure: true
+
+    - name: Verify storage pool was created
+      ansible.builtin.assert:
+        that:
+          - powerflex_provisioning_v2_storage_pool_create_result.changed | default(false)
+        fail_msg: "Storage pool creation failed"
+        success_msg: "Storage pool created successfully"
+
+    - name: Verify device group was created
+      ansible.builtin.assert:
+        that:
+          - powerflex_provisioning_v2_device_group_create_result.changed | default(false)
+        fail_msg: "Device group creation failed"
+        success_msg: "Device group created successfully"
+
+    - name: Cleanup - Delete test resources
+      ansible.builtin.debug:
+        msg: "Manual cleanup required: delete test volume, snapshot, storage pool, and device group from Tundra"

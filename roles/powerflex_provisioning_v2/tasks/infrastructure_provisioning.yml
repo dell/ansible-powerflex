@@ -6,116 +6,183 @@
 
 - name: Reject unsupported Gen1-only parameters
   ansible.builtin.fail:
-    msg: "ERROR: Gen1-only parameters are not supported in Gen2 provisioning. The following parameters are Gen1-only: sds_id, storage_pool_id (for device provisioning), fault_set_id, hdd_media_type. Use Gen2 equivalents: device_group_id, node_id, device_group_name, media_type (SSD only)."
+    msg: >-
+      ERROR: Gen1-only parameters are not supported in Gen2 provisioning.
+      The following parameters are Gen1-only: sds_id, storage_pool_id (for
+      device provisioning), fault_set_id, hdd_media_type. Use Gen2
+      equivalents: device_group_id, storage_node_id, device_group_name,
+      media_type (SSD only).
   when:
     - powerflex_sds_id is defined or powerflex_storage_pool_id_for_device is defined or powerflex_fault_set_id is defined or powerflex_hdd_media_type is defined
 
 - name: Create storage pool with Erasure Coding
   dellemc.powerflex.storagepool_v2:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
     storage_pool_name: "{{ powerflex_storage_pool_name }}"
     protection_domain_name: "{{ powerflex_storage_pool_protection_domain_name }}"
-    device_group_name: "{{ powerflex_storage_pool_device_group_name | default('') }}"
+    device_group_name: "{{ powerflex_storage_pool_device_group_name | default(omit) }}"
     protection_scheme: "{{ powerflex_storage_pool_protection_scheme }}"
-    use_all_capacity: "{{ powerflex_storage_pool_use_all_capacity }}"
-    physical_size_gb: "{{ powerflex_storage_pool_physical_size_gb }}"
+    use_all_available_capacity: "{{ powerflex_storage_pool_use_all_capacity }}"
+    physical_size_gb: "{{ powerflex_storage_pool_physical_size_gb if not powerflex_storage_pool_use_all_capacity else omit }}"
     state: present
-  register: storage_pool_create_result
+  register: powerflex_provisioning_v2_storage_pool_create_result
   when:
     - powerflex_storage_pool_name | default('', true) | length > 0
     - powerflex_storage_pool_protection_domain_name | default('', true) | length > 0
 
 - name: Modify storage pool thresholds
   dellemc.powerflex.storagepool_v2:
-    storage_pool_id: "{{ storage_pool_create_result.storage_pool_id | default('') }}"
-    high_watermark: "{{ powerflex_storage_pool_high_watermark | default(80) }}"
-    low_watermark: "{{ powerflex_storage_pool_low_watermark | default(70) }}"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    storage_pool_id: "{{ powerflex_provisioning_v2_storage_pool_create_result.storage_pool_details.id | default('') }}"
+    cap_alert_thresholds:
+      high_threshold: "{{ powerflex_storage_pool_high_watermark | default(80) }}"
+      critical_threshold: "{{ powerflex_storage_pool_low_watermark | default(90) }}"
     state: present
   when:
-    - storage_pool_create_result.changed | default(false)
+    - powerflex_provisioning_v2_storage_pool_create_result.changed | default(false)
     - powerflex_storage_pool_modify_thresholds | default(false)
 
 - name: Rename storage pool
   dellemc.powerflex.storagepool_v2:
-    storage_pool_id: "{{ storage_pool_create_result.storage_pool_id | default('') }}"
-    new_name: "{{ powerflex_storage_pool_name }}_renamed"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    storage_pool_id: "{{ powerflex_provisioning_v2_storage_pool_create_result.storage_pool_details.id | default('') }}"
+    storage_pool_new_name: "{{ powerflex_storage_pool_name }}_renamed"
     state: present
   when:
-    - storage_pool_create_result.changed | default(false)
+    - powerflex_provisioning_v2_storage_pool_create_result.changed | default(false)
     - powerflex_storage_pool_rename | default(false)
 
 - name: Create device group
   dellemc.powerflex.device_group:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
     device_group_name: "{{ powerflex_device_group_name }}"
     protection_domain_name: "{{ powerflex_device_group_protection_domain_name }}"
     media_type: "{{ powerflex_device_group_media_type }}"
     spare_node_count: "{{ powerflex_device_group_spare_node_count | default(1) }}"
     spare_device_count: "{{ powerflex_device_group_spare_device_count | default(1) }}"
     state: present
-  register: device_group_create_result
+  register: powerflex_provisioning_v2_device_group_create_result
   when:
     - powerflex_device_group_name | default('', true) | length > 0
     - powerflex_device_group_protection_domain_name | default('', true) | length > 0
 
 - name: Query device group capacity
   dellemc.powerflex.device_group:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
     device_group_name: "{{ powerflex_device_group_name }}"
-    protection_domain_name: "{{ powerflex_device_group_protection_domain_name }}"
+    query_usable_capacity: true
     state: present
-  register: device_group_capacity_result
+  register: powerflex_provisioning_v2_device_group_capacity_result
   when:
-    - device_group_create_result.changed | default(false)
+    - powerflex_provisioning_v2_device_group_create_result.changed | default(false)
     - powerflex_device_group_query_capacity | default(false)
 
 - name: Delete device group
   dellemc.powerflex.device_group:
-    device_group_id: "{{ device_group_create_result.device_group_id | default('') }}"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    device_group_id: "{{ powerflex_provisioning_v2_device_group_create_result.device_group_details.id | default('') }}"
     state: absent
   when:
-    - device_group_create_result.changed | default(false)
+    - powerflex_provisioning_v2_device_group_create_result.changed | default(false)
     - powerflex_device_group_delete | default(false)
 
 - name: Provision device via device_v2
   dellemc.powerflex.device_v2:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    current_pathname: "{{ powerflex_device_current_pathname }}"
     device_group_id: "{{ powerflex_device_group_id }}"
-    node_id: "{{ powerflex_device_node_id }}"
+    storage_node_id: "{{ powerflex_device_node_id }}"
+    media_type: "{{ powerflex_device_group_media_type | default('SSD') }}"
     state: present
-  register: device_provision_result
+  register: powerflex_provisioning_v2_device_provision_result
   when:
     - powerflex_device_group_id | default('', true) | length > 0
     - powerflex_device_node_id | default('', true) | length > 0
+    - powerflex_device_current_pathname | default('', true) | length > 0
 
 - name: Clear device error (day-2 maintenance)
   dellemc.powerflex.device_v2:
-    device_id: "{{ device_provision_result.device_id | default('') }}"
-    clear_device_error: true
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    device_id: "{{ powerflex_provisioning_v2_device_provision_result.device_details.id | default('') }}"
+    clear_error: true
     state: present
   when:
-    - device_provision_result.changed | default(false)
+    - powerflex_provisioning_v2_device_provision_result.changed | default(false)
     - powerflex_device_clear_error | default(false)
 
-- name: Reactivate device (day-2 maintenance)
+- name: Reactivate device with force flag (day-2 maintenance)
   dellemc.powerflex.device_v2:
-    device_id: "{{ device_provision_result.device_id | default('') }}"
-    activate_device: true
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    device_id: "{{ powerflex_provisioning_v2_device_provision_result.device_details.id | default('') }}"
+    clear_error: true
+    force: true
     state: present
   when:
-    - device_provision_result.changed | default(false)
+    - powerflex_provisioning_v2_device_provision_result.changed | default(false)
     - powerflex_device_reactivate | default(false)
 
 - name: Manage storage node IP
   dellemc.powerflex.storage_node:
-    node_id: "{{ powerflex_storage_node_id | default('') }}"
-    node_ips: "{{ powerflex_storage_node_ips | default([]) }}"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    storage_node_id: "{{ powerflex_storage_node_id | default('') }}"
+    node_ip_list: "{{ powerflex_storage_node_ips | default([]) }}"
+    node_ip_state: "present-in-node"
     state: present
-  register: storage_node_result
+  register: powerflex_provisioning_v2_storage_node_result
   when:
     - powerflex_storage_node_id | default('', true) | length > 0
+    - powerflex_storage_node_ips | default([], true) | length > 0
 
 - name: Rename storage node
   dellemc.powerflex.storage_node:
-    node_id: "{{ powerflex_storage_node_id | default('') }}"
-    new_name: "{{ powerflex_storage_node_new_name | default('') }}"
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    storage_node_id: "{{ powerflex_storage_node_id | default('') }}"
+    storage_node_new_name: "{{ powerflex_storage_node_new_name | default('') }}"
     state: present
   when:
-    - storage_node_result.changed | default(false)
+    - powerflex_storage_node_id | default('', true) | length > 0
     - powerflex_storage_node_rename | default(false)
