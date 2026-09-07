@@ -1,0 +1,49 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+- name: Converge - powerflex_system_v2 queries
+  hosts: localhost
+  gather_facts: false
+  vars:
+    powerflex_gateway_hostname: "{{ lookup('env', 'POWERFLEX_GATEWAY') | default('10.0.0.1', true) }}"
+    powerflex_gateway_username: "{{ lookup('env', 'POWERFLEX_USERNAME') | default('admin', true) }}"
+    powerflex_gateway_password: "{{ lookup('env', 'POWERFLEX_PASSWORD') | default('password', true) }}"
+    powerflex_gateway_validate_certs: false
+    powerflex_gateway_port: 443
+
+  tasks:
+    - name: Include powerflex_common_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_common_v2
+
+    - name: Include powerflex_system_v2 role — queries only
+      ansible.builtin.include_role:
+        name: powerflex_system_v2
+      vars:
+        powerflex_system_query: true
+        powerflex_system_validate: false
+        powerflex_system_diagnostics: false
+
+    - name: Include powerflex_system_v2 role — validation
+      ansible.builtin.include_role:
+        name: powerflex_system_v2
+      vars:
+        powerflex_system_query: false
+        powerflex_system_validate: true
+        powerflex_system_diagnostics: false
+        powerflex_validate_mdm_cluster: true
+        powerflex_validate_protection_domains: true
+        powerflex_validate_storage_pools: true
+        powerflex_validate_volumes: true
+
+    - name: Include powerflex_system_v2 role — diagnostics
+      ansible.builtin.include_role:
+        name: powerflex_system_v2
+      vars:
+        powerflex_system_query: false
+        powerflex_system_validate: false
+        powerflex_system_diagnostics: true
+        powerflex_diag_system_health: true
+        powerflex_diag_capacity_report: true
+        powerflex_diag_snapshot_report: true
