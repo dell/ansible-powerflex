@@ -1,14 +1,18 @@
 ---
 # Tundra test environment configuration
-# Copy this file to env.yml and fill in the actual password
-
-# PowerFlex Gateway (Tundra lab)
+# PowerFlex Gateway (Tundra lab - Oslo Gen2)
 powerflex_gateway_hostname: "10.247.39.78"
 powerflex_gateway_username: "admin"
-powerflex_gateway_password: "CHANGE_ME"  # Set actual Tundra password here
+powerflex_gateway_password: "Password123!"
 powerflex_gateway_port: 443
 powerflex_gateway_validate_certs: false
 powerflex_gateway_timeout: 30
 
-# Vault password reference (for use with ansible-vault)
-vault_powerflex_password: "{{ vault_powerflex_password }}"
+# Existing Tundra resources for testing
+powerflex_storage_pool_name: "tundra_SP1"
+powerflex_storage_pool_protection_domain_name: "tundra_PD1"
+powerflex_storage_pool_device_group_name: "tundra_DG1"
+powerflex_device_group_name: "ansible_test_dg"
+powerflex_device_group_protection_domain_name: "tundra_PD1"
+powerflex_device_group_id: "802ded0100000000"
+powerflex_device_node_id: "496c99a200000000"
