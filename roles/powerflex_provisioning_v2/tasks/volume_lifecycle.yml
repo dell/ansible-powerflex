@@ -33,7 +33,7 @@
     state: present
   when:
     - powerflex_provisioning_v2_volume_create_result.changed | default(false)
-    - powerflex_volume_size_gb | default(0) > 0
+    - (powerflex_volume_size_gb | default(0) | int) > 0
 
 - name: Rename volume
   dellemc.powerflex.volume_v2:

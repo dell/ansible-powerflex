@@ -34,3 +34,8 @@ roles/powerflex_common_v2/molecule/gen2_detection/converge.yml var-naming[no-rol
 roles/powerflex_provisioning_v2/molecule/volume_snapshot/converge.yml var-naming[no-role-prefix]
 roles/powerflex_provisioning_v2/molecule/infrastructure/converge.yml var-naming[no-role-prefix]
 roles/powerflex_common_v2/tasks/main.yml var-naming[no-role-prefix]
+playbooks/roles/powerflex_provisioning_v2_volumes.yml var-naming[no-role-prefix]
+playbooks/roles/powerflex_provisioning_v2_snapshots.yml var-naming[no-role-prefix]
+playbooks/roles/powerflex_provisioning_v2_infrastructure.yml var-naming[no-role-prefix]
+playbooks/roles/powerflex_provisioning_v2_devices.yml var-naming[no-role-prefix]
+playbooks/roles/powerflex_provisioning_v2_tundra.yml var-naming[no-role-prefix]

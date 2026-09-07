@@ -33,7 +33,7 @@
   when:
     - powerflex_storage_pool_name | default('', true) | length > 0
     - powerflex_storage_pool_protection_domain_name | default('', true) | length > 0
-    - powerflex_provision_infrastructure | default(true)
+    - powerflex_provision_infrastructure | default(true) | bool
 
 - name: Modify storage pool thresholds
   dellemc.powerflex.storagepool_v2:
@@ -82,7 +82,7 @@
   when:
     - powerflex_device_group_name | default('', true) | length > 0
     - powerflex_device_group_protection_domain_name | default('', true) | length > 0
-    - powerflex_provision_infrastructure | default(true)
+    - powerflex_provision_infrastructure | default(true) | bool
 
 - name: Query device group capacity
   dellemc.powerflex.device_group:
@@ -128,7 +128,7 @@
     - powerflex_device_group_id | default('', true) | length > 0
     - powerflex_device_node_id | default('', true) | length > 0
     - powerflex_device_current_pathname | default('', true) | length > 0
-    - powerflex_provision_infrastructure | default(true)
+    - powerflex_provision_infrastructure | default(true) | bool
 
 - name: Clear device error (day-2 maintenance)
   dellemc.powerflex.device_v2:
