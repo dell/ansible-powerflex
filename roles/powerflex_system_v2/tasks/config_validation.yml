@@ -1,0 +1,190 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Configuration validation tasks (AC8)
+
+- name: Query system info for validation
+  dellemc.powerflex.info_v2:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    gather_subset:
+      - vol
+      - protection_domain
+      - storage_pool
+      - storage_node
+  register: powerflex_system_v2_validation_info
+  when: >-
+    powerflex_system_v2_validate_mdm_cluster | default(false) | bool or
+    powerflex_system_v2_validate_protection_domains | default(false) | bool or
+    powerflex_system_v2_validate_storage_pools | default(false) | bool or
+    powerflex_system_v2_validate_volumes | default(false) | bool
+
+# --- MDM Cluster Validation ---
+
+- name: Validate MDM cluster configuration
+  when: powerflex_system_v2_validate_mdm_cluster | default(false) | bool
+  block:
+    - name: Check MDM cluster state is normal
+      ansible.builtin.assert:
+        that:
+          - powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterState == "ClusteredNormal"
+        fail_msg: >-
+          MDM cluster state is
+          '{{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterState }}'
+          — expected 'ClusteredNormal'. Check MDM health.
+        success_msg: "MDM cluster state: ClusteredNormal"
+
+    - name: Check MDM cluster mode
+      ansible.builtin.assert:
+        that:
+          - >-
+            powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterMode
+            in ["ThreeNodes", "FiveNodes"]
+        fail_msg: >-
+          MDM cluster mode
+          '{{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterMode }}'
+          is not supported. Expected ThreeNodes or FiveNodes.
+        success_msg: >-
+          MDM cluster mode:
+          {{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterMode }}
+
+    - name: Check MDM good nodes count
+      ansible.builtin.assert:
+        that:
+          - >-
+            (powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum | int) >= 3
+        fail_msg: >-
+          MDM good nodes count is
+          {{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum }}
+          — minimum 3 required for quorum.
+        success_msg: >-
+          MDM good nodes:
+          {{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum }}
+
+    - name: Set MDM validation result
+      ansible.builtin.set_fact:
+        powerflex_system_v2_mdm_valid: true
+  rescue:
+    - name: Set MDM validation failed
+      ansible.builtin.set_fact:
+        powerflex_system_v2_mdm_valid: false
+    - name: Report MDM validation failure
+      ansible.builtin.debug:
+        msg: "WARNING: MDM cluster validation failed. Review cluster health."
+
+# --- Protection Domain Validation ---
+
+- name: Validate protection domains
+  when: powerflex_system_v2_validate_protection_domains | default(false) | bool
+  block:
+    - name: Check protection domains exist
+      ansible.builtin.assert:
+        that:
+          - (powerflex_system_v2_validation_info.Protection_Domains | default([]) | length) > 0
+        fail_msg: "No protection domains found on the system."
+        success_msg: >-
+          Found {{ powerflex_system_v2_validation_info.Protection_Domains | length }}
+          protection domain(s)
+
+    - name: Check protection domain states
+      ansible.builtin.assert:
+        that:
+          - item.protectionDomainState == "Active"
+        fail_msg: >-
+          Protection domain '{{ item.name }}' ({{ item.id }}) state is
+          '{{ item.protectionDomainState }}' — expected 'Active'.
+        success_msg: "Protection domain '{{ item.name }}' is Active"
+      loop: "{{ powerflex_system_v2_validation_info.Protection_Domains }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Set PD validation result
+      ansible.builtin.set_fact:
+        powerflex_system_v2_pd_valid: true
+  rescue:
+    - name: Set PD validation failed
+      ansible.builtin.set_fact:
+        powerflex_system_v2_pd_valid: false
+    - name: Report PD validation failure
+      ansible.builtin.debug:
+        msg: "WARNING: Protection domain validation failed."
+
+# --- Storage Pool Validation ---
+
+- name: Validate storage pools
+  when: powerflex_system_v2_validate_storage_pools | default(false) | bool
+  block:
+    - name: Check storage pools exist
+      ansible.builtin.assert:
+        that:
+          - (powerflex_system_v2_validation_info.Storage_Pools | default([]) | length) > 0
+        fail_msg: "No storage pools found on the system."
+        success_msg: >-
+          Found {{ powerflex_system_v2_validation_info.Storage_Pools | length }}
+          storage pool(s)
+
+    - name: Set SP validation result
+      ansible.builtin.set_fact:
+        powerflex_system_v2_sp_valid: true
+  rescue:
+    - name: Set SP validation failed
+      ansible.builtin.set_fact:
+        powerflex_system_v2_sp_valid: false
+    - name: Report SP validation failure
+      ansible.builtin.debug:
+        msg: "WARNING: Storage pool validation failed."
+
+# --- Volume Validation ---
+
+- name: Validate volumes
+  when: powerflex_system_v2_validate_volumes | default(false) | bool
+  block:
+    - name: Check volumes exist
+      ansible.builtin.assert:
+        that:
+          - (powerflex_system_v2_validation_info.Volumes | default([]) | length) > 0
+        fail_msg: "No volumes found on the system."
+        success_msg: >-
+          Found {{ powerflex_system_v2_validation_info.Volumes | length }} volume(s)
+
+    - name: Set volume validation result
+      ansible.builtin.set_fact:
+        powerflex_system_v2_vol_valid: true
+  rescue:
+    - name: Set volume validation failed
+      ansible.builtin.set_fact:
+        powerflex_system_v2_vol_valid: false
+    - name: Report volume validation failure
+      ansible.builtin.debug:
+        msg: "WARNING: Volume validation failed."
+
+# --- Validation Summary ---
+
+- name: Display validation summary
+  vars:
+    mdm_status: >-
+      {{ 'PASS' if (powerflex_system_v2_mdm_valid | default(false))
+         else ('FAIL' if (powerflex_system_v2_validate_mdm_cluster | default(false) | bool)
+         else 'SKIPPED') }}
+    pd_status: >-
+      {{ 'PASS' if (powerflex_system_v2_pd_valid | default(false))
+         else ('FAIL' if (powerflex_system_v2_validate_protection_domains | default(false) | bool)
+         else 'SKIPPED') }}
+    sp_status: >-
+      {{ 'PASS' if (powerflex_system_v2_sp_valid | default(false))
+         else ('FAIL' if (powerflex_system_v2_validate_storage_pools | default(false) | bool)
+         else 'SKIPPED') }}
+    vol_status: >-
+      {{ 'PASS' if (powerflex_system_v2_vol_valid | default(false))
+         else ('FAIL' if (powerflex_system_v2_validate_volumes | default(false) | bool)
+         else 'SKIPPED') }}
+  ansible.builtin.debug:
+    msg:
+      mdm_cluster: "{{ mdm_status }}"
+      protection_domains: "{{ pd_status }}"
+      storage_pools: "{{ sp_status }}"
+      volumes: "{{ vol_status }}"

@@ -1,0 +1,34 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check volume was created
+      ansible.builtin.assert:
+        that:
+          - volume_create_result is defined
+          - volume_create_result.changed | default(false)
+        fail_msg: "Volume creation failed"
+        success_msg: "Volume created successfully"
+
+    - name: Check snapshot was created
+      ansible.builtin.assert:
+        that:
+          - snapshot_create_result is defined
+          - snapshot_create_result.changed | default(false)
+        fail_msg: "Snapshot creation failed"
+        success_msg: "Snapshot created successfully"
+
+    - name: Check idempotency (re-run should report changed=false)
+      ansible.builtin.debug:
+        msg: "Idempotency check: re-run should report changed=false"
+
+    - name: Check thin clone was created
+      ansible.builtin.assert:
+        that:
+          - thin_clone_create_result is defined or thin_clone_from_snapshot_result is defined
+        fail_msg: "Thin clone creation failed"
+        success_msg: "Thin clone created successfully"

@@ -1,0 +1,40 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Example playbook demonstrating powerflex_provisioning_v2 snapshot and thin clone workflows
+# This playbook creates snapshots with retention and thin clones
+
+- name: PowerFlex Gen2 Snapshot and Thin Clone Management
+  hosts: localhost
+  gather_facts: false
+  vars:
+    powerflex_gateway_hostname: "192.168.1.100"
+    powerflex_gateway_username: "admin"
+    powerflex_gateway_password: "your_password"
+    powerflex_gateway_port: 443
+    powerflex_gateway_validate_certs: true
+    powerflex_gateway_timeout: 30
+
+    # Snapshot parameters
+    powerflex_snapshot_name: "test_snapshot"
+    # powerflex_snapshot_volume_id: "volume_id_here"  # Set to actual volume ID
+    powerflex_snapshot_retention_days: 7
+
+    # Thin clone parameters (uncomment and set actual IDs)
+    # powerflex_thin_clone_name: "test_thin_clone"
+    # powerflex_thin_clone_source_volume_id: "volume_id_here"
+    # powerflex_thin_clone_source_snapshot_id: "snapshot_id_here"
+
+  tasks:
+    - name: Run powerflex_common_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_common_v2
+
+    - name: Run powerflex_provisioning_v2 role for snapshots
+      ansible.builtin.include_role:
+        name: powerflex_provisioning_v2
+      vars:
+        powerflex_provisioning_v2_provision_volumes: false
+        powerflex_provision_snapshots: true
+        powerflex_provision_infrastructure: false

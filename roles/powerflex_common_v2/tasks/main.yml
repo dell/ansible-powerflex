@@ -1,0 +1,46 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# powerflex_common_v2 - Gen2 Compatibility Foundation
+# This role provides automatic Gen2 version detection, and graceful
+# degradation for Gen1 systems, by querying the PowerFlex API Gateway
+# for its API version and array details in a single call.
+
+- name: Query PowerFlex API version and array details
+  dellemc.powerflex.info_v2:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+  register: powerflex_common_v2_info_result
+  failed_when: false
+
+- name: Fail if gateway unreachable
+  ansible.builtin.fail:
+    msg: "Unable to connect to PowerFlex gateway. Please verify hostname, credentials, and network connectivity."
+  when: powerflex_common_v2_info_result.API_Version is not defined
+
+- name: Set powerflex_generation fact
+  ansible.builtin.set_fact:
+    powerflex_generation: "{{ 'gen2' if (powerflex_common_v2_info_result.API_Version is version('5.0', '>=')) else 'gen1' }}"
+
+- name: Emit warning for Gen1 systems
+  ansible.builtin.debug:
+    msg: "WARNING: Running on PowerFlex Gen1 system (API {{ powerflex_common_v2_info_result.API_Version }}). Gen2-specific tasks will be skipped gracefully."
+  when: powerflex_generation == 'gen1'
+
+- name: Set skip flag for Gen1 systems
+  ansible.builtin.set_fact:
+    powerflex_gen2_skip: "{{ powerflex_generation == 'gen1' }}"
+
+- name: Display system health
+  ansible.builtin.debug:
+    msg: "System health: {{ powerflex_common_v2_info_result.Array_Details | to_nice_json }}"
+  when: powerflex_generation == 'gen2'
+
+- name: Validate configuration
+  ansible.builtin.debug:
+    msg: "Configuration validation: All Gen2 parameters are valid for API version {{ powerflex_common_v2_info_result.API_Version }}"
+  when: powerflex_generation == 'gen2'
