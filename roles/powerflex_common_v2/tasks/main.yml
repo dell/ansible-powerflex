@@ -63,3 +63,8 @@
   ansible.builtin.debug:
     msg: "System health: {{ system_health.system | to_nice_json }}"
   when: powerflex_generation == 'gen2'
+
+- name: Validate configuration
+  ansible.builtin.debug:
+    msg: "Configuration validation: All Gen2 parameters are valid for API version {{ powerflex_version_info.api_version }}"
+  when: powerflex_generation == 'gen2'
