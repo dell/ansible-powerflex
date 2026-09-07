@@ -18,7 +18,7 @@
       - protection_domain
       - storage_pool
       - storage_node
-  register: powerflex_system_v2_system_v2_diag_info
+  register: powerflex_system_v2_diag_info
   when: >-
     powerflex_system_v2_diag_system_health | default(false) | bool or
     powerflex_system_v2_diag_capacity_report | default(false) | bool or
@@ -26,68 +26,68 @@
 
 - name: Generate system health report
   ansible.builtin.set_fact:
-    powerflex_system_v2_system_v2_health_report:
-      system_id: "{{ powerflex_system_v2_system_v2_diag_info.Array_Details[0].id | default('N/A') }}"
-      api_version: "{{ powerflex_system_v2_system_v2_diag_info.API_Version | default('N/A') }}"
+    powerflex_system_v2_health_report:
+      system_id: "{{ powerflex_system_v2_diag_info.Array_Details[0].id | default('N/A') }}"
+      api_version: "{{ powerflex_system_v2_diag_info.API_Version | default('N/A') }}"
       mdm_cluster:
-        state: "{{ powerflex_system_v2_system_v2_diag_info.Array_Details[0].mdmCluster.clusterState | default('N/A') }}"
-        mode: "{{ powerflex_system_v2_system_v2_diag_info.Array_Details[0].mdmCluster.clusterMode | default('N/A') }}"
-        good_nodes: "{{ powerflex_system_v2_system_v2_diag_info.Array_Details[0].mdmCluster.goodNodesNum | default(0) }}"
-        good_replicas: "{{ powerflex_system_v2_system_v2_diag_info.Array_Details[0].mdmCluster.goodReplicasNum | default(0) }}"
+        state: "{{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster.clusterState | default('N/A') }}"
+        mode: "{{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster.clusterMode | default('N/A') }}"
+        good_nodes: "{{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster.goodNodesNum | default(0) }}"
+        good_replicas: "{{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster.goodReplicasNum | default(0) }}"
       capacity:
-        max_capacity_gb: "{{ powerflex_system_v2_system_v2_diag_info.Array_Details[0].maxCapacityInGb | default('N/A') }}"
-        days_installed: "{{ powerflex_system_v2_system_v2_diag_info.Array_Details[0].daysInstalled | default('N/A') }}"
-      protection_domain_count: "{{ powerflex_system_v2_system_v2_diag_info.Protection_Domains | default([]) | length }}"
-      storage_pool_count: "{{ powerflex_system_v2_system_v2_diag_info.Storage_Pools | default([]) | length }}"
-      volume_count: "{{ powerflex_system_v2_system_v2_diag_info.Volumes | default([]) | length }}"
-      storage_node_count: "{{ powerflex_system_v2_system_v2_diag_info.StorageNodes | default([]) | length }}"
+        max_capacity_gb: "{{ powerflex_system_v2_diag_info.Array_Details[0].maxCapacityInGb | default('N/A') }}"
+        days_installed: "{{ powerflex_system_v2_diag_info.Array_Details[0].daysInstalled | default('N/A') }}"
+      protection_domain_count: "{{ powerflex_system_v2_diag_info.Protection_Domains | default([]) | length }}"
+      storage_pool_count: "{{ powerflex_system_v2_diag_info.Storage_Pools | default([]) | length }}"
+      volume_count: "{{ powerflex_system_v2_diag_info.Volumes | default([]) | length }}"
+      storage_node_count: "{{ powerflex_system_v2_diag_info.StorageNodes | default([]) | length }}"
   when: powerflex_system_v2_diag_system_health | default(false) | bool
 
 - name: Display system health report
   ansible.builtin.debug:
-    var: powerflex_system_v2_system_v2_health_report
+    var: powerflex_system_v2_health_report
   when: powerflex_system_v2_diag_system_health | default(false) | bool
 
 # --- Capacity Utilization Report ---
 
 - name: Generate capacity report
   ansible.builtin.set_fact:
-    powerflex_system_v2_system_v2_capacity_report:
-      system_max_capacity_gb: "{{ powerflex_system_v2_system_v2_diag_info.Array_Details.maxCapacityInGb | default('N/A') }}"
+    powerflex_system_v2_capacity_report:
+      system_max_capacity_gb: "{{ powerflex_system_v2_diag_info.Array_Details.maxCapacityInGb | default('N/A') }}"
       protection_domains: >-
-        {{ powerflex_system_v2_system_v2_diag_info.Protection_Domains | default([]) |
+        {{ powerflex_system_v2_diag_info.Protection_Domains | default([]) |
            map(attribute='name') | list }}
       storage_pools: >-
-        {{ powerflex_system_v2_system_v2_diag_info.Storage_Pools | default([]) |
+        {{ powerflex_system_v2_diag_info.Storage_Pools | default([]) |
            map('combine', {}) |
            map(attribute='name') | list }}
-      storage_pool_count: "{{ powerflex_system_v2_system_v2_diag_info.Storage_Pools | default([]) | length }}"
-      volume_count: "{{ powerflex_system_v2_system_v2_diag_info.Volumes | default([]) | length }}"
-      storage_node_count: "{{ powerflex_system_v2_system_v2_diag_info.StorageNodes | default([]) | length }}"
+      storage_pool_count: "{{ powerflex_system_v2_diag_info.Storage_Pools | default([]) | length }}"
+      volume_count: "{{ powerflex_system_v2_diag_info.Volumes | default([]) | length }}"
+      storage_node_count: "{{ powerflex_system_v2_diag_info.StorageNodes | default([]) | length }}"
   when: powerflex_system_v2_diag_capacity_report | default(false) | bool
 
 - name: Display capacity report
   ansible.builtin.debug:
-    var: powerflex_system_v2_system_v2_capacity_report
+    var: powerflex_system_v2_capacity_report
   when: powerflex_system_v2_diag_capacity_report | default(false) | bool
 
 # --- Snapshot Utilization Report ---
 
 - name: Generate snapshot report
   ansible.builtin.set_fact:
-    powerflex_system_v2_system_v2_snapshot_report:
-      total_volumes: "{{ powerflex_system_v2_system_v2_diag_info.Volumes | default([]) | length }}"
+    powerflex_system_v2_snapshot_report:
+      total_volumes: "{{ powerflex_system_v2_diag_info.Volumes | default([]) | length }}"
       snapshot_volumes: >-
-        {{ powerflex_system_v2_system_v2_diag_info.Volumes | default([]) |
+        {{ powerflex_system_v2_diag_info.Volumes | default([]) |
            selectattr('volumeType', 'equalto', 'Snapshot') | list | length }}
       regular_volumes: >-
-        {{ powerflex_system_v2_system_v2_diag_info.Volumes | default([]) |
+        {{ powerflex_system_v2_diag_info.Volumes | default([]) |
            selectattr('volumeType', 'equalto', 'ThinProvisioned') | list | length }}
   when: powerflex_system_v2_diag_snapshot_report | default(false) | bool
 
 - name: Display snapshot report
   ansible.builtin.debug:
-    var: powerflex_system_v2_system_v2_snapshot_report
+    var: powerflex_system_v2_snapshot_report
   when: powerflex_system_v2_diag_snapshot_report | default(false) | bool
 
 # --- Overall Diagnostics Summary ---

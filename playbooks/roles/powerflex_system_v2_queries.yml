@@ -2,7 +2,7 @@
 # Copyright: (c) 2026, Dell Technologies
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# Example playbook demonstrating powerflex_system_v2_system_v2 system information queries
+# Example playbook demonstrating powerflex_system_v2 system information queries
 # Queries system details, protection domains, storage pools, volumes, etc.
 
 - name: PowerFlex Gen2 System Information Queries
@@ -34,9 +34,9 @@
       ansible.builtin.include_role:
         name: powerflex_common_v2
 
-    - name: Run powerflex_system_v2_system_v2 role for queries
+    - name: Run powerflex_system_v2 role for queries
       ansible.builtin.include_role:
-        name: powerflex_system_v2_system_v2
+        name: powerflex_system_v2
       vars:
         powerflex_system_v2_system_query: true
         powerflex_system_v2_system_validate: false
