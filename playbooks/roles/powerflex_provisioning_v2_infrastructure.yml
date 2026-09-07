@@ -1,0 +1,45 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Example playbook demonstrating powerflex_provisioning_v2 infrastructure provisioning
+# This playbook creates storage pools with Erasure Coding and device groups
+
+- name: PowerFlex Gen2 Infrastructure Provisioning
+  hosts: localhost
+  gather_facts: false
+  vars:
+    powerflex_gateway_hostname: "192.168.1.100"
+    powerflex_gateway_username: "admin"
+    powerflex_gateway_password: "your_password"
+    powerflex_gateway_port: 443
+    powerflex_gateway_validate_certs: true
+    powerflex_gateway_timeout: 30
+
+    # Storage pool parameters
+    powerflex_storage_pool_name: "gen2_pool"
+    powerflex_storage_pool_protection_domain_name: "domain1"
+    powerflex_storage_pool_device_group_name: "gen2_dg"
+    powerflex_storage_pool_protection_scheme: "TwoPlusTwo"
+    powerflex_storage_pool_use_all_capacity: false
+    powerflex_storage_pool_physical_size_gb: 1000
+
+    # Device group parameters
+    powerflex_device_group_name: "gen2_dg"
+    powerflex_device_group_protection_domain_name: "domain1"
+    powerflex_device_group_media_type: "SSD"
+    powerflex_device_group_spare_node_count: 1
+    powerflex_device_group_spare_device_count: 1
+
+  tasks:
+    - name: Run powerflex_common_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_common_v2
+
+    - name: Run powerflex_provisioning_v2 role for infrastructure
+      ansible.builtin.include_role:
+        name: powerflex_provisioning_v2
+      vars:
+        powerflex_provision_volumes: false
+        powerflex_provision_snapshots: false
+        powerflex_provision_infrastructure: true
