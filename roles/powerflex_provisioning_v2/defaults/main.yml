@@ -21,25 +21,47 @@ powerflex_volume_name: ""
 powerflex_volume_size_gb: 100
 powerflex_volume_storage_pool_name: ""
 powerflex_volume_protection_domain_name: ""
+powerflex_volume_sdc_id: ""
+powerflex_volume_rename: false
+powerflex_volume_unmap: false
+powerflex_volume_delete: false
 
 # Snapshot parameters
 powerflex_snapshot_name: ""
+powerflex_snapshot_volume_id: ""
 powerflex_snapshot_retention_days: 7
+powerflex_snapshot_rename: false
+powerflex_snapshot_delete: false
 
 # Thin clone parameters
 powerflex_thin_clone_name: ""
+powerflex_thin_clone_source_volume_id: ""
+powerflex_thin_clone_source_snapshot_id: ""
 
 # Storage pool parameters
 powerflex_storage_pool_name: ""
+powerflex_storage_pool_protection_domain_name: ""
+powerflex_storage_pool_device_group_name: ""
 powerflex_storage_pool_protection_scheme: "TwoPlusTwo"
 powerflex_storage_pool_use_all_capacity: false
 powerflex_storage_pool_physical_size_gb: 1000
+powerflex_storage_pool_high_watermark: 80
+powerflex_storage_pool_low_watermark: 70
 
 # Device group parameters
 powerflex_device_group_name: ""
 powerflex_device_group_protection_domain_name: ""
 powerflex_device_group_media_type: "SSD"
+powerflex_device_group_spare_node_count: 1
+powerflex_device_group_spare_device_count: 1
 
 # Device parameters
 powerflex_device_group_id: ""
 powerflex_device_node_id: ""
+powerflex_device_clear_error: false
+powerflex_device_reactivate: false
+
+# Storage node parameters
+powerflex_storage_node_id: ""
+powerflex_storage_node_ips: []
+powerflex_storage_node_new_name: ""
