@@ -6,7 +6,7 @@ galaxy_info:
   author: Dell Technologies
   description: Gen2 system information, validation, and diagnostics for Dell PowerFlex Ansible collection
   company: Dell Technologies
-  role_name: powerflex_system_v2_system_v2
+  role_name: powerflex_system_v2
   namespace: dellemc
   license: GPL-3.0-only
 

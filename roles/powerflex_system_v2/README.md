@@ -1,4 +1,4 @@
-# powerflex_system_v2_system_v2
+# powerflex_system_v2
 
 Gen2 system information, configuration validation, and diagnostics role for Dell PowerFlex 5.x environments.
 
@@ -59,7 +59,7 @@ Enable specific reports: `powerflex_system_v2_diag_system_health`, `powerflex_sy
 
     - name: Run system queries
       ansible.builtin.include_role:
-        name: powerflex_system_v2_system_v2
+        name: powerflex_system_v2
       vars:
         powerflex_system_v2_system_query: true
         powerflex_system_v2_system_gather_subset:

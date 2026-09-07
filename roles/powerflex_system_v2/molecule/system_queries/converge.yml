@@ -2,7 +2,7 @@
 # Copyright: (c) 2026, Dell Technologies
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-- name: Converge - powerflex_system_v2_system_v2 queries
+- name: Converge - powerflex_system_v2 queries
   hosts: localhost
   gather_facts: false
   vars:
@@ -17,17 +17,17 @@
       ansible.builtin.include_role:
         name: powerflex_common_v2
 
-    - name: Include powerflex_system_v2_system_v2 role — queries only
+    - name: Include powerflex_system_v2 role — queries only
       ansible.builtin.include_role:
-        name: powerflex_system_v2_system_v2
+        name: powerflex_system_v2
       vars:
         powerflex_system_v2_system_query: true
         powerflex_system_v2_system_validate: false
         powerflex_system_v2_system_diagnostics: false
 
-    - name: Include powerflex_system_v2_system_v2 role — validation
+    - name: Include powerflex_system_v2 role — validation
       ansible.builtin.include_role:
-        name: powerflex_system_v2_system_v2
+        name: powerflex_system_v2
       vars:
         powerflex_system_v2_system_query: false
         powerflex_system_v2_system_validate: true
@@ -37,9 +37,9 @@
         powerflex_system_v2_validate_storage_pools: true
         powerflex_system_v2_validate_volumes: true
 
-    - name: Include powerflex_system_v2_system_v2 role — diagnostics
+    - name: Include powerflex_system_v2 role — diagnostics
       ansible.builtin.include_role:
-        name: powerflex_system_v2_system_v2
+        name: powerflex_system_v2
       vars:
         powerflex_system_v2_system_query: false
         powerflex_system_v2_system_validate: false
