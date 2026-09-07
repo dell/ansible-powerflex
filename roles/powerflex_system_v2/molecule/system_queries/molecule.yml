@@ -1,0 +1,14 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+dependency:
+  name: galaxy
+driver:
+  name: default
+platforms:
+  - name: instance
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

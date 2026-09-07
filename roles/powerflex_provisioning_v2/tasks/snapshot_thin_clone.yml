@@ -1,0 +1,88 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Snapshot and thin clone workflows (AC3)
+
+- name: Create snapshot with retention
+  dellemc.powerflex.snapshot_v2:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    snapshot_name: "{{ powerflex_snapshot_name }}"
+    vol_id: "{{ powerflex_snapshot_volume_id | default('') }}"
+    desired_retention: "{{ powerflex_snapshot_retention_days }}"
+    retention_unit: "days"
+    state: present
+  register: powerflex_snapshot_create_result
+  when:
+    - powerflex_snapshot_name | default('', true) | length > 0
+    - powerflex_snapshot_volume_id | default('', true) | length > 0
+
+- name: Rename snapshot
+  dellemc.powerflex.snapshot_v2:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    snapshot_id: "{{ powerflex_snapshot_create_result.snapshot_details.id | default('') }}"
+    snapshot_new_name: "{{ powerflex_snapshot_name }}_renamed"
+    state: present
+  when:
+    - powerflex_snapshot_create_result.changed | default(false)
+    - powerflex_snapshot_rename | default(false)
+
+- name: Delete snapshot
+  dellemc.powerflex.snapshot_v2:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    snapshot_id: "{{ powerflex_snapshot_create_result.snapshot_details.id | default('') }}"
+    state: absent
+  when:
+    - powerflex_snapshot_create_result.changed | default(false)
+    - powerflex_snapshot_delete | default(false)
+  ignore_errors: true
+  register: powerflex_snapshot_delete_result
+
+- name: Warn if snapshot deletion failed (retention-locked)
+  ansible.builtin.debug:
+    msg: "WARNING: Snapshot deletion failed - likely retention-locked. {{ powerflex_snapshot_delete_result.msg | default('') }}"
+  when:
+    - powerflex_snapshot_delete_result.failed | default(false)
+    - powerflex_snapshot_delete_result.msg is defined
+
+- name: Create thin clone from volume
+  dellemc.powerflex.thin_clone:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    new_clone_name: "{{ powerflex_thin_clone_name }}"
+    from_volume_id: "{{ powerflex_thin_clone_source_volume_id | default('') }}"
+    state: present
+  register: powerflex_thin_clone_create_result
+  when:
+    - powerflex_thin_clone_name | default('', true) | length > 0
+    - powerflex_thin_clone_source_volume_id | default('', true) | length > 0
+
+- name: Create thin clone from snapshot
+  dellemc.powerflex.thin_clone:
+    hostname: "{{ powerflex_gateway_hostname }}"
+    username: "{{ powerflex_gateway_username }}"
+    password: "{{ powerflex_gateway_password }}"
+    validate_certs: "{{ powerflex_gateway_validate_certs }}"
+    port: "{{ powerflex_gateway_port }}"
+    new_clone_name: "{{ powerflex_thin_clone_name }}"
+    from_snapshot_id: "{{ powerflex_thin_clone_source_snapshot_id | default('') }}"
+    state: present
+  register: powerflex_thin_clone_from_snapshot_result
+  when:
+    - powerflex_thin_clone_name | default('', true) | length > 0
+    - powerflex_thin_clone_source_snapshot_id | default('', true) | length > 0

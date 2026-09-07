@@ -1,0 +1,25 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+- name: Converge
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Include powerflex_common_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_common_v2
+      vars:
+        powerflex_gateway_hostname: "192.168.1.100"
+        powerflex_gateway_username: "admin"
+        powerflex_gateway_password: "test_password"
+
+    - name: Include powerflex_provisioning_v2 role
+      ansible.builtin.include_role:
+        name: powerflex_provisioning_v2
+      vars:
+        powerflex_volume_name: "test_volume"
+        powerflex_volume_size_gb: 10
+        powerflex_volume_storage_pool_name: "pool1"
+        powerflex_snapshot_name: "test_snapshot"
+        powerflex_snapshot_retention_days: 7

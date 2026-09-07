@@ -1,0 +1,34 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+galaxy_info:
+  author: Dell Technologies
+  description: Gen2 compatibility foundation for Dell PowerFlex Ansible collection
+  company: Dell Technologies
+  role_name: powerflex_common_v2
+  namespace: dellemc
+  license: GPL-3.0-only
+
+  min_ansible_version: "2.14.0"
+  platforms:
+    - name: EL
+      versions:
+        - "9"
+        - "8"
+    - name: Ubuntu
+      versions:
+        - jammy
+    - name: SLES
+      versions:
+        - "15SP3"
+        - "15SP4"
+
+  galaxy_tags:
+    - powerflex
+    - storage
+    - dell
+    - gen2
+    - compatibility
+
+dependencies: []

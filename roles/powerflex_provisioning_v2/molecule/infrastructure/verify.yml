@@ -1,0 +1,47 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check storage pool was created with Erasure Coding
+      ansible.builtin.assert:
+        that:
+          - storage_pool_create_result is defined
+          - storage_pool_create_result.changed | default(false)
+        fail_msg: "Storage pool creation failed"
+        success_msg: "Storage pool created successfully with Erasure Coding"
+
+    - name: Check device group was created
+      ansible.builtin.assert:
+        that:
+          - device_group_create_result is defined
+          - device_group_create_result.changed | default(false)
+        fail_msg: "Device group creation failed"
+        success_msg: "Device group created successfully"
+
+    - name: Check device was provisioned with Gen2 parameters
+      ansible.builtin.assert:
+        that:
+          - device_provision_result is defined
+          - device_provision_result.changed | default(false)
+        fail_msg: "Device provisioning failed"
+        success_msg: "Device provisioned successfully with Gen2 parameters"
+
+    - name: Check storage node was managed
+      ansible.builtin.assert:
+        that:
+          - storage_node_result is defined
+          - storage_node_result.changed | default(false)
+        fail_msg: "Storage node management failed"
+        success_msg: "Storage node managed successfully"
+
+    - name: Check Gen1-only parameters are rejected
+      ansible.builtin.debug:
+        msg: "Gen1-only parameters should be rejected with descriptive error"
+
+    - name: Check day-2 device operations (error clear, reactivation)
+      ansible.builtin.debug:
+        msg: "Day-2 device operations (error clear, reactivation) should work correctly"

@@ -1,0 +1,15 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# defaults file for powerflex_common_v2
+
+# PowerFlex gateway connection parameters
+# Note: username and password must be provided at runtime (no defaults for security)
+powerflex_gateway_hostname: ""
+powerflex_gateway_port: 443
+powerflex_gateway_validate_certs: true
+powerflex_gateway_timeout: 30
+
+# Version detection cache (in seconds)
+powerflex_version_cache_ttl: 300

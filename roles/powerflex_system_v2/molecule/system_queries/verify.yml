@@ -1,0 +1,25 @@
+---
+# Copyright: (c) 2026, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+- name: Verify - powerflex_system_v2
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Verify system info was queried
+      ansible.builtin.assert:
+        that:
+          - powerflex_system_v2_info_result is defined
+          - powerflex_system_v2_array is defined
+          - powerflex_system_v2_array.id is defined
+
+    - name: Verify health report was generated
+      ansible.builtin.assert:
+        that:
+          - powerflex_system_v2_health_report is defined
+          - powerflex_system_v2_health_report.system_id is defined
+
+    - name: Verify MDM validation ran
+      ansible.builtin.assert:
+        that:
+          - powerflex_system_v2_mdm_valid is defined
