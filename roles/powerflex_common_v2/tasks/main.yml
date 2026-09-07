@@ -23,10 +23,22 @@
     msg: "WARNING: Running on PowerFlex Gen1 system (API {{ powerflex_version_info.api_version }}). Gen2-specific tasks will be skipped gracefully."
   when: powerflex_generation == 'gen1'
 
-- name: Set skip flag for Gen1 systems
+- name: Validate Gen2 module availability
+  ansible.builtin.assert:
+    that:
+      - "'volume_v2' in ansible_facts.modules"
+      - "'storagepool_v2' in ansible_facts.modules"
+      - "'device_group' in ansible_facts.modules"
+      - "'storage_node' in ansible_facts.modules"
+    quiet: true
+  when: powerflex_generation == 'gen2'
+  ignore_errors: true
+  register: gen2_module_check
+
+- name: Set skip flag for Gen1 systems or missing modules
   ansible.builtin.set_fact:
     powerflex_gen2_skip: true
-  when: powerflex_generation == 'gen1'
+  when: powerflex_generation == 'gen1' or gen2_module_check.failed
 
 - name: Validate gateway connectivity
   dellemc.powerflex.info_v2:
