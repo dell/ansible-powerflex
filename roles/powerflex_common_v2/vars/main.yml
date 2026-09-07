@@ -1,0 +1,6 @@
+---
+# Copyright: (c) 2025, Dell Technologies
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# vars file for powerflex_common_v2
+# No OS-specific variables required for Gen2 compatibility
