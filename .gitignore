@@ -5,4 +5,3 @@ output
 __pycache__/
 *.log
 dellemc-powerflex*.tar.gz
-collections/
