@@ -18,7 +18,7 @@
     protection_domain_name: "trinity-PD"
 
   tasks:
-    # Skip SDS creation due to communication error with 10.247.58.31
+    # Skip SDS creation due to communication error with x.x.x.x
     # This requires the SDS software to be installed and network connectivity
 
     - name: Get SDS details using name (existing SDS)

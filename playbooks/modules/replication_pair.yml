@@ -47,7 +47,7 @@
           validate_certs: "{{ validate_certs }}"
 
     - name: Display replication pair creation result
-      debug:
+      ansible.builtin.debug:
         var: result
 
     - name: Get replication pair details by name
@@ -60,7 +60,7 @@
         pair_name: "{{ pair_name }}"
 
     - name: Display replication pair details
-      debug:
+      ansible.builtin.debug:
         var: result
 
     - name: Get replication pair details by id
@@ -74,7 +74,7 @@
         state: "present"
 
     - name: Display replication pair details by id
-      debug:
+      ansible.builtin.debug:
         var: result
 
     - name: Pause replication pair
@@ -88,7 +88,7 @@
         pause: true
 
     - name: Display pause result
-      debug:
+      ansible.builtin.debug:
         var: result
 
     - name: Resume replication pair
@@ -102,7 +102,7 @@
         pause: false
 
     - name: Display resume result
-      debug:
+      ansible.builtin.debug:
         var: result
 
     - name: Delete replication pair
@@ -116,7 +116,7 @@
         state: "absent"
 
     - name: Display deletion result
-      debug:
+      ansible.builtin.debug:
         var: delete_result
 
     - name: Recreate replication pair for future use
@@ -139,5 +139,5 @@
           validate_certs: "{{ validate_certs }}"
 
     - name: Display recreate result
-      debug:
+      ansible.builtin.debug:
         var: result

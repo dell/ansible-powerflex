@@ -4,8 +4,8 @@
   connection: local
   gather_facts: false
   vars:
-    # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
-    hostname: '10.247.39.166'
+    # Default to Oslo2 - override with -e "hostname=x.x.x.x" for Oslo1
+    hostname: 'x.x.x.x'
     username: 'admin'
     password: 'Password'
     validate_certs: false

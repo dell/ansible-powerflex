@@ -4,14 +4,14 @@
   connection: local
   gather_facts: false
   vars:
-    # Default to Oslo2 - override with -e "hostname=10.247.39.38" for Oslo1
-    hostname: '10.247.39.166'
+    # Default to Oslo2 - override with -e "hostname=x.x.x.x" for Oslo1
+    hostname: 'x.x.x.x'
     username: 'admin'
     password: 'Password'
     validate_certs: false
     sdc_name: test_sdc
-    # Oslo2 SDC IP: 10.247.100.48, Oslo1 SDC IP: 10.247.64.23
-    sdc_ip: "10.247.100.48"
+    # Oslo2 SDC IP: x.x.x.x, Oslo1 SDC IP: x.x.x.x
+    sdc_ip: "x.x.x.x"
 
   tasks:
     - name: Get sdc details using sdc ip
