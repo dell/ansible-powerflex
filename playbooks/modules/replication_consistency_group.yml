@@ -118,7 +118,7 @@
         pair_name: "test_pair"
 
     - name: Display replication pair status
-      debug:
+      ansible.builtin.debug:
         var: pair_status
 
     - name: Create an RCG snapshot - check mode
