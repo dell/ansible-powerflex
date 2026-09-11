@@ -805,21 +805,20 @@ class PowerFlexReplicationConsistencyGroup(PowerFlexBase):
                     initial_copy_num_pairs = stats.get('initialCopyNumPairs', 0)
                     initial_copy_progress = stats.get('initialCopyProgress', 0.0)
 
-                    LOG.info(f"RCG {rcg_id} initial copy status: "
-                             f"initialCopyNumPairs={initial_copy_num_pairs}, "
-                             f"initialCopyProgress={initial_copy_progress}")
+                    LOG.info("RCG %s initial copy status: initialCopyNumPairs=%s, initialCopyProgress=%s",
+                             rcg_id, initial_copy_num_pairs, initial_copy_progress)
 
                     # Initial copy is complete when numPairs is 0 and progress is 1.0
                     if initial_copy_num_pairs == 0 and initial_copy_progress == 1.0:
-                        LOG.info(f"RCG {rcg_id} initial copy complete, proceeding with {rcg_state}")
+                        LOG.info("RCG %s initial copy complete, proceeding with %s", rcg_id, rcg_state)
                         break
                     else:
-                        LOG.info(f"RCG {rcg_id} initial copy in progress, waiting... "
-                                 f"(elapsed: {elapsed}s, max: {max_wait_seconds}s)")
+                        LOG.info("RCG %s initial copy in progress, waiting... (elapsed: %ss, max: %ss)",
+                                 rcg_id, elapsed, max_wait_seconds)
                         time.sleep(check_interval_seconds)
                         elapsed += check_interval_seconds
                 except Exception as e:
-                    LOG.warning(f"Failed to get RCG statistics while waiting for initial copy: {e}")
+                    LOG.warning("Failed to get RCG statistics while waiting for initial copy: %s", e)
                     time.sleep(check_interval_seconds)
                     elapsed += check_interval_seconds
 
@@ -833,7 +832,7 @@ class PowerFlexReplicationConsistencyGroup(PowerFlexBase):
                 if not force:
                     self.module.fail_json(msg=errormsg)
                 else:
-                    LOG.warning(f"Force flag set, proceeding with {rcg_state} despite incomplete initial copy")
+                    LOG.warning("Force flag set, proceeding with %s despite incomplete initial copy", rcg_state)
 
         # Perform the requested action
         if rcg_state == 'failover':
