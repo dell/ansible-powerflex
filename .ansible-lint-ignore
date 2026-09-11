@@ -59,3 +59,5 @@ roles/powerflex_system_v2/molecule/system_queries/converge.yml var-naming[no-rol
 playbooks/roles/powerflex_system_v2_queries.yml var-naming[no-role-prefix]
 playbooks/roles/powerflex_system_v2_validation.yml var-naming[no-role-prefix]
 playbooks/roles/powerflex_system_v2_diagnostics.yml var-naming[no-role-prefix]
+playbooks/modules/device_group.yml args[module]
+playbooks/modules/storagepool_v2.yml args[module]
