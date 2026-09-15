@@ -68,27 +68,28 @@ class PowerFlexBase:
         successor = compatibilities.get('successor', None)
         predecessor = compatibilities.get('predecessor', None)
 
-        api_version = self.powerflex_conn.system.api_version(cached=True)
-        if (pfmp_version := self.get_pfmp_version()) is None:
-            pfmp_version = api_version
+        # Use the underlying Core/MDM version for module compatibility
+        # instead of the PFMP gateway API version. This allows Gen1 modules
+        # to run against PFMP 5.x gateways managing Gen1 (Core 4.5.x) arrays.
+        core_version = self.get_core_version()
 
-        if min_ver and utils.is_version_less(api_version, min_ver):
+        if min_ver and utils.is_version_less(core_version, min_ver):
             if predecessor:
                 self.__skip_module(warnings=[
-                    f"Please use module {predecessor} for PowerFlex {pfmp_version}"
+                    f"Please use module {predecessor} for PowerFlex {core_version}"
                 ])
             self.__skip_module(warnings=[
-                f"Module {current_module} is not compatible with PowerFlex {pfmp_version}. "
+                f"Module {current_module} is not compatible with PowerFlex {core_version}. "
                 f"The minimum supported version of module {current_module} is {min_ver}."
             ])
 
-        if max_ver and utils.is_version_ge_or_eq(api_version, max_ver):
+        if max_ver and utils.is_version_ge_or_eq(core_version, max_ver):
             if successor:
                 self.__skip_module(warnings=[
-                    f"Please use module {successor} for PowerFlex {pfmp_version}"
+                    f"Please use module {successor} for PowerFlex {core_version}"
                 ])
             self.__skip_module(warnings=[
-                f"Module {current_module} is not compatible with PowerFlex {pfmp_version}. "
+                f"Module {current_module} is not compatible with PowerFlex {core_version}. "
                 f"The maximum supported version of module {current_module} is below {max_ver}."
             ])
 
@@ -116,6 +117,36 @@ class PowerFlexBase:
             return self.powerflex_conn.system.pfmp_version(cached=True)
         except Exception:
             return None
+
+    def get_core_version(self):
+        """
+        Get the underlying PowerFlex Core/MDM version.
+
+        This method extracts the actual Core version from the MDM cluster,
+        which may differ from the PFMP gateway API version when PFMP 5.x
+        manages Gen1 (Core 4.5.x) arrays.
+
+        :return: Normalized PowerFlex Core version (e.g. '4.5.6000.0')
+        :rtype: str
+        """
+        try:
+            systems = self.powerflex_conn.system.get()
+            if systems:
+                sys = systems[0]
+                mdm_cluster = sys.get('mdmCluster', {})
+                master = mdm_cluster.get('master', {})
+                version = master.get('versionInfo')
+                if not version:
+                    version = sys.get('systemVersionName')
+                if version:
+                    # Normalize formats like 'R4_5.6000.0' or
+                    # 'DellEMC PowerFlex Version: R4_5.6000.162'
+                    version = version.split()[-1]
+                    version = version.lstrip('R').replace('_', '.')
+                    return version
+        except Exception:
+            LOG.debug("Failed to determine core version, falling back to API version")
+        return self.powerflex_conn.system.api_version(cached=True)
 
 
 def powerflex_compatibility(min_ver, max_ver=None, predecessor=None, successor=None):
