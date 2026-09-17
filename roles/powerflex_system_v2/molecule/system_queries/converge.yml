@@ -1,14 +1,21 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 - name: Converge - powerflex_system_v2 queries
   hosts: localhost
   gather_facts: false
   vars:
-    powerflex_gateway_hostname: "{{ lookup('env', 'POWERFLEX_GATEWAY') | default('10.0.0.1', true) }}"
-    powerflex_gateway_username: "{{ lookup('env', 'POWERFLEX_USERNAME') | default('admin', true) }}"
-    powerflex_gateway_password: "{{ lookup('env', 'POWERFLEX_PASSWORD') | default('password', true) }}"
+    powerflex_gateway_hostname: >-
+      {{ lookup('env', 'POWERFLEX_GATEWAY') | default('10.0.0.1',
+      true) }}
+    powerflex_gateway_username: >-
+      {{ lookup('env', 'POWERFLEX_USERNAME') | default('admin',
+      true) }}
+    powerflex_gateway_password: >-
+      {{ lookup('env', 'POWERFLEX_PASSWORD') | default('password',
+      true) }}
     powerflex_gateway_validate_certs: false
     powerflex_gateway_port: 443
 

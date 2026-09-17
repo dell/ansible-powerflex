@@ -39,7 +39,8 @@
 
     # Note: max_num_paths is only supported in PowerFlex 4.6+
     # Core 4.5.6 does not support this parameter - skip for Gen1 qualification
-    # - name: Set maximum number of paths per volume and maximum Number of Ports Per Protection Domain of nvme_host
+    # - name: Set maximum number of paths per volume and maximum Number
+    #   of Ports Per Protection Domain of nvme_host
     #   dellemc.powerflex.nvme_host:
     #     hostname: "{{ hostname }}"
     #     username: "{{ username }}"

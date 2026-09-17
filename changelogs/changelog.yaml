@@ -34,15 +34,17 @@ releases:
   1.1.1:
     changes:
       deprecated_features:
-        - The dellemc_powerflex_gatherfacts module is deprecated and replaced with dellemc_powerflex_info
+        - The dellemc_powerflex_gatherfacts module is deprecated and
+          replaced with dellemc_powerflex_info
       trivial:
-        - Product Guide, Release Notes and ReadMe updated as per community guidelines.
+        - Product Guide, Release Notes and ReadMe updated as per community
+          guidelines.
     release_date: '2021-12-16'
   1.2.0:
     changes:
       minor_changes:
-        - Names of previously released modules have been changed from dellemc_powerflex_\<module
-          name> to \<module name>.
+        - Names of previously released modules have been changed from
+          dellemc_powerflex_\<module name> to \<module name>.
     modules:
       - description: Manage Protection Domain on Dell PowerFlex
         name: protection_domain
@@ -232,15 +234,15 @@ releases:
   3.1.0:
     changes:
       minor_changes:
-        - Added the ``device_group`` module to manage existing PowerFlex Gen2 device
-          groups. The module supports getting device group details by name or ID,
-          renaming a device group, updating spare node and spare device counts, and
-          querying usable capacity. Device group creation and deletion are not
-          supported.
-        - Added the ``thin_clone`` module to create thin clones from a source volume
-          or a read-only snapshot on PowerFlex 5.x Gen2 systems. This module is
-          creation-only; ongoing management of the resulting thin clone is handled
-          by the ``volume`` module.
+        - Added the ``device_group`` module to manage existing PowerFlex Gen2
+          device groups. The module supports getting device group details by
+          name or ID, renaming a device group, updating spare node and spare
+          device counts, and querying usable capacity. Device group creation
+          and deletion are not supported.
+        - Added the ``thin_clone`` module to create thin clones from a source
+          volume or a read-only snapshot on PowerFlex 5.x Gen2 systems. This
+          module is creation-only; ongoing management of the resulting thin
+          clone is handled by the ``volume`` module.
         - Fixed sanity and lint issues in info_v2 module.
         - Updated GitHub Actions workflow for improved CI stability.
       release_summary: This release adds the device_group and thin_clone modules

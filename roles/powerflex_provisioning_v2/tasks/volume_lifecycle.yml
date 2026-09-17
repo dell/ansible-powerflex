@@ -1,6 +1,7 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Volume lifecycle management tasks (AC2)
 
@@ -27,7 +28,9 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
+    vol_id: >-
+      {{ powerflex_volume_create_result.volume_details.id |
+      default('') }}
     size: "{{ powerflex_volume_size_gb }}"
     cap_unit: "GB"
     state: present
@@ -42,7 +45,9 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
+    vol_id: >-
+      {{ powerflex_volume_create_result.volume_details.id |
+      default('') }}
     vol_new_name: "{{ powerflex_volume_name }}_renamed"
     state: present
   when:
@@ -56,7 +61,9 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
+    vol_id: >-
+      {{ powerflex_volume_create_result.volume_details.id |
+      default('') }}
     sdc:
       - sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
     sdc_state: "mapped"
@@ -72,7 +79,9 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
+    vol_id: >-
+      {{ powerflex_volume_create_result.volume_details.id |
+      default('') }}
     sdc:
       - sdc_id: "{{ powerflex_volume_sdc_id | default('') }}"
     sdc_state: "unmapped"
@@ -88,7 +97,9 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    vol_id: "{{ powerflex_volume_create_result.volume_details.id | default('') }}"
+    vol_id: >-
+      {{ powerflex_volume_create_result.volume_details.id |
+      default('') }}
     state: absent
   when:
     - powerflex_volume_create_result.changed | default(false)

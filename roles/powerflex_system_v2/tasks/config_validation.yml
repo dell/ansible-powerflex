@@ -1,6 +1,7 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Configuration validation tasks (AC8)
 
@@ -31,10 +32,14 @@
     - name: Check MDM cluster state is normal
       ansible.builtin.assert:
         that:
-          - powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterState == "ClusteredNormal"
+          - >-
+            powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterState
+            == "ClusteredNormal"
         fail_msg: >-
           MDM cluster state is
-          '{{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterState }}'
+          '{{
+          powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterState
+          }}'
           — expected 'ClusteredNormal'. Check MDM health.
         success_msg: "MDM cluster state: ClusteredNormal"
 
@@ -46,24 +51,33 @@
             in ["ThreeNodes", "FiveNodes"]
         fail_msg: >-
           MDM cluster mode
-          '{{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterMode }}'
+          '{{
+          powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterMode
+          }}'
           is not supported. Expected ThreeNodes or FiveNodes.
         success_msg: >-
           MDM cluster mode:
-          {{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterMode }}
+          {{
+          powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.clusterMode
+          }}
 
     - name: Check MDM good nodes count
       ansible.builtin.assert:
         that:
           - >-
-            (powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum | int) >= 3
+            (powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum
+            | int) >= 3
         fail_msg: >-
           MDM good nodes count is
-          {{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum }}
+          {{
+          powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum
+          }}
           — minimum 3 required for quorum.
         success_msg: >-
           MDM good nodes:
-          {{ powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum }}
+          {{
+          powerflex_system_v2_validation_info.Array_Details[0].mdmCluster.goodNodesNum
+          }}
 
     - name: Set MDM validation result
       ansible.builtin.set_fact:
@@ -84,10 +98,12 @@
     - name: Check protection domains exist
       ansible.builtin.assert:
         that:
-          - (powerflex_system_v2_validation_info.Protection_Domains | default([]) | length) > 0
+          - (powerflex_system_v2_validation_info.Protection_Domains |
+            default([]) | length) > 0
         fail_msg: "No protection domains found on the system."
         success_msg: >-
-          Found {{ powerflex_system_v2_validation_info.Protection_Domains | length }}
+          Found {{ powerflex_system_v2_validation_info.Protection_Domains |
+          length }}
           protection domain(s)
 
     - name: Check protection domain states
@@ -121,7 +137,8 @@
     - name: Check storage pools exist
       ansible.builtin.assert:
         that:
-          - (powerflex_system_v2_validation_info.Storage_Pools | default([]) | length) > 0
+          - (powerflex_system_v2_validation_info.Storage_Pools | default([]) |
+            length) > 0
         fail_msg: "No storage pools found on the system."
         success_msg: >-
           Found {{ powerflex_system_v2_validation_info.Storage_Pools | length }}
@@ -146,10 +163,12 @@
     - name: Check volumes exist
       ansible.builtin.assert:
         that:
-          - (powerflex_system_v2_validation_info.Volumes | default([]) | length) > 0
+          - (powerflex_system_v2_validation_info.Volumes | default([]) | length)
+            > 0
         fail_msg: "No volumes found on the system."
         success_msg: >-
-          Found {{ powerflex_system_v2_validation_info.Volumes | length }} volume(s)
+          Found {{ powerflex_system_v2_validation_info.Volumes | length }}
+          volume(s)
 
     - name: Set volume validation result
       ansible.builtin.set_fact:
@@ -168,19 +187,23 @@
   vars:
     mdm_status: >-
       {{ 'PASS' if (powerflex_system_v2_mdm_valid | default(false))
-         else ('FAIL' if (powerflex_system_v2_validate_mdm_cluster | default(false) | bool)
+         else ('FAIL' if (powerflex_system_v2_validate_mdm_cluster |
+         default(false) | bool)
          else 'SKIPPED') }}
     pd_status: >-
       {{ 'PASS' if (powerflex_system_v2_pd_valid | default(false))
-         else ('FAIL' if (powerflex_system_v2_validate_protection_domains | default(false) | bool)
+         else ('FAIL' if (powerflex_system_v2_validate_protection_domains |
+         default(false) | bool)
          else 'SKIPPED') }}
     sp_status: >-
       {{ 'PASS' if (powerflex_system_v2_sp_valid | default(false))
-         else ('FAIL' if (powerflex_system_v2_validate_storage_pools | default(false) | bool)
+         else ('FAIL' if (powerflex_system_v2_validate_storage_pools |
+         default(false) | bool)
          else 'SKIPPED') }}
     vol_status: >-
       {{ 'PASS' if (powerflex_system_v2_vol_valid | default(false))
-         else ('FAIL' if (powerflex_system_v2_validate_volumes | default(false) | bool)
+         else ('FAIL' if (powerflex_system_v2_validate_volumes | default(false)
+         | bool)
          else 'SKIPPED') }}
   ansible.builtin.debug:
     msg:

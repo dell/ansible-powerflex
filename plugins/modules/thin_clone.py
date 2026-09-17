@@ -214,7 +214,8 @@ class PowerFlexThinClone(PowerFlexBase):
                 self.module.fail_json(
                     msg="Source volume '%s' not found" % identifier
                 )
-            return source, "volume", source["id"], source.get("name")
+            else:
+                return source, "volume", source["id"], source.get("name")
 
         if from_snapshot_name or from_snapshot_id:
             source = self.get_volume(
@@ -225,7 +226,8 @@ class PowerFlexThinClone(PowerFlexBase):
                 self.module.fail_json(
                     msg="Source snapshot '%s' not found" % identifier
                 )
-            return source, "snapshot", source["id"], source.get("name")
+            else:
+                return source, "snapshot", source["id"], source.get("name")
 
         self.module.fail_json(
             msg="Exactly one of from_volume_name, from_volume_id, "
