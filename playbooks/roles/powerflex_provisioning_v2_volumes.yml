@@ -1,6 +1,7 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Example playbook demonstrating powerflex_provisioning_v2 volume lifecycle
 # This playbook creates, modifies, maps, and deletes volumes
@@ -20,8 +21,10 @@
     powerflex_volume_name: "test_volume"
     powerflex_volume_size_gb: 100
     powerflex_volume_storage_pool_name: "pool1"
-    powerflex_volume_protection_domain_name: "domain1"
-    # powerflex_volume_sdc_id: "sdc_id_here"  # Set to a real SDC ID to test mapping
+    powerflex_volume_protection_domain_name: >-
+      "domain1"
+    # powerflex_volume_sdc_id: "sdc_id_here"  # Set to a real SDC ID to
+    # test mapping
 
   tasks:
     - name: Run powerflex_common_v2 role

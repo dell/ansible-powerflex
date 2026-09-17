@@ -1,11 +1,13 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # defaults file for powerflex_provisioning_v2
 
 # PowerFlex gateway connection parameters
-# Note: username and password must be provided at runtime (no defaults for security)
+# Note: username and password must be provided at runtime (no defaults for
+# security)
 powerflex_gateway_hostname: ""
 powerflex_gateway_port: 443
 powerflex_gateway_validate_certs: true
@@ -70,7 +72,9 @@ powerflex_storage_node_rename: false
 
 # Gen1-only parameters (rejected with error if set)
 # These are not supported in Gen2 provisioning
-# powerflex_sds_id: ""  # Gen1-only - use device_group_id instead
-# powerflex_storage_pool_id_for_device: ""  # Gen1-only - use device_group_id instead
+# powerflex_sds_id: ""  # Gen1-only - use device_group_id
+# instead
+# powerflex_storage_pool_id_for_device: ""  # Gen1-only - use
+# device_group_id instead
 # powerflex_fault_set_id: ""  # Gen1-only - not available in Gen2
 # powerflex_hdd_media_type: ""  # Gen1-only - Gen2 only supports SSD

@@ -1,6 +1,7 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Example playbook demonstrating powerflex_system_v2 system information queries
 # Queries system details, protection domains, storage pools, volumes, etc.
@@ -23,11 +24,12 @@
       - storage_pool
       - storage_node
 
-    # Optionally query specific entities by name or ID
-    # powerflex_system_v2_query_protection_domain_name: "my_pd"
-    # powerflex_system_v2_query_storage_pool_name: "my_pool"
-    # powerflex_system_v2_query_volume_name: "my_volume"
-    # powerflex_system_v2_query_device_group_id: "hex_id_here"
+  # Optionally query specific entities by name or
+  # ID
+  # powerflex_system_v2_query_protection_domain_name: "my_pd"
+  # powerflex_system_v2_query_storage_pool_name: "my_pool"
+  # powerflex_system_v2_query_volume_name: "my_volume"
+  # powerflex_system_v2_query_device_group_id: "hex_id_here"
 
   tasks:
     - name: Run powerflex_common_v2 role

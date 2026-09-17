@@ -1,16 +1,20 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # powerflex_system_v2 - Gen2 System Information, Validation, and Diagnostics
-# This role provides system queries via info_v2, configuration validation,
-# and capacity/health diagnostics for PowerFlex 5.x Gen2 environments.
+# This role provides system queries via info_v2, configuration
+# validation, and capacity/health diagnostics for PowerFlex 5.x Gen2
+# environments.
 
 - name: Check if Gen2 system role should proceed
   ansible.builtin.assert:
     that:
       - not powerflex_gen2_skip | default(false) | bool
-    fail_msg: "Gen2 system role skipped - running on Gen1 system or Gen2 modules unavailable"
+    fail_msg: >-
+      Gen2 system role skipped - running on Gen1 system or Gen2 modules
+      unavailable
     quiet: true
 
 - name: Include system information query tasks
