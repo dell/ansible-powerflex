@@ -10,9 +10,9 @@
   hosts: localhost
   gather_facts: false
   vars:
-    powerflex_gateway_hostname: "192.168.1.100"
-    powerflex_gateway_username: "admin"
-    powerflex_gateway_password: "your_password"
+    powerflex_gateway_hostname: "{{ lookup('env', 'POWERFLEX_HOST') | default('192.168.1.100', true) }}"
+    powerflex_gateway_username: "{{ lookup('env', 'POWERFLEX_USER') | default('admin', true) }}"
+    powerflex_gateway_password: "{{ lookup('env', 'POWERFLEX_PASS') | default('CHANGE_ME', true) }}"
     powerflex_gateway_port: 443
     powerflex_gateway_validate_certs: true
     powerflex_gateway_timeout: 30

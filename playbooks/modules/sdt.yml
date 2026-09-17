@@ -6,7 +6,7 @@
   vars:
     hostname: "x.x.x.x"
     username: "admin"
-    password: "Password"
+    password: "{{ lookup('env', 'POWERFLEX_PASS') | default('CHANGE_ME', true) }}"
     validate_certs: false
     host_port: 443
     sdt_name: "sdt_example"

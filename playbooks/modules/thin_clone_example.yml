@@ -9,9 +9,9 @@
   hosts: localhost
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
-    username: 'admin'
-    password: 'Password'
+    hostname: "{{ lookup('env', 'POWERFLEX_HOST') | default('x.x.x.x', true) }}"
+    username: "{{ lookup('env', 'POWERFLEX_USER') | default('admin', true) }}"
+    password: "{{ lookup('env', 'POWERFLEX_PASS') | default('CHANGE_ME', true) }}"
     validate_certs: false
     # Use unique names
     src_vol_name: "ansible_src_vol"

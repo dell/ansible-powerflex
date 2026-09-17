@@ -4,12 +4,12 @@
   connection: local
   gather_facts: false
   vars:
-    hostname: 'x.x.x.x'
-    remote_hostname: 'x.x.x.x'
-    username: 'admin'
-    password: 'Password'
-    remote_username: 'admin'
-    remote_password: 'Password'
+    hostname: "{{ lookup('env', 'POWERFLEX_HOST') | default('x.x.x.x', true) }}"
+    remote_hostname: "{{ lookup('env', 'POWERFLEX_HOST') | default('x.x.x.x', true) }}"
+    username: "{{ lookup('env', 'POWERFLEX_USER') | default('admin', true) }}"
+    password: "{{ lookup('env', 'POWERFLEX_PASS') | default('CHANGE_ME', true) }}"
+    remote_username: "{{ lookup('env', 'POWERFLEX_USER') | default('admin', true) }}"
+    remote_password: "{{ lookup('env', 'POWERFLEX_PASS') | default('CHANGE_ME', true) }}"
     validate_certs: false
     rcg_name: "rcg_test"
     pair_name: "test_pair"
