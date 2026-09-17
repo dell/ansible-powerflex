@@ -35,8 +35,8 @@ from ansible_collections.dellemc.powerflex.plugins.modules.sdt import PowerFlexS
 class TestPowerflexSDT(PowerFlexUnitBase):
 
     get_module_args = MockSDTApi.SDT_COMMON_ARGS
-    ip1 = "10.47.xxx.xxx"
-    ip2 = "10.46.xxx.xxx"
+    ip1 = "192.0.2.10"
+    ip2 = "192.0.2.20"
     ip3 = "10.45.xxx.xxx"
 
     @pytest.fixture

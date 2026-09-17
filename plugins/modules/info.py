@@ -405,10 +405,10 @@ Array_Details:
             "master": {
                 "id": "6101582c2ca8db00",
                 "ips": [
-                    "10.47.xxx.xxx"
+                    "192.0.2.10"
                 ],
                 "managementIPs": [
-                    "10.47.xxx.xxx"
+                    "192.0.2.10"
                 ],
                 "name": "node0",
                 "opensslVersion": "OpenSSL 1.0.2k-fips  26 Jan 2017",
@@ -424,10 +424,10 @@ Array_Details:
                 {
                     "id": "23fb724015661901",
                     "ips": [
-                        "10.47.xxx.xxx"
+                        "192.0.2.10"
                     ],
                     "managementIPs": [
-                        "10.47.xxx.xxx"
+                        "192.0.2.10"
                     ],
                     "opensslVersion": "OpenSSL 1.0.2k-fips  26 Jan 2017",
                     "port": 9011,
@@ -443,10 +443,10 @@ Array_Details:
                 {
                     "id": "6ef27eb20d0c1202",
                     "ips": [
-                        "10.47.xxx.xxx"
+                        "192.0.2.10"
                     ],
                     "managementIPs": [
-                        "10.47.xxx.xxx"
+                        "192.0.2.10"
                     ],
                     "opensslVersion": "N/A",
                     "port": 9011,

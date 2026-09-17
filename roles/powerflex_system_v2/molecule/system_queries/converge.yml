@@ -14,7 +14,7 @@
       {{ lookup('env', 'POWERFLEX_USERNAME') | default('admin',
       true) }}
     powerflex_gateway_password: >-
-      {{ lookup('env', 'POWERFLEX_PASSWORD') | default('password',
+      {{ lookup('env', 'POWERFLEX_PASSWORD') | default('CHANGE_ME',
       true) }}
     powerflex_gateway_validate_certs: false
     powerflex_gateway_port: 443

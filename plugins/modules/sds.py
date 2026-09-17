@@ -425,7 +425,7 @@ sds_details:
         "id": "8f3bb0cc00000002",
         "ipList": [
             {
-                "ip": "10.47.xxx.xxx",
+                "ip": "192.0.2.10",
                 "role": "all"
             }
         ],

@@ -1,8 +1,8 @@
 ---
 # common params
-hostname: 10.XX.XX.XX
-username: 'user'
-password: 'password'
+hostname: "{{ lookup('env', 'POWERFLEX_HOST') | default('10.XX.XX.XX', true) }}"
+username: "{{ lookup('env', 'POWERFLEX_USER') | default('user', true) }}"
+password: "{{ lookup('env', 'POWERFLEX_PASS') | default('CHANGE_ME', true) }}"
 validate_certs: false
 port: 443
 timeout: 120
