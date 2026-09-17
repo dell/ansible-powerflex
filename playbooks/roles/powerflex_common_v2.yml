@@ -1,6 +1,7 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Example playbook demonstrating powerflex_common_v2 role
 # This playbook detects PowerFlex generation and validates Gen2 compatibility
@@ -27,9 +28,13 @@
 
     - name: Display skip flag
       ansible.builtin.debug:
-        msg: "Gen2 tasks will be skipped: {{ powerflex_gen2_skip | default(false) }}"
+        msg: >-
+          Gen2 tasks will be skipped: {{ powerflex_gen2_skip |
+          default(false) }}
 
     - name: Continue with Gen2-specific tasks if applicable
       ansible.builtin.debug:
         msg: "Proceeding with Gen2-specific provisioning..."
-      when: powerflex_generation == 'gen2' and not powerflex_gen2_skip | default(false)
+      when: >-
+        powerflex_generation == 'gen2' and not powerflex_gen2_skip |
+        default(false)

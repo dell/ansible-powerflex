@@ -1,6 +1,7 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Snapshot and thin clone workflows (AC3)
 
@@ -28,7 +29,9 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    snapshot_id: "{{ powerflex_snapshot_create_result.snapshot_details.id | default('') }}"
+    snapshot_id: >-
+      {{ powerflex_snapshot_create_result.snapshot_details.id |
+      default('') }}
     snapshot_new_name: "{{ powerflex_snapshot_name }}_renamed"
     state: present
   when:
@@ -42,7 +45,9 @@
     password: "{{ powerflex_gateway_password }}"
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
-    snapshot_id: "{{ powerflex_snapshot_create_result.snapshot_details.id | default('') }}"
+    snapshot_id: >-
+      {{ powerflex_snapshot_create_result.snapshot_details.id |
+      default('') }}
     state: absent
   when:
     - powerflex_snapshot_create_result.changed | default(false)
@@ -52,7 +57,9 @@
 
 - name: Warn if snapshot deletion failed (retention-locked)
   ansible.builtin.debug:
-    msg: "WARNING: Snapshot deletion failed - likely retention-locked. {{ powerflex_snapshot_delete_result.msg | default('') }}"
+    msg: >-
+      WARNING: Snapshot deletion failed - likely retention-locked.
+      {{ powerflex_snapshot_delete_result.msg | default('') }}
   when:
     - powerflex_snapshot_delete_result.failed | default(false)
     - powerflex_snapshot_delete_result.msg is defined
@@ -80,7 +87,9 @@
     validate_certs: "{{ powerflex_gateway_validate_certs }}"
     port: "{{ powerflex_gateway_port }}"
     new_clone_name: "{{ powerflex_thin_clone_name }}"
-    from_snapshot_id: "{{ powerflex_thin_clone_source_snapshot_id | default('') }}"
+    from_snapshot_id: >-
+      {{ powerflex_thin_clone_source_snapshot_id |
+      default('') }}
     state: present
   register: powerflex_thin_clone_from_snapshot_result
   when:
