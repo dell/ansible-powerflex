@@ -1,6 +1,7 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
 - name: Verify
   hosts: all
@@ -29,6 +30,8 @@
     - name: Check thin clone was created
       ansible.builtin.assert:
         that:
-          - thin_clone_create_result is defined or thin_clone_from_snapshot_result is defined
+          - >-
+            thin_clone_create_result is defined or
+            thin_clone_from_snapshot_result is defined
         fail_msg: "Thin clone creation failed"
         success_msg: "Thin clone created successfully"

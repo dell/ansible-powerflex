@@ -1,8 +1,10 @@
 ---
 # Copyright: (c) 2026, Dell Technologies
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+ (see COPYING or
+# https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# Example playbook demonstrating powerflex_provisioning_v2 snapshot and thin clone workflows
+# Example playbook demonstrating powerflex_provisioning_v2 snapshot and thin
+# clone workflows
 # This playbook creates snapshots with retention and thin clones
 
 - name: PowerFlex Gen2 Snapshot and Thin Clone Management
