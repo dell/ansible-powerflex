@@ -29,8 +29,8 @@ class MockSDTApi:
     SDT_GET_LIST = [
         {
             "ipList": [
-                {"role": "StorageAndHost", "ip": "10.47.xxx.xxx"},
-                {"role": "StorageAndHost", "ip": "10.46.xxx.xxx"},
+                {"role": "StorageAndHost", "ip": "192.0.2.10"},
+                {"role": "StorageAndHost", "ip": "192.0.2.20"},
             ],
             "sdtState": "Normal",
             "name": "sdt1",

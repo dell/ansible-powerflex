@@ -34,11 +34,11 @@ class MockStorageNodeApi:
             "name": "node1",
             "ipsList": [
                 {
-                    "ip": "10.47.xxx.xxx",
+                    "ip": "192.0.2.10",
                     "role": "Storage"
                 },
                 {
-                    "ip": "10.46.xxx.xxx",
+                    "ip": "192.0.2.20",
                     "role": "App"
                 }
             ],
