@@ -57,7 +57,7 @@ Gen2 compatibility detection.
   vars:
     powerflex_gateway_hostname: "192.168.1.100"
     powerflex_gateway_username: "admin"
-    powerflex_gateway_password: "your_password"
+    powerflex_gateway_password: "{{ lookup('env', 'POWERFLEX_PASS') | default('CHANGE_ME', true) }}"
 
   roles:
     - dellemc.powerflex.powerflex_common_v2

@@ -28,8 +28,8 @@ from ansible_collections.dellemc.powerflex.plugins.modules.sds import PowerFlexS
 class TestPowerflexSDS(PowerFlexUnitBase):
 
     get_module_args = MockSDSApi.SDS_COMMON_ARGS
-    ip1 = "10.47.xxx.xxx"
-    ip2 = "10.46.xxx.xxx"
+    ip1 = "192.0.2.10"
+    ip2 = "192.0.2.20"
 
     @pytest.fixture
     def module_object(self):

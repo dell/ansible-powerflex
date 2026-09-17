@@ -11,6 +11,6 @@
       ansible.builtin.include_role:
         name: powerflex_common_v2
       vars:
-        powerflex_gateway_hostname: "192.168.1.100"
-        powerflex_gateway_username: "admin"
-        powerflex_gateway_password: "test_password"
+        powerflex_gateway_hostname: "{{ lookup('env', 'POWERFLEX_HOST') | default('192.168.1.100', true) }}"
+        powerflex_gateway_username: "{{ lookup('env', 'POWERFLEX_USER') | default('admin', true) }}"
+        powerflex_gateway_password: "{{ lookup('env', 'POWERFLEX_PASS') | default('CHANGE_ME', true) }}"

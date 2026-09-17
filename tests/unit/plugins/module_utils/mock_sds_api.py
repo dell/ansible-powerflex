@@ -44,11 +44,11 @@ class MockSDSApi:
             "id": "8f3bb0cc00000002",
             "ipList": [
                 {
-                    "ip": "10.47.xxx.xxx",
+                    "ip": "192.0.2.10",
                     "role": "all"
                 },
                 {
-                    "ip": "10.46.xxx.xxx",
+                    "ip": "192.0.2.20",
                     "role": "sdcOnly"
                 }
             ],
