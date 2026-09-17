@@ -8,6 +8,7 @@ from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
 
+import copy
 import pytest
 from mock.mock import MagicMock
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.mock_replication_consistency_group_api import MockReplicationConsistencyGroupApi
@@ -29,10 +30,28 @@ class TestPowerflexReplicationConsistencyGroup():
 
     get_module_args = MockReplicationConsistencyGroupApi.RCG_COMMON_ARGS
 
+    @pytest.fixture(autouse=True)
+    def reset_module_args(self):
+        """Give each test a fresh deep copy of RCG_COMMON_ARGS.
+
+        RCG_COMMON_ARGS is a single shared mutable dict, and every test
+        calls `self.get_module_args.update(...)` on it. Without this reset,
+        keys set by one test (e.g. new_rcg_name from a rename test) leak
+        into unrelated tests that run afterwards.
+        """
+        self.get_module_args = copy.deepcopy(MockReplicationConsistencyGroupApi.RCG_COMMON_ARGS)
+
     @pytest.fixture
     def replication_consistency_group_module_mock(self):
         utils.is_version_less = MagicMock(return_value=True)
         utils.is_version_ge_or_eq = MagicMock(return_value=False)
+        # get_powerflex_gateway_host_connection is mocked once at import
+        # time, so PowerFlexReplicationConsistencyGroup.__init__() would
+        # otherwise reuse the *same* MagicMock().return_value (and any
+        # sub-mocks/side_effects configured by a previous test) across
+        # every test in this file. Reset it here so each test gets a
+        # pristine, isolated powerflex_conn.
+        utils.get_powerflex_gateway_host_connection = MagicMock()
         replication_consistency_group_module_mock = PowerFlexReplicationConsistencyGroup()
         replication_consistency_group_module_mock.module.check_mode = False
         return replication_consistency_group_module_mock
