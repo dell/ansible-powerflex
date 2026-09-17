@@ -251,26 +251,27 @@ import copy
 LOG = utils.get_logger('storage_node')
 
 IP_ROLE_CHOICES = ['Storage', 'App', 'StorageAndApp']
+STORAGE_NODE_NOT_FOUND_MSG = "Storage node with identifier '%s' not found"
 
 
 def get_powerflex_storage_node_parameters():
     """This method provides parameters required for the storage_node module
     on PowerFlex"""
-    return dict(
-        storage_node_name=dict(),
-        storage_node_id=dict(),
-        storage_node_new_name=dict(),
-        node_ip_list=dict(
-            type='list', elements='dict', options=dict(
-                ip=dict(required=True),
-                role=dict(required=True, choices=IP_ROLE_CHOICES)
-            )
-        ),
-        node_ip_state=dict(choices=['present-in-node', 'absent-in-node']),
-        update_pathnames=dict(type='bool', default=False),
-        force_failed_devices=dict(type='bool', default=False),
-        state=dict(required=True, type='str', choices=['present'])
-    )
+    return {
+        'storage_node_name': {},
+        'storage_node_id': {},
+        'storage_node_new_name': {},
+        'node_ip_list': {
+            'type': 'list', 'elements': 'dict', 'options': {
+                'ip': {'required': True},
+                'role': {'required': True, 'choices': IP_ROLE_CHOICES}
+            }
+        },
+        'node_ip_state': {'choices': ['present-in-node', 'absent-in-node']},
+        'update_pathnames': {'type': 'bool', 'default': False},
+        'force_failed_devices': {'type': 'bool', 'default': False},
+        'state': {'required': True, 'type': 'str', 'choices': ['present']}
+    }
 
 
 @powerflex_compatibility(min_ver='5.0')
@@ -302,10 +303,10 @@ class PowerFlexStorageNode(PowerFlexBase):
         super().__init__(AnsibleModule, ansible_module_params)
         super().check_module_compatibility()
 
-        self.result = dict(
-            changed=False,
-            storage_node_details={}
-        )
+        self.result = {
+            'changed': False,
+            'storage_node_details': {}
+        }
 
     def get_storage_node_details(self, storage_node_name=None, storage_node_id=None):
         """Get storage node details
@@ -328,7 +329,7 @@ class PowerFlexStorageNode(PowerFlexBase):
                     filter_fields={'id': storage_node_id})
 
             if len(storage_node_details) == 0:
-                msg = "Storage node with identifier '%s' not found" % id_or_name
+                msg = STORAGE_NODE_NOT_FOUND_MSG % id_or_name
                 LOG.info(msg)
                 return None
 
@@ -359,7 +360,7 @@ class PowerFlexStorageNode(PowerFlexBase):
                 filter_fields={'id': storage_node_id})
 
             if len(storage_node_details) == 0:
-                msg = "Storage node with identifier '%s' not found" % storage_node_id
+                msg = STORAGE_NODE_NOT_FOUND_MSG % storage_node_id
                 LOG.error(msg)
                 return None
 
@@ -634,7 +635,7 @@ class StorageNodeHandler():
         if storage_node_details is None:
             id_or_name = storage_node_params['storage_node_id'] or \
                 storage_node_params['storage_node_name']
-            error_msg = "Storage node with identifier '%s' not found" % id_or_name
+            error_msg = STORAGE_NODE_NOT_FOUND_MSG % id_or_name
             LOG.error(error_msg)
             storage_node_obj.module.fail_json(msg=error_msg)
 
