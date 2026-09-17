@@ -8,6 +8,7 @@ from __future__ import (absolute_import, division, print_function)
 
 __metaclass__ = type
 
+import uuid
 import pytest
 # pylint: disable=unused-import
 from ansible_collections.dellemc.powerflex.tests.unit.plugins.module_utils.libraries import initial_mock
@@ -26,6 +27,10 @@ from ansible_collections.dellemc.powerflex.plugins.modules.storage_node import \
 class TestPowerflexStorageNode(PowerFlexUnitBase):
 
     get_module_args = MockStorageNodeApi.STORAGE_NODE_COMMON_ARGS
+    # Generated at runtime (not a string literal) so the value can never be
+    # a persisted/real credential and static analyzers do not flag it as a
+    # hardcoded password.
+    _TEST_PASSWORD = uuid.uuid4().hex
 
     @pytest.fixture
     def module_object(self):
@@ -416,23 +421,23 @@ class TestPowerflexStorageNode(PowerFlexUnitBase):
         regardless of whether they are present in module.params."""
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'password': 'super-secret-password', 'state': 'present'})
+            {'password': self._TEST_PASSWORD, 'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock)
         self.mock_protection_domain_get(powerflex_module_mock)
         StorageNodeHandler().handle(
             powerflex_module_mock, powerflex_module_mock.module.params)
         result_str = str(powerflex_module_mock.result)
-        assert 'super-secret-password' not in result_str
+        assert self._TEST_PASSWORD not in result_str
 
     def test_error_message_sanitized(self, powerflex_module_mock):
         """Confirm error messages are descriptive but do not leak raw
         credentials or internal exception details beyond str(e)."""
         self.set_module_params(
             powerflex_module_mock, self.get_module_args,
-            {'password': 'super-secret-password', 'state': 'present'})
+            {'password': self._TEST_PASSWORD, 'state': 'present'})
         self.mock_storage_node_get(powerflex_module_mock, return_value=[])
         try:
             StorageNodeHandler().handle(
                 powerflex_module_mock, powerflex_module_mock.module.params)
         except Exception as fj_object:
-            assert 'super-secret-password' not in str(fj_object)
+            assert self._TEST_PASSWORD not in str(fj_object)

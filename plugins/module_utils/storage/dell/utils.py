@@ -59,7 +59,7 @@ def get_powerflex_gateway_host_connection(module_params):
             gateway_port=module_params['port'],
             verify_certificate=module_params['validate_certs'],
             username=module_params['username'],
-            password=module_params['password'],
+            password=module_params['password'],  # noqa: S106 - User-provided credential, not hardcoded
             timeout=module_params['timeout'])
         conn.initialize()
         # Ensure Gen1 SDK objects are also loaded so that PFMP 5.x gateways
