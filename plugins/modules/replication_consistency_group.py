@@ -762,6 +762,89 @@ class PowerFlexReplicationConsistencyGroup(PowerFlexBase):
             LOG.error(errormsg)
             self.module.fail_json(msg=errormsg)
 
+    # Valid failover-type state a RCG must be in before a given rcg_state
+    # transition is allowed.
+    VALID_RCG_STATE_TRANSITIONS = {
+        'failover': ['None'],  # Can only failover from normal state
+        'switchover': ['None'],  # Can only switchover from normal state
+        'reverse': ['Failover', 'Switchover'],  # Can reverse after failover/switchover
+        'restore': ['Failover', 'Switchover']  # Can restore after failover/switchover
+    }
+
+    def validate_rcg_state_transition(self, rcg_id, rcg_state, current_failover_type):
+        """Validate that the requested rcg_state transition is allowed from
+        the RCG's current failover type (works for both 3.8 and 5.1).
+
+        :param rcg_id: Unique identifier of the RCG.
+        :param rcg_state: Requested RCG state transition.
+        :param current_failover_type: Current failoverType of the RCG.
+        """
+        valid_states = self.VALID_RCG_STATE_TRANSITIONS.get(rcg_state)
+        if valid_states is None or current_failover_type in valid_states:
+            return
+
+        valid_states_str = ', '.join(valid_states)
+        errormsg = (f"Cannot perform '{rcg_state}' on RCG {rcg_id} in "
+                    f"'{current_failover_type}' state. Valid states for '{rcg_state}': "
+                    f"[{valid_states_str}]")
+        LOG.error(errormsg)
+        self.module.fail_json(msg=errormsg)
+
+    def is_initial_copy_complete(self, stats):
+        """Determine whether the RCG initial copy has completed.
+
+        :param stats: RCG statistics as returned by the SDK.
+        :return: Boolean indicating whether the initial copy is complete.
+        """
+        initial_copy_num_pairs = stats.get('initialCopyNumPairs', 0)
+        initial_copy_progress = stats.get('initialCopyProgress', 0.0)
+        # Initial copy is complete when numPairs is 0 and progress has
+        # reached 1.0. A tolerance-based comparison is used to avoid
+        # relying on exact floating point equality.
+        return initial_copy_num_pairs == 0 and initial_copy_progress >= 1.0
+
+    def wait_for_initial_copy(self, rcg_id, rcg_state, force):
+        """Wait for the RCG initial copy to complete before performing a DR
+        operation (failover/switchover). This is needed because operations
+        like inactivate/activate can reset the initial copy.
+
+        :param rcg_id: Unique identifier of the RCG.
+        :param rcg_state: Requested RCG state transition.
+        :param force: Whether to bypass the check if it times out.
+        """
+        import time
+        max_wait_seconds = 300  # 5 minutes maximum wait
+        check_interval_seconds = 10
+        elapsed = 0
+        stats = {}
+
+        while elapsed < max_wait_seconds:
+            try:
+                stats = self.powerflex_conn.replication_consistency_group.get_statistics(rcg_id)
+                LOG.info("RCG %s initial copy status: initialCopyNumPairs=%s, initialCopyProgress=%s",
+                         rcg_id, stats.get('initialCopyNumPairs', 0), stats.get('initialCopyProgress', 0.0))
+
+                if self.is_initial_copy_complete(stats):
+                    LOG.info("RCG %s initial copy complete, proceeding with %s", rcg_id, rcg_state)
+                    return
+            except Exception as e:
+                LOG.warning("Failed to get RCG statistics while waiting for initial copy: %s", e)
+
+            LOG.info("RCG %s initial copy in progress, waiting... (elapsed: %ss, max: %ss)",
+                     rcg_id, elapsed, max_wait_seconds)
+            time.sleep(check_interval_seconds)
+            elapsed += check_interval_seconds
+
+        errormsg = (f"RCG {rcg_id} initial copy did not complete within {max_wait_seconds} seconds. "
+                    f"Current status: initialCopyNumPairs={stats.get('initialCopyNumPairs', 'unknown')}, "
+                    f"initialCopyProgress={stats.get('initialCopyProgress', 'unknown')}. "
+                    f"Use force flag to bypass this check if needed.")
+        LOG.error(errormsg)
+        if not force:
+            self.module.fail_json(msg=errormsg)
+        else:
+            LOG.warning("Force flag set, proceeding with %s despite incomplete initial copy", rcg_state)
+
     def perform_rcg_action(self, rcg_id, rcg_details):
         """Perform failover, reverse, restore or switchover
 
@@ -773,78 +856,21 @@ class PowerFlexReplicationConsistencyGroup(PowerFlexBase):
         force = self.module.params['force']
         current_failover_type = rcg_details.get('failoverType', 'None')
 
-        # Define valid state transitions
-        valid_transitions = {
-            'failover': ['None'],  # Can only failover from normal state
-            'switchover': ['None'],  # Can only switchover from normal state
-            'reverse': ['Failover', 'Switchover'],  # Can reverse after failover/switchover
-            'restore': ['Failover', 'Switchover']  # Can restore after failover/switchover
-        }
-
-        # Validate state transition (works for both 3.8 and 5.1)
-        if rcg_state in valid_transitions:
-            if current_failover_type not in valid_transitions[rcg_state]:
-                valid_states = ', '.join(valid_transitions[rcg_state])
-                errormsg = (f"Cannot perform '{rcg_state}' on RCG {rcg_id} in "
-                            f"'{current_failover_type}' state. Valid states for '{rcg_state}': "
-                            f"[{valid_states}]")
-                LOG.error(errormsg)
-                self.module.fail_json(msg=errormsg)
+        self.validate_rcg_state_transition(rcg_id, rcg_state, current_failover_type)
 
         # Wait for initial copy to complete before DR operations (failover/switchover)
-        # This is needed because operations like inactivate/activate can reset the initial copy
         if rcg_state in ['failover', 'switchover']:
-            import time
-            max_wait_seconds = 300  # 5 minutes maximum wait
-            check_interval_seconds = 10
-            elapsed = 0
-
-            while elapsed < max_wait_seconds:
-                try:
-                    stats = self.powerflex_conn.replication_consistency_group.get_statistics(rcg_id)
-                    initial_copy_num_pairs = stats.get('initialCopyNumPairs', 0)
-                    initial_copy_progress = stats.get('initialCopyProgress', 0.0)
-
-                    LOG.info("RCG %s initial copy status: initialCopyNumPairs=%s, initialCopyProgress=%s",
-                             rcg_id, initial_copy_num_pairs, initial_copy_progress)
-
-                    # Initial copy is complete when numPairs is 0 and progress is 1.0
-                    if initial_copy_num_pairs == 0 and initial_copy_progress == 1.0:
-                        LOG.info("RCG %s initial copy complete, proceeding with %s", rcg_id, rcg_state)
-                        break
-                    else:
-                        LOG.info("RCG %s initial copy in progress, waiting... (elapsed: %ss, max: %ss)",
-                                 rcg_id, elapsed, max_wait_seconds)
-                        time.sleep(check_interval_seconds)
-                        elapsed += check_interval_seconds
-                except Exception as e:
-                    LOG.warning("Failed to get RCG statistics while waiting for initial copy: %s", e)
-                    time.sleep(check_interval_seconds)
-                    elapsed += check_interval_seconds
-
-            # Check if we timed out
-            if elapsed >= max_wait_seconds:
-                errormsg = (f"RCG {rcg_id} initial copy did not complete within {max_wait_seconds} seconds. "
-                            f"Current status: initialCopyNumPairs={stats.get('initialCopyNumPairs', 'unknown')}, "
-                            f"initialCopyProgress={stats.get('initialCopyProgress', 'unknown')}. "
-                            f"Use force flag to bypass this check if needed.")
-                LOG.error(errormsg)
-                if not force:
-                    self.module.fail_json(msg=errormsg)
-                else:
-                    LOG.warning("Force flag set, proceeding with %s despite incomplete initial copy", rcg_state)
+            self.wait_for_initial_copy(rcg_id, rcg_state, force)
 
         # Perform the requested action
-        if rcg_state == 'failover':
-            return self.failover(rcg_id, force)
-        elif rcg_state == 'switchover':
-            return self.switchover(rcg_id, force)
-        elif rcg_state == 'reverse':
-            return self.reverse(rcg_id)
-        elif rcg_state == 'restore':
-            return self.restore(rcg_id)
-
-        return False  # No action performed
+        rcg_actions = {
+            'failover': lambda: self.failover(rcg_id, force),
+            'switchover': lambda: self.switchover(rcg_id, force),
+            'reverse': lambda: self.reverse(rcg_id),
+            'restore': lambda: self.restore(rcg_id),
+        }
+        action = rcg_actions.get(rcg_state)
+        return action() if action else False
 
     def sync(self, rcg_id):
         """Perform sync

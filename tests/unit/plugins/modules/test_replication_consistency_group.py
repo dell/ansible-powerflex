@@ -349,6 +349,8 @@ class TestPowerflexReplicationConsistencyGroup():
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get_statistics = \
+            MagicMock(return_value={"initialCopyNumPairs": 0, "initialCopyProgress": 1.0})
         replication_consistency_group_module_mock.perform_module_operation()
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.failover.assert_called()
 
@@ -357,6 +359,8 @@ class TestPowerflexReplicationConsistencyGroup():
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get_statistics = \
+            MagicMock(return_value={"initialCopyNumPairs": 0, "initialCopyProgress": 1.0})
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.failover = \
             MagicMock(side_effect=MockApiException)
         replication_consistency_group_module_mock.perform_module_operation()
@@ -413,6 +417,8 @@ class TestPowerflexReplicationConsistencyGroup():
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get_statistics = \
+            MagicMock(return_value={"initialCopyNumPairs": 0, "initialCopyProgress": 1.0})
         replication_consistency_group_module_mock.perform_module_operation()
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.switchover.assert_called()
 
@@ -421,6 +427,8 @@ class TestPowerflexReplicationConsistencyGroup():
         replication_consistency_group_module_mock.module.params = self.get_module_args
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get = MagicMock(
             return_value=MockReplicationConsistencyGroupApi.get_rcg_details())
+        replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.get_statistics = \
+            MagicMock(return_value={"initialCopyNumPairs": 0, "initialCopyProgress": 1.0})
         replication_consistency_group_module_mock.powerflex_conn.replication_consistency_group.switchover = \
             MagicMock(side_effect=MockApiException)
         replication_consistency_group_module_mock.perform_module_operation()
