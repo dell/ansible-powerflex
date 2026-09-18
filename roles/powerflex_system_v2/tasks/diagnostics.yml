@@ -36,20 +36,16 @@
         default('N/A') }}
       mdm_cluster:
         state: >-
-          {{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster
-          .clusterState
+          {{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster.clusterState
           | default('N/A') }}
         mode: >-
-          {{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster
-          .clusterMode
+          {{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster.clusterMode
           | default('N/A') }}
         good_nodes: >-
-          {{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster
-          .goodNodesNum
+          {{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster.goodNodesNum
           | default(0) }}
         good_replicas: >-
-          {{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster
-          .goodReplicasNum
+          {{ powerflex_system_v2_diag_info.Array_Details[0].mdmCluster.goodReplicasNum
           | default(0) }}
       capacity:
         max_capacity_gb: >-
