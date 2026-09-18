@@ -1,5 +1,5 @@
 ===============================
-Dellemc.PowerFlex Release Notes
+Dellemc.PowerFlex Change Logs
 ===============================
 
 .. contents:: Topics
