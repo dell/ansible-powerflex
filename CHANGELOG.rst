@@ -4,6 +4,41 @@ Dellemc.PowerFlex Change Logs
 
 .. contents:: Topics
 
+v3.2.0
+======
+
+Release Summary
+---------------
+
+This release adds the storage_node module for PowerFlex Gen2 storage node management, extends the info_v2 module with storage_node discovery, adds three new Gen2 roles (powerflex_common_v2, powerflex_provisioning_v2, powerflex_system_v2), extends the force parameter of replication_consistency_group to failover operations, and includes bugfixes and security hardening.
+
+Minor Changes
+-------------
+
+- Added the ``powerflex_common_v2`` role providing automatic PowerFlex Gen2 version detection, module compatibility validation, and graceful degradation on Gen1 systems. It is a prerequisite for the ``powerflex_provisioning_v2`` and ``powerflex_system_v2`` roles.
+- Added the ``powerflex_provisioning_v2`` role for Gen2 infrastructure provisioning, including volume lifecycle management and snapshot/thin clone workflows.
+- Added the ``powerflex_system_v2`` role for Gen2 system-level configuration validation, diagnostics, and system queries.
+- Added the ``storage_node`` gather_subset to the ``info_v2`` module for bulk storage node discovery.
+- Added the ``storage_node`` module to manage PowerFlex Gen2 storage nodes. The module supports querying storage node details by name or ID, adding and removing IP addresses with role assignment, changing IP roles, updating device pathnames, and renaming a storage node. Storage node creation and deletion are not supported.
+- Extended the ``force`` parameter of the ``replication_consistency_group`` module to also apply to failover operations, matching the existing behavior for switchover. Added state-transition validation and a wait for initial-copy completion before failover/switchover operations, with ``force`` available to bypass the wait when needed.
+
+Security Fixes
+--------------
+
+- Replaced hardcoded credentials in example playbooks, role READMEs, and Molecule test files with ``lookup('env', ...)`` based credential resolution to avoid accidental credential exposure in git history.
+- Resolved Checkmarx-flagged hardcoded password findings in unit tests by generating credentials at runtime instead of using literal values.
+
+Bugfixes
+--------
+
+- sdt - deleting an SDT that has already been removed is now idempotent and reports ``changed=false`` instead of failing.
+- storagepool_v2 - added validation to reject empty or whitespace-only ``storage_pool_name`` and ``storage_pool_new_name`` values, matching the existing behavior of the ``storagepool`` module.
+
+New Modules
+-----------
+
+- dellemc.powerflex.storage_node - Manage storage node on Dell PowerFlex 5.x
+
 v3.1.0
 ======
 
@@ -37,14 +72,14 @@ This release extends support for existing modules and roles from PowerFlex Gen1 
 Minor Changes
 -------------
 
-- Added support for executing mdm_cluster, nvme_host, sdc, sdt and snapshot_policy modules on PowerFlex Gen2.
 - Added support for executing activemq, lia, mdm and tb roles on PowerFlex Gen2.
+- Added support for executing mdm_cluster, nvme_host, sdc, sdt and snapshot_policy modules on PowerFlex Gen2.
 
 Deprecated Features
---------
+-------------------
 
-- The fault_set, replication_consistency_group, replication_pair, resource_group and sds modules are not supported on PowerFlex Gen2.
 - The device, info, protection_domain, snapshot, storagepool and volume modules are supported only on PowerFlex Gen1. They are replaced by v2 modules on PowerFlex Gen2.
+- The fault_set, replication_consistency_group, replication_pair, resource_group and sds modules are not supported on PowerFlex Gen2.
 
 New Modules
 -----------

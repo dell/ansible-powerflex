@@ -12,7 +12,7 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 module: storage_node
-version_added: '3.1.0'
+version_added: '3.2.0'
 short_description: Manage storage node on Dell PowerFlex 5.x
 
 description:
