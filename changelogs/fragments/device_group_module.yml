@@ -1,7 +1,0 @@
----
-minor_changes:
-  - Added the ``device_group`` module to manage existing PowerFlex Gen2 device
-    groups. The module supports getting device group details by name or ID,
-    renaming a device group, updating spare node and spare device counts, and
-    querying usable capacity. Device group creation and deletion are not
-    supported.

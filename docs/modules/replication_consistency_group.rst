@@ -87,7 +87,7 @@ Parameters
 
 
   force (optional, bool, None)
-    Force switchover the RCG.
+    Force failover or switchover the RCG.
 
 
   pause_mode (optional, str, None)

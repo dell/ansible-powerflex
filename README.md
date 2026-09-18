@@ -35,7 +35,7 @@ The capabilities of the Ansible modules are managing SDCs, volumes, snapshots, s
 
 | **Ansible Modules** | **PowerFlex/VxFlex OS Version** | **SDK version** | **Python version** | **Ansible**              |
 |---------------------|-----------------------|-------|--------------------|--------------------------|
-| v3.1.0 |4.8 <br> 4.6 <br> 5.0 <br> 5.1 Gen2 (Core 5.1) <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 2.0.0 | 3.13.x <br> 3.14.x | 2.18 <br> 2.19 <br> 2.20 |
+| v3.2.0 |4.8 <br> 4.6 <br> 5.0 <br> 5.1 Gen2 (Core 5.1) <br> APEX Block Storage for Mircrosoft Azure <br> APEX Block Storage for AWS | 2.0.0 | 3.13.x <br> 3.14.x | 2.18 <br> 2.19 <br> 2.20 |
 
   * Please follow PyPowerFlex installation instructions on [PyPowerFlex Documentation](https://github.com/dell/python-powerflex)
 
@@ -91,6 +91,7 @@ The modules are written in such a way that all requests are idempotent and hence
   * [Fault Sets Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/fault_set.rst)
   * [Device Group Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/device_group.rst)
   * [Thin Clone Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/thin_clone.rst)
+  * [Storage Node Module](https://github.com/dell/ansible-powerflex/blob/main/docs/modules/storage_node.rst)
 
 
 ## Support
