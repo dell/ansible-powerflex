@@ -17,6 +17,10 @@ Here is the list of supported roles.
 ├── powerflex_sdt
 ├── powerflex_config
 ├── powerflex_activeMQ
+├── powerflex_webui
+├── powerflex_common_v2
+├── powerflex_provisioning_v2
+├── powerflex_system_v2
 
 ```
 
@@ -79,6 +83,18 @@ Below is the brief description of each role
   <tr>
     <td>powerflex_activeMQ</td>
     <td>Role to manage the installation and uninstallation of Powerflex ActiveMQ.</td>
+  </tr>
+  <tr>
+    <td>powerflex_common_v2</td>
+    <td>Role to provide Gen2 compatibility foundation for Dell PowerFlex, including automatic Gen2 version detection, module compatibility validation, and graceful degradation for Gen1 systems.</td>
+  </tr>
+  <tr>
+    <td>powerflex_provisioning_v2</td>
+    <td>Role to provision PowerFlex Gen2 infrastructure, including volume lifecycle management and snapshot/thin clone workflows.</td>
+  </tr>
+  <tr>
+    <td>powerflex_system_v2</td>
+    <td>Role to manage PowerFlex Gen2 system-level configuration validation, diagnostics, and system queries.</td>
   </tr>
 </tbody>
 </table>

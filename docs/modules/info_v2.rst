@@ -55,6 +55,8 @@ Parameters
 
     Snapshot policies - :literal:`snapshot\_policy`.
 
+    Storage nodes - :literal:`storage\_node`.
+
     Storage pools - :literal:`storage\_pool`.
 
     Volumes - :literal:`vol`.
@@ -226,6 +228,28 @@ Examples
           - filter_key: "name"
             filter_operator: "equal"
             filter_value: "ansible_test"
+
+    - name: Get the list of storage nodes
+      dellemc.powerflex.info_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - storage_node
+
+    - name: Get specific storage node details
+      dellemc.powerflex.info_v2:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: "{{ validate_certs }}"
+        gather_subset:
+          - storage_node
+        filters:
+          - filter_key: "name"
+            filter_operator: "equal"
+            filter_value: "node1"
 
     - name: Get deployment and resource provisioning info
       dellemc.powerflex.info_v2:
@@ -3730,6 +3754,18 @@ sdt (when I(gather_subset) is C(sdt), list, [{'authenticationError': 'None', 'ce
   systemId (, str, )
     ID of the system.
 
+
+
+StorageNodes (when I(gather_subset) is C(storage_node), list, [{'id': '8f3bb0cc00000002', 'name': 'node1'}])
+  Details of all storage nodes.
+
+
+  id (, str, )
+    The ID of the storage node.
+
+
+  name (, str, )
+    The name of the storage node.
 
 
 

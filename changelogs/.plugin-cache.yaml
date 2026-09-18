@@ -1,5 +1,34 @@
 objects:
-  role: {}
+  role:
+    powerflex_activemq:
+      description: Role to manage the installation and uninstallation of Powerflex
+        ActiveMQ.
+      name: powerflex_activemq
+      version_added: null
+    powerflex_config:
+      description: Role to configure the protection domain, fault set and storage
+        pool.
+      name: powerflex_config
+      version_added: null
+    powerflex_gateway:
+      description: Role to manage the installation and uninstallation of PowerFlex
+        gateway
+      name: powerflex_gateway
+      version_added: null
+    powerflex_sdr:
+      description: Role to manage installation and uninstallation Powerflex SDR
+      name: powerflex_sdr
+      version_added: null
+    powerflex_tb:
+      description: Role to manage the installation and uninstallation of Powerflex
+        TB.
+      name: powerflex_tb
+      version_added: null
+    powerflex_webui:
+      description: Role to manage the installation and uninstallation of Powerflex
+        web UI.
+      name: powerflex_webui
+      version_added: null
 plugins:
   become: {}
   cache: {}
@@ -12,27 +41,32 @@ plugins:
   lookup: {}
   module:
     device:
-      description: Manage device on Dell PowerFlex Gen1
+      description: Manage device on Dell PowerFlex
       name: device
       namespace: ''
       version_added: 1.1.0
+    device_group:
+      description: Manage Device Groups on Dell PowerFlex
+      name: device_group
+      namespace: ''
+      version_added: 3.0.0
     device_v2:
-      description: Manage device on Dell PowerFlex Gen2
+      description: Manage Device on Dell PowerFlex
       name: device_v2
       namespace: ''
       version_added: 3.0.0
     fault_set:
-      description: Manage Fault Sets on Dell PowerFlex Gen1
+      description: Manage Fault Sets on Dell PowerFlex
       name: fault_set
       namespace: ''
       version_added: 2.2.0
     info:
-      description: Gathering information about Dell PowerFlex Gen1
+      description: Gathering information about Dell PowerFlex
       name: info
       namespace: ''
       version_added: 1.0.0
     info_v2:
-      description: Gathering information about Dell PowerFlex Gen2
+      description: Gathering information about Dell PowerFlex
       name: info_v2
       namespace: ''
       version_added: 3.0.0
@@ -42,32 +76,32 @@ plugins:
       namespace: ''
       version_added: 1.3.0
     nvme_host:
-      description: Manage NVMe Hosts on Dell PowerFlex
+      description: Manage NVMe hosts on Dell PowerFlex
       name: nvme_host
       namespace: ''
       version_added: 2.6.0
     protection_domain:
-      description: Manage Protection Domain on Dell PowerFlex Gen1
+      description: Manage Protection Domain on Dell PowerFlex
       name: protection_domain
       namespace: ''
       version_added: 1.2.0
     protection_domain_v2:
-      description: Manage Protection Domain on Dell PowerFlex Gen2
+      description: Managing protection domain on Dell PowerFlex 5.x
       name: protection_domain_v2
       namespace: ''
       version_added: 3.0.0
     replication_consistency_group:
-      description: Manage replication consistency groups on Dell PowerFlex Gen1
+      description: Manage replication consistency groups on Dell PowerFlex
       name: replication_consistency_group
       namespace: ''
       version_added: 1.5.0
     replication_pair:
-      description: Manage replication pairs on Dell PowerFlex Gen1
+      description: Manage replication pairs on Dell PowerFlex
       name: replication_pair
       namespace: ''
       version_added: 1.6.0
     resource_group:
-      description: Manage resource group deployments on Dell PowerFlex Gen1
+      description: Manage resource group deployments on Dell PowerFlex.
       name: resource_group
       namespace: ''
       version_added: 2.3.0
@@ -77,47 +111,57 @@ plugins:
       namespace: ''
       version_added: 1.0.0
     sds:
-      description: Manage SDS on Dell PowerFlex Gen1
+      description: Manage SDS on Dell PowerFlex
       name: sds
       namespace: ''
       version_added: 1.1.0
     sdt:
-      description: Manage SDT on Dell PowerFlex
-      name: sds
+      description: Manage SDT (also called NVMe Target) on Dell PowerFlex
+      name: sdt
       namespace: ''
       version_added: 2.6.0
     snapshot:
-      description: Manage Snapshots on Dell PowerFlex Gen1
+      description: Manage Snapshots on Dell PowerFlex
       name: snapshot
       namespace: ''
       version_added: 1.0.0
-    snapshot_v2:
-      description: Manage Snapshots on Dell PowerFlex Gen2
-      name: snapshot_v2
-      namespace: ''
-      version_added: 3.0.0
     snapshot_policy:
       description: Manage snapshot policies on Dell PowerFlex
       name: snapshot_policy
       namespace: ''
       version_added: 1.7.0
+    snapshot_v2:
+      description: Manage Snapshots on Dell PowerFlex
+      name: snapshot_v2
+      namespace: ''
+      version_added: 3.0.0
+    storage_node:
+      description: Manage storage node on Dell PowerFlex 5.x
+      name: storage_node
+      namespace: ''
+      version_added: 3.2.0
     storagepool:
-      description: Managing Dell PowerFlex storage pool Gen1
+      description: Managing Dell PowerFlex storage pool
       name: storagepool
       namespace: ''
       version_added: 1.0.0
     storagepool_v2:
-      description: Managing Dell PowerFlex storage pool Gen2
+      description: Managing storage pool on Dell PowerFlex 5.x
       name: storagepool_v2
       namespace: ''
       version_added: 3.0.0
+    thin_clone:
+      description: Create Thin Clones on Dell PowerFlex 5.x (Gen2)
+      name: thin_clone
+      namespace: ''
+      version_added: 3.1.0
     volume:
-      description: Manage volumes on Dell PowerFlex Gen1
+      description: Manage volumes on Dell PowerFlex
       name: volume
       namespace: ''
       version_added: 1.0.0
     volume_v2:
-      description: Manage volumes on Dell PowerFlex Gen2
+      description: Manage volumes on Dell PowerFlex
       name: volume_v2
       namespace: ''
       version_added: 3.0.0
@@ -126,4 +170,4 @@ plugins:
   strategy: {}
   test: {}
   vars: {}
-version: 3.0.0
+version: 3.2.0
