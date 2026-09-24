@@ -21,6 +21,7 @@ Minor Changes
 - Added the ``storage_node`` gather_subset to the ``info_v2`` module for bulk storage node discovery.
 - Added the ``storage_node`` module to manage PowerFlex Gen2 storage nodes. The module supports querying storage node details by name or ID, adding and removing IP addresses with role assignment, changing IP roles, updating device pathnames, and renaming a storage node. Storage node creation and deletion are not supported.
 - Extended the ``force`` parameter of the ``replication_consistency_group`` module to also apply to failover operations, matching the existing behavior for switchover. Added state-transition validation and a wait for initial-copy completion before failover/switchover operations, with ``force`` available to bypass the wait when needed.
+- Added support for PowerFlex 5.1 PFMP 5.1 Core 4.5.6 Gen1 arrays. Updated module compatibility checks to use the underlying Core/MDM version instead of the PFMP gateway API version, allowing Gen1 modules to run against PFMP 5.x gateways managing Gen1 (Core 4.5.x) arrays.
 
 Security Fixes
 --------------
