@@ -254,6 +254,7 @@ releases:
           with ``force`` available to bypass the wait when needed.
         - Added support for PowerFlex 5.1 PFMP 5.1 Core 4.5.6 Gen1 arrays. Updated module compatibility checks to use the underlying Core/MDM
           version instead of the PFMP gateway API version, allowing Gen1 modules to run against PFMP 5.x gateways managing Gen1 (Core 4.5.x) arrays.
+        - Updated minimum supported ansible-core version to 2.16.0 for compatibility with Ansible Automation Platform 2.4 lifecycle and Python 3.12.
       release_summary: This release adds the storage_node module for PowerFlex Gen2 storage node management, extends the info_v2 module with
         storage_node discovery, adds three new Gen2 roles (powerflex_common_v2, powerflex_provisioning_v2, powerflex_system_v2), extends the force
         parameter of replication_consistency_group to failover operations, and includes bugfixes and security hardening.
@@ -272,4 +273,4 @@ releases:
       - description: Manage storage node on Dell PowerFlex 5.x
         name: storage_node
         namespace: ''
-    release_date: '2026-09-18'
+    release_date: '2026-09-30'
